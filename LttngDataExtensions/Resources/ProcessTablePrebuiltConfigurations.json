@@ -1,0 +1,214 @@
+{
+    "Tables": [
+        {
+            "Configurations": [
+                {
+                    "ChartType": 0,
+                    "ColumnRoles": [],
+                    "Columns": [
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 0,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Process Name",
+                                "Guid": "a4a52f70-5090-44f8-b043-5f45849aa322",
+                                "Name": "Process Name"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 0,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Pivot Column",
+                                "Guid": "319e867f-245a-436e-9735-db620f844edc",
+                                "Name": "Pivot Column"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 0,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Left Freeze Column",
+                                "Guid": "4d35a44e-804b-454e-9375-568543e198c2",
+                                "Name": "Left Freeze Column"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 1,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Process Path",
+                                "Guid": "48fb4171-d473-425b-b7cd-7ebe6db86547",
+                                "Name": "Process Path"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 2,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Pid",
+                                "Guid": "22e7eb83-c46e-4f8f-93ee-ae18c3483338",
+                                "Name": "Pid"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 3,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Parent Pid",
+                                "Guid": "de736b58-53b4-49f4-9ac6-2e9766ea1d93",
+                                "Name": "Parent Pid"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 4,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Fork Time",
+                                "Guid": "75fd3deb-21a1-4a9a-8909-3bfe28638f4a",
+                                "Name": "Fork Time"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 7,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Wait Time",
+                                "Guid": "e9214c84-a1c3-430b-833e-5f7e700ef6f0",
+                                "Name": "Wait Time"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 8,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Free Time",
+                                "Guid": "1782091f-4e57-4f18-bc18-dc1b8374134b",
+                                "Name": "Free Time"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 0,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Right Freeze Column",
+                                "Guid": "a755cec5-bbc4-4e9f-bdb3-cb78b56ddcfa",
+                                "Name": "Right Freeze Column"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 0,
+                                "TextAlignment": 0,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Graph Column",
+                                "Guid": "a5ce8faf-5668-49fc-82bc-d2c482086c06",
+                                "Name": "Graph Column"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 5,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Exec Time",
+                                "Guid": "278fd637-d59c-4891-9af9-4618ecb35a6b",
+                                "Name": "Exec Time"
+                            }
+                        },
+                        {
+                            "DisplayHints": {
+                                "AggregationMode": 0,
+                                "IsVisible": true,
+                                "SortOrder": 0,
+                                "SortPriority": 6,
+                                "TextAlignment": 1,
+                                "Width": 80
+                            },
+                            "Metadata": {
+                                "Description": "Exit Time",
+                                "Guid": "26f1fd74-aade-40c1-bded-70eb88d3b09f",
+                                "Name": "Exit Time"
+                            }
+                        }
+                    ],
+                    "Layout": 3,
+                    "Name": "Default"
+                }
+            ],
+            "DefaultConfigurationName": "Default",
+            "TableId": "{0185E156-6759-4D1A-AA85-648ECE0EC123}"
+        }
+    ],
+    "Version": 0.1
+}

@@ -1,0 +1,371 @@
+{
+    "Tables": [
+        {
+            "Configurations": [
+                {
+                    "ChartType": 0,
+                    "ColumnRoles": [
+                        {
+                            "Key": 2,
+                            "Value": {
+                                "DisplayHints": {
+                                    "AggregationMode": 0,
+                                    "IsVisible": true,
+                                    "SortOrder": 0,
+                                    "SortPriority": 3,
+                                    "TextAlignment": 0,
+                                    "Width": 100
+                                },
+                                "Metadata": {
+                                    "Description": "Timestamp",
+                                    "Guid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
+                                    "Name": "Timestamp"
+                                }
+                            }
+                        },
+                        {
+                            "Key": 3,
+                            "Value": {
+                                "DisplayHints": {
+                                    "AggregationMode": 0,
+                                    "IsVisible": true,
+                                    "SortOrder": 0,
+                                    "SortPriority": 3,
+                                    "TextAlignment": 0,
+                                    "Width": 100
+                                },
+                                "Metadata": {
+                                    "Description": "Timestamp",
+                                    "Guid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
+                                    "Name": "Timestamp"
+                                }
+                            }
+                        }
+                    ],
+                  "Columns": [
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 200
+                      },
+                      "Metadata": {
+                        "Description": "Name",
+                        "Guid": "8132ded0-8fe7-4533-b139-4c81133a7bcd",
+                        "Name": "Name"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Pivot Column",
+                        "Guid": "319e867f-245a-436e-9735-db620f844edc",
+                        "Name": "Pivot Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Left Freeze Column",
+                        "Guid": "4d35a44e-804b-454e-9375-568543e198c2",
+                        "Name": "Left Freeze Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 1,
+                        "TextAlignment": 1,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Id",
+                        "Guid": "f81236ac-45b0-4695-95da-4739a8dd0147",
+                        "Name": "Id"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 2,
+                        "TextAlignment": 1,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "CPU",
+                        "Guid": "f1dba380-e2f3-47d2-8e5e-d753b28d13dd",
+                        "Name": "CPU"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 2,
+                        "TextAlignment": 1,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Discarded Events On The Event's CPU",
+                        "Guid": "877222E9-BF0E-49FF-9506-45091A8C518B",
+                        "Name": "Discarded Events"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 4,
+                        "TextAlignment": 1,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Count",
+                        "Guid": "1d8946da-567e-4a32-bb46-eb90727da59c",
+                        "Name": "Count"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 5,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 1",
+                        "Guid": "0c5cf8cd-9b9e-5798-1a5d-09d429f7fa3c",
+                        "Name": "Field 1"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 6,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 2",
+                        "Guid": "71badd11-26e5-56bc-44ec-12f4cc6a8f3e",
+                        "Name": "Field 2"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 7,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 3",
+                        "Guid": "411dba2d-5d6e-5272-8287-636d0841768c",
+                        "Name": "Field 3"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 8,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 4",
+                        "Guid": "048f5050-1f17-59b3-fa22-4b0781ee630b",
+                        "Name": "Field 4"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 9,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 5",
+                        "Guid": "94e48f22-d499-5227-bb04-be011b4159b0",
+                        "Name": "Field 5"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 10,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 6",
+                        "Guid": "c1054028-424a-59ba-e760-6d30abbd69c5",
+                        "Name": "Field 6"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 11,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 7",
+                        "Guid": "5cbc4b58-2de1-5449-55b2-4651d4edf90a",
+                        "Name": "Field 7"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 12,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 8",
+                        "Guid": "fc01e6c9-a43b-51a1-fd2e-112ba48aff65",
+                        "Name": "Field 8"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": false,
+                        "SortOrder": 0,
+                        "SortPriority": 13,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 9",
+                        "Guid": "e3dcf300-46e2-5c43-ef4b-2c3db489ec25",
+                        "Name": "Field 9"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": false,
+                        "SortOrder": 0,
+                        "SortPriority": 14,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 10",
+                        "Guid": "87c21ddb-4b29-58e3-5ddc-f114c5ca209a",
+                        "Name": "Field 10"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": false,
+                        "SortOrder": 0,
+                        "SortPriority": 15,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Field 11",
+                        "Guid": "65f8fe42-ad02-5016-3521-f93329c76227",
+                        "Name": "Field 11"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Right Freeze Column",
+                        "Guid": "a755cec5-bbc4-4e9f-bdb3-cb78b56ddcfa",
+                        "Name": "Right Freeze Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Graph Column",
+                        "Guid": "a5ce8faf-5668-49fc-82bc-d2c482086c06",
+                        "Name": "Graph Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 3,
+                        "TextAlignment": 0,
+                        "Width": 100
+                      },
+                      "Metadata": {
+                        "Description": "Timestamp",
+                        "Guid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
+                        "Name": "Timestamp"
+                      }
+                    }
+                  ],
+                    "Layout": 3,
+                    "Name": "Default"
+                }
+            ],
+            "DefaultConfigurationName": "Default",
+            "TableId": "F5EAF336-EA19-487D-9C1F-527812B02F30"
+        }
+    ],
+    "Version": 0.1
+}
