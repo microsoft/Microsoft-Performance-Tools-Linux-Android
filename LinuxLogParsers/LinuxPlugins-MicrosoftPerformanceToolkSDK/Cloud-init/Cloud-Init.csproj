@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Cloud-InitMPTAddin</AssemblyName>
+    <RootNamespace>Cloud-InitMPTAddin</RootNamespace>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LinuxLogParser\LinuxLogParser.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="DeployStagedFiles">
+    <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)Linux\WaLinuxAgent\$(OutDir) $(ProjectDir)$(OutDir)WaLinuxAgent" />
+    <Exec Command="CALL XCOPY /dickherfy &quot;$(SolutionDir)Linux\DmesgIsoLog\$(OutDir)\Dmesg $(ProjectDir)$(OutDir)Dmesg" />
+    <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)\..\..\LTTNG.CTF\LttngDataExtensions\$(OutDir) $(ProjectDir)$(OutDir)LttngDataExtensions" />
+  </Target>
+
+</Project>

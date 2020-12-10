@@ -17,6 +17,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfCds", "PerfCds\PerfCds.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfDataExtensions", "PerfDataExtensions\PerfDataExtensions.csproj", "{B381F72E-335C-4842-9DB2-615D5C18A943}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LinuxLogParsers", "LinuxLogParsers", "{9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxLogParserCore", "LinuxLogParsers\LinuxLogParserCore\LinuxLogParserCore.csproj", "{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxLogParser", "LinuxLogParsers\LinuxLogParser\LinuxLogParser.csproj", "{03DBB240-C4DD-4FF4-9405-F50CBF0A960D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloud-Init", "LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj", "{7CBFAE62-0D0D-4075-A426-99945DD4E9A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dmesg", "LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj", "{04455C36-F127-4D40-BCB3-78E7DE21E70E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaLinuxAgent", "LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj", "{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,9 +63,36 @@ Global
 		{B381F72E-335C-4842-9DB2-615D5C18A943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B381F72E-335C-4842-9DB2-615D5C18A943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B381F72E-335C-4842-9DB2-615D5C18A943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03DBB240-C4DD-4FF4-9405-F50CBF0A960D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03DBB240-C4DD-4FF4-9405-F50CBF0A960D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03DBB240-C4DD-4FF4-9405-F50CBF0A960D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03DBB240-C4DD-4FF4-9405-F50CBF0A960D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04455C36-F127-4D40-BCB3-78E7DE21E70E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04455C36-F127-4D40-BCB3-78E7DE21E70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04455C36-F127-4D40-BCB3-78E7DE21E70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04455C36-F127-4D40-BCB3-78E7DE21E70E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B8667E9-0CB6-4562-B2BD-B5E7768BC1A4} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{03DBB240-C4DD-4FF4-9405-F50CBF0A960D} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{04455C36-F127-4D40-BCB3-78E7DE21E70E} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E96603EA-8E1D-4AA9-A474-D267A116C316}
