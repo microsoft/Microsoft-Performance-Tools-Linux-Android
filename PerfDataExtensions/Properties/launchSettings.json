@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PerfDataExtensions": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Tools\\WPT\\latest\\wpa.exe",
+      "commandLineArgs": "-addsearchdir C:\\src\\LTTNG.CTF\\PerfDataExtensions\\bin\\Debug\\netstandard2.1"
+    }
+  }
+}

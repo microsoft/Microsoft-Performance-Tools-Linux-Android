@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CompositeDataCookers\**" />
+    <Compile Remove="DataProcessors\**" />
+    <Compile Remove="NewFolder\**" />
+    <Compile Remove="SourceDataCookers\NewFolder1\**" />
+    <Compile Remove="SourceDataCookers\Process\**" />
+    <EmbeddedResource Remove="CompositeDataCookers\**" />
+    <EmbeddedResource Remove="DataProcessors\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="SourceDataCookers\NewFolder1\**" />
+    <EmbeddedResource Remove="SourceDataCookers\Process\**" />
+    <None Remove="CompositeDataCookers\**" />
+    <None Remove="DataProcessors\**" />
+    <None Remove="NewFolder\**" />
+    <None Remove="SourceDataCookers\NewFolder1\**" />
+    <None Remove="SourceDataCookers\Process\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataOutputTypes\IContextSwitch.cs" />
+    <Compile Remove="Tables\CpuTable.cs" />
+    <Compile Remove="Tables\ProcessTable.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\CpuTablePrebuiltConfigurations.json" />
+    <None Remove="Resources\FileEventsTablePrebuiltConfigurations.json" />
+    <None Remove="Resources\ProcessTablePrebuiltConfigurations.json" />
+    <None Remove="Tables\GenericEventTablePrebuiltConfigurations.json" />
+    <None Remove="Tables\ProcessTablePrebuildConfiguations.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.57" GeneratePathProperty="true">
+      <IncludeAssets>compile</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerfCds\PerfCds.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\DiskActivityPrebuiltConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\GenericEventTablePrebuiltConfigurations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\SyscallTablePrebuiltConfigurations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+<ItemGroup>
+  <TraceEventWorkaround Include="$(PkgMicrosoft_Diagnostics_Tracing_Traceevent)\lib\netstandard2.0\Microsoft.Diagnostics.Tracing.TraceEvent.dll;$(PkgMicrosoft_Diagnostics_Tracing_Traceevent)\lib\netstandard2.0\Microsoft.Diagnostics.FastSerialization.dll" />
+</ItemGroup>
+<Target Name="CopyRulesToTarget" AfterTargets="Build">
+  <Copy SourceFiles="@(TraceEventWorkaround)" DestinationFolder="$(TargetDir)" />
+</Target>
+  
+  <Target Name="PostBuild" AfterTargets="DeployStagedFiles">
+    <Exec Command="CALL XCOPY /dickherfy $(ProjectDir)..\LttngDataExtensions\$(OutDir)WPA_Testing\CustomDataSources\LTTngDataExtensions $(ProjectDir)$(OutDir)WPA_Testing\CustomDataSources\LTTngDataExtensions" />
+  </Target>
+
+</Project>
