@@ -1,0 +1,257 @@
+﻿{
+  "Tables": [
+    {
+      "Configurations": [
+        {
+          "ChartType": 0,
+          "ColumnRoles": [
+            {
+              "Key": 2,
+              "Value": {
+                "DisplayHints": {
+                  "AggregationMode": 0,
+                  "IsVisible": true,
+                  "SortOrder": 0,
+                  "SortPriority": 3,
+                  "TextAlignment": 0,
+                  "Width": 100
+                },
+                "Metadata": {
+                  "Description": "Syscall Start Time",
+                  "Guid": "F8BBE984-0241-4DAC-99F4-A5D07DF0571A",
+                  "Name": "Syscall Start Time"
+                }
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "DisplayHints": {
+                  "AggregationMode": 0,
+                  "IsVisible": true,
+                  "SortOrder": 0,
+                  "SortPriority": 3,
+                  "TextAlignment": 0,
+                  "Width": 100
+                },
+                "Metadata": {
+                  "Description": "Syscall End Time",
+                  "Guid": "4F3066C1-C66E-4E94-847C-5D36626DA824",
+                  "Name": "Syscall End Time"
+                }
+              }
+            }
+          ],
+          "Columns": [
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 200
+              },
+              "Metadata": {
+                "Description": "Syscall Name",
+                "Guid": "BB6ADD3C-CECB-4338-8FC2-079397839233",
+                "Name": "Syscall Name"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "CellFormat": null,
+                "ColumnParameter": null,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 80
+              },
+              "Metadata": {
+                "Description": "Pivot Column",
+                "Guid": "319e867f-245a-436e-9735-db620f844edc",
+                "Name": "Pivot Column"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 3,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 200
+              },
+              "Metadata": {
+                "Description": "Syscall Name",
+                "Guid": "BB6ADD3C-CECB-4338-8FC2-079397839233",
+                "Name": "Count"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 2,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Sum Duration",
+                "Guid": "2C63CD3D-985A-4F06-AE79-042BC3B75C73",
+                "Name": "Duration"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 1,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Avg Duration",
+                "Guid": "2C63CD3D-985A-4F06-AE79-042BC3B75C73",
+                "Name": "Duration"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 4,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Min Duration",
+                "Guid": "2C63CD3D-985A-4F06-AE79-042BC3B75C73",
+                "Name": "Duration"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 5,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Max Duration",
+                "Guid": "2C63CD3D-985A-4F06-AE79-042BC3B75C73",
+                "Name": "Duration"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "CellFormat": null,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": -1,
+                "TextAlignment": 0,
+                "Width": 80
+              },
+              "Metadata": {
+                "Description": "Thread Id",
+                "Guid": "ce4c85b3-86d2-4be7-8b13-8e9ba9aaff7b",
+                "IsPercent": false,
+                "Name": "Thread Id"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "CellFormat": null,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 2,
+                "TextAlignment": 0,
+                "Width": 132
+              },
+              "Metadata": {
+                "Description": "Thread's Command",
+                "Guid": "0b2dc181-b52a-4091-81b7-e930238607be",
+                "IsPercent": false,
+                "Name": "Thread's Command"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 80
+              },
+              "Metadata": {
+                "Description": "Right Freeze Column",
+                "Guid": "a755cec5-bbc4-4e9f-bdb3-cb78b56ddcfa",
+                "Name": "Right Freeze Column"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 80
+              },
+              "Metadata": {
+                "Description": "Graph Column",
+                "Guid": "a5ce8faf-5668-49fc-82bc-d2c482086c06",
+                "Name": "Graph Column"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 3,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Syscall Start Time",
+                "Guid": "F8BBE984-0241-4DAC-99F4-A5D07DF0571A",
+                "Name": "Start Time"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Syscall End Time",
+                "Guid": "4F3066C1-C66E-4E94-847C-5D36626DA824",
+                "Name": "End Time"
+              }
+            }
+          ],
+          "Layout": 3,
+          "Name": "Syscall Latency"
+        }
+      ],
+      "DefaultConfigurationName": "Syscall Latency",
+      "TableId": "52A9B61F-DEB5-4F3D-A5E8-210ABC0022C0"
+    }
+  ],
+  "Version": 0.1
+}

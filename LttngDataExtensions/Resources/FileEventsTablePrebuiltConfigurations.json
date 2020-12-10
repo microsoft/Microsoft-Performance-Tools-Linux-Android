@@ -1,0 +1,145 @@
+﻿{
+  "Tables": [
+    {
+      "Configurations": [
+        {
+          "ChartType": 0,
+          "ColumnRoles": [
+            {
+              "Key": 2,
+              "Value": {
+                "DisplayHints": {
+                  "AggregationMode": 0,
+                  "IsVisible": true,
+                  "SortOrder": 0,
+                  "SortPriority": 3,
+                  "TextAlignment": 0,
+                  "Width": 100
+                },
+                "Metadata": {
+                  "Description": "File Event Start Time",
+                  "Guid": "C00F0244-914A-4A03-A4ED-47CF94940DE8",
+                  "Name": "File Event Start Time"
+                }
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "DisplayHints": {
+                  "AggregationMode": 0,
+                  "IsVisible": true,
+                  "SortOrder": 0,
+                  "SortPriority": 3,
+                  "TextAlignment": 0,
+                  "Width": 100
+                },
+                "Metadata": {
+                  "Description": "File Event End Time",
+                  "Guid": "DB3593DB-C8B2-452A-847A-3F302307B8C4",
+                  "Name": "File Event End Time"
+                }
+              }
+            }
+          ],
+          "Columns": [
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 200
+              },
+              "Metadata": {
+                "Description": "File Event Name",
+                "Guid": "A3BA2CFE-1390-4375-9054-3C2D993B8219",
+                "Name": "Event"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 3,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "File Event Start Time",
+                "Guid": "C00F0244-914A-4A03-A4ED-47CF94940DE8",
+                "Name": "Start Time"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "File Event End Time",
+                "Guid": "DB3593DB-C8B2-452A-847A-3F302307B8C4",
+                "Name": "End Time"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "File Event Duration in Nanoseconds",
+                "Guid": "B86947FC-86FD-4346-B7CB-D0DB4FF2635D",
+                "Name": "Duration (ns)"
+              }
+            },
+            {
+              "DisplayHints": {
+                "AggregationMode": 0,
+                "IsVisible": true,
+                "SortOrder": 0,
+                "SortPriority": 0,
+                "TextAlignment": 0,
+                "Width": 100
+              },
+              "Metadata": {
+                "Description": "Size of the operation",
+                "Guid": "1C55AEC5-4351-4227-A48A-6D8E00A2F2D3",
+                "Name": "Size"
+              },
+              {
+                "DisplayHints": {
+                  "AggregationMode": 0,
+                  "IsVisible": true,
+                  "SortOrder": 0,
+                  "SortPriority": 0,
+                  "TextAlignment": 0,
+                  "Width": 100
+                },
+                "Metadata": {
+                  "Description": "File involved in the event",
+                  "Guid": "62A57C1A-45AE-4A81-B2D9-850A2C8D53C8",
+                  "Name": "File Path"
+                }
+              }
+          ],
+          "Layout": 3,
+          "Name": "Default"
+        }
+      ],
+      "DefaultConfigurationName": "Default",
+      "TableId": "A636196C-2FD9-453D-B315-2FC07AD06A26"
+    }
+  ],
+  "Version": 0.1
+}

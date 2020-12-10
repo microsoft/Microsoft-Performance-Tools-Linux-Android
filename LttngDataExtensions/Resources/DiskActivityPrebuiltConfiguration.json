@@ -1,0 +1,362 @@
+{
+    "Tables": [
+        {
+            "Configurations": [
+                {
+                    "ChartType": 0,
+                    "ColumnRoles": [
+                        {
+                            "Key": 3,
+                            "Value": {
+                                "DisplayHints": {
+                                    "AggregationMode": 0,
+                                    "IsVisible": true,
+                                    "SortOrder": 0,
+                                    "SortPriority": 7,
+                                    "TextAlignment": 0,
+                                    "Width": 99
+                                },
+                                "Metadata": {
+                                    "Description": "Complete Time",
+                                    "Guid": "9c0f7be4-90d9-4098-abcb-ad767329c65b",
+                                    "Name": "Complete Time"
+                                }
+                            }
+                        },
+                        {
+                            "Key": 6,
+                            "Value": {
+                                "DisplayHints": {
+                                    "AggregationMode": 0,
+                                    "IsVisible": true,
+                                    "SortOrder": 0,
+                                    "SortPriority": 1,
+                                    "TextAlignment": 1,
+                                    "Width": 117
+                                },
+                                "Metadata": {
+                                    "Description": "Device Id",
+                                    "Guid": "ec918167-5a00-467a-abe6-f4c2e14b5c31",
+                                    "Name": "Device Id"
+                                }
+                            }
+                        }
+                    ],
+                  "Columns": [
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 4,
+                        "TextAlignment": 1,
+                        "Width": 117
+                      },
+                      "Metadata": {
+                        "Description": "Device Id",
+                        "Guid": "ec918167-5a00-467a-abe6-f4c2e14b5c31",
+                        "Name": "Device Id"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 1,
+                        "SortPriority": 5,
+                        "TextAlignment": 1,
+                        "Width": 117
+                      },
+                      "Metadata": {
+                        "Description": "Name",
+                        "Guid": "0DF88D6A-2583-460B-B98B-13079DF731DA",
+                        "Name": "Name"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Pivot Column",
+                        "Guid": "319e867f-245a-436e-9735-db620f844edc",
+                        "Name": "Pivot Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Left Freeze Column",
+                        "Guid": "4d35a44e-804b-454e-9375-568543e198c2",
+                        "Name": "Left Freeze Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 11,
+                        "TextAlignment": 1,
+                        "Width": 108
+                      },
+                      "Metadata": {
+                        "Description": "File involved in the IO activity",
+                        "Guid": "D0642DC5-E486-469F-991A-70EBC63F4056",
+                        "Name": "Filepath"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 5,
+                        "TextAlignment": 1,
+                        "Width": 108
+                      },
+                      "Metadata": {
+                        "Description": "Sector Number",
+                        "Guid": "8c1df470-bc47-43bc-bf35-68fbadd725cf",
+                        "Name": "Sector Number"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 6,
+                        "TextAlignment": 0,
+                        "Width": 138
+                      },
+                      "Metadata": {
+                        "Description": "Disk Offset",
+                        "Guid": "c39e3639-31a5-42e0-86d5-9cdaf4e57cea",
+                        "Name": "Disk Offset"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 2,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 7,
+                        "TextAlignment": 0,
+                        "Width": 112
+                      },
+                      "Metadata": {
+                        "Description": "Size",
+                        "Guid": "bde426c2-1cfd-425b-8ad6-37378daffc06",
+                        "Name": "Size"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 5,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 1,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Size",
+                        "Guid": "bde426c2-1cfd-425b-8ad6-37378daffc06",
+                        "Name": "Size"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 5,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 17,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Error",
+                        "Guid": "BF7D9C8B-600B-4FFC-A016-2B4F59B9DDF6",
+                        "Name": "Error"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 8,
+                        "TextAlignment": 0,
+                        "Width": 107
+                      },
+                      "Metadata": {
+                        "Description": "Insert Time",
+                        "Guid": "f057fee1-1ddf-419a-a7c2-150929825bc5",
+                        "Name": "Insert Time"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 9,
+                        "TextAlignment": 0,
+                        "Width": 112
+                      },
+                      "Metadata": {
+                        "Description": "Issue Time",
+                        "Guid": "b9515398-b00f-4ca4-819f-a77292f97cb4",
+                        "Name": "Issue Time"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 10,
+                        "TextAlignment": 0,
+                        "Width": 99
+                      },
+                      "Metadata": {
+                        "Description": "Complete Time",
+                        "Guid": "9c0f7be4-90d9-4098-abcb-ad767329c65b",
+                        "Name": "Complete Time"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 5,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 2,
+                        "TextAlignment": 0,
+                        "Width": 120
+                      },
+                      "Metadata": {
+                        "Description": "IO Time",
+                        "Guid": "985c8096-6a60-4a59-8bef-17335c7896f5",
+                        "Name": "IO Time"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 2,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 2,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 120
+                      },
+                      "Metadata": {
+                        "Description": "IO Time",
+                        "Guid": "985c8096-6a60-4a59-8bef-17335c7896f5",
+                        "Name": "IO Time"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Right Freeze Column",
+                        "Guid": "a755cec5-bbc4-4e9f-bdb3-cb78b56ddcfa",
+                        "Name": "Right Freeze Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "CellFormat": null,
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 80
+                      },
+                      "Metadata": {
+                        "Description": "Graph Column",
+                        "Guid": "a5ce8faf-5668-49fc-82bc-d2c482086c06",
+                        "Name": "Graph Column"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 2,
+                        "CellFormat": "N2",
+                        "ColumnParameter": null,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 3,
+                        "TextAlignment": 0,
+                        "Width": 157
+                      },
+                      "Metadata": {
+                        "Description": "Percent of viewport range time that is consumed by this activity.",
+                        "Guid": "db9c35d9-693a-43df-9bc0-0e54da389144",
+                        "Name": "Time Percent"
+                      }
+                    }
+                  ],
+                    "Layout": 3,
+                    "Name": "DiskActivityByDevice"
+                }
+            ],
+            "DefaultConfigurationName": "DiskActivityByDevice",
+            "TableId": "B18A134C-0B62-4C02-B729-6579C8223AB3"
+        }
+    ],
+    "Version": 0.1
+}
