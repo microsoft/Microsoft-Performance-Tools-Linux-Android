@@ -38,7 +38,7 @@ jobs:
       displayName: DotNetCore restore
       inputs:
         command: 'restore'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Performance-Tools-Linux/Microsoft-Perf-Tools-Linux.sln'
+        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux.sln'
         verbosityRestore: $(Debug.NuGetVerbosityRestore)
         includeNugetOrg: true
 
