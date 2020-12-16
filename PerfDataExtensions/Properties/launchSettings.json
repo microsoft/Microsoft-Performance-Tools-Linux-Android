@@ -3,7 +3,7 @@
     "PerfDataExtensions": {
       "commandName": "Executable",
       "executablePath": "C:\\Tools\\WPT\\latest\\wpa.exe",
-      "commandLineArgs": "-addsearchdir C:\\src\\LTTNG.CTF\\PerfDataExtensions\\bin\\Debug\\netstandard2.1"
+      "commandLineArgs": "-addsearchdir C:\\src\\Microsoft-Performance-Tools-Linux\\PerfDataExtensions\\bin\\Debug\\netstandard2.1"
     }
   }
 }

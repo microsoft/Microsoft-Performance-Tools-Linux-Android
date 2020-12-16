@@ -35,6 +35,11 @@ namespace LttngDataExtensions.SourceDataCookers.Syscall
         {
         }
 
+        public DataCookerPath GetCookerPath()
+        {
+            return Path;
+        }
+
         private static readonly HashSet<DataCookerPath> RequiredPaths = new HashSet<DataCookerPath>
         {
             LttngThreadDataCooker.DataCookerPath

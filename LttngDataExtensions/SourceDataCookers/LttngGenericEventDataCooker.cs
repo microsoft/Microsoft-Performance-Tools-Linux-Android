@@ -28,6 +28,11 @@ namespace LttngDataExtensions.SourceDataCookers
             this.Events = new ProcessedEventData<LttngGenericEvent>();
         }
 
+        public DataCookerPath GetCookerPath()
+        {
+            return Path;
+        }
+
         /// <summary>
         /// No specific data keys for generic events, rather, the ReceiveAllEvents option is set.
         /// </summary>

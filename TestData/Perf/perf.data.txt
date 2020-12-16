@@ -1,0 +1,742 @@
+perf  7496/7496  [003] 264874.155353:    1001001                cpu-clock: 
+	ffffffff810d47be smp_call_function_single ([kernel.kallsyms])
+	ffffffff8114e5b8 event_function_call ([kernel.kallsyms])
+	ffffffff81146914 perf_event_for_each_child ([kernel.kallsyms])
+	ffffffff81152237 _perf_ioctl ([kernel.kallsyms])
+	ffffffff8115273c perf_ioctl ([kernel.kallsyms])
+	ffffffff811f0655 do_vfs_ioctl ([kernel.kallsyms])
+	ffffffff811f0c20 ksys_ioctl ([kernel.kallsyms])
+	ffffffff811f0c66 __x64_sys_ioctl ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f81ee50c5d7 ioctl (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55a3cf3f7443 perf_evlist__enable (/usr/bin/perf)
+	    55a3cf377876 cmd_record (/usr/bin/perf)
+	    55a3cf3e2411 run_builtin (/usr/bin/perf)
+	    55a3cf3e271e handle_internal_command (/usr/bin/perf)
+	    55a3cf360d01 main (/usr/bin/perf)
+	    7f81ee417b97 __libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)
+	5716258d4c544155 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.155353:    1001001                cpu-clock: 
+	    7f159287dcf1 [unknown] (/lib/x86_64-linux-gnu/libm-2.27.so)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7499/7499  [004] 264874.155380:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+swapper     0/0     [007] 264874.155395:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.155466:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.157433:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff811aa023 __vmalloc_node_range ([kernel.kallsyms])
+	ffffffff8104e62e copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [005] 264874.160466:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7499/7499  [004] 264874.165363:    1001001                cpu-clock: 
+	    55b631347986 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7500/7500  [006] 264874.165363:    1001001                cpu-clock: 
+	    7f15927e1a6b [unknown] (/lib/x86_64-linux-gnu/libm-2.27.so)
+	8d005484411d8d48 [unknown] ([unknown])
+
+perf  7496/7496  [003] 264874.165386:    1001001                cpu-clock: 
+	ffffffff810d47be smp_call_function_single ([kernel.kallsyms])
+	ffffffff8114e5b8 event_function_call ([kernel.kallsyms])
+	ffffffff81146914 perf_event_for_each_child ([kernel.kallsyms])
+	ffffffff81152237 _perf_ioctl ([kernel.kallsyms])
+	ffffffff8115273c perf_ioctl ([kernel.kallsyms])
+	ffffffff811f0655 do_vfs_ioctl ([kernel.kallsyms])
+	ffffffff811f0c20 ksys_ioctl ([kernel.kallsyms])
+	ffffffff811f0c66 __x64_sys_ioctl ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f81ee50c5d7 ioctl (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55a3cf3f7443 perf_evlist__enable (/usr/bin/perf)
+	    55a3cf377876 cmd_record (/usr/bin/perf)
+	    55a3cf3e2411 run_builtin (/usr/bin/perf)
+	    55a3cf3e271e handle_internal_command (/usr/bin/perf)
+	    55a3cf360d01 main (/usr/bin/perf)
+	    7f81ee417b97 __libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)
+	5716258d4c544155 [unknown] ([unknown])
+
+swapper     0/0     [007] 264874.165407:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [002] 264874.165458:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.165467:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [005] 264874.170499:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7501/7501  [002] 264874.175353:    1001001                cpu-clock: 
+	    55b6313473f4 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7499/7499  [004] 264874.175357:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7500/7500  [006] 264874.175371:    1001001                cpu-clock: 
+	    55b631347b12 hanoi (/usr/bin/stress-ng)
+
+perf  7496/7496  [003] 264874.175400:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff81192bd3 __do_fault ([kernel.kallsyms])
+	ffffffff81198630 __handle_mm_fault ([kernel.kallsyms])
+	ffffffff81198ae6 handle_mm_fault ([kernel.kallsyms])
+	ffffffff8103eede __do_page_fault ([kernel.kallsyms])
+	ffffffff81a00ffe page_fault ([kernel.kallsyms])
+	    55a3cf4098ab perf_mmap__push (/usr/bin/perf)
+	    55a3cf3750bc record__mmap_read_evlist.constprop.30 (/usr/bin/perf)
+	    55a3cf377001 cmd_record (/usr/bin/perf)
+	    55a3cf3e2411 run_builtin (/usr/bin/perf)
+	    55a3cf3e271e handle_internal_command (/usr/bin/perf)
+	    55a3cf360d01 main (/usr/bin/perf)
+	    7f81ee417b97 __libc_start_main (/lib/x86_64-linux-gnu/libc-2.27.so)
+	5716258d4c544155 [unknown] ([unknown])
+
+swapper     0/0     [007] 264874.175422:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.175487:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.176352:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff81168341 __get_free_pages ([kernel.kallsyms])
+	ffffffff8119661a __pud_alloc ([kernel.kallsyms])
+	ffffffff811972c0 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [005] 264874.180489:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7501/7501  [002] 264874.185355:    1001001                cpu-clock: 
+	    55b6313473d5 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.185356:    1001001                cpu-clock: 
+	    55b6314221f9 __bid128_to_binary80 (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.185356:    1001001                cpu-clock: 
+	    55b631347986 is_prime (/usr/bin/stress-ng)
+
+swapper     0/0     [003] 264874.185393:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.185398:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.186697:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff811940a9 __pte_alloc ([kernel.kallsyms])
+	ffffffff81197079 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [000] 264874.186782:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [005] 264874.190477:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7500/7500  [006] 264874.195356:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff811983c7 __handle_mm_fault ([kernel.kallsyms])
+	ffffffff81198ae6 handle_mm_fault ([kernel.kallsyms])
+	ffffffff8103eede __do_page_fault ([kernel.kallsyms])
+	ffffffff81a00ffe page_fault ([kernel.kallsyms])
+	    55b631347078 stress_cpu_matrix_prod (/usr/bin/stress-ng)
+	    55b631347f10 stress_cpu_all (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7501/7501  [002] 264874.195361:    1001001                cpu-clock: 
+	    55b6313473d0 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7499/7499  [004] 264874.195361:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+swapper     0/0     [003] 264874.195407:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.195412:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.195526:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.196707:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff81168341 __get_free_pages ([kernel.kallsyms])
+	ffffffff8119661a __pud_alloc ([kernel.kallsyms])
+	ffffffff811972c0 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [005] 264874.200480:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7501/7501  [002] 264874.205354:    1001001                cpu-clock: 
+	    55b6313473d0 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.205354:    1001001                cpu-clock: 
+	    55b631340844 stress_cpu_nsqrt (/usr/bin/stress-ng)
+	      7570632d67 [unknown] ([unknown])
+
+stress-ng-cpu  7499/7499  [004] 264874.205357:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+swapper     0/0     [003] 264874.205386:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.205399:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.205646:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff811940a9 __pte_alloc ([kernel.kallsyms])
+	ffffffff81197079 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [000] 264874.205715:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [005] 264874.210472:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7501/7501  [002] 264874.215355:    1001001                cpu-clock: 
+	    55b6313473d0 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.215355:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.215355:    1001001                cpu-clock: 
+	    55b6313585c0 queens_try (/usr/bin/stress-ng)
+
+swapper     0/0     [003] 264874.215385:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.215395:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.215652:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff811940a9 __pte_alloc ([kernel.kallsyms])
+	ffffffff81197079 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [000] 264874.216726:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [005] 264874.220465:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7500/7500  [006] 264874.225352:    1001001                cpu-clock: 
+	    55b631347986 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.225352:    1001001                cpu-clock: 
+	    55b631347869 stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7501/7501  [002] 264874.225359:    1001001                cpu-clock: 
+	    55b63134740a [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+swapper     0/0     [007] 264874.225375:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [003] 264874.225400:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.225442:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.226665:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff811940a9 __pte_alloc ([kernel.kallsyms])
+	ffffffff81197079 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [005] 264874.230484:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7499/7499  [004] 264874.235354:    1001001                cpu-clock: 
+	    55b63134785d stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.235355:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7501/7501  [002] 264874.235385:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff8119895c __handle_mm_fault ([kernel.kallsyms])
+	ffffffff81198ae6 handle_mm_fault ([kernel.kallsyms])
+	ffffffff8103eede __do_page_fault ([kernel.kallsyms])
+	ffffffff81a00ffe page_fault ([kernel.kallsyms])
+	    7f1592811590 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+swapper     0/0     [007] 264874.235405:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [003] 264874.235406:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7502/7502  [000] 264874.238829:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff8119895c __handle_mm_fault ([kernel.kallsyms])
+	ffffffff81198ae6 handle_mm_fault ([kernel.kallsyms])
+	ffffffff8103eede __do_page_fault ([kernel.kallsyms])
+	ffffffff81a00ffe page_fault ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+swapper     0/0     [005] 264874.240471:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7500/7500  [006] 264874.245356:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.245357:    1001001                cpu-clock: 
+	    55b631347869 stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+swapper     0/0     [003] 264874.245408:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.245452:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7502/7502  [000] 264874.245992:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff810447e7 pte_alloc_one ([kernel.kallsyms])
+	ffffffff8119895c __handle_mm_fault ([kernel.kallsyms])
+	ffffffff81198ae6 handle_mm_fault ([kernel.kallsyms])
+	ffffffff8103eede __do_page_fault ([kernel.kallsyms])
+	ffffffff81a00ffe page_fault ([kernel.kallsyms])
+	    55b63133d690 grantpt@plt (/usr/bin/stress-ng)
+
+stress-ng  7498/7498  [001] 264874.247221:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff81196710 __pmd_alloc ([kernel.kallsyms])
+	ffffffff81197129 copy_page_range ([kernel.kallsyms])
+	ffffffff8104f41b copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+stress-ng-cpu  7501/7501  [002] 264874.255356:    1001001                cpu-clock: 
+	    55b63134779d [unknown] ([unknown])
+	    55b631347f10 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.255356:    1001001                cpu-clock: 
+	    55b631347986 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.255357:    1001001                cpu-clock: 
+	    55b631347869 stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+swapper     0/0     [007] 264874.255391:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [000] 264874.255400:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8274efc0 start_kernel ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [005] 264874.255401:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [003] 264874.255405:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.256285:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff811aa023 __vmalloc_node_range ([kernel.kallsyms])
+	ffffffff8104e62e copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+stress-ng-cpu  7503/7503  [005] 264874.265360:    1001001                cpu-clock: 
+	    55b6313473d5 ackermann (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7501/7501  [002] 264874.265360:    1001001                cpu-clock: 
+	    55b63134778e [unknown] ([unknown])
+	    55b631347f10 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7502/7502  [000] 264874.265360:    1001001                cpu-clock: 
+	    55b6313473d7 ackermann (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7499/7499  [004] 264874.265361:    1001001                cpu-clock: 
+	    55b6313478a0 stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.265361:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
+
+swapper     0/0     [007] 264874.265410:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [003] 264874.265413:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng  7498/7498  [001] 264874.266294:    1001001                cpu-clock: 
+	ffffffff8199bb07 clear_page_rep ([kernel.kallsyms])
+	ffffffff81166b5b get_page_from_freelist ([kernel.kallsyms])
+	ffffffff811681a9 __alloc_pages_nodemask ([kernel.kallsyms])
+	ffffffff811aa023 __vmalloc_node_range ([kernel.kallsyms])
+	ffffffff8104e62e copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+stress-ng-cpu  7503/7503  [005] 264874.275359:    1001001                cpu-clock: 
+	    55b6313473d4 ackermann (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7501/7501  [002] 264874.275359:    1001001                cpu-clock: 
+	    55b631347795 [unknown] ([unknown])
+	    55b631347f10 [unknown] ([unknown])
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng  7498/7498  [001] 264874.275360:    1001001                cpu-clock: 
+	ffffffff811a7220 find_vmap_area ([kernel.kallsyms])
+	ffffffff811a969a find_vm_area ([kernel.kallsyms])
+	ffffffff8104e654 copy_process.part.57 ([kernel.kallsyms])
+	ffffffff8104fe12 _do_fork ([kernel.kallsyms])
+	ffffffff810024c5 do_syscall_64 ([kernel.kallsyms])
+	ffffffff81a00088 entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+	    7f1591215b1c __libc_fork (/lib/x86_64-linux-gnu/libc-2.27.so)
+	    55b6318b8e9e stress_run (/usr/bin/stress-ng)
+
+stress-ng-cpu  7500/7500  [006] 264874.275360:    1001001                cpu-clock: 
+	    55b631347986 is_prime (/usr/bin/stress-ng)
+
+stress-ng-cpu  7499/7499  [004] 264874.275363:    1001001                cpu-clock: 
+	    55b6313478a3 stress_cpu_sieve (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7502/7502  [000] 264874.275367:    1001001                cpu-clock: 
+	    55b6313473ea ackermann (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+swapper     0/0     [003] 264874.275409:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+swapper     0/0     [007] 264874.275454:    1001001                cpu-clock: 
+	ffffffff819a821e native_safe_halt ([kernel.kallsyms])
+	ffffffff819a7f1c default_idle ([kernel.kallsyms])
+	ffffffff81082f06 do_idle ([kernel.kallsyms])
+	ffffffff810830ff cpu_startup_entry ([kernel.kallsyms])
+	ffffffff8102e1f5 start_secondary ([kernel.kallsyms])
+	ffffffff810000d4 secondary_startup_64 ([kernel.kallsyms])
+
+stress-ng-cpu  7501/7501  [002] 264874.285364:    1001001                cpu-clock: 
+	    55b63135c125 [unknown] ([unknown])
+	e2be15f6f4de22a9 [unknown] ([unknown])
+
+stress-ng-cpu  7503/7503  [005] 264874.285367:    1001001                cpu-clock: 
+	    55b6313473ea ackermann (/usr/bin/stress-ng)
+	8d005484411d8d48 [unknown] ([unknown])
+
+stress-ng-cpu  7500/7500  [006] 264874.285367:    1001001                cpu-clock: 
+	    55b631347993 is_prime (/usr/bin/stress-ng)
