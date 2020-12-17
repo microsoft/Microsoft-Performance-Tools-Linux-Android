@@ -19,6 +19,8 @@ namespace DmesgIsoMPTAddin
     {
         public const string CookerId = "DmesgIsoCooker";
 
+        public static readonly DataCookerPath CookerPath = new DataCookerPath(SourceParserIds.DmesgIsoLog, CookerId);
+
         public ReadOnlyHashSet<LogParsedDataKey> DataKeys => new ReadOnlyHashSet<LogParsedDataKey>(
             new HashSet<LogParsedDataKey>(
                 new[] {
@@ -50,7 +52,7 @@ namespace DmesgIsoMPTAddin
         private List<LogEntry> logEntries;
         private LogContext context;
 
-        public DmesgIsoDataCooker() : this(new DataCookerPath(SourceParserIds.DmesgIsoLog, CookerId))
+        public DmesgIsoDataCooker() : this(CookerPath)
         {
         }
 

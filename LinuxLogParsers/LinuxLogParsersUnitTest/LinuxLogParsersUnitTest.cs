@@ -28,6 +28,7 @@ namespace LinuxLogParsersUnitTest
 
             var runtime = Engine.Create();
             runtime.AddFile(dmesgDataPath.FullName);
+            runtime.EnableCooker(DmesgIsoDataCooker.CookerPath);
 
             var runtimeExecutionResults = runtime.Process();
             var cooker = runtime.SourceDataCookers.Where(c => c.DataCookerId == DmesgIsoDataCooker.CookerId).First();
