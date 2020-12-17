@@ -18,6 +18,15 @@
 If you want to see a demo or get more in-depth info on using these tools check out a talk given at the [Linux Tracing Summit](https://www.tracingsummit.org/ts/2019/):
 >Linux & Windows Perf Analysis using WPA, ([slides](https://www.tracingsummit.org/ts/2019/files/Tracingsummit2019-wpa-berg-gibeau.pdf)) ([video](https://youtu.be/HUbVaIi-aaw))
 
+# Prerequisites
+
+## Runtime prereqs
+- [.NET Core Runtime 3.1.x](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+
+## Dev prereqs
+- [.NET Core SDK 3.1.x](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- [Visual Studio](https://visualstudio.microsoft.com/), [VSCode](https://visualstudio.microsoft.com/), or your favorite editor!
+
 # Download
 See [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases)
 
@@ -25,7 +34,7 @@ See [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/re
 The tools can be run in several modes:
 
 - Cross-platform with .NET Core
-  - Used as a lib
+  - Used as a library
   - With a driver program for example dumping to screen or text format
 - (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
 - (Coming soon) (Windows) Using the WPA GUI to load these tools as plugins
@@ -36,7 +45,7 @@ Please see [Linux Trace Log Capture](LinuxTraceLogCapture.md)
 # How to load the logs in the UI
 Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
 
-- LTTng - If you just need to open only a LTTng trace use
+- LTTng - If you just need to open only a LTTng trace by itself in folder format
   - WPA -> Open -> Folder (Select CTF folder)
 - Unified (LTTng or other multiple different logs files together)
   - If you want to open other logs together in single timeline - Copy other Linux logs you want to open to single folder
