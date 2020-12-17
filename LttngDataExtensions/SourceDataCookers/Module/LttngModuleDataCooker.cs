@@ -30,11 +30,6 @@ namespace LttngDataExtensions.SourceDataCookers.Module
         {
         }
 
-        public DataCookerPath GetCookerPath()
-        {
-            return Path;
-        }
-
         private static readonly HashSet<DataCookerPath> RequiredPaths = new HashSet<DataCookerPath>
         {
             LttngThreadDataCooker.DataCookerPath

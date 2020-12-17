@@ -24,11 +24,6 @@ namespace LttngDataExtensions.SourceDataCookers.Diagnostic_Messages
         {
         }
 
-        public DataCookerPath GetCookerPath()
-        {
-            return Path;
-        }
-
         public override string Description => "Processes LTTNG events that are diagnostic messages.";
 
 

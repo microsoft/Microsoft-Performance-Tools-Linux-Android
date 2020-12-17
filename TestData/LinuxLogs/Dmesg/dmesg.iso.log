@@ -1,0 +1,1871 @@
+2019-05-09T20:02:30,000000+0000 Linux version 4.15.0-1036-azure (buildd@lgw01-amd64-003) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.10)) #38~16.04.1-Ubuntu SMP Fri Dec 7 03:21:52 UTC 2018 (Ubuntu 4.15.0-1036.38~16.04.1-azure 4.15.18)
+2019-05-09T20:02:30,000000+0000 Command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0-1036-azure root=UUID=cd3cbe6d-1564-4cf9-a74b-a822273ef6c9 rw console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 initcall_debug init=/sbin/custom_init
+2019-05-09T20:02:30,000000+0000 KERNEL supported cpus:
+2019-05-09T20:02:30,000000+0000   Intel GenuineIntel
+2019-05-09T20:02:30,000000+0000   AMD AuthenticAMD
+2019-05-09T20:02:30,000000+0000   Centaur CentaurHauls
+2019-05-09T20:02:30,000000+0000 x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+2019-05-09T20:02:30,000000+0000 x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+2019-05-09T20:02:30,000000+0000 x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+2019-05-09T20:02:30,000000+0000 x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+2019-05-09T20:02:30,000000+0000 x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+2019-05-09T20:02:30,000000+0000 e820: BIOS-provided physical RAM map:
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x0000000000100000-0x000000003ffeffff] usable
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x000000003fff0000-0x000000003fffefff] ACPI data
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x000000003ffff000-0x000000003fffffff] ACPI NVS
+2019-05-09T20:02:30,000000+0000 BIOS-e820: [mem 0x0000000100000000-0x000000027fffffff] usable
+2019-05-09T20:02:30,000000+0000 bootconsole [earlyser0] enabled
+2019-05-09T20:02:30,000000+0000 NX (Execute Disable) protection: active
+2019-05-09T20:02:30,000000+0000 SMBIOS 2.3 present.
+2019-05-09T20:02:30,000000+0000 DMI: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+2019-05-09T20:02:30,000000+0000 Hypervisor detected: Microsoft Hyper-V
+2019-05-09T20:02:30,000000+0000 Hyper-V: features 0x2e7f, hints 0x40c2c
+2019-05-09T20:02:30,000000+0000 Hyper-V Host Build:14393-10.0-0-0.296
+2019-05-09T20:02:30,000000+0000 Hyper-V: LAPIC Timer Frequency: 0xc3500
+2019-05-09T20:02:30,000000+0000 tsc: Marking TSC unstable due to running on Hyper-V
+2019-05-09T20:02:30,000000+0000 Hyper-V: Using ext hypercall for remote TLB flush
+2019-05-09T20:02:30,000000+0000 e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+2019-05-09T20:02:30,000000+0000 e820: remove [mem 0x000a0000-0x000fffff] usable
+2019-05-09T20:02:30,000000+0000 e820: last_pfn = 0x280000 max_arch_pfn = 0x400000000
+2019-05-09T20:02:30,000000+0000 MTRR default type: uncachable
+2019-05-09T20:02:30,000000+0000 MTRR fixed ranges enabled:
+2019-05-09T20:02:30,000000+0000   00000-9FFFF write-back
+2019-05-09T20:02:30,000000+0000   A0000-DFFFF uncachable
+2019-05-09T20:02:30,000000+0000   E0000-FFFFF write-back
+2019-05-09T20:02:30,000000+0000 MTRR variable ranges enabled:
+2019-05-09T20:02:30,000000+0000   0 base 00000000000 mask FFFC0000000 write-back
+2019-05-09T20:02:30,000000+0000   1 base 00100000000 mask FF000000000 write-back
+2019-05-09T20:02:30,000000+0000   2 disabled
+2019-05-09T20:02:30,000000+0000   3 disabled
+2019-05-09T20:02:30,000000+0000   4 disabled
+2019-05-09T20:02:30,000000+0000   5 disabled
+2019-05-09T20:02:30,000000+0000   6 disabled
+2019-05-09T20:02:30,000000+0000   7 disabled
+2019-05-09T20:02:30,000000+0000 x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+2019-05-09T20:02:30,000000+0000 e820: update [mem 0x40000000-0xffffffff] usable ==> reserved
+2019-05-09T20:02:30,000000+0000 e820: last_pfn = 0x3fff0 max_arch_pfn = 0x400000000
+2019-05-09T20:02:30,000000+0000 found SMP MP-table at [mem 0x000ff780-0x000ff78f] mapped at [        (ptrval)]
+2019-05-09T20:02:30,000000+0000 Scanning 1 areas for low memory corruption
+2019-05-09T20:02:30,000000+0000 Base memory trampoline at [        (ptrval)] 99000 size 24576
+2019-05-09T20:02:30,000000+0000 Using GB pages for direct mapping
+2019-05-09T20:02:30,000000+0000 BRK [0x196ce0000, 0x196ce0fff] PGTABLE
+2019-05-09T20:02:30,000000+0000 BRK [0x196ce1000, 0x196ce1fff] PGTABLE
+2019-05-09T20:02:30,000000+0000 BRK [0x196ce2000, 0x196ce2fff] PGTABLE
+2019-05-09T20:02:30,000000+0000 BRK [0x196ce3000, 0x196ce3fff] PGTABLE
+2019-05-09T20:02:30,000000+0000 BRK [0x196ce4000, 0x196ce4fff] PGTABLE
+2019-05-09T20:02:30,000000+0000 RAMDISK: [mem 0x362d6000-0x37162fff]
+2019-05-09T20:02:30,000000+0000 ACPI: Early table checksum verification disabled
+2019-05-09T20:02:30,000000+0000 ACPI: RSDP 0x00000000000F5BF0 000014 (v00 ACPIAM)
+2019-05-09T20:02:30,000000+0000 ACPI: RSDT 0x000000003FFF0000 000040 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: FACP 0x000000003FFF0200 000081 (v02 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: DSDT 0x000000003FFF1D24 003CBE (v01 MSFTVM MSFTVM02 00000002 INTL 02002026)
+2019-05-09T20:02:30,000000+0000 ACPI: FACS 0x000000003FFFF000 000040
+2019-05-09T20:02:30,000000+0000 ACPI: WAET 0x000000003FFF1A80 000028 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: SLIC 0x000000003FFF1AC0 000176 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: OEM0 0x000000003FFF1CC0 000064 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT 0x000000003FFF0800 000140 (v02 VRTUAL MICROSFT 00000001 MSFT 00000001)
+2019-05-09T20:02:30,000000+0000 ACPI: APIC 0x000000003FFF0300 000452 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: OEMB 0x000000003FFFF040 000064 (v01 VRTUAL MICROSFT 06001702 MSFT 00000097)
+2019-05-09T20:02:30,000000+0000 ACPI: Local APIC address 0xfee00000
+2019-05-09T20:02:30,000000+0000 SRAT: PXM 0 -> APIC 0x00 -> Node 0
+2019-05-09T20:02:30,000000+0000 SRAT: PXM 0 -> APIC 0x01 -> Node 0
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x3fffffff] hotplug
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x27fffffff] hotplug
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x280200000-0xfdfffffff] hotplug
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x1000000000-0xffffffffff] hotplug
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x10000200000-0x1ffffffffff] hotplug
+2019-05-09T20:02:30,000000+0000 ACPI: SRAT: Node 0 PXM 0 [mem 0x20000200000-0x3ffffffffff] hotplug
+2019-05-09T20:02:30,000000+0000 NUMA: Node 0 [mem 0x00000000-0x3fffffff] + [mem 0x100000000-0x27fffffff] -> [mem 0x00000000-0x27fffffff]
+2019-05-09T20:02:30,000000+0000 NODE_DATA(0) allocated [mem 0x27ffd5000-0x27fffffff]
+2019-05-09T20:02:30,000000+0000 Zone ranges:
+2019-05-09T20:02:30,000000+0000   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+2019-05-09T20:02:30,000000+0000   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+2019-05-09T20:02:30,000000+0000   Normal   [mem 0x0000000100000000-0x000000027fffffff]
+2019-05-09T20:02:30,000000+0000   Device   empty
+2019-05-09T20:02:30,000000+0000 Movable zone start for each node
+2019-05-09T20:02:30,000000+0000 Early memory node ranges
+2019-05-09T20:02:30,000000+0000   node   0: [mem 0x0000000000001000-0x000000000009efff]
+2019-05-09T20:02:30,000000+0000   node   0: [mem 0x0000000000100000-0x000000003ffeffff]
+2019-05-09T20:02:30,000000+0000   node   0: [mem 0x0000000100000000-0x000000027fffffff]
+2019-05-09T20:02:30,000000+0000 Initmem setup node 0 [mem 0x0000000000001000-0x000000027fffffff]
+2019-05-09T20:02:30,000000+0000 On node 0 totalpages: 1834894
+2019-05-09T20:02:30,000000+0000   DMA zone: 64 pages used for memmap
+2019-05-09T20:02:30,000000+0000   DMA zone: 21 pages reserved
+2019-05-09T20:02:30,000000+0000   DMA zone: 3998 pages, LIFO batch:0
+2019-05-09T20:02:30,000000+0000   DMA32 zone: 4032 pages used for memmap
+2019-05-09T20:02:30,000000+0000   DMA32 zone: 258032 pages, LIFO batch:31
+2019-05-09T20:02:30,000000+0000   Normal zone: 24576 pages used for memmap
+2019-05-09T20:02:30,000000+0000   Normal zone: 1572864 pages, LIFO batch:31
+2019-05-09T20:02:30,000000+0000 Reserved but unavailable: 98 pages
+2019-05-09T20:02:30,000000+0000 ACPI: PM-Timer IO Port: 0x408
+2019-05-09T20:02:30,000000+0000 ACPI: Local APIC address 0xfee00000
+2019-05-09T20:02:30,000000+0000 ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+2019-05-09T20:02:30,000000+0000 IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+2019-05-09T20:02:30,000000+0000 ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+2019-05-09T20:02:30,000000+0000 ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+2019-05-09T20:02:30,000000+0000 ACPI: IRQ0 used by override.
+2019-05-09T20:02:30,000000+0000 ACPI: IRQ9 used by override.
+2019-05-09T20:02:30,000000+0000 Using ACPI (MADT) for SMP configuration information
+2019-05-09T20:02:30,000000+0000 smpboot: Allowing 2 CPUs, 0 hotplug CPUs
+2019-05-09T20:02:30,000000+0000 e820: [mem 0x40000000-0xffffffff] available for PCI devices
+2019-05-09T20:02:30,000000+0000 Booting paravirtualized kernel on bare hardware
+2019-05-09T20:02:30,000000+0000 clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+2019-05-09T20:02:30,000000+0000 random: get_random_bytes called from start_kernel+0x99/0x51b with crng_init=0
+2019-05-09T20:02:30,000000+0000 setup_percpu: NR_CPUS:8192 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:1
+2019-05-09T20:02:30,000000+0000 percpu: Embedded 45 pages/cpu @        (ptrval) s147456 r8192 d28672 u1048576
+2019-05-09T20:02:30,000000+0000 pcpu-alloc: s147456 r8192 d28672 u1048576 alloc=1*2097152
+2019-05-09T20:02:30,000000+0000 pcpu-alloc: [0] 0 1 
+2019-05-09T20:02:30,000000+0000 Built 1 zonelists, mobility grouping on.  Total pages: 1806201
+2019-05-09T20:02:30,000000+0000 Policy zone: Normal
+2019-05-09T20:02:30,000000+0000 Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0-1036-azure root=UUID=cd3cbe6d-1564-4cf9-a74b-a822273ef6c9 rw console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 initcall_debug init=/sbin/custom_init
+2019-05-09T20:02:30,000000+0000 Calgary: detecting Calgary via BIOS EBDA area
+2019-05-09T20:02:30,000000+0000 Calgary: Unable to locate Rio Grande table in EBDA - bailing!
+2019-05-09T20:02:30,000000+0000 Memory: 7117844K/7339576K available (12300K kernel code, 2292K rwdata, 4028K rodata, 2256K init, 2372K bss, 221732K reserved, 0K cma-reserved)
+2019-05-09T20:02:30,000000+0000 SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+2019-05-09T20:02:30,000000+0000 Kernel/User page tables isolation: enabled
+2019-05-09T20:02:30,000000+0000 ftrace: allocating 38483 entries in 151 pages
+2019-05-09T20:02:30,000000+0000 Hierarchical RCU implementation.
+2019-05-09T20:02:30,000000+0000 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=2.
+2019-05-09T20:02:30,000000+0000 	Tasks RCU enabled.
+2019-05-09T20:02:30,000000+0000 RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+2019-05-09T20:02:30,000000+0000 NR_IRQS: 524544, nr_irqs: 440, preallocated irqs: 16
+2019-05-09T20:02:30,000000+0000 Console: colour VGA+ 80x25
+2019-05-09T20:02:30,000000+0000 console [tty1] enabled
+2019-05-09T20:02:30,000000+0000 console [ttyS0] enabled
+2019-05-09T20:02:30,000000+0000 bootconsole [earlyser0] disabled
+2019-05-09T20:02:30,000000+0000 ACPI: Core revision 20170831
+2019-05-09T20:02:30,000000+0000 ACPI: 1 ACPI AML tables successfully acquired and loaded
+2019-05-09T20:02:30,000000+0000 APIC: Switch to symmetric I/O mode setup
+2019-05-09T20:02:30,004000+0000 Hyper-V: Using ext hypercalls for IPI
+2019-05-09T20:02:30,008000+0000 Hyper-V: Using MSR based APIC access
+2019-05-09T20:02:30,012000+0000 clocksource: hyperv_clocksource_tsc_page: mask: 0xffffffffffffffff max_cycles: 0x24e6a1710, max_idle_ns: 440795202120 ns
+2019-05-09T20:02:30,044000+0000 ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+2019-05-09T20:02:30,048000+0000 tsc: Detected 2294.685 MHz processor
+2019-05-09T20:02:30,052000+0000 Calibrating delay loop (skipped), value calculated using timer frequency.. 4589.37 BogoMIPS (lpj=9178740)
+2019-05-09T20:02:30,056001+0000 pid_max: default: 32768 minimum: 301
+2019-05-09T20:02:30,060025+0000 Security Framework initialized
+2019-05-09T20:02:30,064002+0000 Yama: becoming mindful.
+2019-05-09T20:02:30,068022+0000 AppArmor: AppArmor initialized
+2019-05-09T20:02:30,080016+0000 Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes)
+2019-05-09T20:02:30,084684+0000 Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes)
+2019-05-09T20:02:30,088028+0000 Mount-cache hash table entries: 16384 (order: 5, 131072 bytes)
+2019-05-09T20:02:30,092024+0000 Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes)
+2019-05-09T20:02:30,096313+0000 mce: CPU supports 1 MCE banks
+2019-05-09T20:02:30,100140+0000 Last level iTLB entries: 4KB 64, 2MB 8, 4MB 8
+2019-05-09T20:02:30,104002+0000 Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0, 1GB 4
+2019-05-09T20:02:30,108004+0000 Spectre V2 : Mitigation: Full generic retpoline
+2019-05-09T20:02:30,112002+0000 Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+2019-05-09T20:02:30,116002+0000 Speculative Store Bypass: Vulnerable
+2019-05-09T20:02:30,136444+0000 Freeing SMP alternatives memory: 36K
+2019-05-09T20:02:30,144677+0000 smpboot: CPU0: Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz (family: 0x6, model: 0x4f, stepping: 0x1)
+2019-05-09T20:02:30,148087+0000 calling  trace_init_flags_sys_exit+0x0/0x14 @ 1
+2019-05-09T20:02:30,148089+0000 initcall trace_init_flags_sys_exit+0x0/0x14 returned 0 after 0 usecs
+2019-05-09T20:02:30,148091+0000 calling  trace_init_flags_sys_enter+0x0/0x14 @ 1
+2019-05-09T20:02:30,148093+0000 initcall trace_init_flags_sys_enter+0x0/0x14 returned 0 after 0 usecs
+2019-05-09T20:02:30,148094+0000 calling  init_hw_perf_events+0x0/0x616 @ 1
+2019-05-09T20:02:30,148095+0000 Performance Events: unsupported p6 CPU model 79 no PMU driver, software events only.
+2019-05-09T20:02:30,152004+0000 initcall init_hw_perf_events+0x0/0x616 returned 0 after 3815 usecs
+2019-05-09T20:02:30,152005+0000 calling  init_real_mode+0x0/0x1e4 @ 1
+2019-05-09T20:02:30,152021+0000 initcall init_real_mode+0x0/0x1e4 returned 0 after 14 usecs
+2019-05-09T20:02:30,152022+0000 calling  trace_init_perf_perm_irq_work_exit+0x0/0x18 @ 1
+2019-05-09T20:02:30,152024+0000 initcall trace_init_perf_perm_irq_work_exit+0x0/0x18 returned 0 after 0 usecs
+2019-05-09T20:02:30,152026+0000 calling  register_nmi_cpu_backtrace_handler+0x0/0x1b @ 1
+2019-05-09T20:02:30,152028+0000 initcall register_nmi_cpu_backtrace_handler+0x0/0x1b returned 0 after 0 usecs
+2019-05-09T20:02:30,152030+0000 calling  numachip_system_init+0x0/0x6c @ 1
+2019-05-09T20:02:30,152031+0000 initcall numachip_system_init+0x0/0x6c returned 0 after 0 usecs
+2019-05-09T20:02:30,152034+0000 calling  early_efi_map_fb+0x0/0x3d @ 1
+2019-05-09T20:02:30,152035+0000 initcall early_efi_map_fb+0x0/0x3d returned 0 after 0 usecs
+2019-05-09T20:02:30,152036+0000 calling  spawn_ksoftirqd+0x0/0x41 @ 1
+2019-05-09T20:02:30,152058+0000 initcall spawn_ksoftirqd+0x0/0x41 returned 0 after 19 usecs
+2019-05-09T20:02:30,152060+0000 calling  migration_init+0x0/0x39 @ 1
+2019-05-09T20:02:30,152061+0000 initcall migration_init+0x0/0x39 returned 0 after 0 usecs
+2019-05-09T20:02:30,152064+0000 calling  check_cpu_stall_init+0x0/0x20 @ 1
+2019-05-09T20:02:30,152065+0000 initcall check_cpu_stall_init+0x0/0x20 returned 0 after 0 usecs
+2019-05-09T20:02:30,152067+0000 calling  srcu_bootup_announce+0x0/0x35 @ 1
+2019-05-09T20:02:30,152068+0000 Hierarchical SRCU implementation.
+2019-05-09T20:02:30,156004+0000 initcall srcu_bootup_announce+0x0/0x35 returned 0 after 3841 usecs
+2019-05-09T20:02:30,156005+0000 calling  rcu_spawn_gp_kthread+0x0/0x129 @ 1
+2019-05-09T20:02:30,156029+0000 initcall rcu_spawn_gp_kthread+0x0/0x129 returned 0 after 21 usecs
+2019-05-09T20:02:30,156030+0000 calling  cpu_stop_init+0x0/0x96 @ 1
+2019-05-09T20:02:30,156043+0000 initcall cpu_stop_init+0x0/0x96 returned 0 after 12 usecs
+2019-05-09T20:02:30,156045+0000 calling  init_events+0x0/0x42 @ 1
+2019-05-09T20:02:30,156052+0000 initcall init_events+0x0/0x42 returned 0 after 5 usecs
+2019-05-09T20:02:30,156053+0000 calling  init_trace_printk+0x0/0x12 @ 1
+2019-05-09T20:02:30,156055+0000 initcall init_trace_printk+0x0/0x12 returned 0 after 0 usecs
+2019-05-09T20:02:30,156056+0000 calling  event_trace_enable_again+0x0/0x26 @ 1
+2019-05-09T20:02:30,156057+0000 initcall event_trace_enable_again+0x0/0x26 returned 0 after 0 usecs
+2019-05-09T20:02:30,156060+0000 calling  jump_label_init_module+0x0/0x17 @ 1
+2019-05-09T20:02:30,156061+0000 initcall jump_label_init_module+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,156063+0000 calling  dynamic_debug_init+0x0/0x265 @ 1
+2019-05-09T20:02:30,156551+0000 initcall dynamic_debug_init+0x0/0x265 returned 0 after 474 usecs
+2019-05-09T20:02:30,156555+0000 calling  rand_initialize+0x0/0x60 @ 1
+2019-05-09T20:02:30,156592+0000 initcall rand_initialize+0x0/0x60 returned 0 after 35 usecs
+2019-05-09T20:02:30,156596+0000 calling  mce_amd_init+0x0/0x18e @ 1
+2019-05-09T20:02:30,156598+0000 initcall mce_amd_init+0x0/0x18e returned -19 after 0 usecs
+2019-05-09T20:02:30,156601+0000 calling  initialize_ptr_random+0x0/0x40 @ 1
+2019-05-09T20:02:30,156603+0000 initcall initialize_ptr_random+0x0/0x40 returned 0 after 0 usecs
+2019-05-09T20:02:30,156607+0000 NMI watchdog: Perf event create on CPU 0 failed with -2
+2019-05-09T20:02:30,160002+0000 NMI watchdog: Perf NMI watchdog permanently disabled
+2019-05-09T20:02:30,164039+0000 smp: Bringing up secondary CPUs ...
+2019-05-09T20:02:30,168081+0000 x86: Booting SMP configuration:
+2019-05-09T20:02:30,172002+0000 .... node  #0, CPUs:      #1
+2019-05-09T20:02:30,172688+0000 smp: Brought up 1 node, 2 CPUs
+2019-05-09T20:02:30,180001+0000 smpboot: Max logical packages: 1
+2019-05-09T20:02:30,184002+0000 smpboot: Total of 2 processors activated (9178.74 BogoMIPS)
+2019-05-09T20:02:30,188365+0000 devtmpfs: initialized
+2019-05-09T20:02:30,192064+0000 x86/mm: Memory block size: 128MB
+2019-05-09T20:02:30,196591+0000 calling  ipc_ns_init+0x0/0x66 @ 1
+2019-05-09T20:02:30,196594+0000 initcall ipc_ns_init+0x0/0x66 returned 0 after 1 usecs
+2019-05-09T20:02:30,196596+0000 calling  init_mmap_min_addr+0x0/0x1b @ 1
+2019-05-09T20:02:30,196598+0000 initcall init_mmap_min_addr+0x0/0x1b returned 0 after 0 usecs
+2019-05-09T20:02:30,196600+0000 calling  evm_display_config+0x0/0x30 @ 1
+2019-05-09T20:02:30,196600+0000 evm: security.selinux
+2019-05-09T20:02:30,204002+0000 evm: security.SMACK64
+2019-05-09T20:02:30,208001+0000 evm: security.SMACK64EXEC
+2019-05-09T20:02:30,208001+0000 evm: security.SMACK64TRANSMUTE
+2019-05-09T20:02:30,216001+0000 evm: security.SMACK64MMAP
+2019-05-09T20:02:30,216001+0000 evm: security.apparmor
+2019-05-09T20:02:30,220002+0000 evm: security.ima
+2019-05-09T20:02:30,224001+0000 evm: security.capability
+2019-05-09T20:02:30,228003+0000 initcall evm_display_config+0x0/0x30 returned 0 after 30664 usecs
+2019-05-09T20:02:30,228005+0000 calling  init_cpufreq_transition_notifier_list+0x0/0x20 @ 1
+2019-05-09T20:02:30,228011+0000 initcall init_cpufreq_transition_notifier_list+0x0/0x20 returned 0 after 3 usecs
+2019-05-09T20:02:30,228013+0000 calling  jit_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,228014+0000 initcall jit_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,228016+0000 calling  net_ns_init+0x0/0x140 @ 1
+2019-05-09T20:02:30,228071+0000 initcall net_ns_init+0x0/0x140 returned 0 after 53 usecs
+2019-05-09T20:02:30,228071+0000 calling  e820__register_nvs_regions+0x0/0x3d @ 1
+2019-05-09T20:02:30,228071+0000 initcall e820__register_nvs_regions+0x0/0x3d returned 0 after 0 usecs
+2019-05-09T20:02:30,228071+0000 calling  cpufreq_register_tsc_scaling+0x0/0x33 @ 1
+2019-05-09T20:02:30,228071+0000 initcall cpufreq_register_tsc_scaling+0x0/0x33 returned 0 after 0 usecs
+2019-05-09T20:02:30,228071+0000 calling  init_cpu_syscore+0x0/0x14 @ 1
+2019-05-09T20:02:30,228071+0000 initcall init_cpu_syscore+0x0/0x14 returned 0 after 0 usecs
+2019-05-09T20:02:30,228071+0000 calling  reboot_init+0x0/0x45 @ 1
+2019-05-09T20:02:30,228071+0000 initcall reboot_init+0x0/0x45 returned 0 after 0 usecs
+2019-05-09T20:02:30,228071+0000 calling  init_lapic_sysfs+0x0/0x28 @ 1
+2019-05-09T20:02:30,228071+0000 initcall init_lapic_sysfs+0x0/0x28 returned 0 after 0 usecs
+2019-05-09T20:02:30,228071+0000 calling  wq_sysfs_init+0x0/0x30 @ 1
+2019-05-09T20:02:30,228071+0000 initcall wq_sysfs_init+0x0/0x30 returned 0 after 0 usecs
+2019-05-09T20:02:30,228072+0000 calling  ksysfs_init+0x0/0x98 @ 1
+2019-05-09T20:02:30,228077+0000 initcall ksysfs_init+0x0/0x98 returned 0 after 3 usecs
+2019-05-09T20:02:30,228079+0000 calling  pm_init+0x0/0x5f @ 1
+2019-05-09T20:02:30,228090+0000 initcall pm_init+0x0/0x5f returned 0 after 9 usecs
+2019-05-09T20:02:30,228092+0000 calling  rcu_spawn_tasks_kthread+0x0/0x49 @ 1
+2019-05-09T20:02:30,228105+0000 initcall rcu_spawn_tasks_kthread+0x0/0x49 returned 0 after 12 usecs
+2019-05-09T20:02:30,228105+0000 calling  rcu_set_runtime_mode+0x0/0x17 @ 1
+2019-05-09T20:02:30,228105+0000 initcall rcu_set_runtime_mode+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,228105+0000 calling  init_jiffies_clocksource+0x0/0x1e @ 1
+2019-05-09T20:02:30,228105+0000 clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+2019-05-09T20:02:30,240007+0000 initcall init_jiffies_clocksource+0x0/0x1e returned 0 after 11619 usecs
+2019-05-09T20:02:30,240009+0000 calling  futex_init+0x0/0xfd @ 1
+2019-05-09T20:02:30,240013+0000 futex hash table entries: 512 (order: 3, 32768 bytes)
+2019-05-09T20:02:30,244009+0000 initcall futex_init+0x0/0xfd returned 0 after 3903 usecs
+2019-05-09T20:02:30,244010+0000 calling  cgroup_wq_init+0x0/0x33 @ 1
+2019-05-09T20:02:30,244019+0000 initcall cgroup_wq_init+0x0/0x33 returned 0 after 8 usecs
+2019-05-09T20:02:30,244020+0000 calling  cgroup1_wq_init+0x0/0x33 @ 1
+2019-05-09T20:02:30,244024+0000 initcall cgroup1_wq_init+0x0/0x33 returned 0 after 2 usecs
+2019-05-09T20:02:30,244025+0000 calling  ftrace_mod_cmd_init+0x0/0x12 @ 1
+2019-05-09T20:02:30,244044+0000 initcall ftrace_mod_cmd_init+0x0/0x12 returned 0 after 17 usecs
+2019-05-09T20:02:30,244045+0000 calling  init_wakeup_tracer+0x0/0x32 @ 1
+2019-05-09T20:02:30,244047+0000 initcall init_wakeup_tracer+0x0/0x32 returned 0 after 1 usecs
+2019-05-09T20:02:30,244048+0000 calling  init_graph_trace+0x0/0x64 @ 1
+2019-05-09T20:02:30,244051+0000 initcall init_graph_trace+0x0/0x64 returned 0 after 2 usecs
+2019-05-09T20:02:30,244054+0000 calling  init_per_zone_wmark_min+0x0/0x71 @ 1
+2019-05-09T20:02:30,244057+0000 initcall init_per_zone_wmark_min+0x0/0x71 returned 0 after 2 usecs
+2019-05-09T20:02:30,244059+0000 calling  init_zero_pfn+0x0/0x43 @ 1
+2019-05-09T20:02:30,244060+0000 initcall init_zero_pfn+0x0/0x43 returned 0 after 0 usecs
+2019-05-09T20:02:30,244062+0000 calling  memory_failure_init+0x0/0xa0 @ 1
+2019-05-09T20:02:30,244063+0000 initcall memory_failure_init+0x0/0xa0 returned 0 after 0 usecs
+2019-05-09T20:02:30,244065+0000 calling  cma_init_reserved_areas+0x0/0x196 @ 1
+2019-05-09T20:02:30,244066+0000 initcall cma_init_reserved_areas+0x0/0x196 returned 0 after 0 usecs
+2019-05-09T20:02:30,244068+0000 calling  fsnotify_init+0x0/0x4e @ 1
+2019-05-09T20:02:30,244073+0000 initcall fsnotify_init+0x0/0x4e returned 0 after 3 usecs
+2019-05-09T20:02:30,244074+0000 calling  filelock_init+0x0/0x91 @ 1
+2019-05-09T20:02:30,244080+0000 initcall filelock_init+0x0/0x91 returned 0 after 3 usecs
+2019-05-09T20:02:30,244081+0000 calling  init_script_binfmt+0x0/0x1b @ 1
+2019-05-09T20:02:30,244083+0000 initcall init_script_binfmt+0x0/0x1b returned 0 after 0 usecs
+2019-05-09T20:02:30,244084+0000 calling  init_elf_binfmt+0x0/0x1b @ 1
+2019-05-09T20:02:30,244086+0000 initcall init_elf_binfmt+0x0/0x1b returned 0 after 0 usecs
+2019-05-09T20:02:30,244088+0000 calling  init_compat_elf_binfmt+0x0/0x1b @ 1
+2019-05-09T20:02:30,244089+0000 initcall init_compat_elf_binfmt+0x0/0x1b returned 0 after 0 usecs
+2019-05-09T20:02:30,244090+0000 calling  configfs_init+0x0/0x9d @ 1
+2019-05-09T20:02:30,244093+0000 initcall configfs_init+0x0/0x9d returned 0 after 1 usecs
+2019-05-09T20:02:30,244095+0000 calling  debugfs_init+0x0/0x5e @ 1
+2019-05-09T20:02:30,244097+0000 initcall debugfs_init+0x0/0x5e returned 0 after 0 usecs
+2019-05-09T20:02:30,244098+0000 calling  tracefs_init+0x0/0x40 @ 1
+2019-05-09T20:02:30,244100+0000 initcall tracefs_init+0x0/0x40 returned 0 after 0 usecs
+2019-05-09T20:02:30,244101+0000 calling  securityfs_init+0x0/0x76 @ 1
+2019-05-09T20:02:30,244122+0000 initcall securityfs_init+0x0/0x76 returned 0 after 18 usecs
+2019-05-09T20:02:30,244123+0000 calling  prandom_init+0x0/0xc1 @ 1
+2019-05-09T20:02:30,244126+0000 initcall prandom_init+0x0/0xc1 returned 0 after 1 usecs
+2019-05-09T20:02:30,244127+0000 calling  pinctrl_init+0x0/0xb3 @ 1
+2019-05-09T20:02:30,244127+0000 pinctrl core: initialized pinctrl subsystem
+2019-05-09T20:02:30,252019+0000 initcall pinctrl_init+0x0/0xb3 returned 0 after 7704 usecs
+2019-05-09T20:02:30,252020+0000 calling  gpiolib_dev_init+0x0/0xd3 @ 1
+2019-05-09T20:02:30,252031+0000 initcall gpiolib_dev_init+0x0/0xd3 returned 0 after 9 usecs
+2019-05-09T20:02:30,252033+0000 calling  sfi_sysfs_init+0x0/0xdb @ 1
+2019-05-09T20:02:30,252035+0000 initcall sfi_sysfs_init+0x0/0xdb returned 0 after 0 usecs
+2019-05-09T20:02:30,252038+0000 calling  virtio_init+0x0/0x30 @ 1
+2019-05-09T20:02:30,252042+0000 initcall virtio_init+0x0/0x30 returned 0 after 3 usecs
+2019-05-09T20:02:30,252044+0000 calling  regulator_init+0x0/0x91 @ 1
+2019-05-09T20:02:30,252093+0000 initcall regulator_init+0x0/0x91 returned 0 after 45 usecs
+2019-05-09T20:02:30,252094+0000 calling  iommu_init+0x0/0x30 @ 1
+2019-05-09T20:02:30,252096+0000 initcall iommu_init+0x0/0x30 returned 0 after 0 usecs
+2019-05-09T20:02:30,252097+0000 calling  opp_debug_init+0x0/0x41 @ 1
+2019-05-09T20:02:30,252100+0000 initcall opp_debug_init+0x0/0x41 returned 0 after 0 usecs
+2019-05-09T20:02:30,252101+0000 calling  cpufreq_core_init+0x0/0x51 @ 1
+2019-05-09T20:02:30,252104+0000 initcall cpufreq_core_init+0x0/0x51 returned 0 after 0 usecs
+2019-05-09T20:02:30,252105+0000 calling  cpuidle_init+0x0/0x40 @ 1
+2019-05-09T20:02:30,252108+0000 initcall cpuidle_init+0x0/0x40 returned 0 after 1 usecs
+2019-05-09T20:02:30,252109+0000 calling  capsule_reboot_register+0x0/0x17 @ 1
+2019-05-09T20:02:30,252110+0000 initcall capsule_reboot_register+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,252112+0000 calling  sock_init+0x0/0x9f @ 1
+2019-05-09T20:02:30,252839+0000 initcall sock_init+0x0/0x9f returned 0 after 708 usecs
+2019-05-09T20:02:30,252841+0000 calling  net_inuse_init+0x0/0x29 @ 1
+2019-05-09T20:02:30,252844+0000 initcall net_inuse_init+0x0/0x29 returned 0 after 1 usecs
+2019-05-09T20:02:30,252845+0000 calling  net_defaults_init+0x0/0x29 @ 1
+2019-05-09T20:02:30,252847+0000 initcall net_defaults_init+0x0/0x29 returned 0 after 0 usecs
+2019-05-09T20:02:30,252848+0000 calling  init_default_flow_dissectors+0x0/0x55 @ 1
+2019-05-09T20:02:30,252850+0000 initcall init_default_flow_dissectors+0x0/0x55 returned 0 after 0 usecs
+2019-05-09T20:02:30,252852+0000 calling  netpoll_init+0x0/0x36 @ 1
+2019-05-09T20:02:30,252853+0000 initcall netpoll_init+0x0/0x36 returned 0 after 0 usecs
+2019-05-09T20:02:30,252855+0000 calling  netlink_proto_init+0x0/0x15c @ 1
+2019-05-09T20:02:30,252886+0000 NET: Registered protocol family 16
+2019-05-09T20:02:30,256012+0000 initcall netlink_proto_init+0x0/0x15c returned 0 after 3079 usecs
+2019-05-09T20:02:30,256035+0000 calling  irq_sysfs_init+0x0/0x94 @ 1
+2019-05-09T20:02:30,256085+0000 initcall irq_sysfs_init+0x0/0x94 returned 0 after 47 usecs
+2019-05-09T20:02:30,256086+0000 calling  audit_init+0x0/0x167 @ 1
+2019-05-09T20:02:30,256088+0000 audit: initializing netlink subsys (disabled)
+2019-05-09T20:02:30,260065+0000 initcall audit_init+0x0/0x167 returned 0 after 3885 usecs
+2019-05-09T20:02:30,260065+0000 audit: type=2000 audit(1557432149.260:1): state=initialized audit_enabled=0 res=1
+2019-05-09T20:02:30,264006+0000 calling  bdi_class_init+0x0/0x4e @ 1
+2019-05-09T20:02:30,264014+0000 initcall bdi_class_init+0x0/0x4e returned 0 after 6 usecs
+2019-05-09T20:02:30,264016+0000 calling  mm_sysfs_init+0x0/0x2e @ 1
+2019-05-09T20:02:30,264018+0000 initcall mm_sysfs_init+0x0/0x2e returned 0 after 1 usecs
+2019-05-09T20:02:30,264019+0000 calling  gpiolib_sysfs_init+0x0/0xa7 @ 1
+2019-05-09T20:02:30,264023+0000 initcall gpiolib_sysfs_init+0x0/0xa7 returned 0 after 2 usecs
+2019-05-09T20:02:30,264024+0000 calling  pcibus_class_init+0x0/0x1e @ 1
+2019-05-09T20:02:30,264027+0000 initcall pcibus_class_init+0x0/0x1e returned 0 after 1 usecs
+2019-05-09T20:02:30,264028+0000 calling  pci_driver_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,264033+0000 initcall pci_driver_init+0x0/0x17 returned 0 after 3 usecs
+2019-05-09T20:02:30,264034+0000 calling  rio_bus_init+0x0/0x45 @ 1
+2019-05-09T20:02:30,264044+0000 initcall rio_bus_init+0x0/0x45 returned 0 after 8 usecs
+2019-05-09T20:02:30,264045+0000 calling  backlight_class_init+0x0/0xad @ 1
+2019-05-09T20:02:30,264048+0000 initcall backlight_class_init+0x0/0xad returned 0 after 1 usecs
+2019-05-09T20:02:30,264050+0000 calling  tty_class_init+0x0/0x39 @ 1
+2019-05-09T20:02:30,264052+0000 initcall tty_class_init+0x0/0x39 returned 0 after 1 usecs
+2019-05-09T20:02:30,264054+0000 calling  vtconsole_class_init+0x0/0xc2 @ 1
+2019-05-09T20:02:30,264066+0000 initcall vtconsole_class_init+0x0/0xc2 returned 0 after 9 usecs
+2019-05-09T20:02:30,264067+0000 calling  iommu_dev_init+0x0/0x1e @ 1
+2019-05-09T20:02:30,264070+0000 initcall iommu_dev_init+0x0/0x1e returned 0 after 1 usecs
+2019-05-09T20:02:30,264071+0000 calling  isa_bus_init+0x0/0x3e @ 1
+2019-05-09T20:02:30,264082+0000 initcall isa_bus_init+0x0/0x3e returned 0 after 9 usecs
+2019-05-09T20:02:30,264083+0000 calling  register_node_type+0x0/0x34 @ 1
+2019-05-09T20:02:30,264095+0000 initcall register_node_type+0x0/0x34 returned 0 after 10 usecs
+2019-05-09T20:02:30,264096+0000 calling  regmap_initcall+0x0/0x12 @ 1
+2019-05-09T20:02:30,264099+0000 initcall regmap_initcall+0x0/0x12 returned 0 after 1 usecs
+2019-05-09T20:02:30,264100+0000 calling  sram_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,264105+0000 initcall sram_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:30,264106+0000 calling  syscon_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,264110+0000 initcall syscon_init+0x0/0x19 returned 0 after 2 usecs
+2019-05-09T20:02:30,264112+0000 calling  mipi_dsi_bus_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,264119+0000 initcall mipi_dsi_bus_init+0x0/0x17 returned 0 after 5 usecs
+2019-05-09T20:02:30,264120+0000 calling  spi_init+0x0/0xc6 @ 1
+2019-05-09T20:02:30,264132+0000 initcall spi_init+0x0/0xc6 returned 0 after 10 usecs
+2019-05-09T20:02:30,264133+0000 calling  init_ladder+0x0/0x2a @ 1
+2019-05-09T20:02:30,264147+0000 cpuidle: using governor ladder
+2019-05-09T20:02:30,268005+0000 initcall init_ladder+0x0/0x2a returned 0 after 3778 usecs
+2019-05-09T20:02:30,268006+0000 calling  init_menu+0x0/0x17 @ 1
+2019-05-09T20:02:30,268024+0000 cpuidle: using governor menu
+2019-05-09T20:02:30,272006+0000 initcall init_menu+0x0/0x17 returned 0 after 3903 usecs
+2019-05-09T20:02:30,272009+0000 calling  pcc_init+0x0/0x9b @ 1
+2019-05-09T20:02:30,272012+0000 initcall pcc_init+0x0/0x9b returned -19 after 1 usecs
+2019-05-09T20:02:30,272014+0000 calling  amd_postcore_init+0x0/0x123 @ 1
+2019-05-09T20:02:30,272016+0000 initcall amd_postcore_init+0x0/0x123 returned 0 after 0 usecs
+2019-05-09T20:02:30,272018+0000 calling  kobject_uevent_init+0x0/0x12 @ 1
+2019-05-09T20:02:30,272031+0000 initcall kobject_uevent_init+0x0/0x12 returned 0 after 11 usecs
+2019-05-09T20:02:30,272061+0000 calling  bts_init+0x0/0xc3 @ 1
+2019-05-09T20:02:30,272062+0000 initcall bts_init+0x0/0xc3 returned -19 after 0 usecs
+2019-05-09T20:02:30,272063+0000 calling  pt_init+0x0/0x358 @ 1
+2019-05-09T20:02:30,272064+0000 initcall pt_init+0x0/0x358 returned -19 after 0 usecs
+2019-05-09T20:02:30,272066+0000 calling  boot_params_ksysfs_init+0x0/0x267 @ 1
+2019-05-09T20:02:30,272072+0000 initcall boot_params_ksysfs_init+0x0/0x267 returned 0 after 3 usecs
+2019-05-09T20:02:30,272073+0000 calling  sbf_init+0x0/0xee @ 1
+2019-05-09T20:02:30,272075+0000 initcall sbf_init+0x0/0xee returned 0 after 0 usecs
+2019-05-09T20:02:30,272076+0000 calling  arch_kdebugfs_init+0x0/0x29 @ 1
+2019-05-09T20:02:30,272081+0000 initcall arch_kdebugfs_init+0x0/0x29 returned 0 after 2 usecs
+2019-05-09T20:02:30,272083+0000 calling  mtrr_if_init+0x0/0x66 @ 1
+2019-05-09T20:02:30,272086+0000 initcall mtrr_if_init+0x0/0x66 returned 0 after 1 usecs
+2019-05-09T20:02:30,272088+0000 calling  ffh_cstate_init+0x0/0x30 @ 1
+2019-05-09T20:02:30,272090+0000 initcall ffh_cstate_init+0x0/0x30 returned 0 after 1 usecs
+2019-05-09T20:02:30,272093+0000 calling  activate_jump_labels+0x0/0x3a @ 1
+2019-05-09T20:02:30,272095+0000 initcall activate_jump_labels+0x0/0x3a returned 0 after 0 usecs
+2019-05-09T20:02:30,272097+0000 calling  gigantic_pages_init+0x0/0x38 @ 1
+2019-05-09T20:02:30,272102+0000 initcall gigantic_pages_init+0x0/0x38 returned 0 after 3 usecs
+2019-05-09T20:02:30,272104+0000 calling  kcmp_cookies_init+0x0/0x3d @ 1
+2019-05-09T20:02:30,272108+0000 initcall kcmp_cookies_init+0x0/0x3d returned 0 after 1 usecs
+2019-05-09T20:02:30,272109+0000 calling  acpi_pci_init+0x0/0x62 @ 1
+2019-05-09T20:02:30,272110+0000 ACPI: bus type PCI registered
+2019-05-09T20:02:30,276002+0000 acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+2019-05-09T20:02:30,280003+0000 initcall acpi_pci_init+0x0/0x62 returned 0 after 7706 usecs
+2019-05-09T20:02:30,280005+0000 calling  dma_bus_init+0x0/0xc5 @ 1
+2019-05-09T20:02:30,280023+0000 initcall dma_bus_init+0x0/0xc5 returned 0 after 16 usecs
+2019-05-09T20:02:30,280025+0000 calling  dma_channel_table_init+0x0/0xd2 @ 1
+2019-05-09T20:02:30,280029+0000 initcall dma_channel_table_init+0x0/0xd2 returned 0 after 3 usecs
+2019-05-09T20:02:30,280031+0000 calling  dmi_id_init+0x0/0x32a @ 1
+2019-05-09T20:02:30,280054+0000 initcall dmi_id_init+0x0/0x32a returned 0 after 21 usecs
+2019-05-09T20:02:30,280056+0000 calling  numachip_timer_init+0x0/0x5a @ 1
+2019-05-09T20:02:30,280057+0000 initcall numachip_timer_init+0x0/0x5a returned -19 after 0 usecs
+2019-05-09T20:02:30,280058+0000 calling  pci_arch_init+0x0/0x6b @ 1
+2019-05-09T20:02:30,280625+0000 PCI: Using configuration type 1 for base access
+2019-05-09T20:02:30,284010+0000 initcall pci_arch_init+0x0/0x6b returned 0 after 3856 usecs
+2019-05-09T20:02:30,284040+0000 calling  init_vdso+0x0/0x46 @ 1
+2019-05-09T20:02:30,284056+0000 initcall init_vdso+0x0/0x46 returned 0 after 15 usecs
+2019-05-09T20:02:30,284056+0000 calling  sysenter_setup+0x0/0x19 @ 1
+2019-05-09T20:02:30,284056+0000 initcall sysenter_setup+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:30,284056+0000 calling  fixup_ht_bug+0x0/0x98 @ 1
+2019-05-09T20:02:30,284056+0000 initcall fixup_ht_bug+0x0/0x98 returned 0 after 0 usecs
+2019-05-09T20:02:30,284056+0000 calling  topology_init+0x0/0xda @ 1
+2019-05-09T20:02:30,284194+0000 initcall topology_init+0x0/0xda returned 0 after 133 usecs
+2019-05-09T20:02:30,284195+0000 calling  mtrr_init_finialize+0x0/0x44 @ 1
+2019-05-09T20:02:30,284197+0000 initcall mtrr_init_finialize+0x0/0x44 returned 0 after 0 usecs
+2019-05-09T20:02:30,284198+0000 calling  uid_cache_init+0x0/0x8a @ 1
+2019-05-09T20:02:30,284200+0000 initcall uid_cache_init+0x0/0x8a returned 0 after 0 usecs
+2019-05-09T20:02:30,284202+0000 calling  param_sysfs_init+0x0/0x1f1 @ 1
+2019-05-09T20:02:30,285010+0000 initcall param_sysfs_init+0x0/0x1f1 returned 0 after 786 usecs
+2019-05-09T20:02:30,285012+0000 calling  user_namespace_sysctl_init+0x0/0x39 @ 1
+2019-05-09T20:02:30,285021+0000 initcall user_namespace_sysctl_init+0x0/0x39 returned 0 after 6 usecs
+2019-05-09T20:02:30,285022+0000 calling  proc_schedstat_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,285025+0000 initcall proc_schedstat_init+0x0/0x24 returned 0 after 1 usecs
+2019-05-09T20:02:30,285027+0000 calling  pm_sysrq_init+0x0/0x1e @ 1
+2019-05-09T20:02:30,285034+0000 initcall pm_sysrq_init+0x0/0x1e returned 0 after 5 usecs
+2019-05-09T20:02:30,285038+0000 calling  create_proc_profile+0x0/0xe0 @ 1
+2019-05-09T20:02:30,285040+0000 initcall create_proc_profile+0x0/0xe0 returned 0 after 0 usecs
+2019-05-09T20:02:30,285042+0000 calling  crash_save_vmcoreinfo_init+0x0/0x5d0 @ 1
+2019-05-09T20:02:30,285071+0000 initcall crash_save_vmcoreinfo_init+0x0/0x5d0 returned 0 after 25 usecs
+2019-05-09T20:02:30,285073+0000 calling  crash_notes_memory_init+0x0/0x3b @ 1
+2019-05-09T20:02:30,285077+0000 initcall crash_notes_memory_init+0x0/0x3b returned 0 after 1 usecs
+2019-05-09T20:02:30,285079+0000 calling  cgroup_sysfs_init+0x0/0x1e @ 1
+2019-05-09T20:02:30,285082+0000 initcall cgroup_sysfs_init+0x0/0x1e returned 0 after 1 usecs
+2019-05-09T20:02:30,285083+0000 calling  cgroup_namespaces_init+0x0/0xd @ 1
+2019-05-09T20:02:30,285085+0000 initcall cgroup_namespaces_init+0x0/0xd returned 0 after 0 usecs
+2019-05-09T20:02:30,285086+0000 calling  user_namespaces_init+0x0/0x32 @ 1
+2019-05-09T20:02:30,285088+0000 initcall user_namespaces_init+0x0/0x32 returned 0 after 0 usecs
+2019-05-09T20:02:30,285089+0000 calling  hung_task_init+0x0/0x54 @ 1
+2019-05-09T20:02:30,285098+0000 initcall hung_task_init+0x0/0x54 returned 0 after 8 usecs
+2019-05-09T20:02:30,285098+0000 calling  dev_map_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,285098+0000 initcall dev_map_init+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  bpf_offload_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,285098+0000 initcall bpf_offload_init+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  oom_init+0x0/0x35 @ 1
+2019-05-09T20:02:30,285098+0000 initcall oom_init+0x0/0x35 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  cgwb_init+0x0/0x33 @ 1
+2019-05-09T20:02:30,285098+0000 initcall cgwb_init+0x0/0x33 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  default_bdi_init+0x0/0xc0 @ 1
+2019-05-09T20:02:30,285098+0000 initcall default_bdi_init+0x0/0xc0 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  percpu_enable_async+0x0/0x14 @ 1
+2019-05-09T20:02:30,285098+0000 initcall percpu_enable_async+0x0/0x14 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  kcompactd_init+0x0/0xa0 @ 1
+2019-05-09T20:02:30,285098+0000 initcall kcompactd_init+0x0/0xa0 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  init_reserve_notifier+0x0/0x24 @ 1
+2019-05-09T20:02:30,285098+0000 initcall init_reserve_notifier+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  init_admin_reserve+0x0/0x40 @ 1
+2019-05-09T20:02:30,285098+0000 initcall init_admin_reserve+0x0/0x40 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  init_user_reserve+0x0/0x40 @ 1
+2019-05-09T20:02:30,285098+0000 initcall init_user_reserve+0x0/0x40 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  swap_init_sysfs+0x0/0x6f @ 1
+2019-05-09T20:02:30,285098+0000 initcall swap_init_sysfs+0x0/0x6f returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  swapfile_init+0x0/0xb3 @ 1
+2019-05-09T20:02:30,285098+0000 initcall swapfile_init+0x0/0xb3 returned 0 after 0 usecs
+2019-05-09T20:02:30,285098+0000 calling  hugetlb_init+0x0/0x20 @ 1
+2019-05-09T20:02:30,285098+0000 HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+2019-05-09T20:02:30,292003+0000 HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+2019-05-09T20:02:30,296020+0000 initcall hugetlb_init+0x0/0x20 returned 0 after 10664 usecs
+2019-05-09T20:02:30,296022+0000 calling  ksm_init+0x0/0x19e @ 1
+2019-05-09T20:02:30,296032+0000 initcall ksm_init+0x0/0x19e returned 0 after 9 usecs
+2019-05-09T20:02:30,296032+0000 calling  hugepage_init+0x0/0x149 @ 1
+2019-05-09T20:02:30,296032+0000 initcall hugepage_init+0x0/0x149 returned 0 after 0 usecs
+2019-05-09T20:02:30,296032+0000 calling  mem_cgroup_swap_init+0x0/0x5a @ 1
+2019-05-09T20:02:30,296032+0000 initcall mem_cgroup_swap_init+0x0/0x5a returned 0 after 0 usecs
+2019-05-09T20:02:30,296032+0000 calling  mem_cgroup_init+0x0/0x14e @ 1
+2019-05-09T20:02:30,296032+0000 initcall mem_cgroup_init+0x0/0x14e returned 0 after 0 usecs
+2019-05-09T20:02:30,296032+0000 calling  page_idle_init+0x0/0x34 @ 1
+2019-05-09T20:02:30,296032+0000 initcall page_idle_init+0x0/0x34 returned 0 after 0 usecs
+2019-05-09T20:02:30,296032+0000 calling  sel_ib_pkey_init+0x0/0x37 @ 1
+2019-05-09T20:02:30,296032+0000 initcall sel_ib_pkey_init+0x0/0x37 returned 0 after 0 usecs
+2019-05-09T20:02:30,296033+0000 calling  crypto_wq_init+0x0/0x36 @ 1
+2019-05-09T20:02:30,300013+0000 initcall crypto_wq_init+0x0/0x36 returned 0 after 3886 usecs
+2019-05-09T20:02:30,300015+0000 calling  cryptomgr_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,300017+0000 initcall cryptomgr_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,300018+0000 calling  init_bio+0x0/0xda @ 1
+2019-05-09T20:02:30,300028+0000 initcall init_bio+0x0/0xda returned 0 after 9 usecs
+2019-05-09T20:02:30,300028+0000 calling  blk_settings_init+0x0/0x2f @ 1
+2019-05-09T20:02:30,300028+0000 initcall blk_settings_init+0x0/0x2f returned 0 after 0 usecs
+2019-05-09T20:02:30,300028+0000 calling  blk_ioc_init+0x0/0x2f @ 1
+2019-05-09T20:02:30,300032+0000 initcall blk_ioc_init+0x0/0x2f returned 0 after 2 usecs
+2019-05-09T20:02:30,300033+0000 calling  blk_softirq_init+0x0/0x79 @ 1
+2019-05-09T20:02:30,300034+0000 initcall blk_softirq_init+0x0/0x79 returned 0 after 0 usecs
+2019-05-09T20:02:30,300035+0000 calling  blk_mq_init+0x0/0x2f @ 1
+2019-05-09T20:02:30,300036+0000 initcall blk_mq_init+0x0/0x2f returned 0 after 0 usecs
+2019-05-09T20:02:30,300037+0000 calling  genhd_device_init+0x0/0x7b @ 1
+2019-05-09T20:02:30,300080+0000 initcall genhd_device_init+0x0/0x7b returned 0 after 40 usecs
+2019-05-09T20:02:30,300081+0000 calling  irq_poll_setup+0x0/0x74 @ 1
+2019-05-09T20:02:30,300082+0000 initcall irq_poll_setup+0x0/0x74 returned 0 after 0 usecs
+2019-05-09T20:02:30,300083+0000 calling  byt_gpio_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,300087+0000 initcall byt_gpio_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:30,300088+0000 calling  chv_pinctrl_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,300092+0000 initcall chv_pinctrl_init+0x0/0x19 returned 0 after 2 usecs
+2019-05-09T20:02:30,300093+0000 calling  gpiolib_debugfs_init+0x0/0x29 @ 1
+2019-05-09T20:02:30,300096+0000 initcall gpiolib_debugfs_init+0x0/0x29 returned 0 after 1 usecs
+2019-05-09T20:02:30,300097+0000 calling  lp_gpio_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,300100+0000 initcall lp_gpio_init+0x0/0x19 returned 0 after 2 usecs
+2019-05-09T20:02:30,300103+0000 calling  pci_slot_init+0x0/0x50 @ 1
+2019-05-09T20:02:30,300106+0000 initcall pci_slot_init+0x0/0x50 returned 0 after 0 usecs
+2019-05-09T20:02:30,300107+0000 calling  fbmem_init+0x0/0xdc @ 1
+2019-05-09T20:02:30,300126+0000 initcall fbmem_init+0x0/0xdc returned 0 after 17 usecs
+2019-05-09T20:02:30,300127+0000 calling  scan_for_dmi_ipmi+0x0/0xfb @ 1
+2019-05-09T20:02:30,300129+0000 initcall scan_for_dmi_ipmi+0x0/0xfb returned 0 after 0 usecs
+2019-05-09T20:02:30,300130+0000 calling  acpi_init+0x0/0x345 @ 1
+2019-05-09T20:02:30,300186+0000 ACPI: Added _OSI(Module Device)
+2019-05-09T20:02:30,304007+0000 ACPI: Added _OSI(Processor Device)
+2019-05-09T20:02:30,308001+0000 ACPI: Added _OSI(3.0 _SCP Extensions)
+2019-05-09T20:02:30,312002+0000 ACPI: Added _OSI(Processor Aggregator Device)
+2019-05-09T20:02:30,316002+0000 ACPI: Added _OSI(Linux-Dell-Video)
+2019-05-09T20:02:30,320002+0000 ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+2019-05-09T20:02:30,331166+0000 ACPI: Interpreter enabled
+2019-05-09T20:02:30,332008+0000 ACPI: (supports S0 S5)
+2019-05-09T20:02:30,336002+0000 ACPI: Using IOAPIC for interrupt routing
+2019-05-09T20:02:30,340022+0000 PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+2019-05-09T20:02:30,344262+0000 ACPI: Enabled 1 GPEs in block 00 to 0F
+2019-05-09T20:02:30,371428+0000 ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+2019-05-09T20:02:30,372008+0000 acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+2019-05-09T20:02:30,376005+0000 acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+2019-05-09T20:02:30,380009+0000 acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+2019-05-09T20:02:30,384220+0000 PCI host bridge to bus 0000:00
+2019-05-09T20:02:30,388003+0000 pci_bus 0000:00: root bus resource [mem 0xfe0000000-0xfffffffff window]
+2019-05-09T20:02:30,392003+0000 pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+2019-05-09T20:02:30,396003+0000 pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+2019-05-09T20:02:30,400004+0000 pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+2019-05-09T20:02:30,404002+0000 pci_bus 0000:00: root bus resource [mem 0x40000000-0xfffbffff window]
+2019-05-09T20:02:30,408003+0000 pci_bus 0000:00: root bus resource [bus 00-ff]
+2019-05-09T20:02:30,412259+0000 pci 0000:00:00.0: [8086:7192] type 00 class 0x060000
+2019-05-09T20:02:30,417980+0000 pci 0000:00:07.0: [8086:7110] type 00 class 0x060100
+2019-05-09T20:02:30,422409+0000 pci 0000:00:07.1: [8086:7111] type 00 class 0x010180
+2019-05-09T20:02:30,425972+0000 pci 0000:00:07.1: reg 0x20: [io  0xffa0-0xffaf]
+2019-05-09T20:02:30,427370+0000 pci 0000:00:07.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+2019-05-09T20:02:30,428002+0000 pci 0000:00:07.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+2019-05-09T20:02:30,432003+0000 pci 0000:00:07.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+2019-05-09T20:02:30,436005+0000 pci 0000:00:07.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+2019-05-09T20:02:30,444367+0000 pci 0000:00:07.3: [8086:7113] type 00 class 0x068000
+2019-05-09T20:02:30,444428+0000 * Found PM-Timer Bug on the chipset. Due to workarounds for a bug,
+                                * this clock source is slow. Consider trying other clock sources
+2019-05-09T20:02:30,454049+0000 pci 0000:00:07.3: quirk: [io  0x0400-0x043f] claimed by PIIX4 ACPI
+2019-05-09T20:02:30,457413+0000 pci 0000:00:08.0: [1414:5353] type 00 class 0x030000
+2019-05-09T20:02:30,458379+0000 pci 0000:00:08.0: reg 0x10: [mem 0xf8000000-0xfbffffff]
+2019-05-09T20:02:30,479730+0000 ACPI: PCI Interrupt Link [LNKA] (IRQs 3 4 5 7 9 10 *11 12 14 15)
+2019-05-09T20:02:30,484401+0000 ACPI: PCI Interrupt Link [LNKB] (IRQs 3 4 5 7 9 10 11 12 14 15) *0, disabled.
+2019-05-09T20:02:30,488450+0000 ACPI: PCI Interrupt Link [LNKC] (IRQs 3 4 5 7 9 10 11 12 14 15) *0, disabled.
+2019-05-09T20:02:30,492346+0000 ACPI: PCI Interrupt Link [LNKD] (IRQs 3 4 5 7 9 10 11 12 14 15) *0, disabled.
+2019-05-09T20:02:30,496227+0000 initcall acpi_init+0x0/0x345 returned 0 after 191497 usecs
+2019-05-09T20:02:30,496230+0000 calling  pnp_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,496236+0000 initcall pnp_init+0x0/0x17 returned 0 after 4 usecs
+2019-05-09T20:02:30,496237+0000 calling  misc_init+0x0/0xbe @ 1
+2019-05-09T20:02:30,496246+0000 initcall misc_init+0x0/0xbe returned 0 after 7 usecs
+2019-05-09T20:02:30,496247+0000 calling  tpm_init+0x0/0xd4 @ 1
+2019-05-09T20:02:30,496252+0000 initcall tpm_init+0x0/0xd4 returned 0 after 3 usecs
+2019-05-09T20:02:30,496255+0000 calling  cn_init+0x0/0xe0 @ 1
+2019-05-09T20:02:30,496260+0000 initcall cn_init+0x0/0xe0 returned 0 after 3 usecs
+2019-05-09T20:02:30,496262+0000 calling  wm831x_spi_init+0x0/0x2d @ 1
+2019-05-09T20:02:30,496267+0000 initcall wm831x_spi_init+0x0/0x2d returned 0 after 3 usecs
+2019-05-09T20:02:30,496269+0000 calling  ezx_pcap_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,496276+0000 initcall ezx_pcap_init+0x0/0x19 returned 0 after 6 usecs
+2019-05-09T20:02:30,496278+0000 calling  da9052_spi_init+0x0/0x31 @ 1
+2019-05-09T20:02:30,496282+0000 initcall da9052_spi_init+0x0/0x31 returned 0 after 2 usecs
+2019-05-09T20:02:30,496284+0000 calling  libnvdimm_init+0x0/0x4a @ 1
+2019-05-09T20:02:30,496303+0000 initcall libnvdimm_init+0x0/0x4a returned 0 after 17 usecs
+2019-05-09T20:02:30,496305+0000 calling  dax_fs_init+0x0/0xca @ 1
+2019-05-09T20:02:30,496332+0000 initcall dax_fs_init+0x0/0xca returned 0 after 25 usecs
+2019-05-09T20:02:30,496334+0000 calling  dax_init+0x0/0x35 @ 1
+2019-05-09T20:02:30,496337+0000 initcall dax_init+0x0/0x35 returned 0 after 1 usecs
+2019-05-09T20:02:30,496339+0000 calling  dma_buf_init+0x0/0xb2 @ 1
+2019-05-09T20:02:30,496343+0000 initcall dma_buf_init+0x0/0xb2 returned 0 after 2 usecs
+2019-05-09T20:02:30,496345+0000 calling  init_scsi+0x0/0x96 @ 1
+2019-05-09T20:02:30,496412+0000 SCSI subsystem initialized
+2019-05-09T20:02:30,500004+0000 initcall init_scsi+0x0/0x96 returned 0 after 3570 usecs
+2019-05-09T20:02:30,500006+0000 calling  ata_init+0x0/0x344 @ 1
+2019-05-09T20:02:30,500046+0000 libata version 3.00 loaded.
+2019-05-09T20:02:30,500046+0000 initcall ata_init+0x0/0x344 returned 0 after 38 usecs
+2019-05-09T20:02:30,500046+0000 calling  vga_arb_device_init+0x0/0x24d @ 1
+2019-05-09T20:02:30,500070+0000 pci 0000:00:08.0: vgaarb: setting as boot VGA device
+2019-05-09T20:02:30,504000+0000 pci 0000:00:08.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+2019-05-09T20:02:30,504007+0000 pci 0000:00:08.0: vgaarb: bridge control possible
+2019-05-09T20:02:30,508001+0000 vgaarb: loaded
+2019-05-09T20:02:30,512004+0000 initcall vga_arb_device_init+0x0/0x24d returned 0 after 11675 usecs
+2019-05-09T20:02:30,512006+0000 calling  phy_init+0x0/0x5b @ 1
+2019-05-09T20:02:30,512028+0000 initcall phy_init+0x0/0x5b returned 0 after 19 usecs
+2019-05-09T20:02:30,512030+0000 calling  serio_init+0x0/0x2f @ 1
+2019-05-09T20:02:30,512036+0000 initcall serio_init+0x0/0x2f returned 0 after 3 usecs
+2019-05-09T20:02:30,512037+0000 calling  input_init+0x0/0xfd @ 1
+2019-05-09T20:02:30,512046+0000 initcall input_init+0x0/0xfd returned 0 after 6 usecs
+2019-05-09T20:02:30,512048+0000 calling  rtc_init+0x0/0x52 @ 1
+2019-05-09T20:02:30,512052+0000 initcall rtc_init+0x0/0x52 returned 0 after 2 usecs
+2019-05-09T20:02:30,512053+0000 calling  pps_init+0x0/0xaf @ 1
+2019-05-09T20:02:30,512056+0000 pps_core: LinuxPPS API ver. 1 registered
+2019-05-09T20:02:30,516001+0000 pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+2019-05-09T20:02:30,520003+0000 initcall pps_init+0x0/0xaf returned 0 after 7760 usecs
+2019-05-09T20:02:30,520004+0000 calling  ptp_init+0x0/0x9e @ 1
+2019-05-09T20:02:30,520008+0000 PTP clock support registered
+2019-05-09T20:02:30,524003+0000 initcall ptp_init+0x0/0x9e returned 0 after 3902 usecs
+2019-05-09T20:02:30,524004+0000 calling  power_supply_class_init+0x0/0x45 @ 1
+2019-05-09T20:02:30,524008+0000 initcall power_supply_class_init+0x0/0x45 returned 0 after 2 usecs
+2019-05-09T20:02:30,524009+0000 calling  hwmon_init+0x0/0xf1 @ 1
+2019-05-09T20:02:30,524013+0000 initcall hwmon_init+0x0/0xf1 returned 0 after 1 usecs
+2019-05-09T20:02:30,524014+0000 calling  md_init+0x0/0x168 @ 1
+2019-05-09T20:02:30,524053+0000 initcall md_init+0x0/0x168 returned 0 after 37 usecs
+2019-05-09T20:02:30,524053+0000 calling  edac_init+0x0/0x79 @ 1
+2019-05-09T20:02:30,524053+0000 EDAC MC: Ver: 3.0.0
+2019-05-09T20:02:30,528708+0000 initcall edac_init+0x0/0x79 returned 0 after 4545 usecs
+2019-05-09T20:02:30,528708+0000 calling  ib_core_init+0x0/0x177 @ 1
+2019-05-09T20:02:30,528708+0000 initcall ib_core_init+0x0/0x177 returned 0 after 0 usecs
+2019-05-09T20:02:30,528708+0000 calling  dmi_init+0x0/0x11d @ 1
+2019-05-09T20:02:30,528708+0000 initcall dmi_init+0x0/0x11d returned 0 after 0 usecs
+2019-05-09T20:02:30,528708+0000 calling  efisubsys_init+0x0/0x2bf @ 1
+2019-05-09T20:02:30,528708+0000 initcall efisubsys_init+0x0/0x2bf returned 0 after 0 usecs
+2019-05-09T20:02:30,528708+0000 calling  hv_acpi_init+0x0/0x18e @ 1
+2019-05-09T20:02:30,528708+0000 hv_vmbus: Vmbus version:4.0
+2019-05-09T20:02:30,532014+0000 initcall hv_acpi_init+0x0/0x18e returned 0 after 3225 usecs
+2019-05-09T20:02:30,532016+0000 calling  devfreq_init+0x0/0xa8 @ 1
+2019-05-09T20:02:30,532043+0000 initcall devfreq_init+0x0/0xa8 returned 0 after 26 usecs
+2019-05-09T20:02:30,532043+0000 calling  devfreq_event_init+0x0/0x54 @ 1
+2019-05-09T20:02:30,532642+0000 initcall devfreq_event_init+0x0/0x54 returned 0 after 582 usecs
+2019-05-09T20:02:30,532643+0000 calling  devfreq_simple_ondemand_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532645+0000 initcall devfreq_simple_ondemand_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,532646+0000 calling  devfreq_performance_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532648+0000 initcall devfreq_performance_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,532649+0000 calling  devfreq_powersave_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532650+0000 initcall devfreq_powersave_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,532651+0000 calling  devfreq_userspace_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532652+0000 initcall devfreq_userspace_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,532654+0000 calling  devfreq_passive_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532655+0000 initcall devfreq_passive_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,532656+0000 calling  vme_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532660+0000 initcall vme_init+0x0/0x17 returned 0 after 3 usecs
+2019-05-09T20:02:30,532661+0000 calling  ras_init+0x0/0x15 @ 1
+2019-05-09T20:02:30,532666+0000 initcall ras_init+0x0/0x15 returned 0 after 3 usecs
+2019-05-09T20:02:30,532667+0000 calling  nvmem_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,532671+0000 initcall nvmem_init+0x0/0x17 returned 0 after 2 usecs
+2019-05-09T20:02:30,532672+0000 calling  pci_subsys_init+0x0/0x6c @ 1
+2019-05-09T20:02:30,532672+0000 PCI: Using ACPI for IRQ routing
+2019-05-09T20:02:30,536004+0000 PCI: pci_cache_line_size set to 64 bytes
+2019-05-09T20:02:30,536787+0000 e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+2019-05-09T20:02:30,536788+0000 e820: reserve RAM buffer [mem 0x3fff0000-0x3fffffff]
+2019-05-09T20:02:30,536791+0000 initcall pci_subsys_init+0x0/0x6c returned 0 after 4020 usecs
+2019-05-09T20:02:30,536793+0000 calling  proto_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,536796+0000 initcall proto_init+0x0/0x17 returned 0 after 1 usecs
+2019-05-09T20:02:30,536797+0000 calling  net_dev_init+0x0/0x1ef @ 1
+2019-05-09T20:02:30,536882+0000 initcall net_dev_init+0x0/0x1ef returned 0 after 80 usecs
+2019-05-09T20:02:30,536883+0000 calling  neigh_init+0x0/0x85 @ 1
+2019-05-09T20:02:30,536885+0000 initcall neigh_init+0x0/0x85 returned 0 after 0 usecs
+2019-05-09T20:02:30,536886+0000 calling  fib_notifier_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,536888+0000 initcall fib_notifier_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,536889+0000 calling  fib_rules_init+0x0/0xaf @ 1
+2019-05-09T20:02:30,536891+0000 initcall fib_rules_init+0x0/0xaf returned 0 after 0 usecs
+2019-05-09T20:02:30,536893+0000 calling  init_cgroup_netprio+0x0/0x19 @ 1
+2019-05-09T20:02:30,536894+0000 initcall init_cgroup_netprio+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:30,536896+0000 calling  bpf_lwt_init+0x0/0x1c @ 1
+2019-05-09T20:02:30,536897+0000 initcall bpf_lwt_init+0x0/0x1c returned 0 after 0 usecs
+2019-05-09T20:02:30,536899+0000 calling  pktsched_init+0x0/0x116 @ 1
+2019-05-09T20:02:30,536902+0000 initcall pktsched_init+0x0/0x116 returned 0 after 1 usecs
+2019-05-09T20:02:30,536903+0000 calling  tc_filter_init+0x0/0x88 @ 1
+2019-05-09T20:02:30,536912+0000 initcall tc_filter_init+0x0/0x88 returned 0 after 6 usecs
+2019-05-09T20:02:30,536913+0000 calling  tc_action_init+0x0/0x6e @ 1
+2019-05-09T20:02:30,536916+0000 initcall tc_action_init+0x0/0x6e returned 0 after 1 usecs
+2019-05-09T20:02:30,536917+0000 calling  genl_init+0x0/0x3b @ 1
+2019-05-09T20:02:30,536940+0000 initcall genl_init+0x0/0x3b returned 0 after 20 usecs
+2019-05-09T20:02:30,536941+0000 calling  ipv4_netfilter_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,536943+0000 initcall ipv4_netfilter_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,536944+0000 calling  cipso_v4_init+0x0/0x6a @ 1
+2019-05-09T20:02:30,536945+0000 initcall cipso_v4_init+0x0/0x6a returned 0 after 0 usecs
+2019-05-09T20:02:30,536946+0000 calling  wireless_nlevent_init+0x0/0x47 @ 1
+2019-05-09T20:02:30,536948+0000 initcall wireless_nlevent_init+0x0/0x47 returned 0 after 0 usecs
+2019-05-09T20:02:30,536949+0000 calling  netlbl_init+0x0/0x7e @ 1
+2019-05-09T20:02:30,536950+0000 NetLabel: Initializing
+2019-05-09T20:02:30,540003+0000 NetLabel:  domain hash size = 128
+2019-05-09T20:02:30,544004+0000 NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+2019-05-09T20:02:30,548016+0000 NetLabel:  unlabeled traffic allowed by default
+2019-05-09T20:02:30,552006+0000 initcall netlbl_init+0x0/0x7e returned 0 after 14700 usecs
+2019-05-09T20:02:30,552007+0000 calling  rfkill_init+0x0/0xfc @ 1
+2019-05-09T20:02:30,552029+0000 initcall rfkill_init+0x0/0xfc returned 0 after 21 usecs
+2019-05-09T20:02:30,552029+0000 calling  watchdog_init+0x0/0x89 @ 1
+2019-05-09T20:02:30,552035+0000 initcall watchdog_init+0x0/0x89 returned 0 after 5 usecs
+2019-05-09T20:02:30,552041+0000 calling  nmi_warning_debugfs+0x0/0x2c @ 1
+2019-05-09T20:02:30,552044+0000 initcall nmi_warning_debugfs+0x0/0x2c returned 0 after 2 usecs
+2019-05-09T20:02:30,552046+0000 calling  save_microcode_in_initrd+0x0/0xa0 @ 1
+2019-05-09T20:02:30,552051+0000 initcall save_microcode_in_initrd+0x0/0xa0 returned 0 after 3 usecs
+2019-05-09T20:02:30,552053+0000 calling  hpet_late_init+0x0/0x108 @ 1
+2019-05-09T20:02:30,552055+0000 initcall hpet_late_init+0x0/0x108 returned -19 after 0 usecs
+2019-05-09T20:02:30,552056+0000 calling  init_amd_nbs+0x0/0x11f @ 1
+2019-05-09T20:02:30,552059+0000 initcall init_amd_nbs+0x0/0x11f returned 0 after 1 usecs
+2019-05-09T20:02:30,552060+0000 calling  sugov_register+0x0/0x17 @ 1
+2019-05-09T20:02:30,552062+0000 initcall sugov_register+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,552064+0000 calling  clocksource_done_booting+0x0/0x47 @ 1
+2019-05-09T20:02:30,552083+0000 clocksource: Switched to clocksource hyperv_clocksource_tsc_page
+2019-05-09T20:02:30,559024+0000 initcall clocksource_done_booting+0x0/0x47 returned 0 after 6794 usecs
+2019-05-09T20:02:30,559025+0000 calling  tracer_init_tracefs+0x0/0x1ba @ 1
+2019-05-09T20:02:30,561044+0000 initcall tracer_init_tracefs+0x0/0x1ba returned 0 after 1969 usecs
+2019-05-09T20:02:30,561045+0000 calling  init_trace_printk_function_export+0x0/0x32 @ 1
+2019-05-09T20:02:30,561047+0000 initcall init_trace_printk_function_export+0x0/0x32 returned 0 after 0 usecs
+2019-05-09T20:02:30,561048+0000 calling  init_graph_tracefs+0x0/0x32 @ 1
+2019-05-09T20:02:30,561050+0000 initcall init_graph_tracefs+0x0/0x32 returned 0 after 0 usecs
+2019-05-09T20:02:30,561051+0000 calling  event_trace_init+0x0/0x2dd @ 1
+2019-05-09T20:02:30,569112+0000 initcall event_trace_init+0x0/0x2dd returned 0 after 7867 usecs
+2019-05-09T20:02:30,569114+0000 calling  init_kprobe_trace+0x0/0x91 @ 1
+2019-05-09T20:02:30,569117+0000 initcall init_kprobe_trace+0x0/0x91 returned 0 after 1 usecs
+2019-05-09T20:02:30,569118+0000 calling  init_uprobe_trace+0x0/0x54 @ 1
+2019-05-09T20:02:30,569121+0000 initcall init_uprobe_trace+0x0/0x54 returned 0 after 0 usecs
+2019-05-09T20:02:30,569122+0000 calling  bpf_init+0x0/0x55 @ 1
+2019-05-09T20:02:30,569126+0000 initcall bpf_init+0x0/0x55 returned 0 after 2 usecs
+2019-05-09T20:02:30,569128+0000 calling  init_pipe_fs+0x0/0x4c @ 1
+2019-05-09T20:02:30,569138+0000 initcall init_pipe_fs+0x0/0x4c returned 0 after 8 usecs
+2019-05-09T20:02:30,569139+0000 calling  cgroup_writeback_init+0x0/0x30 @ 1
+2019-05-09T20:02:30,569155+0000 initcall cgroup_writeback_init+0x0/0x30 returned 0 after 13 usecs
+2019-05-09T20:02:30,569156+0000 calling  inotify_user_setup+0x0/0x50 @ 1
+2019-05-09T20:02:30,569160+0000 initcall inotify_user_setup+0x0/0x50 returned 0 after 1 usecs
+2019-05-09T20:02:30,569161+0000 calling  eventpoll_init+0x0/0xc8 @ 1
+2019-05-09T20:02:30,569187+0000 initcall eventpoll_init+0x0/0xc8 returned 0 after 7 usecs
+2019-05-09T20:02:30,569188+0000 calling  anon_inode_init+0x0/0x60 @ 1
+2019-05-09T20:02:30,569193+0000 initcall anon_inode_init+0x0/0x60 returned 0 after 2 usecs
+2019-05-09T20:02:30,569194+0000 calling  init_dax_wait_table+0x0/0x38 @ 1
+2019-05-09T20:02:30,569242+0000 initcall init_dax_wait_table+0x0/0x38 returned 0 after 44 usecs
+2019-05-09T20:02:30,569243+0000 calling  proc_locks_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,569246+0000 initcall proc_locks_init+0x0/0x24 returned 0 after 1 usecs
+2019-05-09T20:02:30,569247+0000 calling  dquot_init+0x0/0x12e @ 1
+2019-05-09T20:02:30,569248+0000 VFS: Disk quotas dquot_6.6.0
+2019-05-09T20:02:30,574116+0000 VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+2019-05-09T20:02:30,581586+0000 initcall dquot_init+0x0/0x12e returned 0 after 12045 usecs
+2019-05-09T20:02:30,581588+0000 calling  quota_init+0x0/0x29 @ 1
+2019-05-09T20:02:30,581595+0000 initcall quota_init+0x0/0x29 returned 0 after 5 usecs
+2019-05-09T20:02:30,581597+0000 calling  proc_cmdline_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581600+0000 initcall proc_cmdline_init+0x0/0x24 returned 0 after 1 usecs
+2019-05-09T20:02:30,581602+0000 calling  proc_consoles_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581604+0000 initcall proc_consoles_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581606+0000 calling  proc_cpuinfo_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581609+0000 initcall proc_cpuinfo_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581611+0000 calling  proc_devices_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581613+0000 initcall proc_devices_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581615+0000 calling  proc_interrupts_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581618+0000 initcall proc_interrupts_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581620+0000 calling  proc_loadavg_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581622+0000 initcall proc_loadavg_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581624+0000 calling  proc_meminfo_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581626+0000 initcall proc_meminfo_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581628+0000 calling  proc_stat_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581630+0000 initcall proc_stat_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581632+0000 calling  proc_uptime_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581635+0000 initcall proc_uptime_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581636+0000 calling  proc_version_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581639+0000 initcall proc_version_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581641+0000 calling  proc_softirqs_init+0x0/0x24 @ 1
+2019-05-09T20:02:30,581643+0000 initcall proc_softirqs_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:30,581645+0000 calling  proc_kcore_init+0x0/0x19f @ 1
+2019-05-09T20:02:30,581653+0000 initcall proc_kcore_init+0x0/0x19f returned 0 after 6 usecs
+2019-05-09T20:02:30,581655+0000 calling  vmcore_init+0x0/0x38 @ 1
+2019-05-09T20:02:30,581657+0000 initcall vmcore_init+0x0/0x38 returned 0 after 0 usecs
+2019-05-09T20:02:30,581659+0000 calling  proc_kmsg_init+0x0/0x27 @ 1
+2019-05-09T20:02:30,581661+0000 initcall proc_kmsg_init+0x0/0x27 returned 0 after 0 usecs
+2019-05-09T20:02:30,581663+0000 calling  proc_page_init+0x0/0x5b @ 1
+2019-05-09T20:02:30,581667+0000 initcall proc_page_init+0x0/0x5b returned 0 after 1 usecs
+2019-05-09T20:02:30,581669+0000 calling  init_ramfs_fs+0x0/0x25 @ 1
+2019-05-09T20:02:30,581671+0000 initcall init_ramfs_fs+0x0/0x25 returned 0 after 0 usecs
+2019-05-09T20:02:30,581672+0000 calling  init_hugetlbfs_fs+0x0/0x171 @ 1
+2019-05-09T20:02:30,581710+0000 initcall init_hugetlbfs_fs+0x0/0x171 returned 0 after 36 usecs
+2019-05-09T20:02:30,581712+0000 calling  tomoyo_initerface_init+0x0/0x1a1 @ 1
+2019-05-09T20:02:30,581713+0000 initcall tomoyo_initerface_init+0x0/0x1a1 returned 0 after 0 usecs
+2019-05-09T20:02:30,581715+0000 calling  aa_create_aafs+0x0/0x3a5 @ 1
+2019-05-09T20:02:30,581770+0000 AppArmor: AppArmor Filesystem Enabled
+2019-05-09T20:02:30,586870+0000 initcall aa_create_aafs+0x0/0x3a5 returned 0 after 5031 usecs
+2019-05-09T20:02:30,586871+0000 calling  blk_scsi_ioctl_init+0x0/0x391 @ 1
+2019-05-09T20:02:30,586872+0000 initcall blk_scsi_ioctl_init+0x0/0x391 returned 0 after 0 usecs
+2019-05-09T20:02:30,586873+0000 calling  dynamic_debug_init_debugfs+0x0/0x67 @ 1
+2019-05-09T20:02:30,586880+0000 initcall dynamic_debug_init_debugfs+0x0/0x67 returned 0 after 5 usecs
+2019-05-09T20:02:30,586882+0000 calling  acpi_event_init+0x0/0x35 @ 1
+2019-05-09T20:02:30,586886+0000 initcall acpi_event_init+0x0/0x35 returned 0 after 3 usecs
+2019-05-09T20:02:30,586888+0000 calling  pnp_system_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,586897+0000 initcall pnp_system_init+0x0/0x17 returned 0 after 7 usecs
+2019-05-09T20:02:30,586898+0000 calling  pnpacpi_init+0x0/0x73 @ 1
+2019-05-09T20:02:30,586899+0000 pnp: PnP ACPI init
+2019-05-09T20:02:30,590595+0000 pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+2019-05-09T20:02:30,590640+0000 pnp 00:01: Plug and Play ACPI device, IDs PNP0303 PNP030b (active)
+2019-05-09T20:02:30,590683+0000 pnp 00:02: Plug and Play ACPI device, IDs PNP0f03 PNP0f13 (active)
+2019-05-09T20:02:30,591604+0000 pnp 00:03: [dma 0 disabled]
+2019-05-09T20:02:30,591631+0000 pnp 00:03: Plug and Play ACPI device, IDs PNP0501 (active)
+2019-05-09T20:02:30,592639+0000 pnp 00:04: [dma 0 disabled]
+2019-05-09T20:02:30,592665+0000 pnp 00:04: Plug and Play ACPI device, IDs PNP0501 (active)
+2019-05-09T20:02:30,593589+0000 pnp 00:05: [dma 2]
+2019-05-09T20:02:30,593628+0000 pnp 00:05: Plug and Play ACPI device, IDs PNP0700 (active)
+2019-05-09T20:02:30,593670+0000 system 00:06: [io  0x01e0-0x01ef] has been reserved
+2019-05-09T20:02:30,600572+0000 system 00:06: [io  0x0160-0x016f] has been reserved
+2019-05-09T20:02:30,607675+0000 system 00:06: [io  0x0278-0x027f] has been reserved
+2019-05-09T20:02:30,613868+0000 system 00:06: [io  0x0378-0x037f] has been reserved
+2019-05-09T20:02:30,620001+0000 system 00:06: [io  0x0678-0x067f] has been reserved
+2019-05-09T20:02:30,626790+0000 system 00:06: [io  0x0778-0x077f] has been reserved
+2019-05-09T20:02:30,632920+0000 system 00:06: [io  0x04d0-0x04d1] has been reserved
+2019-05-09T20:02:30,639124+0000 system 00:06: Plug and Play ACPI device, IDs PNP0c02 (active)
+2019-05-09T20:02:30,639230+0000 system 00:07: [io  0x0400-0x043f] has been reserved
+2019-05-09T20:02:30,645275+0000 system 00:07: [io  0x0370-0x0371] has been reserved
+2019-05-09T20:02:30,651311+0000 system 00:07: [io  0x0440-0x044f] has been reserved
+2019-05-09T20:02:30,657414+0000 system 00:07: [mem 0xfec00000-0xfec00fff] could not be reserved
+2019-05-09T20:02:30,664424+0000 system 00:07: [mem 0xfee00000-0xfee00fff] has been reserved
+2019-05-09T20:02:30,671042+0000 system 00:07: Plug and Play ACPI device, IDs PNP0c02 (active)
+2019-05-09T20:02:30,671134+0000 system 00:08: [mem 0x00000000-0x0009ffff] could not be reserved
+2019-05-09T20:02:30,678200+0000 system 00:08: [mem 0x000c0000-0x000dffff] could not be reserved
+2019-05-09T20:02:30,685107+0000 system 00:08: [mem 0x000e0000-0x000fffff] could not be reserved
+2019-05-09T20:02:30,692046+0000 system 00:08: [mem 0x00100000-0x3fffffff] could not be reserved
+2019-05-09T20:02:30,698984+0000 system 00:08: [mem 0xfffc0000-0xffffffff] has been reserved
+2019-05-09T20:02:30,705737+0000 system 00:08: Plug and Play ACPI device, IDs PNP0c01 (active)
+2019-05-09T20:02:30,706002+0000 pnp: PnP ACPI: found 9 devices
+2019-05-09T20:02:30,710339+0000 initcall pnpacpi_init+0x0/0x73 returned 0 after 120544 usecs
+2019-05-09T20:02:30,710340+0000 calling  chr_dev_init+0x0/0xaf @ 1
+2019-05-09T20:02:30,713911+0000 initcall chr_dev_init+0x0/0xaf returned 0 after 3485 usecs
+2019-05-09T20:02:30,713913+0000 calling  firmware_class_init+0x0/0x42 @ 1
+2019-05-09T20:02:30,713915+0000 initcall firmware_class_init+0x0/0x42 returned 0 after 0 usecs
+2019-05-09T20:02:30,713917+0000 calling  thermal_init+0x0/0xca @ 1
+2019-05-09T20:02:30,713925+0000 initcall thermal_init+0x0/0xca returned 0 after 6 usecs
+2019-05-09T20:02:30,713927+0000 calling  cpufreq_gov_performance_init+0x0/0x17 @ 1
+2019-05-09T20:02:30,713929+0000 initcall cpufreq_gov_performance_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:30,713930+0000 calling  map_properties+0x0/0x518 @ 1
+2019-05-09T20:02:30,713931+0000 initcall map_properties+0x0/0x518 returned 0 after 0 usecs
+2019-05-09T20:02:30,713933+0000 calling  init_acpi_pm_clocksource+0x0/0xda @ 1
+2019-05-09T20:02:30,718443+0000 clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+2019-05-09T20:02:30,727076+0000 initcall init_acpi_pm_clocksource+0x0/0xda returned 0 after 12832 usecs
+2019-05-09T20:02:30,727078+0000 calling  pcibios_assign_resources+0x0/0xbf @ 1
+2019-05-09T20:02:30,727083+0000 pci_bus 0000:00: resource 4 [mem 0xfe0000000-0xfffffffff window]
+2019-05-09T20:02:30,727084+0000 pci_bus 0000:00: resource 5 [io  0x0000-0x0cf7 window]
+2019-05-09T20:02:30,727085+0000 pci_bus 0000:00: resource 6 [io  0x0d00-0xffff window]
+2019-05-09T20:02:30,727087+0000 pci_bus 0000:00: resource 7 [mem 0x000a0000-0x000bffff window]
+2019-05-09T20:02:30,727088+0000 pci_bus 0000:00: resource 8 [mem 0x40000000-0xfffbffff window]
+2019-05-09T20:02:30,727101+0000 initcall pcibios_assign_resources+0x0/0xbf returned 0 after 21 usecs
+2019-05-09T20:02:30,727103+0000 calling  sysctl_core_init+0x0/0x31 @ 1
+2019-05-09T20:02:30,727114+0000 initcall sysctl_core_init+0x0/0x31 returned 0 after 8 usecs
+2019-05-09T20:02:30,727115+0000 calling  eth_offload_init+0x0/0x19 @ 1
+2019-05-09T20:02:30,727117+0000 initcall eth_offload_init+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:30,727118+0000 calling  inet_init+0x0/0x28a @ 1
+2019-05-09T20:02:30,727131+0000 NET: Registered protocol family 2
+2019-05-09T20:02:30,732044+0000 TCP established hash table entries: 65536 (order: 7, 524288 bytes)
+2019-05-09T20:02:30,739670+0000 TCP bind hash table entries: 65536 (order: 8, 1048576 bytes)
+2019-05-09T20:02:30,747650+0000 TCP: Hash tables configured (established 65536 bind 65536)
+2019-05-09T20:02:30,754295+0000 UDP hash table entries: 4096 (order: 5, 131072 bytes)
+2019-05-09T20:02:30,760697+0000 UDP-Lite hash table entries: 4096 (order: 5, 131072 bytes)
+2019-05-09T20:02:30,767818+0000 initcall inet_init+0x0/0x28a returned 0 after 39744 usecs
+2019-05-09T20:02:30,767820+0000 calling  ipv4_offload_init+0x0/0x79 @ 1
+2019-05-09T20:02:30,767821+0000 initcall ipv4_offload_init+0x0/0x79 returned 0 after 0 usecs
+2019-05-09T20:02:30,767822+0000 calling  af_unix_init+0x0/0x53 @ 1
+2019-05-09T20:02:30,767823+0000 NET: Registered protocol family 1
+2019-05-09T20:02:30,772537+0000 initcall af_unix_init+0x0/0x53 returned 0 after 4601 usecs
+2019-05-09T20:02:30,772539+0000 calling  ipv6_offload_init+0x0/0x84 @ 1
+2019-05-09T20:02:30,772541+0000 initcall ipv6_offload_init+0x0/0x84 returned 0 after 0 usecs
+2019-05-09T20:02:30,772543+0000 calling  pci_apply_final_quirks+0x0/0x128 @ 1
+2019-05-09T20:02:30,772547+0000 pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+2019-05-09T20:02:30,779102+0000 pci 0000:00:08.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+2019-05-09T20:02:30,787797+0000 PCI: CLS 0 bytes, default 64
+2019-05-09T20:02:30,787799+0000 initcall pci_apply_final_quirks+0x0/0x128 returned 0 after 14896 usecs
+2019-05-09T20:02:30,787800+0000 calling  acpi_reserve_resources+0x0/0xf0 @ 1
+2019-05-09T20:02:30,787803+0000 initcall acpi_reserve_resources+0x0/0xf0 returned 0 after 1 usecs
+2019-05-09T20:02:30,787806+0000 calling  populate_rootfs+0x0/0x10f @ 1
+2019-05-09T20:02:30,787835+0000 Unpacking initramfs...
+2019-05-09T20:02:30,992575+0000 Freeing initrd memory: 14900K
+2019-05-09T20:02:30,997396+0000 initcall populate_rootfs+0x0/0x10f returned 0 after 204671 usecs
+2019-05-09T20:02:30,997399+0000 calling  pci_iommu_init+0x0/0x44 @ 1
+2019-05-09T20:02:30,997400+0000 PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+2019-05-09T20:02:31,004629+0000 software IO TLB [mem 0x3bff0000-0x3fff0000] (64MB) mapped at [        (ptrval)-        (ptrval)]
+2019-05-09T20:02:31,014456+0000 initcall pci_iommu_init+0x0/0x44 returned 0 after 16653 usecs
+2019-05-09T20:02:31,014459+0000 calling  calgary_fixup_tce_spaces+0x0/0xf9 @ 1
+2019-05-09T20:02:31,014461+0000 initcall calgary_fixup_tce_spaces+0x0/0xf9 returned -19 after 0 usecs
+2019-05-09T20:02:31,014464+0000 calling  ir_dev_scope_init+0x0/0x38 @ 1
+2019-05-09T20:02:31,014466+0000 initcall ir_dev_scope_init+0x0/0x38 returned 0 after 0 usecs
+2019-05-09T20:02:31,014501+0000 calling  ia32_binfmt_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,014506+0000 initcall ia32_binfmt_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:31,014508+0000 calling  amd_uncore_init+0x0/0x27d @ 1
+2019-05-09T20:02:31,014509+0000 initcall amd_uncore_init+0x0/0x27d returned -19 after 0 usecs
+2019-05-09T20:02:31,014510+0000 calling  amd_ibs_init+0x0/0x18e @ 1
+2019-05-09T20:02:31,014512+0000 initcall amd_ibs_init+0x0/0x18e returned -19 after 0 usecs
+2019-05-09T20:02:31,014513+0000 calling  amd_iommu_pc_init+0x0/0x217 @ 1
+2019-05-09T20:02:31,014514+0000 initcall amd_iommu_pc_init+0x0/0x217 returned -19 after 0 usecs
+2019-05-09T20:02:31,014515+0000 calling  msr_init+0x0/0xf2 @ 1
+2019-05-09T20:02:31,014559+0000 initcall msr_init+0x0/0xf2 returned 0 after 41 usecs
+2019-05-09T20:02:31,014561+0000 calling  intel_uncore_init+0x0/0x24f @ 1
+2019-05-09T20:02:31,014562+0000 initcall intel_uncore_init+0x0/0x24f returned -19 after 0 usecs
+2019-05-09T20:02:31,014564+0000 calling  register_kernel_offset_dumper+0x0/0x20 @ 1
+2019-05-09T20:02:31,014566+0000 initcall register_kernel_offset_dumper+0x0/0x20 returned 0 after 0 usecs
+2019-05-09T20:02:31,014568+0000 calling  i8259A_init_ops+0x0/0x29 @ 1
+2019-05-09T20:02:31,014569+0000 initcall i8259A_init_ops+0x0/0x29 returned 0 after 0 usecs
+2019-05-09T20:02:31,014571+0000 calling  init_tsc_clocksource+0x0/0xce @ 1
+2019-05-09T20:02:31,014575+0000 initcall init_tsc_clocksource+0x0/0xce returned 0 after 1 usecs
+2019-05-09T20:02:31,014576+0000 calling  add_rtc_cmos+0x0/0xac @ 1
+2019-05-09T20:02:31,014578+0000 initcall add_rtc_cmos+0x0/0xac returned 0 after 0 usecs
+2019-05-09T20:02:31,014580+0000 calling  i8237A_init_ops+0x0/0x19 @ 1
+2019-05-09T20:02:31,014583+0000 clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x21139843abd, max_idle_ns: 440795210670 ns
+2019-05-09T20:02:31,020071+0000 initcall i8237A_init_ops+0x0/0x19 returned 0 after 5357 usecs
+2019-05-09T20:02:31,020073+0000 calling  thermal_throttle_init_device+0x0/0x47 @ 1
+2019-05-09T20:02:31,020075+0000 initcall thermal_throttle_init_device+0x0/0x47 returned 0 after 0 usecs
+2019-05-09T20:02:31,020077+0000 calling  ioapic_init_ops+0x0/0x19 @ 1
+2019-05-09T20:02:31,020078+0000 initcall ioapic_init_ops+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:31,020079+0000 calling  register_e820_pmem+0x0/0x49 @ 1
+2019-05-09T20:02:31,020083+0000 initcall register_e820_pmem+0x0/0x49 returned 0 after 2 usecs
+2019-05-09T20:02:31,020084+0000 calling  add_pcspkr+0x0/0x68 @ 1
+2019-05-09T20:02:31,020120+0000 initcall add_pcspkr+0x0/0x68 returned 0 after 33 usecs
+2019-05-09T20:02:31,020123+0000 calling  start_periodic_check_for_corruption+0x0/0x60 @ 1
+2019-05-09T20:02:31,020123+0000 Scanning for low memory corruption every 60 seconds
+2019-05-09T20:02:31,020126+0000 initcall start_periodic_check_for_corruption+0x0/0x60 returned 0 after 2 usecs
+2019-05-09T20:02:31,020127+0000 calling  sysfb_init+0x0/0x97 @ 1
+2019-05-09T20:02:31,020159+0000 initcall sysfb_init+0x0/0x97 returned 0 after 29 usecs
+2019-05-09T20:02:31,020161+0000 calling  audit_classes_init+0x0/0xb4 @ 1
+2019-05-09T20:02:31,020165+0000 initcall audit_classes_init+0x0/0xb4 returned 0 after 2 usecs
+2019-05-09T20:02:31,020166+0000 calling  pt_dump_init+0x0/0x37 @ 1
+2019-05-09T20:02:31,020168+0000 initcall pt_dump_init+0x0/0x37 returned 0 after 0 usecs
+2019-05-09T20:02:31,020169+0000 calling  crc32c_intel_mod_init+0x0/0x5c @ 1
+2019-05-09T20:02:31,020209+0000 initcall crc32c_intel_mod_init+0x0/0x5c returned 0 after 37 usecs
+2019-05-09T20:02:31,020210+0000 calling  iosf_mbi_init+0x0/0xbe @ 1
+2019-05-09T20:02:31,020234+0000 initcall iosf_mbi_init+0x0/0xbe returned 0 after 21 usecs
+2019-05-09T20:02:31,020235+0000 calling  proc_execdomains_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,020239+0000 initcall proc_execdomains_init+0x0/0x24 returned 0 after 2 usecs
+2019-05-09T20:02:31,020240+0000 calling  register_warn_debugfs+0x0/0x29 @ 1
+2019-05-09T20:02:31,020242+0000 initcall register_warn_debugfs+0x0/0x29 returned 0 after 0 usecs
+2019-05-09T20:02:31,020243+0000 calling  ioresources_init+0x0/0x3b @ 1
+2019-05-09T20:02:31,020247+0000 initcall ioresources_init+0x0/0x3b returned 0 after 3 usecs
+2019-05-09T20:02:31,020249+0000 calling  init_sched_debug_procfs+0x0/0x2e @ 1
+2019-05-09T20:02:31,020251+0000 initcall init_sched_debug_procfs+0x0/0x2e returned 0 after 0 usecs
+2019-05-09T20:02:31,020253+0000 calling  irq_gc_init_ops+0x0/0x19 @ 1
+2019-05-09T20:02:31,020254+0000 initcall irq_gc_init_ops+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:31,020256+0000 calling  klp_init+0x0/0x2e @ 1
+2019-05-09T20:02:31,020258+0000 initcall klp_init+0x0/0x2e returned 0 after 1 usecs
+2019-05-09T20:02:31,020260+0000 calling  timekeeping_init_ops+0x0/0x19 @ 1
+2019-05-09T20:02:31,020261+0000 initcall timekeeping_init_ops+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:31,020263+0000 calling  init_clocksource_sysfs+0x0/0x6e @ 1
+2019-05-09T20:02:31,020284+0000 initcall init_clocksource_sysfs+0x0/0x6e returned 0 after 18 usecs
+2019-05-09T20:02:31,020285+0000 calling  init_timer_list_procfs+0x0/0x2e @ 1
+2019-05-09T20:02:31,020287+0000 initcall init_timer_list_procfs+0x0/0x2e returned 0 after 0 usecs
+2019-05-09T20:02:31,020288+0000 calling  alarmtimer_init+0x0/0x136 @ 1
+2019-05-09T20:02:31,020312+0000 initcall alarmtimer_init+0x0/0x136 returned 0 after 20 usecs
+2019-05-09T20:02:31,020313+0000 calling  init_posix_timers+0x0/0x2f @ 1
+2019-05-09T20:02:31,020330+0000 initcall init_posix_timers+0x0/0x2f returned 0 after 15 usecs
+2019-05-09T20:02:31,020332+0000 calling  clockevents_init_sysfs+0x0/0xc6 @ 1
+2019-05-09T20:02:31,020381+0000 initcall clockevents_init_sysfs+0x0/0xc6 returned 0 after 46 usecs
+2019-05-09T20:02:31,020383+0000 calling  proc_dma_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,020386+0000 initcall proc_dma_init+0x0/0x24 returned 0 after 1 usecs
+2019-05-09T20:02:31,020388+0000 calling  proc_modules_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,020391+0000 initcall proc_modules_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:31,020392+0000 calling  kallsyms_init+0x0/0x27 @ 1
+2019-05-09T20:02:31,020395+0000 initcall kallsyms_init+0x0/0x27 returned 0 after 0 usecs
+2019-05-09T20:02:31,020396+0000 calling  pid_namespaces_init+0x0/0x45 @ 1
+2019-05-09T20:02:31,020404+0000 initcall pid_namespaces_init+0x0/0x45 returned 0 after 6 usecs
+2019-05-09T20:02:31,020406+0000 calling  audit_watch_init+0x0/0x3f @ 1
+2019-05-09T20:02:31,020407+0000 initcall audit_watch_init+0x0/0x3f returned 0 after 0 usecs
+2019-05-09T20:02:31,020408+0000 calling  audit_fsnotify_init+0x0/0x3f @ 1
+2019-05-09T20:02:31,020411+0000 initcall audit_fsnotify_init+0x0/0x3f returned 0 after 1 usecs
+2019-05-09T20:02:31,020412+0000 calling  audit_tree_init+0x0/0x4e @ 1
+2019-05-09T20:02:31,020413+0000 initcall audit_tree_init+0x0/0x4e returned 0 after 0 usecs
+2019-05-09T20:02:31,020415+0000 calling  init_kprobes+0x0/0x1d6 @ 1
+2019-05-09T20:02:31,020546+0000 initcall init_kprobes+0x0/0x1d6 returned 0 after 126 usecs
+2019-05-09T20:02:31,020547+0000 calling  seccomp_sysctl_init+0x0/0x31 @ 1
+2019-05-09T20:02:31,020551+0000 initcall seccomp_sysctl_init+0x0/0x31 returned 0 after 2 usecs
+2019-05-09T20:02:31,020553+0000 calling  utsname_sysctl_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,020560+0000 initcall utsname_sysctl_init+0x0/0x19 returned 0 after 5 usecs
+2019-05-09T20:02:31,020561+0000 calling  init_tracepoints+0x0/0x2d @ 1
+2019-05-09T20:02:31,020562+0000 initcall init_tracepoints+0x0/0x2d returned 0 after 0 usecs
+2019-05-09T20:02:31,020564+0000 calling  stack_trace_init+0x0/0xb5 @ 1
+2019-05-09T20:02:31,020571+0000 initcall stack_trace_init+0x0/0xb5 returned 0 after 5 usecs
+2019-05-09T20:02:31,020572+0000 calling  init_mmio_trace+0x0/0x12 @ 1
+2019-05-09T20:02:31,020576+0000 initcall init_mmio_trace+0x0/0x12 returned 0 after 2 usecs
+2019-05-09T20:02:31,020577+0000 calling  init_blk_tracer+0x0/0x56 @ 1
+2019-05-09T20:02:31,020586+0000 initcall init_blk_tracer+0x0/0x56 returned 0 after 7 usecs
+2019-05-09T20:02:31,020587+0000 calling  perf_event_sysfs_init+0x0/0x86 @ 1
+2019-05-09T20:02:31,020627+0000 initcall perf_event_sysfs_init+0x0/0x86 returned 0 after 37 usecs
+2019-05-09T20:02:31,020629+0000 calling  init_uprobes+0x0/0x67 @ 1
+2019-05-09T20:02:31,020633+0000 initcall init_uprobes+0x0/0x67 returned 0 after 1 usecs
+2019-05-09T20:02:31,020634+0000 calling  system_trusted_keyring_init+0x0/0xfb @ 1
+2019-05-09T20:02:31,020635+0000 Initialise system trusted keyrings
+2019-05-09T20:02:31,020643+0000 initcall system_trusted_keyring_init+0x0/0xfb returned 0 after 6 usecs
+2019-05-09T20:02:31,020645+0000 calling  blacklist_init+0x0/0xa3 @ 1
+2019-05-09T20:02:31,020647+0000 Key type blacklist registered
+2019-05-09T20:02:31,020650+0000 initcall blacklist_init+0x0/0xa3 returned 0 after 3 usecs
+2019-05-09T20:02:31,020653+0000 calling  kswapd_init+0x0/0x95 @ 1
+2019-05-09T20:02:31,020689+0000 initcall kswapd_init+0x0/0x95 returned 0 after 32 usecs
+2019-05-09T20:02:31,020691+0000 calling  extfrag_debug_init+0x0/0x7d @ 1
+2019-05-09T20:02:31,020714+0000 initcall extfrag_debug_init+0x0/0x7d returned 0 after 21 usecs
+2019-05-09T20:02:31,020716+0000 calling  mm_compute_batch_init+0x0/0x1e @ 1
+2019-05-09T20:02:31,020718+0000 initcall mm_compute_batch_init+0x0/0x1e returned 0 after 0 usecs
+2019-05-09T20:02:31,020720+0000 calling  slab_proc_init+0x0/0x27 @ 1
+2019-05-09T20:02:31,020724+0000 initcall slab_proc_init+0x0/0x27 returned 0 after 2 usecs
+2019-05-09T20:02:31,020725+0000 calling  workingset_init+0x0/0x8d @ 1
+2019-05-09T20:02:31,020726+0000 workingset: timestamp_bits=36 max_order=21 bucket_order=0
+2019-05-09T20:02:31,020728+0000 initcall workingset_init+0x0/0x8d returned 0 after 1 usecs
+2019-05-09T20:02:31,020729+0000 calling  proc_vmalloc_init+0x0/0x27 @ 1
+2019-05-09T20:02:31,020731+0000 initcall proc_vmalloc_init+0x0/0x27 returned 0 after 0 usecs
+2019-05-09T20:02:31,020732+0000 calling  procswaps_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,020734+0000 initcall procswaps_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:31,020735+0000 calling  init_frontswap+0x0/0x96 @ 1
+2019-05-09T20:02:31,020739+0000 initcall init_frontswap+0x0/0x96 returned 0 after 2 usecs
+2019-05-09T20:02:31,020741+0000 calling  slab_sysfs_init+0x0/0xf5 @ 1
+2019-05-09T20:02:31,021762+0000 initcall slab_sysfs_init+0x0/0xf5 returned 0 after 995 usecs
+2019-05-09T20:02:31,021764+0000 calling  init_cleancache+0x0/0x96 @ 1
+2019-05-09T20:02:31,021769+0000 initcall init_cleancache+0x0/0x96 returned 0 after 3 usecs
+2019-05-09T20:02:31,021770+0000 calling  init_zbud+0x0/0x25 @ 1
+2019-05-09T20:02:31,021770+0000 zbud: loaded
+2019-05-09T20:02:31,021772+0000 initcall init_zbud+0x0/0x25 returned 0 after 0 usecs
+2019-05-09T20:02:31,021773+0000 calling  zs_init+0x0/0x79 @ 1
+2019-05-09T20:02:31,021787+0000 initcall zs_init+0x0/0x79 returned 0 after 12 usecs
+2019-05-09T20:02:31,021789+0000 calling  hmm_init+0x0/0x69 @ 1
+2019-05-09T20:02:31,021794+0000 initcall hmm_init+0x0/0x69 returned 0 after 3 usecs
+2019-05-09T20:02:31,021795+0000 calling  fcntl_init+0x0/0x2f @ 1
+2019-05-09T20:02:31,021798+0000 initcall fcntl_init+0x0/0x2f returned 0 after 1 usecs
+2019-05-09T20:02:31,021799+0000 calling  proc_filesystems_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,021801+0000 initcall proc_filesystems_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:31,021803+0000 calling  start_dirtytime_writeback+0x0/0x2f @ 1
+2019-05-09T20:02:31,021804+0000 initcall start_dirtytime_writeback+0x0/0x2f returned 0 after 0 usecs
+2019-05-09T20:02:31,021806+0000 calling  blkdev_init+0x0/0x2f @ 1
+2019-05-09T20:02:31,021811+0000 initcall blkdev_init+0x0/0x2f returned 0 after 3 usecs
+2019-05-09T20:02:31,021812+0000 calling  dio_init+0x0/0x32 @ 1
+2019-05-09T20:02:31,021829+0000 initcall dio_init+0x0/0x32 returned 0 after 15 usecs
+2019-05-09T20:02:31,021831+0000 calling  dnotify_init+0x0/0x7e @ 1
+2019-05-09T20:02:31,021834+0000 initcall dnotify_init+0x0/0x7e returned 0 after 1 usecs
+2019-05-09T20:02:31,021835+0000 calling  fanotify_user_setup+0x0/0x7c @ 1
+2019-05-09T20:02:31,021839+0000 initcall fanotify_user_setup+0x0/0x7c returned 0 after 2 usecs
+2019-05-09T20:02:31,021840+0000 calling  userfaultfd_init+0x0/0x33 @ 1
+2019-05-09T20:02:31,021855+0000 initcall userfaultfd_init+0x0/0x33 returned 0 after 12 usecs
+2019-05-09T20:02:31,021856+0000 calling  aio_setup+0x0/0xa6 @ 1
+2019-05-09T20:02:31,021865+0000 initcall aio_setup+0x0/0xa6 returned 0 after 7 usecs
+2019-05-09T20:02:31,021867+0000 calling  fscrypt_init+0x0/0xa9 @ 1
+2019-05-09T20:02:31,021946+0000 initcall fscrypt_init+0x0/0xa9 returned 0 after 75 usecs
+2019-05-09T20:02:31,021948+0000 calling  init_sys32_ioctl+0x0/0x2d @ 1
+2019-05-09T20:02:31,022092+0000 initcall init_sys32_ioctl+0x0/0x2d returned 0 after 138 usecs
+2019-05-09T20:02:31,022093+0000 calling  mbcache_init+0x0/0x36 @ 1
+2019-05-09T20:02:31,022109+0000 initcall mbcache_init+0x0/0x36 returned 0 after 13 usecs
+2019-05-09T20:02:31,022111+0000 calling  proc_version_signature_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,022113+0000 initcall proc_version_signature_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:31,022114+0000 calling  init_devpts_fs+0x0/0x2d @ 1
+2019-05-09T20:02:31,022120+0000 initcall init_devpts_fs+0x0/0x2d returned 0 after 5 usecs
+2019-05-09T20:02:31,022123+0000 calling  ext4_init_fs+0x0/0x175 @ 1
+2019-05-09T20:02:31,022192+0000 initcall ext4_init_fs+0x0/0x175 returned 0 after 65 usecs
+2019-05-09T20:02:31,022193+0000 calling  journal_init+0x0/0x10c @ 1
+2019-05-09T20:02:31,022229+0000 initcall journal_init+0x0/0x10c returned 0 after 33 usecs
+2019-05-09T20:02:31,022230+0000 calling  init_squashfs_fs+0x0/0x74 @ 1
+2019-05-09T20:02:31,022247+0000 squashfs: version 4.0 (2009/01/31) Phillip Lougher
+2019-05-09T20:02:31,022249+0000 initcall init_squashfs_fs+0x0/0x74 returned 0 after 16 usecs
+2019-05-09T20:02:31,022250+0000 calling  init_fat_fs+0x0/0x4f @ 1
+2019-05-09T20:02:31,022278+0000 initcall init_fat_fs+0x0/0x4f returned 0 after 26 usecs
+2019-05-09T20:02:31,022279+0000 calling  init_vfat_fs+0x0/0x17 @ 1
+2019-05-09T20:02:31,022281+0000 initcall init_vfat_fs+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022282+0000 calling  ecryptfs_init+0x0/0x1a1 @ 1
+2019-05-09T20:02:31,022395+0000 initcall ecryptfs_init+0x0/0x1a1 returned 0 after 108 usecs
+2019-05-09T20:02:31,022397+0000 calling  init_nls_cp437+0x0/0x19 @ 1
+2019-05-09T20:02:31,022398+0000 initcall init_nls_cp437+0x0/0x19 returned 0 after 0 usecs
+2019-05-09T20:02:31,022399+0000 calling  fuse_init+0x0/0x1a1 @ 1
+2019-05-09T20:02:31,022400+0000 fuse init (API version 7.26)
+2019-05-09T20:02:31,022457+0000 initcall fuse_init+0x0/0x1a1 returned 0 after 54 usecs
+2019-05-09T20:02:31,022459+0000 calling  init_pstore_fs+0x0/0x4c @ 1
+2019-05-09T20:02:31,022461+0000 initcall init_pstore_fs+0x0/0x4c returned 0 after 0 usecs
+2019-05-09T20:02:31,022462+0000 calling  efivarfs_init+0x0/0x39 @ 1
+2019-05-09T20:02:31,022464+0000 initcall efivarfs_init+0x0/0x39 returned -19 after 0 usecs
+2019-05-09T20:02:31,022465+0000 calling  ipc_init+0x0/0x55 @ 1
+2019-05-09T20:02:31,022471+0000 initcall ipc_init+0x0/0x55 returned 0 after 3 usecs
+2019-05-09T20:02:31,022472+0000 calling  ipc_sysctl_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,022479+0000 initcall ipc_sysctl_init+0x0/0x19 returned 0 after 5 usecs
+2019-05-09T20:02:31,022481+0000 calling  init_mqueue_fs+0x0/0x10b @ 1
+2019-05-09T20:02:31,022518+0000 initcall init_mqueue_fs+0x0/0x10b returned 0 after 34 usecs
+2019-05-09T20:02:31,022520+0000 calling  key_proc_init+0x0/0x5d @ 1
+2019-05-09T20:02:31,022523+0000 initcall key_proc_init+0x0/0x5d returned 0 after 1 usecs
+2019-05-09T20:02:31,022525+0000 calling  selinux_nf_ip_init+0x0/0x43 @ 1
+2019-05-09T20:02:31,022527+0000 initcall selinux_nf_ip_init+0x0/0x43 returned 0 after 0 usecs
+2019-05-09T20:02:31,022528+0000 calling  init_sel_fs+0x0/0xa3 @ 1
+2019-05-09T20:02:31,022530+0000 initcall init_sel_fs+0x0/0xa3 returned 0 after 0 usecs
+2019-05-09T20:02:31,022531+0000 calling  selnl_init+0x0/0x7c @ 1
+2019-05-09T20:02:31,022539+0000 initcall selnl_init+0x0/0x7c returned 0 after 5 usecs
+2019-05-09T20:02:31,022540+0000 calling  sel_netif_init+0x0/0x3f @ 1
+2019-05-09T20:02:31,022542+0000 initcall sel_netif_init+0x0/0x3f returned 0 after 0 usecs
+2019-05-09T20:02:31,022543+0000 calling  sel_netnode_init+0x0/0x37 @ 1
+2019-05-09T20:02:31,022545+0000 initcall sel_netnode_init+0x0/0x37 returned 0 after 0 usecs
+2019-05-09T20:02:31,022546+0000 calling  sel_netport_init+0x0/0x37 @ 1
+2019-05-09T20:02:31,022547+0000 initcall sel_netport_init+0x0/0x37 returned 0 after 0 usecs
+2019-05-09T20:02:31,022549+0000 calling  aurule_init+0x0/0x30 @ 1
+2019-05-09T20:02:31,022551+0000 initcall aurule_init+0x0/0x30 returned 0 after 0 usecs
+2019-05-09T20:02:31,022552+0000 calling  init_smk_fs+0x0/0x11f @ 1
+2019-05-09T20:02:31,022554+0000 initcall init_smk_fs+0x0/0x11f returned 0 after 0 usecs
+2019-05-09T20:02:31,022555+0000 calling  smack_nf_ip_init+0x0/0x2d @ 1
+2019-05-09T20:02:31,022557+0000 initcall smack_nf_ip_init+0x0/0x2d returned 0 after 0 usecs
+2019-05-09T20:02:31,022559+0000 calling  crypto_algapi_init+0x0/0x12 @ 1
+2019-05-09T20:02:31,022561+0000 initcall crypto_algapi_init+0x0/0x12 returned 0 after 0 usecs
+2019-05-09T20:02:31,022563+0000 calling  seqiv_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022565+0000 initcall seqiv_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022568+0000 calling  dh_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,022591+0000 initcall dh_init+0x0/0x20 returned 0 after 19 usecs
+2019-05-09T20:02:31,022592+0000 calling  rsa_init+0x0/0x50 @ 1
+2019-05-09T20:02:31,022611+0000 initcall rsa_init+0x0/0x50 returned 0 after 17 usecs
+2019-05-09T20:02:31,022614+0000 calling  hmac_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022615+0000 initcall hmac_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022617+0000 calling  crypto_null_mod_init+0x0/0x4d @ 1
+2019-05-09T20:02:31,022670+0000 initcall crypto_null_mod_init+0x0/0x4d returned 0 after 49 usecs
+2019-05-09T20:02:31,022671+0000 calling  md5_mod_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022685+0000 initcall md5_mod_init+0x0/0x17 returned 0 after 11 usecs
+2019-05-09T20:02:31,022687+0000 calling  sha1_generic_mod_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022721+0000 initcall sha1_generic_mod_init+0x0/0x17 returned 0 after 31 usecs
+2019-05-09T20:02:31,022722+0000 calling  sha256_generic_mod_init+0x0/0x1c @ 1
+2019-05-09T20:02:31,022747+0000 initcall sha256_generic_mod_init+0x0/0x1c returned 0 after 22 usecs
+2019-05-09T20:02:31,022748+0000 calling  sha512_generic_mod_init+0x0/0x1c @ 1
+2019-05-09T20:02:31,022769+0000 initcall sha512_generic_mod_init+0x0/0x1c returned 0 after 18 usecs
+2019-05-09T20:02:31,022771+0000 calling  crypto_ecb_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022772+0000 initcall crypto_ecb_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022774+0000 calling  crypto_cbc_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022775+0000 initcall crypto_cbc_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022777+0000 calling  crypto_cts_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022778+0000 initcall crypto_cts_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022779+0000 calling  crypto_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022781+0000 initcall crypto_module_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,022782+0000 calling  crypto_ctr_module_init+0x0/0x3e @ 1
+2019-05-09T20:02:31,022784+0000 initcall crypto_ctr_module_init+0x0/0x3e returned 0 after 0 usecs
+2019-05-09T20:02:31,022786+0000 calling  crypto_gcm_module_init+0x0/0xb9 @ 1
+2019-05-09T20:02:31,022788+0000 initcall crypto_gcm_module_init+0x0/0xb9 returned 0 after 0 usecs
+2019-05-09T20:02:31,022789+0000 calling  aes_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022801+0000 initcall aes_init+0x0/0x17 returned 0 after 9 usecs
+2019-05-09T20:02:31,022802+0000 calling  crc32c_mod_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022815+0000 initcall crc32c_mod_init+0x0/0x17 returned 0 after 10 usecs
+2019-05-09T20:02:31,022816+0000 calling  crct10dif_mod_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,022828+0000 initcall crct10dif_mod_init+0x0/0x17 returned 0 after 9 usecs
+2019-05-09T20:02:31,022829+0000 calling  lzo_mod_init+0x0/0x47 @ 1
+2019-05-09T20:02:31,022851+0000 initcall lzo_mod_init+0x0/0x47 returned 0 after 19 usecs
+2019-05-09T20:02:31,022852+0000 calling  drbg_init+0x0/0x87 @ 1
+2019-05-09T20:02:31,023088+0000 initcall drbg_init+0x0/0x87 returned 0 after 228 usecs
+2019-05-09T20:02:31,023089+0000 calling  jent_mod_init+0x0/0x35 @ 1
+2019-05-09T20:02:31,023220+0000 initcall jent_mod_init+0x0/0x35 returned 0 after 126 usecs
+2019-05-09T20:02:31,023222+0000 calling  ghash_mod_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,023233+0000 initcall ghash_mod_init+0x0/0x17 returned 0 after 9 usecs
+2019-05-09T20:02:31,023235+0000 calling  asymmetric_key_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,023235+0000 Key type asymmetric registered
+2019-05-09T20:02:31,023237+0000 initcall asymmetric_key_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,023238+0000 calling  x509_key_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,023239+0000 Asymmetric key parser 'x509' registered
+2019-05-09T20:02:31,023240+0000 initcall x509_key_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,023241+0000 calling  proc_genhd_init+0x0/0x3b @ 1
+2019-05-09T20:02:31,023244+0000 initcall proc_genhd_init+0x0/0x3b returned 0 after 1 usecs
+2019-05-09T20:02:31,023244+0000 calling  bsg_init+0x0/0x154 @ 1
+2019-05-09T20:02:31,023269+0000 Block layer SCSI generic (bsg) driver version 0.4 loaded (major 244)
+2019-05-09T20:02:31,023270+0000 initcall bsg_init+0x0/0x154 returned 0 after 24 usecs
+2019-05-09T20:02:31,023271+0000 calling  throtl_init+0x0/0x47 @ 1
+2019-05-09T20:02:31,023289+0000 initcall throtl_init+0x0/0x47 returned 0 after 16 usecs
+2019-05-09T20:02:31,023290+0000 calling  noop_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,023291+0000 io scheduler noop registered (default)
+2019-05-09T20:02:31,023292+0000 initcall noop_init+0x0/0x17 returned 0 after 1 usecs
+2019-05-09T20:02:31,023293+0000 calling  btree_module_init+0x0/0x2a @ 1
+2019-05-09T20:02:31,023295+0000 initcall btree_module_init+0x0/0x2a returned 0 after 1 usecs
+2019-05-09T20:02:31,023296+0000 calling  crc_t10dif_mod_init+0x0/0x3e @ 1
+2019-05-09T20:02:31,023299+0000 initcall crc_t10dif_mod_init+0x0/0x3e returned 0 after 1 usecs
+2019-05-09T20:02:31,023299+0000 calling  percpu_counter_startup+0x0/0x56 @ 1
+2019-05-09T20:02:31,082803+0000 initcall percpu_counter_startup+0x0/0x56 returned 0 after 58105 usecs
+2019-05-09T20:02:31,082804+0000 calling  digsig_init+0x0/0x3b @ 1
+2019-05-09T20:02:31,082807+0000 initcall digsig_init+0x0/0x3b returned 0 after 2 usecs
+2019-05-09T20:02:31,082808+0000 calling  sg_pool_init+0x0/0xcc @ 1
+2019-05-09T20:02:31,082823+0000 initcall sg_pool_init+0x0/0xcc returned 0 after 13 usecs
+2019-05-09T20:02:31,082824+0000 calling  phy_core_init+0x0/0x50 @ 1
+2019-05-09T20:02:31,082831+0000 initcall phy_core_init+0x0/0x50 returned 0 after 5 usecs
+2019-05-09T20:02:31,082832+0000 calling  pci_proc_init+0x0/0x67 @ 1
+2019-05-09T20:02:31,082844+0000 initcall pci_proc_init+0x0/0x67 returned 0 after 10 usecs
+2019-05-09T20:02:31,082845+0000 calling  pcie_portdrv_init+0x0/0x7a @ 1
+2019-05-09T20:02:31,082863+0000 initcall pcie_portdrv_init+0x0/0x7a returned 0 after 16 usecs
+2019-05-09T20:02:31,082864+0000 calling  aer_service_init+0x0/0x3f @ 1
+2019-05-09T20:02:31,082868+0000 initcall aer_service_init+0x0/0x3f returned 0 after 3 usecs
+2019-05-09T20:02:31,082869+0000 calling  pcie_pme_service_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,082872+0000 initcall pcie_pme_service_init+0x0/0x17 returned 0 after 1 usecs
+2019-05-09T20:02:31,082873+0000 calling  dpc_service_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,082876+0000 initcall dpc_service_init+0x0/0x17 returned 0 after 1 usecs
+2019-05-09T20:02:31,082877+0000 calling  pci_hotplug_init+0x0/0x36 @ 1
+2019-05-09T20:02:31,082879+0000 initcall pci_hotplug_init+0x0/0x36 returned 0 after 0 usecs
+2019-05-09T20:02:31,082880+0000 calling  pcied_init+0x0/0x5b @ 1
+2019-05-09T20:02:31,082883+0000 initcall pcied_init+0x0/0x5b returned 0 after 2 usecs
+2019-05-09T20:02:31,082884+0000 calling  pci_ep_cfs_init+0x0/0xd5 @ 1
+2019-05-09T20:02:31,082898+0000 initcall pci_ep_cfs_init+0x0/0xd5 returned 0 after 12 usecs
+2019-05-09T20:02:31,082899+0000 calling  pci_epc_init+0x0/0x47 @ 1
+2019-05-09T20:02:31,082902+0000 initcall pci_epc_init+0x0/0x47 returned 0 after 1 usecs
+2019-05-09T20:02:31,082903+0000 calling  pci_epf_init+0x0/0x2f @ 1
+2019-05-09T20:02:31,082910+0000 initcall pci_epf_init+0x0/0x2f returned 0 after 5 usecs
+2019-05-09T20:02:31,082911+0000 calling  dw_plat_pcie_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,082916+0000 initcall dw_plat_pcie_driver_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:31,082917+0000 calling  intel_idle_init+0x0/0x5ef @ 1
+2019-05-09T20:02:31,082919+0000 intel_idle: Please enable MWAIT in BIOS SETUP
+2019-05-09T20:02:31,082920+0000 initcall intel_idle_init+0x0/0x5ef returned -19 after 1 usecs
+2019-05-09T20:02:31,082922+0000 calling  acpi_button_driver_init+0x0/0x23 @ 1
+2019-05-09T20:02:31,082996+0000 input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+2019-05-09T20:02:31,090695+0000 ACPI: Power Button [PWRF]
+2019-05-09T20:02:31,095068+0000 initcall acpi_button_driver_init+0x0/0x23 returned 0 after 11858 usecs
+2019-05-09T20:02:31,095069+0000 calling  acpi_processor_driver_init+0x0/0x96 @ 1
+2019-05-09T20:02:31,095132+0000 initcall acpi_processor_driver_init+0x0/0x96 returned 0 after 60 usecs
+2019-05-09T20:02:31,095134+0000 calling  nfit_init+0x0/0x165 @ 1
+2019-05-09T20:02:31,095245+0000 initcall nfit_init+0x0/0x165 returned 0 after 106 usecs
+2019-05-09T20:02:31,095246+0000 calling  acpi_hed_driver_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,095257+0000 initcall acpi_hed_driver_init+0x0/0x17 returned 0 after 8 usecs
+2019-05-09T20:02:31,095258+0000 calling  erst_init+0x0/0x326 @ 1
+2019-05-09T20:02:31,095260+0000 initcall erst_init+0x0/0x326 returned 0 after 0 usecs
+2019-05-09T20:02:31,095262+0000 calling  gpio_clk_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,095269+0000 initcall gpio_clk_driver_init+0x0/0x19 returned 0 after 5 usecs
+2019-05-09T20:02:31,095271+0000 calling  plt_clk_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,095275+0000 initcall plt_clk_driver_init+0x0/0x19 returned 0 after 2 usecs
+2019-05-09T20:02:31,095276+0000 calling  virtio_mmio_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,095281+0000 initcall virtio_mmio_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:31,095283+0000 calling  virtio_pci_driver_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,095290+0000 initcall virtio_pci_driver_init+0x0/0x20 returned 0 after 5 usecs
+2019-05-09T20:02:31,095292+0000 calling  virtio_balloon_driver_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,095300+0000 initcall virtio_balloon_driver_init+0x0/0x17 returned 0 after 6 usecs
+2019-05-09T20:02:31,095302+0000 calling  n_null_init+0x0/0x24 @ 1
+2019-05-09T20:02:31,095304+0000 initcall n_null_init+0x0/0x24 returned 0 after 0 usecs
+2019-05-09T20:02:31,095305+0000 calling  pty_init+0x0/0x393 @ 1
+2019-05-09T20:02:31,095388+0000 initcall pty_init+0x0/0x393 returned 0 after 78 usecs
+2019-05-09T20:02:31,095390+0000 calling  sysrq_init+0x0/0x4f @ 1
+2019-05-09T20:02:31,095394+0000 initcall sysrq_init+0x0/0x4f returned 0 after 1 usecs
+2019-05-09T20:02:31,095396+0000 calling  serial8250_init+0x0/0x157 @ 1
+2019-05-09T20:02:31,095397+0000 Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+2019-05-09T20:02:31,133999+0000 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+2019-05-09T20:02:31,140051+0000 random: fast init done
+2019-05-09T20:02:31,178098+0000 00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
+2019-05-09T20:02:31,187662+0000 initcall serial8250_init+0x0/0x157 returned 0 after 90099 usecs
+2019-05-09T20:02:31,187664+0000 calling  serial_pci_driver_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,187676+0000 initcall serial_pci_driver_init+0x0/0x20 returned 0 after 9 usecs
+2019-05-09T20:02:31,187678+0000 calling  max310x_uart_init+0x0/0x3a @ 1
+2019-05-09T20:02:31,187691+0000 initcall max310x_uart_init+0x0/0x3a returned 0 after 10 usecs
+2019-05-09T20:02:31,187710+0000 calling  sccnxp_uart_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,187717+0000 initcall sccnxp_uart_driver_init+0x0/0x19 returned 0 after 6 usecs
+2019-05-09T20:02:31,187718+0000 calling  init_kgdboc+0x0/0x1c @ 1
+2019-05-09T20:02:31,187720+0000 initcall init_kgdboc+0x0/0x1c returned 0 after 1 usecs
+2019-05-09T20:02:31,187721+0000 calling  ttyprintk_init+0x0/0x104 @ 1
+2019-05-09T20:02:31,187771+0000 initcall ttyprintk_init+0x0/0x104 returned 0 after 47 usecs
+2019-05-09T20:02:31,187772+0000 calling  init+0x0/0x105 @ 1
+2019-05-09T20:02:31,187784+0000 initcall init+0x0/0x105 returned 0 after 11 usecs
+2019-05-09T20:02:31,187785+0000 calling  hpet_init+0x0/0x6a @ 1
+2019-05-09T20:02:31,187842+0000 initcall hpet_init+0x0/0x6a returned 0 after 54 usecs
+2019-05-09T20:02:31,187843+0000 calling  hwrng_modinit+0x0/0x82 @ 1
+2019-05-09T20:02:31,187886+0000 initcall hwrng_modinit+0x0/0x82 returned 0 after 40 usecs
+2019-05-09T20:02:31,187887+0000 calling  agp_init+0x0/0x2c @ 1
+2019-05-09T20:02:31,187888+0000 Linux agpgart interface v0.103
+2019-05-09T20:02:31,192718+0000 initcall agp_init+0x0/0x2c returned 0 after 4715 usecs
+2019-05-09T20:02:31,192719+0000 calling  agp_amd64_mod_init+0x0/0x26 @ 1
+2019-05-09T20:02:31,192733+0000 initcall agp_amd64_mod_init+0x0/0x26 returned -19 after 12 usecs
+2019-05-09T20:02:31,192734+0000 calling  agp_intel_init+0x0/0x2f @ 1
+2019-05-09T20:02:31,192739+0000 initcall agp_intel_init+0x0/0x2f returned 0 after 3 usecs
+2019-05-09T20:02:31,192740+0000 calling  agp_via_init+0x0/0x2f @ 1
+2019-05-09T20:02:31,192745+0000 initcall agp_via_init+0x0/0x2f returned 0 after 3 usecs
+2019-05-09T20:02:31,192746+0000 calling  init_tis+0x0/0xd5 @ 1
+2019-05-09T20:02:31,192755+0000 initcall init_tis+0x0/0xd5 returned 0 after 7 usecs
+2019-05-09T20:02:31,192756+0000 calling  crb_acpi_driver_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,192767+0000 initcall crb_acpi_driver_init+0x0/0x17 returned 0 after 9 usecs
+2019-05-09T20:02:31,192769+0000 calling  cn_proc_init+0x0/0x3b @ 1
+2019-05-09T20:02:31,192771+0000 initcall cn_proc_init+0x0/0x3b returned 0 after 0 usecs
+2019-05-09T20:02:31,192774+0000 calling  topology_sysfs_init+0x0/0x40 @ 1
+2019-05-09T20:02:31,192784+0000 initcall topology_sysfs_init+0x0/0x40 returned 0 after 8 usecs
+2019-05-09T20:02:31,192786+0000 calling  cacheinfo_sysfs_init+0x0/0x32 @ 1
+2019-05-09T20:02:31,192977+0000 initcall cacheinfo_sysfs_init+0x0/0x32 returned 169 after 185 usecs
+2019-05-09T20:02:31,192996+0000 calling  loop_init+0x0/0x16a @ 1
+2019-05-09T20:02:31,194258+0000 loop: module loaded
+2019-05-09T20:02:31,198224+0000 initcall loop_init+0x0/0x16a returned 0 after 5102 usecs
+2019-05-09T20:02:31,198226+0000 calling  tps65912_spi_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,198233+0000 initcall tps65912_spi_driver_init+0x0/0x19 returned 0 after 5 usecs
+2019-05-09T20:02:31,198234+0000 calling  pmem_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,198244+0000 initcall pmem_init+0x0/0x20 returned 0 after 8 usecs
+2019-05-09T20:02:31,198246+0000 calling  nd_btt_init+0x0/0x39 @ 1
+2019-05-09T20:02:31,198249+0000 initcall nd_btt_init+0x0/0x39 returned 0 after 1 usecs
+2019-05-09T20:02:31,198250+0000 calling  nd_blk_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,198254+0000 initcall nd_blk_init+0x0/0x20 returned 0 after 2 usecs
+2019-05-09T20:02:31,198255+0000 calling  e820_pmem_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,198260+0000 initcall e820_pmem_driver_init+0x0/0x19 returned 0 after 3 usecs
+2019-05-09T20:02:31,198261+0000 calling  dax_pmem_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,198269+0000 initcall dax_pmem_init+0x0/0x20 returned 0 after 6 usecs
+2019-05-09T20:02:31,198271+0000 calling  fc_transport_init+0x0/0x8e @ 1
+2019-05-09T20:02:31,198279+0000 initcall fc_transport_init+0x0/0x8e returned 0 after 7 usecs
+2019-05-09T20:02:31,198281+0000 calling  storvsc_drv_init+0x0/0x82 @ 1
+2019-05-09T20:02:31,198283+0000 hv_vmbus: registering driver hv_storvsc
+2019-05-09T20:02:31,205331+0000 scsi host0: storvsc_host_t
+2019-05-09T20:02:31,214154+0000 scsi 0:0:0:0: Direct-Access     Msft     Virtual Disk     1.0  PQ: 0 ANSI: 5
+2019-05-09T20:02:31,224279+0000 scsi host1: storvsc_host_t
+2019-05-09T20:02:31,233220+0000 scsi 1:0:1:0: Direct-Access     Msft     Virtual Disk     1.0  PQ: 0 ANSI: 5
+2019-05-09T20:02:31,243613+0000 scsi host2: storvsc_host_t
+2019-05-09T20:02:31,254149+0000 scsi host3: storvsc_host_t
+2019-05-09T20:02:31,263386+0000 initcall storvsc_drv_init+0x0/0x82 returned 0 after 63572 usecs
+2019-05-09T20:02:31,263389+0000 calling  init_sd+0x0/0x170 @ 1
+2019-05-09T20:02:31,263478+0000 initcall init_sd+0x0/0x170 returned 0 after 84 usecs
+2019-05-09T20:02:31,263480+0000 calling  init_sr+0x0/0x51 @ 1
+2019-05-09T20:02:31,263485+0000 initcall init_sr+0x0/0x51 returned 0 after 3 usecs
+2019-05-09T20:02:31,263487+0000 calling  init_sg+0x0/0x124 @ 1
+2019-05-09T20:02:31,263637+0000 sd 0:0:0:0: Attached scsi generic sg0 type 0
+2019-05-09T20:02:31,266007+0000 sd 1:0:1:0: [sdb] 29360128 512-byte logical blocks: (15.0 GB/14.0 GiB)
+2019-05-09T20:02:31,266197+0000 sd 1:0:1:0: [sdb] 4096-byte physical blocks
+2019-05-09T20:02:31,266886+0000 sd 1:0:1:0: [sdb] Write Protect is off
+2019-05-09T20:02:31,266888+0000 sd 1:0:1:0: [sdb] Mode Sense: 0f 00 10 00
+2019-05-09T20:02:31,267483+0000 sd 1:0:1:0: [sdb] Write cache: disabled, read cache: enabled, supports DPO and FUA
+2019-05-09T20:02:31,268419+0000  sdb: sdb1
+2019-05-09T20:02:31,269237+0000 sd 1:0:1:0: [sdb] Attached SCSI disk
+2019-05-09T20:02:31,300759+0000 sd 0:0:0:0: [sda] 62918656 512-byte logical blocks: (32.2 GB/30.0 GiB)
+2019-05-09T20:02:31,300760+0000 sd 0:0:0:0: [sda] 4096-byte physical blocks
+2019-05-09T20:02:31,305537+0000 sd 0:0:0:0: [sda] Write Protect is off
+2019-05-09T20:02:31,305538+0000 sd 0:0:0:0: [sda] Mode Sense: 0f 00 10 00
+2019-05-09T20:02:31,319227+0000 sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+2019-05-09T20:02:31,334129+0000 sd 1:0:1:0: Attached scsi generic sg1 type 0
+2019-05-09T20:02:31,339972+0000 initcall init_sg+0x0/0x124 returned 0 after 74689 usecs
+2019-05-09T20:02:31,339974+0000 calling  nvme_core_init+0x0/0xd4 @ 1
+2019-05-09T20:02:31,340148+0000 initcall nvme_core_init+0x0/0xd4 returned 0 after 167 usecs
+2019-05-09T20:02:31,340150+0000 calling  nvme_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,340182+0000 initcall nvme_init+0x0/0x20 returned 0 after 29 usecs
+2019-05-09T20:02:31,340183+0000 calling  piix_init+0x0/0x2e @ 1
+2019-05-09T20:02:31,340212+0000 ata_piix 0000:00:07.1: version 2.13
+2019-05-09T20:02:31,340734+0000 ata_piix 0000:00:07.1: Hyper-V Virtual Machine detected, ATA device ignore set
+2019-05-09T20:02:31,350438+0000  sda: sda1
+2019-05-09T20:02:31,353629+0000 scsi host4: ata_piix
+2019-05-09T20:02:31,357311+0000 scsi host5: ata_piix
+2019-05-09T20:02:31,361189+0000 ata1: PATA max UDMA/33 cmd 0x1f0 ctl 0x3f6 bmdma 0xffa0 irq 14
+2019-05-09T20:02:31,368159+0000 ata2: PATA max UDMA/33 cmd 0x170 ctl 0x376 bmdma 0xffa8 irq 15
+2019-05-09T20:02:31,377143+0000 initcall piix_init+0x0/0x2e returned 0 after 36090 usecs
+2019-05-09T20:02:31,377145+0000 calling  sis_pci_driver_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,377151+0000 initcall sis_pci_driver_init+0x0/0x20 returned 0 after 5 usecs
+2019-05-09T20:02:31,377153+0000 calling  ata_generic_pci_driver_init+0x0/0x20 @ 1
+2019-05-09T20:02:31,377159+0000 initcall ata_generic_pci_driver_init+0x0/0x20 returned 0 after 4 usecs
+2019-05-09T20:02:31,377182+0000 calling  net_olddevs_init+0x0/0x60 @ 1
+2019-05-09T20:02:31,377186+0000 initcall net_olddevs_init+0x0/0x60 returned 0 after 2 usecs
+2019-05-09T20:02:31,377188+0000 calling  fixed_mdio_bus_init+0x0/0xed @ 1
+2019-05-09T20:02:31,377223+0000 libphy: Fixed MDIO Bus: probed
+2019-05-09T20:02:31,381427+0000 initcall fixed_mdio_bus_init+0x0/0xed returned 0 after 4136 usecs
+2019-05-09T20:02:31,381429+0000 calling  tun_init+0x0/0xa8 @ 1
+2019-05-09T20:02:31,381430+0000 tun: Universal TUN/TAP device driver, 1.6
+2019-05-09T20:02:31,386925+0000 initcall tun_init+0x0/0xa8 returned 0 after 5364 usecs
+2019-05-09T20:02:31,386926+0000 calling  mlx4_init+0x0/0x136 @ 1
+2019-05-09T20:02:31,387124+0000 initcall mlx4_init+0x0/0x136 returned 0 after 190 usecs
+2019-05-09T20:02:31,387125+0000 calling  init+0x0/0x68 @ 1
+2019-05-09T20:02:31,387156+0000 initcall init+0x0/0x68 returned 0 after 28 usecs
+2019-05-09T20:02:31,387158+0000 calling  ppp_init+0x0/0x110 @ 1
+2019-05-09T20:02:31,387158+0000 PPP generic driver version 2.4.2
+2019-05-09T20:02:31,391939+0000 sd 0:0:0:0: [sda] Attached SCSI disk
+2019-05-09T20:02:31,391946+0000 initcall ppp_init+0x0/0x110 returned 0 after 4671 usecs
+2019-05-09T20:02:31,391947+0000 calling  cdrom_init+0x0/0x1e @ 1
+2019-05-09T20:02:31,391953+0000 initcall cdrom_init+0x0/0x1e returned 0 after 4 usecs
+2019-05-09T20:02:31,391955+0000 calling  kgdbdbgp_start_thread+0x0/0x55 @ 1
+2019-05-09T20:02:31,391956+0000 initcall kgdbdbgp_start_thread+0x0/0x55 returned 0 after 0 usecs
+2019-05-09T20:02:31,391957+0000 calling  i8042_init+0x0/0x472 @ 1
+2019-05-09T20:02:31,392009+0000 i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f03:PS2M] at 0x60,0x64 irq 1,12
+2019-05-09T20:02:31,398144+0000 serio: i8042 KBD port at 0x60,0x64 irq 1
+2019-05-09T20:02:31,398147+0000 serio: i8042 AUX port at 0x60,0x64 irq 12
+2019-05-09T20:02:31,398186+0000 initcall i8042_init+0x0/0x472 returned 0 after 6080 usecs
+2019-05-09T20:02:31,398188+0000 calling  mousedev_init+0x0/0x86 @ 1
+2019-05-09T20:02:31,415839+0000 mousedev: PS/2 mouse device common for all mice
+2019-05-09T20:02:31,421857+0000 initcall mousedev_init+0x0/0x86 returned 0 after 23111 usecs
+2019-05-09T20:02:31,421859+0000 calling  evdev_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,421904+0000 initcall evdev_init+0x0/0x17 returned 0 after 41 usecs
+2019-05-09T20:02:31,421905+0000 calling  atkbd_init+0x0/0x2c @ 1
+2019-05-09T20:02:31,421922+0000 initcall atkbd_init+0x0/0x2c returned 0 after 15 usecs
+2019-05-09T20:02:31,421924+0000 calling  uinput_misc_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,422038+0000 initcall uinput_misc_init+0x0/0x17 returned 0 after 108 usecs
+2019-05-09T20:02:31,422039+0000 calling  cmos_init+0x0/0x71 @ 1
+2019-05-09T20:02:31,422331+0000 rtc_cmos 00:00: RTC can wake from S4
+2019-05-09T20:02:31,448849+0000 input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+2019-05-09T20:02:31,449487+0000 rtc_cmos 00:00: rtc core: registered rtc_cmos as rtc0
+2019-05-09T20:02:31,450556+0000 rtc_cmos 00:00: alarms up to one month, 114 bytes nvram
+2019-05-09T20:02:31,450569+0000 initcall cmos_init+0x0/0x71 returned 0 after 27857 usecs
+2019-05-09T20:02:31,450571+0000 calling  restart_poweroff_driver_init+0x0/0x19 @ 1
+2019-05-09T20:02:31,450579+0000 initcall restart_poweroff_driver_init+0x0/0x19 returned 0 after 5 usecs
+2019-05-09T20:02:31,450581+0000 calling  watchdog_gov_noop_register+0x0/0x17 @ 1
+2019-05-09T20:02:31,450584+0000 initcall watchdog_gov_noop_register+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,450585+0000 calling  dm_init+0x0/0x52 @ 1
+2019-05-09T20:02:31,450667+0000 device-mapper: uevent: version 1.0.3
+2019-05-09T20:02:31,450764+0000 device-mapper: ioctl: 4.37.0-ioctl (2017-09-20) initialised: dm-devel@redhat.com
+2019-05-09T20:02:31,450790+0000 initcall dm_init+0x0/0x52 returned 0 after 174 usecs
+2019-05-09T20:02:31,450792+0000 calling  cpufreq_gov_powersave_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,450794+0000 initcall cpufreq_gov_powersave_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,450796+0000 calling  cpufreq_gov_userspace_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,450798+0000 initcall cpufreq_gov_userspace_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,450799+0000 calling  cpufreq_gov_dbs_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,450801+0000 initcall cpufreq_gov_dbs_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,450803+0000 calling  cpufreq_gov_dbs_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,450804+0000 initcall cpufreq_gov_dbs_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,450806+0000 calling  intel_pstate_init+0x0/0xa4 @ 1
+2019-05-09T20:02:31,450807+0000 initcall intel_pstate_init+0x0/0xa4 returned -19 after 0 usecs
+2019-05-09T20:02:31,450808+0000 calling  ib_cm_init+0x0/0xfb @ 1
+2019-05-09T20:02:31,450819+0000 initcall ib_cm_init+0x0/0xfb returned 0 after 9 usecs
+2019-05-09T20:02:31,450820+0000 calling  iw_cm_init+0x0/0xab @ 1
+2019-05-09T20:02:31,450842+0000 initcall iw_cm_init+0x0/0xab returned 0 after 21 usecs
+2019-05-09T20:02:31,450843+0000 calling  cma_init+0x0/0xcf @ 1
+2019-05-09T20:02:31,450874+0000 initcall cma_init+0x0/0xcf returned 0 after 29 usecs
+2019-05-09T20:02:31,450875+0000 calling  ib_umad_init+0x0/0xda @ 1
+2019-05-09T20:02:31,450880+0000 initcall ib_umad_init+0x0/0xda returned 0 after 4 usecs
+2019-05-09T20:02:31,450881+0000 calling  ib_uverbs_init+0x0/0xda @ 1
+2019-05-09T20:02:31,450884+0000 initcall ib_uverbs_init+0x0/0xda returned 0 after 2 usecs
+2019-05-09T20:02:31,450885+0000 calling  ib_ucm_init+0x0/0xa8 @ 1
+2019-05-09T20:02:31,450887+0000 initcall ib_ucm_init+0x0/0xa8 returned 0 after 0 usecs
+2019-05-09T20:02:31,450888+0000 calling  ucma_init+0x0/0x9e @ 1
+2019-05-09T20:02:31,450914+0000 initcall ucma_init+0x0/0x9e returned 0 after 24 usecs
+2019-05-09T20:02:31,450915+0000 calling  mlx4_ib_init+0x0/0x6d @ 1
+2019-05-09T20:02:31,450946+0000 initcall mlx4_ib_init+0x0/0x6d returned 0 after 28 usecs
+2019-05-09T20:02:31,450947+0000 calling  mlx5_ib_init+0x0/0x1c @ 1
+2019-05-09T20:02:31,450948+0000 initcall mlx5_ib_init+0x0/0x1c returned 0 after 0 usecs
+2019-05-09T20:02:31,450949+0000 calling  ipoib_init_module+0x0/0x127 @ 1
+2019-05-09T20:02:31,450965+0000 initcall ipoib_init_module+0x0/0x127 returned 0 after 14 usecs
+2019-05-09T20:02:31,450969+0000 calling  efivars_sysfs_init+0x0/0x220 @ 1
+2019-05-09T20:02:31,450971+0000 initcall efivars_sysfs_init+0x0/0x220 returned -19 after 0 usecs
+2019-05-09T20:02:31,450972+0000 calling  esrt_sysfs_init+0x0/0x2d3 @ 1
+2019-05-09T20:02:31,450974+0000 initcall esrt_sysfs_init+0x0/0x2d3 returned -38 after 0 usecs
+2019-05-09T20:02:31,450975+0000 calling  skein_generic_init+0x0/0x5b @ 1
+2019-05-09T20:02:31,451036+0000 initcall skein_generic_init+0x0/0x5b returned 0 after 58 usecs
+2019-05-09T20:02:31,451037+0000 calling  pmc_core_probe+0x0/0x227 @ 1
+2019-05-09T20:02:31,451039+0000 initcall pmc_core_probe+0x0/0x227 returned -19 after 0 usecs
+2019-05-09T20:02:31,451040+0000 calling  pmc_atom_init+0x0/0x288 @ 1
+2019-05-09T20:02:31,451043+0000 initcall pmc_atom_init+0x0/0x288 returned -19 after 1 usecs
+2019-05-09T20:02:31,451045+0000 calling  sock_diag_init+0x0/0x3a @ 1
+2019-05-09T20:02:31,451054+0000 initcall sock_diag_init+0x0/0x3a returned 0 after 7 usecs
+2019-05-09T20:02:31,451056+0000 calling  devlink_module_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,451067+0000 initcall devlink_module_init+0x0/0x17 returned 0 after 9 usecs
+2019-05-09T20:02:31,451069+0000 calling  blackhole_init+0x0/0x17 @ 1
+2019-05-09T20:02:31,451071+0000 initcall blackhole_init+0x0/0x17 returned 0 after 0 usecs
+2019-05-09T20:02:31,451072+0000 calling  gre_offload_init+0x0/0x56 @ 1
+2019-05-09T20:02:31,451073+0000 initcall gre_offload_init+0x0/0x56 returned 0 after 0 usecs
+2019-05-09T20:02:31,451074+0000 calling  sysctl_ipv4_init+0x0/0x51 @ 1
+2019-05-09T20:02:31,451105+0000 initcall sysctl_ipv4_init+0x0/0x51 returned 0 after 28 usecs
+2019-05-09T20:02:31,451106+0000 calling  cubictcp_register+0x0/0x5f @ 1
+2019-05-09T20:02:31,451107+0000 initcall cubictcp_register+0x0/0x5f returned 0 after 0 usecs
+2019-05-09T20:02:31,451108+0000 calling  inet6_init+0x0/0x36a @ 1
+2019-05-09T20:02:31,451193+0000 NET: Registered protocol family 10
+2019-05-09T20:02:31,454796+0000 Segment Routing with IPv6
+2019-05-09T20:02:31,454814+0000 initcall inet6_init+0x0/0x36a returned 0 after 3616 usecs
+2019-05-09T20:02:31,454816+0000 calling  packet_init+0x0/0x47 @ 1
+2019-05-09T20:02:31,454817+0000 NET: Registered protocol family 17
+2019-05-09T20:02:31,454820+0000 initcall packet_init+0x0/0x47 returned 0 after 2 usecs
+2019-05-09T20:02:31,454822+0000 calling  strp_mod_init+0x0/0x36 @ 1
+2019-05-09T20:02:31,454908+0000 initcall strp_mod_init+0x0/0x36 returned 0 after 81 usecs
+2019-05-09T20:02:31,454909+0000 calling  dcbnl_init+0x0/0x52 @ 1
+2019-05-09T20:02:31,454912+0000 initcall dcbnl_init+0x0/0x52 returned 0 after 0 usecs
+2019-05-09T20:02:31,454948+0000 calling  init_dns_resolver+0x0/0xda @ 1
+2019-05-09T20:02:31,454954+0000 Key type dns_resolver registered
+2019-05-09T20:02:31,454956+0000 initcall init_dns_resolver+0x0/0xda returned 0 after 5 usecs
+2019-05-09T20:02:31,454960+0000 calling  mcheck_init_device+0x0/0x142 @ 1
+2019-05-09T20:02:31,503013+0000 initcall mcheck_init_device+0x0/0x142 returned 0 after 46923 usecs
+2019-05-09T20:02:31,503015+0000 calling  dev_mcelog_init_device+0x0/0x54 @ 1
+2019-05-09T20:02:31,503464+0000 initcall dev_mcelog_init_device+0x0/0x54 returned 0 after 435 usecs
+2019-05-09T20:02:31,503499+0000 calling  tboot_late_init+0x0/0x339 @ 1
+2019-05-09T20:02:31,503501+0000 initcall tboot_late_init+0x0/0x339 returned 0 after 0 usecs
+2019-05-09T20:02:31,503503+0000 calling  intel_rdt_late_init+0x0/0x420 @ 1
+2019-05-09T20:02:31,503505+0000 initcall intel_rdt_late_init+0x0/0x420 returned -19 after 0 usecs
+2019-05-09T20:02:31,503506+0000 calling  mcheck_late_init+0x0/0x7a @ 1
+2019-05-09T20:02:31,503519+0000 RAS: Correctable Errors collector initialized.
+2019-05-09T20:02:31,509418+0000 initcall mcheck_late_init+0x0/0x7a returned 0 after 5769 usecs
+2019-05-09T20:02:31,509420+0000 calling  severities_debugfs_init+0x0/0x40 @ 1
+2019-05-09T20:02:31,509435+0000 initcall severities_debugfs_init+0x0/0x40 returned 0 after 12 usecs
+2019-05-09T20:02:31,509437+0000 calling  threshold_init_device+0x0/0x4b @ 1
+2019-05-09T20:02:31,509439+0000 initcall threshold_init_device+0x0/0x4b returned 0 after 0 usecs
+2019-05-09T20:02:31,509443+0000 calling  microcode_init+0x0/0x1e0 @ 1
+2019-05-09T20:02:31,509447+0000 initcall microcode_init+0x0/0x1e0 returned -22 after 0 usecs
+2019-05-09T20:02:31,509449+0000 calling  hpet_insert_resource+0x0/0x29 @ 1
+2019-05-09T20:02:31,509451+0000 initcall hpet_insert_resource+0x0/0x29 returned 1 after 0 usecs
+2019-05-09T20:02:31,509453+0000 calling  update_mp_table+0x0/0x50f @ 1
+2019-05-09T20:02:31,509455+0000 initcall update_mp_table+0x0/0x50f returned 0 after 0 usecs
+2019-05-09T20:02:31,509456+0000 calling  lapic_insert_resource+0x0/0x45 @ 1
+2019-05-09T20:02:31,509459+0000 initcall lapic_insert_resource+0x0/0x45 returned 0 after 1 usecs
+2019-05-09T20:02:31,509461+0000 calling  print_ICs+0x0/0x1ab @ 1
+2019-05-09T20:02:31,509463+0000 initcall print_ICs+0x0/0x1ab returned 0 after 0 usecs
+2019-05-09T20:02:31,509466+0000 calling  pat_memtype_list_init+0x0/0x3a @ 1
+2019-05-09T20:02:31,509475+0000 initcall pat_memtype_list_init+0x0/0x3a returned 0 after 7 usecs
+2019-05-09T20:02:31,509477+0000 calling  create_tlb_single_page_flush_ceiling+0x0/0x2e @ 1
+2019-05-09T20:02:31,509480+0000 initcall create_tlb_single_page_flush_ceiling+0x0/0x2e returned 0 after 1 usecs
+2019-05-09T20:02:31,509483+0000 calling  create_init_pkru_value+0x0/0x2e @ 1
+2019-05-09T20:02:31,509486+0000 initcall create_init_pkru_value+0x0/0x2e returned 0 after 1 usecs
+2019-05-09T20:02:31,509489+0000 calling  init_oops_id+0x0/0x40 @ 1
+2019-05-09T20:02:31,509492+0000 initcall init_oops_id+0x0/0x40 returned 0 after 0 usecs
+2019-05-09T20:02:31,509495+0000 calling  sched_clock_init_late+0x0/0x7b @ 1
+2019-05-09T20:02:31,509497+0000 initcall sched_clock_init_late+0x0/0x7b returned 0 after 0 usecs
+2019-05-09T20:02:31,509498+0000 calling  sched_init_debug+0x0/0x43 @ 1
+2019-05-09T20:02:31,509506+0000 initcall sched_init_debug+0x0/0x43 returned 0 after 6 usecs
+2019-05-09T20:02:31,509508+0000 calling  pm_qos_power_init+0x0/0xb1 @ 1
+2019-05-09T20:02:31,509778+0000 initcall pm_qos_power_init+0x0/0xb1 returned 0 after 261 usecs
+2019-05-09T20:02:31,509780+0000 calling  printk_late_init+0x0/0x122 @ 1
+2019-05-09T20:02:31,509781+0000 initcall printk_late_init+0x0/0x122 returned 0 after 0 usecs
+2019-05-09T20:02:31,509783+0000 calling  tk_debug_sleep_time_init+0x0/0x41 @ 1
+2019-05-09T20:02:31,509786+0000 initcall tk_debug_sleep_time_init+0x0/0x41 returned 0 after 1 usecs
+2019-05-09T20:02:31,509787+0000 calling  debugfs_kprobe_init+0x0/0xd1 @ 1
+2019-05-09T20:02:31,509791+0000 initcall debugfs_kprobe_init+0x0/0xd1 returned 0 after 2 usecs
+2019-05-09T20:02:31,509792+0000 calling  taskstats_init+0x0/0x3c @ 1
+2019-05-09T20:02:31,509796+0000 registered taskstats version 1
+2019-05-09T20:02:31,514493+0000 initcall taskstats_init+0x0/0x3c returned 0 after 4588 usecs
+2019-05-09T20:02:31,514495+0000 calling  init_hwlat_tracer+0x0/0xb6 @ 1
+2019-05-09T20:02:31,514516+0000 initcall init_hwlat_tracer+0x0/0xb6 returned 0 after 18 usecs
+2019-05-09T20:02:31,514517+0000 calling  kdb_ftrace_register+0x0/0x32 @ 1
+2019-05-09T20:02:31,514521+0000 initcall kdb_ftrace_register+0x0/0x32 returned 0 after 1 usecs
+2019-05-09T20:02:31,514523+0000 calling  load_system_certificate_list+0x0/0xf9 @ 1
+2019-05-09T20:02:31,514524+0000 Loading compiled-in X.509 certificates
+2019-05-09T20:02:31,522749+0000 Loaded X.509 cert 'Build time autogenerated kernel key: 1c77d09e3e58c065d0b656b0e5e3eb6270545758'
+2019-05-09T20:02:31,532485+0000 initcall load_system_certificate_list+0x0/0xf9 returned 0 after 17536 usecs
+2019-05-09T20:02:31,532487+0000 calling  load_uefi_certs+0x0/0x28e @ 1
+2019-05-09T20:02:31,532489+0000 initcall load_uefi_certs+0x0/0x28e returned 0 after 0 usecs
+2019-05-09T20:02:31,532491+0000 calling  fault_around_debugfs+0x0/0x3a @ 1
+2019-05-09T20:02:31,532500+0000 initcall fault_around_debugfs+0x0/0x3a returned 0 after 7 usecs
+2019-05-09T20:02:31,532502+0000 calling  max_swapfiles_check+0x0/0xd @ 1
+2019-05-09T20:02:31,532504+0000 initcall max_swapfiles_check+0x0/0xd returned 0 after 0 usecs
+2019-05-09T20:02:31,532505+0000 calling  init_zswap+0x0/0x420 @ 1
+2019-05-09T20:02:31,532523+0000 zswap: loaded using pool lzo/zbud
+2019-05-09T20:02:31,537774+0000 initcall init_zswap+0x0/0x420 returned 0 after 5142 usecs
+2019-05-09T20:02:31,537776+0000 calling  split_huge_pages_debugfs+0x0/0x3a @ 1
+2019-05-09T20:02:31,537781+0000 initcall split_huge_pages_debugfs+0x0/0x3a returned 0 after 4 usecs
+2019-05-09T20:02:31,537782+0000 calling  check_early_ioremap_leak+0x0/0x3d @ 1
+2019-05-09T20:02:31,537784+0000 initcall check_early_ioremap_leak+0x0/0x3d returned 0 after 0 usecs
+2019-05-09T20:02:31,537787+0000 calling  init_root_keyring+0x0/0x10 @ 1
+2019-05-09T20:02:31,537793+0000 initcall init_root_keyring+0x0/0x10 returned 0 after 4 usecs
+2019-05-09T20:02:31,537794+0000 calling  big_key_init+0x0/0x9b @ 1
+2019-05-09T20:02:31,558384+0000 Key type big_key registered
+2019-05-09T20:02:31,562402+0000 initcall big_key_init+0x0/0x9b returned 0 after 24027 usecs
+2019-05-09T20:02:31,562404+0000 calling  init_trusted+0x0/0xb9 @ 1
+2019-05-09T20:02:31,562412+0000 Key type trusted registered
+2019-05-09T20:02:31,566201+0000 initcall init_trusted+0x0/0xb9 returned 0 after 3705 usecs
+2019-05-09T20:02:31,566202+0000 calling  init_encrypted+0x0/0xd5 @ 1
+2019-05-09T20:02:31,567357+0000 Key type encrypted registered
+2019-05-09T20:02:31,571230+0000 initcall init_encrypted+0x0/0xd5 returned 0 after 4907 usecs
+2019-05-09T20:02:31,571232+0000 calling  init_profile_hash+0x0/0x8b @ 1
+2019-05-09T20:02:31,571235+0000 AppArmor: AppArmor sha1 policy hashing enabled
+2019-05-09T20:02:31,576153+0000 initcall init_profile_hash+0x0/0x8b returned 0 after 4802 usecs
+2019-05-09T20:02:31,576154+0000 calling  init_ima+0x0/0x9b @ 1
+2019-05-09T20:02:31,576167+0000 ima: No TPM chip found, activating TPM-bypass! (rc=-19)
+2019-05-09T20:02:31,581817+0000 ima: Allocated hash algorithm: sha1
+2019-05-09T20:02:31,586937+0000 initcall init_ima+0x0/0x9b returned 0 after 10526 usecs
+2019-05-09T20:02:31,586938+0000 calling  init_evm+0x0/0x56 @ 1
+2019-05-09T20:02:31,586939+0000 evm: HMAC attrs: 0x1
+2019-05-09T20:02:31,590826+0000 initcall init_evm+0x0/0x56 returned 0 after 3793 usecs
+2019-05-09T20:02:31,590828+0000 calling  lockdown_lift_sysrq+0x0/0x35 @ 1
+2019-05-09T20:02:31,590829+0000 initcall lockdown_lift_sysrq+0x0/0x35 returned 0 after 0 usecs
+2019-05-09T20:02:31,590831+0000 calling  prandom_reseed+0x0/0x2f @ 1
+2019-05-09T20:02:31,590833+0000 initcall prandom_reseed+0x0/0x2f returned 0 after 1 usecs
+2019-05-09T20:02:31,590835+0000 calling  pci_resource_alignment_sysfs_init+0x0/0x1e @ 1
+2019-05-09T20:02:31,590838+0000 initcall pci_resource_alignment_sysfs_init+0x0/0x1e returned 0 after 1 usecs
+2019-05-09T20:02:31,590839+0000 calling  pci_sysfs_init+0x0/0x4f @ 1
+2019-05-09T20:02:31,591143+0000 initcall pci_sysfs_init+0x0/0x4f returned 0 after 294 usecs
+2019-05-09T20:02:31,591145+0000 calling  bert_init+0x0/0x22e @ 1
+2019-05-09T20:02:31,591147+0000 initcall bert_init+0x0/0x22e returned 0 after 0 usecs
+2019-05-09T20:02:31,591148+0000 calling  clk_debug_init+0x0/0x143 @ 1
+2019-05-09T20:02:31,591154+0000 initcall clk_debug_init+0x0/0x143 returned 0 after 4 usecs
+2019-05-09T20:02:31,591156+0000 calling  dmar_free_unused_resources+0x0/0xb8 @ 1
+2019-05-09T20:02:31,591158+0000 initcall dmar_free_unused_resources+0x0/0xb8 returned 0 after 0 usecs
+2019-05-09T20:02:31,591160+0000 calling  deferred_probe_initcall+0x0/0x30 @ 1
+2019-05-09T20:02:31,591165+0000 initcall deferred_probe_initcall+0x0/0x30 returned 0 after 4 usecs
+2019-05-09T20:02:31,591167+0000 calling  genpd_debug_init+0x0/0x15c @ 1
+2019-05-09T20:02:31,591173+0000 initcall genpd_debug_init+0x0/0x15c returned 0 after 4 usecs
+2019-05-09T20:02:31,591174+0000 calling  genpd_power_off_unused+0x0/0x83 @ 1
+2019-05-09T20:02:31,591175+0000 initcall genpd_power_off_unused+0x0/0x83 returned 0 after 0 usecs
+2019-05-09T20:02:31,591176+0000 calling  sync_debugfs_init+0x0/0x60 @ 1
+2019-05-09T20:02:31,591179+0000 initcall sync_debugfs_init+0x0/0x60 returned 0 after 1 usecs
+2019-05-09T20:02:31,591181+0000 calling  rtc_hctosys+0x0/0xfc @ 1
+2019-05-09T20:02:31,693760+0000 rtc_cmos 00:00: setting system clock to 2019-05-09 20:02:31 UTC (1557432151)
+2019-05-09T20:02:31,701229+0000 initcall rtc_hctosys+0x0/0xfc returned 0 after 107465 usecs
+2019-05-09T20:02:31,701231+0000 calling  acpi_cpufreq_init+0x0/0x2a9 @ 1
+2019-05-09T20:02:31,730415+0000 ata1.01: host indicates ignore ATA devices, ignored
+2019-05-09T20:02:31,731124+0000 ata2.01: NODEV after polling detection
+2019-05-09T20:02:31,772092+0000 initcall acpi_cpufreq_init+0x0/0x2a9 returned -19 after 69195 usecs
+2019-05-09T20:02:31,772095+0000 calling  powernowk8_init+0x0/0x1b0 @ 1
+2019-05-09T20:02:31,772097+0000 initcall powernowk8_init+0x0/0x1b0 returned -19 after 0 usecs
+2019-05-09T20:02:31,772098+0000 calling  pcc_cpufreq_init+0x0/0x4a1 @ 1
+2019-05-09T20:02:31,772109+0000 initcall pcc_cpufreq_init+0x0/0x4a1 returned -19 after 9 usecs
+2019-05-09T20:02:31,772111+0000 calling  centrino_init+0x0/0x30 @ 1
+2019-05-09T20:02:31,772112+0000 initcall centrino_init+0x0/0x30 returned -19 after 0 usecs
+2019-05-09T20:02:31,772113+0000 calling  edd_init+0x0/0x2cc @ 1
+2019-05-09T20:02:31,772114+0000 BIOS EDD facility v0.16 2004-Jun-25, 0 devices found
+2019-05-09T20:02:31,778184+0000 EDD information not available.
+2019-05-09T20:02:31,782638+0000 initcall edd_init+0x0/0x2cc returned -19 after 10275 usecs
+2019-05-09T20:02:31,782640+0000 calling  firmware_memmap_init+0x0/0x38 @ 1
+2019-05-09T20:02:31,782664+0000 initcall firmware_memmap_init+0x0/0x38 returned 0 after 21 usecs
+2019-05-09T20:02:31,782667+0000 calling  register_update_efi_random_seed+0x0/0x30 @ 1
+2019-05-09T20:02:31,782669+0000 initcall register_update_efi_random_seed+0x0/0x30 returned 0 after 0 usecs
+2019-05-09T20:02:31,782670+0000 calling  efi_shutdown_init+0x0/0x44 @ 1
+2019-05-09T20:02:31,782672+0000 initcall efi_shutdown_init+0x0/0x44 returned -19 after 0 usecs
+2019-05-09T20:02:31,782673+0000 calling  itmt_legacy_init+0x0/0x5b @ 1
+2019-05-09T20:02:31,805443+0000 ata1.00: host indicates ignore ATA devices, ignored
+2019-05-09T20:02:31,806313+0000 initcall itmt_legacy_init+0x0/0x5b returned 0 after 23082 usecs
+2019-05-09T20:02:31,806315+0000 calling  pci_mmcfg_late_insert_resources+0x0/0x51 @ 1
+2019-05-09T20:02:31,806317+0000 ata2.00: ATAPI: Virtual CD, , max MWDMA2
+2019-05-09T20:02:31,806320+0000 initcall pci_mmcfg_late_insert_resources+0x0/0x51 returned 0 after 0 usecs
+2019-05-09T20:02:31,806321+0000 calling  tcp_congestion_default+0x0/0x1e @ 1
+2019-05-09T20:02:31,806361+0000 initcall tcp_congestion_default+0x0/0x1e returned 0 after 0 usecs
+2019-05-09T20:02:31,806363+0000 calling  clear_boot_tracer+0x0/0x2e @ 1
+2019-05-09T20:02:31,806365+0000 initcall clear_boot_tracer+0x0/0x2e returned 0 after 0 usecs
+2019-05-09T20:02:31,806369+0000 calling  clk_disable_unused+0x0/0x180 @ 1
+2019-05-09T20:02:31,806372+0000 initcall clk_disable_unused+0x0/0x180 returned 0 after 0 usecs
+2019-05-09T20:02:31,806374+0000 calling  regulator_init_complete+0x0/0x3b @ 1
+2019-05-09T20:02:31,806377+0000 initcall regulator_init_complete+0x0/0x3b returned 0 after 1 usecs
+2019-05-09T20:02:31,814409+0000 ata2.00: configured for MWDMA2
+2019-05-09T20:02:31,821440+0000 scsi 5:0:0:0: CD-ROM            Msft     Virtual CD/ROM   1.0  PQ: 0 ANSI: 5
+2019-05-09T20:02:31,835459+0000 sr 5:0:0:0: [sr0] scsi3-mmc drive: 0x/0x tray
+2019-05-09T20:02:31,841389+0000 cdrom: Uniform CD-ROM driver Revision: 3.20
+2019-05-09T20:02:31,847293+0000 sr 5:0:0:0: Attached scsi CD-ROM sr0
+2019-05-09T20:02:31,847866+0000 sr 5:0:0:0: Attached scsi generic sg2 type 5
+2019-05-09T20:02:32,156253+0000 Freeing unused kernel memory: 2256K
+2019-05-09T20:02:32,168050+0000 Write protecting the kernel read-only data: 18432k
+2019-05-09T20:02:32,175831+0000 Freeing unused kernel memory: 2008K
+2019-05-09T20:02:32,181271+0000 Freeing unused kernel memory: 68K
+2019-05-09T20:02:32,192106+0000 x86/mm: Checked W+X mappings: passed, no W+X pages found.
+2019-05-09T20:02:32,198581+0000 x86/mm: Checking user space page tables
+2019-05-09T20:02:32,208971+0000 x86/mm: Checked W+X mappings: passed, no W+X pages found.
+2019-05-09T20:02:32,231828+0000 random: systemd-udevd: uninitialized urandom read (16 bytes read)
+2019-05-09T20:02:32,232558+0000 random: udevadm: uninitialized urandom read (16 bytes read)
+2019-05-09T20:02:32,232576+0000 random: udevadm: uninitialized urandom read (16 bytes read)
+2019-05-09T20:02:32,281001+0000 calling  netvsc_drv_init+0x0/0x1000 [hv_netvsc] @ 177
+2019-05-09T20:02:32,281002+0000 hv_vmbus: registering driver hv_netvsc
+2019-05-09T20:02:32,287443+0000 calling  init_hyperv_utils+0x0/0x1000 [hv_utils] @ 181
+2019-05-09T20:02:32,287444+0000 hv_utils: Registering HyperV Utility Driver
+2019-05-09T20:02:32,292970+0000 hv_vmbus: registering driver hv_util
+2019-05-09T20:02:32,300455+0000 calling  hv_kbd_init+0x0/0x1000 [hyperv_keyboard] @ 175
+2019-05-09T20:02:32,300456+0000 hv_vmbus: registering driver hyperv_keyboard
+2019-05-09T20:02:32,311423+0000 calling  hid_init+0x0/0x66 [hid] @ 179
+2019-05-09T20:02:32,311435+0000 hidraw: raw HID events driver (C) Jiri Kosina
+2019-05-09T20:02:32,318809+0000 calling  hvfb_drv_init+0x0/0x1000 [hyperv_fb] @ 182
+2019-05-09T20:02:32,318810+0000 hv_vmbus: registering driver hyperv_fb
+2019-05-09T20:02:32,324171+0000 initcall hid_init+0x0/0x66 [hid] returned 0 after 12444 usecs
+2019-05-09T20:02:32,325533+0000 calling  mousevsc_init+0x0/0x1000 [hid_hyperv] @ 179
+2019-05-09T20:02:32,325534+0000 hv_vmbus: registering driver hid_hyperv
+2019-05-09T20:02:32,332489+0000 calling  pacpi_pci_driver_init+0x0/0x1000 [pata_acpi] @ 180
+2019-05-09T20:02:32,332503+0000 initcall pacpi_pci_driver_init+0x0/0x1000 [pata_acpi] returned 0 after 10 usecs
+2019-05-09T20:02:32,449825+0000 calling  cryptd_init+0x0/0x1000 [cryptd] @ 180
+2019-05-09T20:02:32,449831+0000 initcall cryptd_init+0x0/0x1000 [cryptd] returned 0 after 3 usecs
+2019-05-09T20:02:32,452602+0000 calling  aes_init+0x0/0x1000 [aes_x86_64] @ 180
+2019-05-09T20:02:32,452631+0000 initcall aes_init+0x0/0x1000 [aes_x86_64] returned 0 after 26 usecs
+2019-05-09T20:02:32,454914+0000 calling  aesni_init+0x0/0x1ee [aesni_intel] @ 180
+2019-05-09T20:02:32,454914+0000 AVX2 version of gcm_enc/dec engaged.
+2019-05-09T20:02:32,459992+0000 AES CTR mode by8 optimization enabled
+2019-05-09T20:02:32,470498+0000 calling  crypto_pcbc_module_init+0x0/0x1000 [pcbc] @ 212
+2019-05-09T20:02:32,470500+0000 initcall crypto_pcbc_module_init+0x0/0x1000 [pcbc] returned 0 after 0 usecs
+2019-05-09T20:02:32,471221+0000 initcall aesni_init+0x0/0x1ee [aesni_intel] returned 0 after 15919 usecs
+2019-05-09T20:02:32,472199+0000 calling  ghash_pclmulqdqni_mod_init+0x0/0x1000 [ghash_clmulni_intel] @ 180
+2019-05-09T20:02:32,472879+0000 initcall ghash_pclmulqdqni_mod_init+0x0/0x1000 [ghash_clmulni_intel] returned 0 after 659 usecs
+2019-05-09T20:02:32,473789+0000 calling  crc32_pclmul_mod_init+0x0/0x1000 [crc32_pclmul] @ 180
+2019-05-09T20:02:32,474243+0000 initcall crc32_pclmul_mod_init+0x0/0x1000 [crc32_pclmul] returned 0 after 439 usecs
+2019-05-09T20:02:32,475158+0000 calling  crct10dif_intel_mod_init+0x0/0x1000 [crct10dif_pclmul] @ 180
+2019-05-09T20:02:32,475181+0000 initcall crct10dif_intel_mod_init+0x0/0x1000 [crct10dif_pclmul] returned 0 after 20 usecs
+2019-05-09T20:02:33,102837+0000 initcall netvsc_drv_init+0x0/0x1000 [hv_netvsc] returned 0 after 802568 usecs
+2019-05-09T20:02:33,103467+0000 hv_utils: Heartbeat IC version 3.0
+2019-05-09T20:02:33,109258+0000 input: AT Translated Set 2 keyboard as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:07/VMBUS:01/d34b2567-b9b6-42b9-8778-0a4ec0b955bf/serio2/input/input3
+2019-05-09T20:02:33,112113+0000 initcall hv_kbd_init+0x0/0x1000 [hyperv_keyboard] returned 0 after 792631 usecs
+2019-05-09T20:02:33,124883+0000 hyperv_fb: Screen resolution: 1152x864, Color depth: 32
+2019-05-09T20:02:33,134090+0000 Console: switching to colour frame buffer device 144x54
+2019-05-09T20:02:33,141440+0000 initcall hvfb_drv_init+0x0/0x1000 [hyperv_fb] returned 0 after 803346 usecs
+2019-05-09T20:02:33,142044+0000 input: Microsoft Vmbus HID-compliant Mouse as /devices/0006:045E:0621.0001/input/input4
+2019-05-09T20:02:33,150486+0000 hid 0006:045E:0621.0001: input: <UNKNOWN> HID v0.01 Mouse [Microsoft Vmbus HID-compliant Mouse] on 
+2019-05-09T20:02:33,159725+0000 calling  hid_generic_init+0x0/0x1000 [hid_generic] @ 178
+2019-05-09T20:02:33,159745+0000 initcall hid_generic_init+0x0/0x1000 [hid_generic] returned 0 after 17 usecs
+2019-05-09T20:02:33,159845+0000 initcall mousevsc_init+0x0/0x1000 [hid_hyperv] returned 0 after 814754 usecs
+2019-05-09T20:02:33,160145+0000 hv_utils: Shutdown IC version 3.0
+2019-05-09T20:02:33,164818+0000 hv_utils: TimeSync IC version 4.0
+2019-05-09T20:02:33,169220+0000 initcall init_hyperv_utils+0x0/0x1000 [hv_utils] returned 0 after 861105 usecs
+2019-05-09T20:02:33,169379+0000 hv_utils: VSS IC version 5.0
+2019-05-09T20:02:34,277693+0000 calling  linear_init+0x0/0x1000 [linear] @ 279
+2019-05-09T20:02:34,277714+0000 initcall linear_init+0x0/0x1000 [linear] returned 0 after 0 usecs
+2019-05-09T20:02:34,279535+0000 calling  multipath_init+0x0/0x1000 [multipath] @ 282
+2019-05-09T20:02:34,279538+0000 initcall multipath_init+0x0/0x1000 [multipath] returned 0 after 0 usecs
+2019-05-09T20:02:34,281518+0000 calling  raid0_init+0x0/0x1000 [raid0] @ 285
+2019-05-09T20:02:34,281520+0000 initcall raid0_init+0x0/0x1000 [raid0] returned 0 after 0 usecs
+2019-05-09T20:02:34,284635+0000 calling  raid_init+0x0/0x1000 [raid1] @ 288
+2019-05-09T20:02:34,284638+0000 initcall raid_init+0x0/0x1000 [raid1] returned 0 after 0 usecs
+2019-05-09T20:02:34,286636+0000 calling  libcrc32c_mod_init+0x0/0x1000 [libcrc32c] @ 291
+2019-05-09T20:02:34,286641+0000 initcall libcrc32c_mod_init+0x0/0x1000 [libcrc32c] returned 0 after 2 usecs
+2019-05-09T20:02:34,287944+0000 calling  init_module+0x0/0x1000 [raid6_pq] @ 291
+2019-05-09T20:02:34,332015+0000 raid6: sse2x1   gen()  9185 MB/s
+2019-05-09T20:02:34,380047+0000 raid6: sse2x1   xor()  6899 MB/s
+2019-05-09T20:02:34,432053+0000 raid6: sse2x2   gen() 11523 MB/s
+2019-05-09T20:02:34,484048+0000 raid6: sse2x2   xor()  7247 MB/s
+2019-05-09T20:02:34,532054+0000 raid6: sse2x4   gen() 13121 MB/s
+2019-05-09T20:02:34,584051+0000 raid6: sse2x4   xor()  8532 MB/s
+2019-05-09T20:02:34,636073+0000 raid6: avx2x1   gen() 17302 MB/s
+2019-05-09T20:02:34,688052+0000 raid6: avx2x1   xor() 12619 MB/s
+2019-05-09T20:02:34,741274+0000 raid6: avx2x2   gen() 20563 MB/s
+2019-05-09T20:02:34,792041+0000 raid6: avx2x2   xor() 13985 MB/s
+2019-05-09T20:02:34,844043+0000 raid6: avx2x4   gen() 24372 MB/s
+2019-05-09T20:02:34,892043+0000 raid6: avx2x4   xor() 16786 MB/s
+2019-05-09T20:02:34,895921+0000 raid6: using algorithm avx2x4 gen() 24372 MB/s
+2019-05-09T20:02:34,900922+0000 raid6: .... xor() 16786 MB/s, rmw enabled
+2019-05-09T20:02:34,905274+0000 raid6: using avx2x2 recovery algorithm
+2019-05-09T20:02:34,909706+0000 initcall init_module+0x0/0x1000 [raid6_pq] returned 0 after 607183 usecs
+2019-05-09T20:02:34,910815+0000 calling  calibrate_xor_blocks+0x0/0xf37 [xor] @ 291
+2019-05-09T20:02:34,910816+0000 xor: automatically using best checksumming function   avx       
+2019-05-09T20:02:34,917466+0000 initcall calibrate_xor_blocks+0x0/0xf37 [xor] returned 0 after 6491 usecs
+2019-05-09T20:02:34,918425+0000 calling  async_tx_init+0x0/0x1000 [async_tx] @ 291
+2019-05-09T20:02:34,918428+0000 async_tx: api initialized (async)
+2019-05-09T20:02:34,922627+0000 initcall async_tx_init+0x0/0x1000 [async_tx] returned 0 after 4100 usecs
+2019-05-09T20:02:34,924435+0000 calling  async_pq_init+0x0/0x1000 [async_pq] @ 291
+2019-05-09T20:02:34,924437+0000 initcall async_pq_init+0x0/0x1000 [async_pq] returned 0 after 0 usecs
+2019-05-09T20:02:34,929478+0000 calling  raid5_init+0x0/0x1000 [raid456] @ 291
+2019-05-09T20:02:34,929538+0000 initcall raid5_init+0x0/0x1000 [raid456] returned 0 after 53 usecs
+2019-05-09T20:02:34,935009+0000 calling  raid_init+0x0/0x1000 [raid10] @ 308
+2019-05-09T20:02:34,935011+0000 initcall raid_init+0x0/0x1000 [raid10] returned 0 after 0 usecs
+2019-05-09T20:02:34,974152+0000 calling  init_btrfs_fs+0x0/0x12e [btrfs] @ 324
+2019-05-09T20:02:34,975223+0000 Btrfs loaded, crc32c=crc32c-intel
+2019-05-09T20:02:34,979288+0000 initcall init_btrfs_fs+0x0/0x12e [btrfs] returned 0 after 4999 usecs
+2019-05-09T20:02:35,070746+0000 EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)
+2019-05-09T20:02:35,394143+0000 lttng_kretprobes: loading out-of-tree module taints kernel.
+2019-05-09T20:02:35,401046+0000 lttng_kretprobes: module verification failed: signature and/or required key missing - tainting kernel
+2019-05-09T20:02:35,411903+0000 calling  init_module+0x0/0x1000 [lttng_lib_ring_buffer] @ 397
+2019-05-09T20:02:35,411905+0000 initcall init_module+0x0/0x1000 [lttng_lib_ring_buffer] returned 0 after 0 usecs
+2019-05-09T20:02:35,412853+0000 calling  lttng_statedump_init+0x0/0x1000 [lttng_statedump] @ 397
+2019-05-09T20:02:35,412855+0000 initcall lttng_statedump_init+0x0/0x1000 [lttng_statedump] returned 0 after 0 usecs
+2019-05-09T20:02:35,447028+0000 calling  lttng_events_init+0x0/0x215 [lttng_tracer] @ 397
+2019-05-09T20:02:35,454016+0000 LTTng: Loaded modules v2.8.0 (Isseki Nicho)
+2019-05-09T20:02:35,460005+0000 initcall lttng_events_init+0x0/0x215 [lttng_tracer] returned 0 after 12653 usecs
+2019-05-09T20:02:35,460299+0000 Scheduler tracepoints stat_sleep, stat_iowait, stat_blocked and stat_runtime require the kernel parameter schedstats=enable or kernel.sched_schedstats=1
+2019-05-09T20:02:35,463665+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_discard] @ 401
+2019-05-09T20:02:35,478891+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_discard] returned 0 after 586 usecs
+2019-05-09T20:02:35,480733+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_overwrite] @ 403
+2019-05-09T20:02:35,481143+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_overwrite] returned 0 after 398 usecs
+2019-05-09T20:02:35,482998+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_metadata_client] @ 405
+2019-05-09T20:02:35,483477+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_metadata_client] returned 0 after 464 usecs
+2019-05-09T20:02:35,485205+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_mmap_discard] @ 407
+2019-05-09T20:02:35,485776+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_mmap_discard] returned 0 after 554 usecs
+2019-05-09T20:02:35,487482+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_mmap_overwrite] @ 409
+2019-05-09T20:02:35,487992+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_client_mmap_overwrite] returned 0 after 495 usecs
+2019-05-09T20:02:35,489770+0000 calling  lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_metadata_mmap_client] @ 411
+2019-05-09T20:02:35,490179+0000 initcall lttng_ring_buffer_client_init+0x0/0x1000 [lttng_ring_buffer_metadata_mmap_client] returned 0 after 397 usecs
+2019-05-09T20:02:35,498649+0000 calling  __lttng_events_init__block+0x0/0x50 [lttng_probe_block] @ 423
+2019-05-09T20:02:35,498893+0000 initcall __lttng_events_init__block+0x0/0x50 [lttng_probe_block] returned 0 after 234 usecs
+2019-05-09T20:02:35,502021+0000 calling  __lttng_events_init__compaction+0x0/0x50 [lttng_probe_compaction] @ 427
+2019-05-09T20:02:35,502228+0000 initcall __lttng_events_init__compaction+0x0/0x50 [lttng_probe_compaction] returned 0 after 199 usecs
+2019-05-09T20:02:35,506853+0000 calling  __lttng_events_init__gpio+0x0/0x50 [lttng_probe_gpio] @ 433
+2019-05-09T20:02:35,507062+0000 initcall __lttng_events_init__gpio+0x0/0x50 [lttng_probe_gpio] returned 0 after 201 usecs
+2019-05-09T20:02:35,509018+0000 calling  __lttng_events_init__irq+0x0/0x50 [lttng_probe_irq] @ 435
+2019-05-09T20:02:35,509228+0000 initcall __lttng_events_init__irq+0x0/0x50 [lttng_probe_irq] returned 0 after 202 usecs
+2019-05-09T20:02:35,512255+0000 calling  __lttng_events_init__jbd2+0x0/0x50 [lttng_probe_jbd2] @ 439
+2019-05-09T20:02:35,512560+0000 initcall __lttng_events_init__jbd2+0x0/0x50 [lttng_probe_jbd2] returned 0 after 293 usecs
+2019-05-09T20:02:35,514221+0000 calling  __lttng_events_init__kmem+0x0/0x50 [lttng_probe_kmem] @ 441
+2019-05-09T20:02:35,514521+0000 initcall __lttng_events_init__kmem+0x0/0x50 [lttng_probe_kmem] returned 0 after 289 usecs
+2019-05-09T20:02:35,516195+0000 calling  __lttng_events_init__kvm+0x0/0x50 [lttng_probe_kvm] @ 443
+2019-05-09T20:02:35,516470+0000 initcall __lttng_events_init__kvm+0x0/0x50 [lttng_probe_kvm] returned 0 after 265 usecs
+2019-05-09T20:02:35,522287+0000 calling  __lttng_events_init__module+0x0/0x50 [lttng_probe_module] @ 451
+2019-05-09T20:02:35,522599+0000 initcall __lttng_events_init__module+0x0/0x50 [lttng_probe_module] returned 0 after 301 usecs
+2019-05-09T20:02:35,524226+0000 calling  __lttng_events_init__napi+0x0/0x50 [lttng_probe_napi] @ 453
+2019-05-09T20:02:35,524515+0000 initcall __lttng_events_init__napi+0x0/0x50 [lttng_probe_napi] returned 0 after 279 usecs
+2019-05-09T20:02:35,526163+0000 calling  __lttng_events_init__net+0x0/0x50 [lttng_probe_net] @ 455
+2019-05-09T20:02:35,526422+0000 initcall __lttng_events_init__net+0x0/0x50 [lttng_probe_net] returned 0 after 249 usecs
+2019-05-09T20:02:35,528105+0000 calling  __lttng_events_init__power+0x0/0x50 [lttng_probe_power] @ 457
+2019-05-09T20:02:35,528314+0000 initcall __lttng_events_init__power+0x0/0x50 [lttng_probe_power] returned 0 after 201 usecs
+2019-05-09T20:02:35,529981+0000 calling  __lttng_events_init__printk+0x0/0x50 [lttng_probe_printk] @ 459
+2019-05-09T20:02:35,530187+0000 initcall __lttng_events_init__printk+0x0/0x50 [lttng_probe_printk] returned 0 after 199 usecs
+2019-05-09T20:02:35,531903+0000 calling  __lttng_events_init__random+0x0/0x50 [lttng_probe_random] @ 461
+2019-05-09T20:02:35,532145+0000 initcall __lttng_events_init__random+0x0/0x50 [lttng_probe_random] returned 0 after 233 usecs
+2019-05-09T20:02:35,533883+0000 calling  __lttng_events_init__rcu+0x0/0x50 [lttng_probe_rcu] @ 463
+2019-05-09T20:02:35,534091+0000 initcall __lttng_events_init__rcu+0x0/0x50 [lttng_probe_rcu] returned 0 after 200 usecs
+2019-05-09T20:02:35,537472+0000 calling  __lttng_events_init__regulator+0x0/0x50 [lttng_probe_regulator] @ 467
+2019-05-09T20:02:35,537775+0000 initcall __lttng_events_init__regulator+0x0/0x50 [lttng_probe_regulator] returned 0 after 293 usecs
+2019-05-09T20:02:35,540940+0000 calling  __lttng_events_init__sched+0x0/0x50 [lttng_probe_sched] @ 471
+2019-05-09T20:02:35,541147+0000 initcall __lttng_events_init__sched+0x0/0x50 [lttng_probe_sched] returned 0 after 200 usecs
+2019-05-09T20:02:35,542855+0000 calling  __lttng_events_init__scsi+0x0/0x50 [lttng_probe_scsi] @ 473
+2019-05-09T20:02:35,543063+0000 initcall __lttng_events_init__scsi+0x0/0x50 [lttng_probe_scsi] returned 0 after 200 usecs
+2019-05-09T20:02:35,544720+0000 calling  __lttng_events_init__signal+0x0/0x50 [lttng_probe_signal] @ 475
+2019-05-09T20:02:35,544927+0000 initcall __lttng_events_init__signal+0x0/0x50 [lttng_probe_signal] returned 0 after 200 usecs
+2019-05-09T20:02:35,546549+0000 calling  __lttng_events_init__skb+0x0/0x50 [lttng_probe_skb] @ 477
+2019-05-09T20:02:35,546820+0000 initcall __lttng_events_init__skb+0x0/0x50 [lttng_probe_skb] returned 0 after 262 usecs
+2019-05-09T20:02:35,548487+0000 calling  __lttng_events_init__sock+0x0/0x50 [lttng_probe_sock] @ 479
+2019-05-09T20:02:35,548791+0000 initcall __lttng_events_init__sock+0x0/0x50 [lttng_probe_sock] returned 0 after 294 usecs
+2019-05-09T20:02:35,550486+0000 calling  __lttng_events_init__lttng_statedump+0x0/0x50 [lttng_probe_statedump] @ 481
+2019-05-09T20:02:35,550794+0000 initcall __lttng_events_init__lttng_statedump+0x0/0x50 [lttng_probe_statedump] returned 0 after 298 usecs
+2019-05-09T20:02:35,552461+0000 calling  __lttng_events_init__rpc+0x0/0x50 [lttng_probe_sunrpc] @ 483
+2019-05-09T20:02:35,552772+0000 initcall __lttng_events_init__rpc+0x0/0x50 [lttng_probe_sunrpc] returned 0 after 301 usecs
+2019-05-09T20:02:35,554439+0000 calling  __lttng_events_init__timer+0x0/0x50 [lttng_probe_timer] @ 485
+2019-05-09T20:02:35,554763+0000 initcall __lttng_events_init__timer+0x0/0x50 [lttng_probe_timer] returned 0 after 314 usecs
+2019-05-09T20:02:35,556494+0000 calling  __lttng_events_init__udp+0x0/0x50 [lttng_probe_udp] @ 487
+2019-05-09T20:02:35,556786+0000 initcall __lttng_events_init__udp+0x0/0x50 [lttng_probe_udp] returned 0 after 282 usecs
+2019-05-09T20:02:35,558494+0000 calling  __lttng_events_init__mm_vmscan+0x0/0x50 [lttng_probe_vmscan] @ 489
+2019-05-09T20:02:35,558792+0000 initcall __lttng_events_init__mm_vmscan+0x0/0x50 [lttng_probe_vmscan] returned 0 after 288 usecs
+2019-05-09T20:02:35,561876+0000 calling  __lttng_events_init__workqueue+0x0/0x50 [lttng_probe_workqueue] @ 493
+2019-05-09T20:02:35,562101+0000 initcall __lttng_events_init__workqueue+0x0/0x50 [lttng_probe_workqueue] returned 0 after 200 usecs
+2019-05-09T20:02:35,563911+0000 calling  __lttng_events_init__writeback+0x0/0x50 [lttng_probe_writeback] @ 495
+2019-05-09T20:02:35,564176+0000 initcall __lttng_events_init__writeback+0x0/0x50 [lttng_probe_writeback] returned 0 after 256 usecs
+2019-05-09T20:02:36,090399+0000 calling  init_autofs4_fs+0x0/0x2b [autofs4] @ 1
+2019-05-09T20:02:36,090476+0000 initcall init_autofs4_fs+0x0/0x2b [autofs4] returned 0 after 70 usecs
+2019-05-09T20:02:36,092948+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/freezer of type cgroup with options freezer.
+2019-05-09T20:02:36,093046+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/blkio of type cgroup with options blkio.
+2019-05-09T20:02:36,093410+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/cpu,cpuacct of type cgroup with options cpu,cpuacct.
+2019-05-09T20:02:36,093597+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/memory of type cgroup with options memory.
+2019-05-09T20:02:36,095039+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/devices of type cgroup with options devices.
+2019-05-09T20:02:36,095123+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/cpuset of type cgroup with options cpuset.
+2019-05-09T20:02:36,095512+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/net_cls,net_prio of type cgroup with options net_cls,net_prio.
+2019-05-09T20:02:36,095642+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/perf_event of type cgroup with options perf_event.
+2019-05-09T20:02:36,095756+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/hugetlb of type cgroup with options hugetlb.
+2019-05-09T20:02:36,095838+0000 systemd[1]: Mounting cgroup to /sys/fs/cgroup/pids of type cgroup with options pids.
+2019-05-09T20:02:36,406670+0000 calling  iscsi_transport_init+0x0/0x1000 [scsi_transport_iscsi] @ 552
+2019-05-09T20:02:36,406671+0000 Loading iSCSI transport class v2.0-870.
+2019-05-09T20:02:36,412918+0000 initcall iscsi_transport_init+0x0/0x1000 [scsi_transport_iscsi] returned 0 after 6095 usecs
+2019-05-09T20:02:36,434788+0000 calling  iscsi_sw_tcp_init+0x0/0x1000 [iscsi_tcp] @ 552
+2019-05-09T20:02:36,434802+0000 iscsi: registered transport (tcp)
+2019-05-09T20:02:36,437460+0000 EXT4-fs (sda1): re-mounted. Opts: discard
+2019-05-09T20:02:36,445542+0000 initcall iscsi_sw_tcp_init+0x0/0x1000 [iscsi_tcp] returned 0 after 10497 usecs
+2019-05-09T20:02:36,477232+0000 calling  iser_init+0x0/0x1000 [ib_iser] @ 552
+2019-05-09T20:02:36,477262+0000 iscsi: registered transport (iser)
+2019-05-09T20:02:36,481996+0000 initcall iser_init+0x0/0x1000 [ib_iser] returned 0 after 4648 usecs
+2019-05-09T20:02:36,573536+0000 random: crng init done
+2019-05-09T20:02:36,576005+0000 random: 7 urandom warning(s) missed due to ratelimiting
+2019-05-09T20:02:36,613360+0000 hv_utils: KVP IC version 4.0
+2019-05-09T20:02:36,666179+0000 systemd-journald[555]: Received request to flush runtime journal from PID 1
+2019-05-09T20:02:37,110115+0000 calling  joydev_init+0x0/0x1000 [joydev] @ 618
+2019-05-09T20:02:37,110861+0000 initcall joydev_init+0x0/0x1000 [joydev] returned 0 after 724 usecs
+2019-05-09T20:02:37,242030+0000 calling  serio_raw_drv_init+0x0/0x1000 [serio_raw] @ 620
+2019-05-09T20:02:37,242042+0000 initcall serio_raw_drv_init+0x0/0x1000 [serio_raw] returned 0 after 10 usecs
+2019-05-09T20:02:37,267035+0000 calling  init_balloon_drv+0x0/0x1000 [hv_balloon] @ 619
+2019-05-09T20:02:37,267036+0000 hv_vmbus: registering driver hv_balloon
+2019-05-09T20:02:37,280247+0000 hv_balloon: Using Dynamic Memory protocol version 2.0
+2019-05-09T20:02:37,287631+0000 initcall init_balloon_drv+0x0/0x1000 [hv_balloon] returned 0 after 20109 usecs
+2019-05-09T20:02:37,539456+0000 audit: type=1400 audit(1557432158.323:2): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/sbin/dhclient" pid=670 comm="apparmor_parser"
+2019-05-09T20:02:37,539976+0000 audit: type=1400 audit(1557432158.323:3): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=670 comm="apparmor_parser"
+2019-05-09T20:02:37,540595+0000 audit: type=1400 audit(1557432158.327:4): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-helper" pid=670 comm="apparmor_parser"
+2019-05-09T20:02:37,541037+0000 audit: type=1400 audit(1557432158.327:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=670 comm="apparmor_parser"
+2019-05-09T20:02:37,588221+0000 audit: type=1400 audit(1557432158.371:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/bin/lxc-start" pid=709 comm="apparmor_parser"
+2019-05-09T20:02:37,735265+0000 audit: type=1400 audit(1557432158.519:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/lxd/lxd-bridge-proxy" pid=721 comm="apparmor_parser"
+2019-05-09T20:02:37,758761+0000 audit: type=1400 audit(1557432158.543:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="lxc-container-default" pid=671 comm="apparmor_parser"
+2019-05-09T20:02:37,759906+0000 audit: type=1400 audit(1557432158.543:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="lxc-container-default-cgns" pid=671 comm="apparmor_parser"
+2019-05-09T20:02:37,760506+0000 audit: type=1400 audit(1557432158.547:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="lxc-container-default-with-mounting" pid=671 comm="apparmor_parser"
+2019-05-09T20:02:37,761025+0000 audit: type=1400 audit(1557432158.547:11): apparmor="STATUS" operation="profile_load" profile="unconfined" name="lxc-container-default-with-nesting" pid=671 comm="apparmor_parser"
+2019-05-09T20:02:38,105179+0000 calling  init_udf_fs+0x0/0x1000 [udf] @ 855
+2019-05-09T20:02:38,105205+0000 initcall init_udf_fs+0x0/0x1000 [udf] returned 0 after 21 usecs
+2019-05-09T20:02:38,164723+0000 UDF-fs: INFO Mounting volume 'UDF Volume', timestamp 2019/05/10 00:00 (1000)
+2019-05-09T20:02:38,213521+0000 IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+2019-05-09T20:02:38,213537+0000 IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+2019-05-09T20:02:41,560448+0000 EXT4-fs (sda1): resizing filesystem from 576000 to 7864571 blocks
+2019-05-09T20:02:41,585639+0000 EXT4-fs (sda1): resized filesystem to 7864571
+2019-05-09T20:02:41,837678+0000  sdb: sdb1
+2019-05-09T20:02:44,125931+0000 EXT4-fs (sdb1): mounted filesystem with ordered data mode. Opts: (null)
+2019-05-09T20:02:44,196665+0000 systemd[1]: systemd-tmpfiles-setup-dev.service: Changed dead -> exited
+2019-05-09T20:02:44,196670+0000 systemd[1]: system.slice changed dead -> active
+2019-05-09T20:02:44,196672+0000 systemd[1]: dev-ttyS21.device: Changed dead -> plugged
+2019-05-09T20:02:44,196674+0000 systemd[1]: dev-disk-by\x2dlabel-cloudimg\x2drootfs.device: Changed dead -> plugged
+2019-05-09T20:02:44,196676+0000 systemd[1]: dev-ttyS24.device: Changed dead -> plugged
+2019-05-09T20:02:44,196680+0000 systemd[1]: sys-devices-LNXSYSTM:00-LNXSYBUS:00-PNP0A03:00-device:07-VMBUS:01-00000000\x2d0000\x2d8899\x2d0000\x2d000000000000-host0-target0:0:0-0:0:0:0-block-sda.device: Changed dead -> plugged
+2019-05-09T20:02:44,196704+0000 systemd[1]: systemd-sysctl.service: Changed dead -> exited
+2019-05-09T20:02:44,196707+0000 systemd[1]: dev-disk-by\x2did-scsi\x2d360022480baf8c6d93c042fa5d01a3623\x2dpart1.device: Changed dead -> plugged
+2019-05-09T20:02:44,196710+0000 systemd[1]: syslog.socket: Changed dead -> running
+2019-05-09T20:02:44,196733+0000 systemd[1]: systemd-journal-flush.service: Changed dead -> exited
+2019-05-09T20:02:45,052073+0000 serial8250: too much work for irq4
+2019-05-09T20:02:45,291509+0000 hv_utils: VSS: userspace daemon ver. 129 connected
+2019-05-09T20:02:45,294301+0000 new mount options do not match the existing superblock, will be ignored
+2019-05-09T20:02:47,765281+0000 calling  xt_init+0x0/0x1000 [x_tables] @ 1751
+2019-05-09T20:02:47,765287+0000 initcall xt_init+0x0/0x1000 [x_tables] returned 0 after 2 usecs
+2019-05-09T20:02:47,775586+0000 calling  ip_tables_init+0x0/0x1000 [ip_tables] @ 1751
+2019-05-09T20:02:47,775590+0000 ip_tables: (C) 2000-2006 Netfilter Core Team
+2019-05-09T20:02:47,775592+0000 initcall ip_tables_init+0x0/0x1000 [ip_tables] returned 0 after 3 usecs
+2019-05-09T20:02:47,790107+0000 calling  iptable_security_init+0x0/0x1000 [iptable_security] @ 1758
+2019-05-09T20:02:47,820079+0000 calling  nf_conntrack_standalone_init+0x0/0x1000 [nf_conntrack] @ 1759
+2019-05-09T20:02:47,820298+0000 nf_conntrack version 0.5.0 (65536 buckets, 262144 max)
+2019-05-09T20:02:47,820326+0000 initcall nf_conntrack_standalone_init+0x0/0x1000 [nf_conntrack] returned 0 after 234 usecs
+2019-05-09T20:02:47,830776+0000 calling  conntrack_mt_init+0x0/0x1000 [xt_conntrack] @ 1759
+2019-05-09T20:02:47,830778+0000 initcall conntrack_mt_init+0x0/0x1000 [xt_conntrack] returned 0 after 0 usecs
+2019-05-09T20:02:47,844830+0000 initcall iptable_security_init+0x0/0x1000 [iptable_security] returned 0 after 53437 usecs
+2019-05-09T20:02:48,891324+0000 calling  owner_mt_init+0x0/0x1000 [xt_owner] @ 1810
+2019-05-09T20:02:48,891328+0000 initcall owner_mt_init+0x0/0x1000 [xt_owner] returned 0 after 0 usecs
+2019-05-09T20:02:49,029872+0000 calling  nf_defrag_init+0x0/0x1000 [nf_defrag_ipv4] @ 1827
+2019-05-09T20:02:49,029875+0000 initcall nf_defrag_init+0x0/0x1000 [nf_defrag_ipv4] returned 0 after 0 usecs
+2019-05-09T20:02:49,047645+0000 calling  nf_conntrack_l3proto_ipv4_init+0x0/0x1000 [nf_conntrack_ipv4] @ 1827
+2019-05-09T20:02:49,047671+0000 initcall nf_conntrack_l3proto_ipv4_init+0x0/0x1000 [nf_conntrack_ipv4] returned 0 after 23 usecs
+2019-05-09T20:02:51,948060+0000 serial8250: too much work for irq4
+2019-05-09T20:03:25,496613+0000 hv_balloon: Max. dynamic memory size: 7168 MB
+2019-05-09T20:03:28,568307+0000 ring buffer relay-metadata: 318 records written, 0 records overrun
+2019-05-09T20:03:28,568309+0000 ring buffer relay-metadata, cpu -1: non-consumed data
+                                  [ 1306624 bytes written, 1302528 bytes read ]
+2019-05-09T20:03:28,568310+0000 ring buffer: relay-metadata, cpu -1: 655360 bytes committed
+2019-05-09T20:03:28,568416+0000 ring buffer relay-discard, cpu 0: 1173234 records written, 0 records overrun
+2019-05-09T20:03:28,568417+0000 ring buffer relay-discard, cpu 0: records were lost. Caused by:
+                                  [ 135991 buffer full, 0 nest buffer wrap-around, 0 event too big ]
+2019-05-09T20:03:28,568451+0000 ring buffer relay-discard, cpu 1: 952728 records written, 0 records overrun
+2019-05-09T20:03:28,568451+0000 ring buffer relay-discard, cpu 1: records were lost. Caused by:
+                                  [ 136464 buffer full, 0 nest buffer wrap-around, 0 event too big ]

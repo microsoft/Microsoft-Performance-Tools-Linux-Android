@@ -45,6 +45,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestCommon", "UnitTestCommon\UnitTestCommon.csproj", "{1204B52D-AD92-439D-8C86-01899958145B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LttngDriver", "LTTngDriver\LttngDriver.csproj", "{763F22A1-91AE-4038-A3CC-EA4A105B2A22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinuxLogParsersUnitTest", "LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj", "{F910A8EA-9B0F-4BDA-87D4-0765EE973421}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +117,10 @@ Global
 		{1204B52D-AD92-439D-8C86-01899958145B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1204B52D-AD92-439D-8C86-01899958145B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1204B52D-AD92-439D-8C86-01899958145B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F910A8EA-9B0F-4BDA-87D4-0765EE973421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F910A8EA-9B0F-4BDA-87D4-0765EE973421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F910A8EA-9B0F-4BDA-87D4-0765EE973421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F910A8EA-9B0F-4BDA-87D4-0765EE973421}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +131,7 @@ Global
 		{7CBFAE62-0D0D-4075-A426-99945DD4E9A8} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{04455C36-F127-4D40-BCB3-78E7DE21E70E} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{F910A8EA-9B0F-4BDA-87D4-0765EE973421} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E96603EA-8E1D-4AA9-A474-D267A116C316}

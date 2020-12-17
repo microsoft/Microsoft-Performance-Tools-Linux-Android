@@ -55,27 +55,27 @@ namespace LTTngDataExtUnitTest
 
                     // Enable our various types of data
                     var lttngGenericEventDataCooker = new LttngGenericEventDataCooker();
-                    LTTngGenericEventDataCookerPath = lttngGenericEventDataCooker.GetCookerPath();
+                    LTTngGenericEventDataCookerPath = lttngGenericEventDataCooker.Path;
                     runtime.EnableCooker(LTTngGenericEventDataCookerPath);
 
                     var lttngSyscallDataCooker = new LttngSyscallDataCooker();
-                    LTTngSyscallDataCookerPath = lttngSyscallDataCooker.GetCookerPath();
+                    LTTngSyscallDataCookerPath = lttngSyscallDataCooker.Path;
                     runtime.EnableCooker(LTTngSyscallDataCookerPath);
 
                     var lttngThreadDataCooker = new LttngThreadDataCooker();
-                    LTTngThreadDataCookerPath = lttngThreadDataCooker.GetCookerPath();
+                    LTTngThreadDataCookerPath = lttngThreadDataCooker.Path;
                     runtime.EnableCooker(LTTngThreadDataCookerPath);
 
                     var lttngDmesgDataCooker = new LttngDmesgDataCooker();
-                    LttngDmesgDataCookerPath = lttngDmesgDataCooker.GetCookerPath();
+                    LttngDmesgDataCookerPath = lttngDmesgDataCooker.Path;
                     runtime.EnableCooker(LttngDmesgDataCookerPath);
 
                     var lttngModuleDataCooker = new LttngModuleDataCooker();
-                    LttngModuleDataCookerPath = lttngModuleDataCooker.GetCookerPath();
+                    LttngModuleDataCookerPath = lttngModuleDataCooker.Path;
                     runtime.EnableCooker(LttngModuleDataCookerPath);
 
                     var lttngDiskDataCooker = new LttngDiskDataCooker();
-                    LttngDiskDataCookerPath = lttngDiskDataCooker.GetCookerPath();
+                    LttngDiskDataCookerPath = lttngDiskDataCooker.Path;
                     runtime.EnableCooker(LttngDiskDataCookerPath);
 
                     //
@@ -206,12 +206,12 @@ namespace LTTngDataExtUnitTest
         {
             ProcessTrace();
 
-            var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IThread>>(
+            var threads = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IThread>>(
                 new DataOutputPath(
                     LTTngThreadDataCookerPath,
                     nameof(LttngThreadDataCooker.Threads)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(threads.Count > 0);
         }
     }
 }

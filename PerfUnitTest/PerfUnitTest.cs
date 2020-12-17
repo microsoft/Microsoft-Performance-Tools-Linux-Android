@@ -53,27 +53,9 @@ namespace PerfUnitTest
             perfDataCustomDataSourceProcessor.BuildTable(PerfTxtCpuSamplingTable.TableDescriptor, tableBuilder);
             var tbr = tableBuilder.TableBuilderWithRowCount;
 
-            var rowNumber = 0;
-            for (var i = 0; i < tbr.Columns.Count(); i++)
-            {
-                var col = tbr.Columns.ElementAt(i);
-                try
-                {
-                    var projResult = col.Project(rowNumber);
+            TableBuilderTests.TestRowTypesMatchColTypes(tbr, 0);
 
-                    if (projResult != null)
-                    {
-                        var projResultType = projResult.GetType();
-                        Assert.IsTrue(col.DataType == projResultType);
-                    }
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-
-            rowNumber = 2;
+            var rowNumber = 2;
             // Sample #
             var sampleNumber = (long)tbr.Columns.ElementAt(0).Project(rowNumber);
             Assert.IsTrue(sampleNumber == 2);

@@ -371,11 +371,6 @@ namespace LttngDataExtensions.SourceDataCookers.Thread
         {
         }
 
-        public DataCookerPath GetCookerPath()
-        {
-            return Path;
-        }
-
         private readonly Dictionary<uint, ContextSwitch> lastContextSwitch = new Dictionary<uint, ContextSwitch>();
         private readonly List<ExecutionEvent> processedExecutionEvents = new List<ExecutionEvent>();
         private readonly List<Thread> terminatedThreads = new List<Thread>();
