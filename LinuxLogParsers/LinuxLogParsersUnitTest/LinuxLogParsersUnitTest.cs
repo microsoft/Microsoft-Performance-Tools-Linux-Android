@@ -1,8 +1,9 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using CloudInitMPTAddin;
 using DmesgIsoMPTAddin;
-using LinuxLogParser.CloudInitLog;
 using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
