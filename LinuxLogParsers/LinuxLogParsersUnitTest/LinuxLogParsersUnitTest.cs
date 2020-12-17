@@ -1,3 +1,4 @@
+using CloudInitMPTAddin;
 using DmesgIsoMPTAddin;
 using LinuxLogParser.CloudInitLog;
 using Microsoft.Performance.SDK.Extensibility;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnitTestCommon;
+using WaLinuxAgentMPTAddin;
 
 namespace LinuxLogParsersUnitTest
 {
@@ -29,24 +31,19 @@ namespace LinuxLogParsersUnitTest
             var runtime = Engine.Create();
             runtime.AddFile(dmesgDataPath.FullName);
 
-            runtime.EnableCooker(new DmesgIsoDataCooker().Path);
+            var cooker = new DmesgIsoDataCooker().Path;
+            runtime.EnableCooker(cooker);
 
             var runtimeExecutionResults = runtime.Process();
-            var cooker = runtime.SourceDataCookers.Where(c => c.DataCookerId == DmesgIsoDataCooker.CookerId).First();
 
             var eventData = runtimeExecutionResults.QueryOutput<DmesgIsoLogParsedResult>(
                 new DataOutputPath(
                     cooker,
                     nameof(DmesgIsoDataCooker.ParsedResult)));
 
-            //var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IDiagnosticMessage>>(
-            //    new DataOutputPath(
-            //        LttngDmesgDataCookerPath,
-            //        nameof(LttngDmesgDataCooker.DiagnosticMessages)));
+            Assert.IsTrue(eventData.LogEntries.Count >= 0); 
 
-            Assert.IsTrue(eventData.LogEntries.Count == 0); // TODO - UT - Trace has no DiagMessages
-
-            // Option 2 - UI - not working
+            // Option 2 - UI - not working using Mocking. SDK may have way to test Table UI in the future
             //var dmesgDataPathFullPath = dmesgDataPath.FullName;
             //var datasource = new Mock<IDataSource>();
             //datasource.Setup(ds => ds.GetUri()).Returns(new Uri(dmesgDataPathFullPath));
@@ -83,11 +80,49 @@ namespace LinuxLogParsersUnitTest
         [TestMethod]
         public void CloudInit()
         {
+            // Input data
+            string[] cloudInitData = { @"..\..\..\..\..\TestData\LinuxLogs\Cloud-Init\cloud-init.log" };
+            var cloutInitDataPath = new FileInfo(cloudInitData[0]);
+            Assert.IsTrue(cloutInitDataPath.Exists);
+
+            var runtime = Engine.Create();
+            runtime.AddFile(cloutInitDataPath.FullName);
+
+            var cooker = new CloudInitDataCooker().Path;
+            runtime.EnableCooker(cooker);
+
+            var runtimeExecutionResults = runtime.Process();
+
+            var eventData = runtimeExecutionResults.QueryOutput<CloudInitLogParsedResult>(
+                new DataOutputPath(
+                    cooker,
+                    nameof(CloudInitDataCooker.ParsedResult)));
+
+            Assert.IsTrue(eventData.LogEntries.Count >= 0);
         }
 
         [TestMethod]
         public void WaLinuxAgent()
         {
+            // Input data
+            string[] waLinuxAgentData = { @"..\..\..\..\..\TestData\LinuxLogs\WaLinuxAgent\waagent.log" };
+            var waLinuxAgentDataPath = new FileInfo(waLinuxAgentData[0]);
+            Assert.IsTrue(waLinuxAgentDataPath.Exists);
+
+            var runtime = Engine.Create();
+            runtime.AddFile(waLinuxAgentDataPath.FullName);
+
+            var cooker = new WaLinuxAgentDataCooker().Path;
+            runtime.EnableCooker(cooker);
+
+            var runtimeExecutionResults = runtime.Process();
+
+            var eventData = runtimeExecutionResults.QueryOutput<WaLinuxAgentLogParsedResult>(
+                new DataOutputPath(
+                    cooker,
+                    nameof(WaLinuxAgentDataCooker.ParsedResult)));
+
+            Assert.IsTrue(eventData.LogEntries.Count >= 0);
         }
     }
 }

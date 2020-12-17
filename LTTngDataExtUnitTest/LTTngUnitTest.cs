@@ -85,7 +85,7 @@ namespace LTTngDataExtUnitTest
                     RuntimeExecutionResults = runtime.Process();
 
                     // ##########################################################
-                    // Approach #2 (not currently working but if it does should be able to test tables)
+                    // Option 2 - UI - not working using Mocking. SDK may have way to test Table UI in the future
                     // ##########################################################
                     var lttngDataPathFullPath = lttngDataPath.FullName;
                     var datasource = new Mock<IDataSource>();
