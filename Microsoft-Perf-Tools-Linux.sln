@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{E48222FC-D
 		SUPPORT.md = SUPPORT.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LttngDriver", "LTTngDriver\LttngDriver.csproj", "{763F22A1-91AE-4038-A3CC-EA4A105B2A22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{763F22A1-91AE-4038-A3CC-EA4A105B2A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763F22A1-91AE-4038-A3CC-EA4A105B2A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763F22A1-91AE-4038-A3CC-EA4A105B2A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763F22A1-91AE-4038-A3CC-EA4A105B2A22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
