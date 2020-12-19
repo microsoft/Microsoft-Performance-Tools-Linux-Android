@@ -84,27 +84,6 @@ namespace LTTngDataExtUnitTest
 
                     RuntimeExecutionResults = runtime.Process();
 
-                    // ##########################################################
-                    // Option 2 - UI - not working using Mocking. SDK may have way to test Table UI in the future
-                    // ##########################################################
-                    var lttngDataPathFullPath = lttngDataPath.FullName;
-                    var datasource = new Mock<IDataSource>();
-                    datasource.Setup(ds => ds.GetUri()).Returns(new Uri(lttngDataPathFullPath));
-
-                    // Env
-                    var appEnv = new Mock<IApplicationEnvironment>();
-                    var serializer = new Mock<ISerializer>();
-                    appEnv.Setup(ae => ae.Serializer).Returns(serializer.Object);
-                    var processorEnv = new Mock<IProcessorEnvironment>();
-
-                    var lttngDataSource = new LttngDataSource();
-                    lttngDataSource.SetApplicationEnvironment(appEnv.Object);
-                    //var lttngDataProcessor = lttngDataSource.CreateProcessor(datasource.Object, processorEnv.Object, ProcessorOptions.Default); // <= PROBLEM HERE
-
-                    //var dataExtensionRetrieval = new Mock<IDataExtensionRetrieval>();
-                    var tableBuilder = new TableBuilder();
-                    // LttngDataExtensions.Tables.DiskTable.BuildTable(tableBuilder, 
-
                     IsTraceProcessed = true;
                 }
             }
