@@ -51,8 +51,9 @@ jobs:
           Antlr4.Runtime\Antlr4.Runtime.dotnet.csproj
           CtfPlayback\CtfPlayback.csproj
           CtfUnitTest\CtfUnitTest.csproj
-          LttngCds\LttngCds.csproj
-          LttngDataExtensions\LttngDataExtensions.csproj
+          LTTngCds\LttngCds.csproj
+          LTTngDataExtensions\LttngDataExtensions.csproj
+          LTTngDriver\LTTngDriver.csproj
           PerfCds\PerfCds.csproj
           PerfDataExtensions\PerfDataExtensions.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
@@ -76,11 +77,18 @@ jobs:
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/PerfDataExtensions'
         
     - task: CopyFiles@2
-      displayName: Copy LttngDataExtensions Build to Output Artifacts
+      displayName: Copy LTTngDataExtensions Build to Output Artifacts
       inputs:
         SourceFolder: 'LttngDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/LTTngDataExtensions'
+        
+    - task: CopyFiles@2
+      displayName: Copy LTTngDriver Build to Output Artifacts
+      inputs:
+        SourceFolder: 'LTTngDriver/bin/$(BuildConfiguration)/netcoreapp3.1'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/LTTngDriver'
         
     - task: CopyFiles@2
       displayName: Copy Cloud-initBuild to Output Artifacts
