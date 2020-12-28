@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "LttngDriver": {
-      "commandName": "Project",
-      "commandLineArgs": "-e C:\\src\\Microsoft-Performance-Tools-Linux\\LttngDataExtensions\\bin\\Debug\\netstandard2.1 C:\\src\\Microsoft-Performance-Tools-Linux\\TestData\\LTTng\\lttng-kernel-trace.ctf"
-    }
-  }
-}

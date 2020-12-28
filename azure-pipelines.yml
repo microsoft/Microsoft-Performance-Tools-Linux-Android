@@ -51,8 +51,8 @@ jobs:
           Antlr4.Runtime\Antlr4.Runtime.dotnet.csproj
           CtfPlayback\CtfPlayback.csproj
           CtfUnitTest\CtfUnitTest.csproj
-          LTTngCds\LttngCds.csproj
-          LTTngDataExtensions\LttngDataExtensions.csproj
+          LTTngCds\LTTngCds.csproj
+          LTTngDataExtensions\LTTngDataExtensions.csproj
           LTTngDataExtUnitTest\LTTngDataExtUnitTest.csproj
           LTTngDriver\LTTngDriver.csproj
           PerfCds\PerfCds.csproj
@@ -82,7 +82,7 @@ jobs:
     - task: CopyFiles@2
       displayName: Copy LTTngDataExtensions Build to Output Artifacts
       inputs:
-        SourceFolder: 'LttngDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
+        SourceFolder: 'LTTngDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/LTTngDataExtensions'
         

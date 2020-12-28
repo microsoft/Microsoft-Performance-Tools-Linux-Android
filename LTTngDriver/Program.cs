@@ -8,13 +8,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using LttngDataExtensions.DataOutputTypes;
-using LttngDataExtensions.SourceDataCookers;
+using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 
-namespace LttngDriver
+namespace LTTngDriver
 {
     public sealed partial class Program
     {
@@ -53,7 +53,7 @@ namespace LttngDriver
                 runtime.AddFile(ctf);
             }
 
-            var lttngGenericEventDataCooker = new LttngGenericEventDataCooker();
+            var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
             var cookerName = lttngGenericEventDataCooker.Path;
             runtime.EnableCooker(cookerName);
 
@@ -67,10 +67,10 @@ namespace LttngDriver
             // Access our cooked data.
             //
 
-            var eventData = results.QueryOutput<ProcessedEventData<LttngGenericEvent>>(
+            var eventData = results.QueryOutput<ProcessedEventData<LTTngGenericEvent>>(
                 new DataOutputPath(
                     cookerName,
-                    nameof(LttngGenericEventDataCooker.Events)));
+                    nameof(LTTngGenericEventDataCooker.Events)));
 
             TextWriter output = null;
             FileStream file = null;
@@ -137,13 +137,13 @@ namespace LttngDriver
         }
 
         private static void EmitEvents(
-            ProcessedEventData<LttngGenericEvent> events,
+            ProcessedEventData<LTTngGenericEvent> events,
             TextWriter output)
         {
             Debug.Assert(events != null);
             Debug.Assert(output != null);
 
-            var genericEventProperties = typeof(LttngGenericEvent).GetProperties();
+            var genericEventProperties = typeof(LTTngGenericEvent).GetProperties();
             Debug.Assert(genericEventProperties != null);
 
             var maxNumFields = events.Select(x => x.FieldNames.Count).Max();
@@ -156,7 +156,7 @@ namespace LttngDriver
                 if (IsIndexProperty(p))
                 {
                     //
-                    // we have hit the indexer on LttngGeneric Event. We will enumerate
+                    // we have hit the indexer on LTTngGeneric Event. We will enumerate
                     // that separately after this property loop (they are the field N
                     // values, so it makes sense to do them separatly.)
                     //

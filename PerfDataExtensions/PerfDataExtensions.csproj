@@ -78,7 +78,7 @@
 </Target>
   
   <Target Name="PostBuild" AfterTargets="DeployStagedFiles">
-    <Exec Command="CALL XCOPY /dickherfy $(ProjectDir)..\LttngDataExtensions\$(OutDir)WPA_Testing\CustomDataSources\LTTngDataExtensions $(ProjectDir)$(OutDir)WPA_Testing\CustomDataSources\LTTngDataExtensions" />
+    <Exec Command="CALL XCOPY /dickherfy $(ProjectDir)..\LTTngDataExtensions\$(OutDir) $(ProjectDir)$(OutDir)\LTTngDataExtensions" />
   </Target>
 
 </Project>

@@ -84,7 +84,7 @@ namespace CtfPlayback
                 if (streamPlayback.CurrentEvent.Timestamp.NanosecondsFromPosixEpoch < this.lastEventTimestamp)
                 {
                     Debug.Assert(false, "time inversion?");
-                    Console.Error.WriteLine("Time inversion discovered in Lttng trace.");
+                    Console.Error.WriteLine("Time inversion discovered in LTTng trace.");
                 }
 
                 this.customization.ProcessEvent(

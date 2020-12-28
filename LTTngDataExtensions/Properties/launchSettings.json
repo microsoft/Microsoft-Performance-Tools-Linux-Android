@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "LTTngDataExtensions": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Tools\\WPT\\latest\\wpa.exe",
+      "commandLineArgs": "-addsearchdir C:\\Users\\ivberg\\Downloads\\Microsoft-Performance-Tools-Linux\\MicrosoftPerfToolkitAddinsIvan"
+    }
+  }
+}
