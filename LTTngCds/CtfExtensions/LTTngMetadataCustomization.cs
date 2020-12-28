@@ -30,10 +30,10 @@ namespace LTTngCds.CtfExtensions
                 return null;
             }
 
-            // note: this may be overly cautious making this LTTNG specific, but it's not clear to me that the CTF
+            // note: this may be overly cautious making this LTTng specific, but it's not clear to me that the CTF
             // specification mandates this clock reference format. It might just be another "example".
 
-            // LTTNG maps are in the form of: clock.<clock_name>.value
+            // LTTng maps are in the form of: clock.<clock_name>.value
             // where <clock_name> is the name of the clock
             // e.g. "clock.monotonic.value"
 

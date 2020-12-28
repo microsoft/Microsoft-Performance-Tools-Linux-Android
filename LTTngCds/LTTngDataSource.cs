@@ -13,7 +13,7 @@ namespace LTTngCds
     [CustomDataSource(
         "{98608154-6231-4F25-903A-5E440574AB45}",
         "LTTng",
-        "Processes LTTNG CTF data")]
+        "Processes LTTng CTF data")]
     [FileDataSource("ctf", "ctf")]
     public class LTTngDataSource
         : CustomDataSourceBase

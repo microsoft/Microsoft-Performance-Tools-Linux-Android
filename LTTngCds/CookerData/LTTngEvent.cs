@@ -12,7 +12,7 @@ using Microsoft.Performance.SDK.Extensibility;
 namespace LTTngCds.CookerData
 {
     /// <summary>
-    /// An LTTNG event
+    /// An LTTng event
     /// </summary>
     public class LTTngEvent
         : IKeyedDataType<string>
@@ -24,17 +24,17 @@ namespace LTTngCds.CookerData
         {
             if (!(ctfEvent.EventDescriptor is IEventDescriptor eventDescriptor))
             {
-                throw new CtfPlaybackException("Not a valid LTTNG event.");
+                throw new CtfPlaybackException("Not a valid LTTng event.");
             }
 
             if (ctfEvent.Payload is null)
             {
-                throw new CtfPlaybackException("LTTNG event payload is null.");
+                throw new CtfPlaybackException("LTTng event payload is null.");
             }
 
             if (!(ctfEvent.Payload is CtfStructValue payload))
             {
-                throw new CtfPlaybackException("LTTNG event payload is not a structure.");
+                throw new CtfPlaybackException("LTTng event payload is not a structure.");
             }
 
             this.ctfEvent = ctfEvent;

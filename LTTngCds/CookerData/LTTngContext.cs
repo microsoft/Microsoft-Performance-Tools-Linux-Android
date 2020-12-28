@@ -27,7 +27,7 @@ namespace LTTngCds.CookerData
         }
 
         /// <summary>
-        /// The clocks described in the LTTNG trace.
+        /// The clocks described in the LTTng trace.
         /// </summary>
         public IReadOnlyDictionary<string, ICtfClockDescriptor> Clocks => this.metadata.Metadata.ClocksByName;
 

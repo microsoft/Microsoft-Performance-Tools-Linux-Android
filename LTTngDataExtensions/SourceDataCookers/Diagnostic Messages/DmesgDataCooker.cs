@@ -23,7 +23,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages
         {
         }
 
-        public override string Description => "Processes LTTNG events that are diagnostic messages.";
+        public override string Description => "Processes LTTng events that are diagnostic messages.";
 
 
         private static string DmesgDataKey = "printk_console";

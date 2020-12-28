@@ -41,7 +41,7 @@ namespace PerfCds.CtfExtensions.Descriptors
 
         public uint LogLevel { get; private set; }
 
-        // LTTNG defines no context for an event. Check if this is true for perf?
+        // LTTng defines no context for an event. Check if this is true for perf?
 
         public ICtfTypeDescriptor Context => null;
 

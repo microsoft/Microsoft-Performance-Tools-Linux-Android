@@ -6,7 +6,7 @@ using CtfPlayback.Metadata.Interfaces;
 namespace LTTngCds.CtfExtensions.DescriptorInterfaces
 {
     /// <summary>
-    /// LTTNG specific event information combined with CTF event information
+    /// LTTng specific event information combined with CTF event information
     /// </summary>
     public interface IEventDescriptor
         : ICtfEventDescriptor

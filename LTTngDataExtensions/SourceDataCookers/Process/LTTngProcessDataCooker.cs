@@ -50,7 +50,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Process
             this.DataKeys = new ReadOnlyHashSet<string>(Keys);
         }
 
-        public override string Description => "Processes LTTNG events related to processes.";
+        public override string Description => "Processes LTTng events related to processes.";
 
         public override ReadOnlyHashSet<string> DataKeys { get; }
 

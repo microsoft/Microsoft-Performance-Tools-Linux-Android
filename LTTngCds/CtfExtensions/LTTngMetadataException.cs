@@ -8,7 +8,7 @@ using CtfPlayback.Metadata;
 namespace LTTngCds.CtfExtensions
 {
     /// <summary>
-    /// An LTTNG exception related to trace metadata
+    /// An LTTng exception related to trace metadata
     /// </summary>
     public class LTTngMetadataException 
         : CtfMetadataException
@@ -18,12 +18,12 @@ namespace LTTngCds.CtfExtensions
         }
 
         public LTTngMetadataException(string message) 
-            : base("LTTNG: " + message)
+            : base("LTTng: " + message)
         {
         }
 
         public LTTngMetadataException(string message, Exception innerException) 
-            : base("LTTNG: " + message, innerException)
+            : base("LTTng: " + message, innerException)
         {
         }
 

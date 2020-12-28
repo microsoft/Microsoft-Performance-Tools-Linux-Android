@@ -41,7 +41,7 @@ namespace LTTngCds.CtfExtensions.Descriptors
 
         public uint LogLevel { get; private set; }
 
-        // LTTNG defines no context for an event
+        // LTTng defines no context for an event
 
         public ICtfTypeDescriptor Context => null;
 

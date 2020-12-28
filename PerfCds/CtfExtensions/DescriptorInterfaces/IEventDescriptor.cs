@@ -6,7 +6,7 @@ using CtfPlayback.Metadata.Interfaces;
 namespace PerfCds.CtfExtensions.DescriptorInterfaces
 {
     /// <summary>
-    /// LTTNG specific event information combined with CTF event information. Remove for Perf??
+    /// LTTng specific event information combined with CTF event information. Remove for Perf??
     /// </summary>
     public interface IEventDescriptor
         : ICtfEventDescriptor

@@ -35,7 +35,7 @@ namespace LTTngCds
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to open LTTNG zip archive: {e.Message}");
+                Console.Error.WriteLine($"Failed to open LTTng zip archive: {e.Message}");
                 throw;
             }
         }
@@ -48,7 +48,7 @@ namespace LTTngCds
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to open LTTNG folder: {e.Message}");
+                Console.Error.WriteLine($"Failed to open LTTng folder: {e.Message}");
                 throw;
             }
         }

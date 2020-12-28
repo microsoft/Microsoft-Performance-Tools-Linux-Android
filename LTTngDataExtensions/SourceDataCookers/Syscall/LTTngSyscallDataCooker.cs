@@ -49,7 +49,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Syscall
             { LTTngThreadDataCooker.DataCookerPath, DataCookerDependencyType.AsConsumed }
         };
 
-        public override string Description => "Processes LTTNG events related to syscalls.";
+        public override string Description => "Processes LTTng events related to syscalls.";
 
         public override ReadOnlyHashSet<string> DataKeys => EmptyDataKeys;
 

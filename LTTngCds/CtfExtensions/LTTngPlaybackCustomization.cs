@@ -237,7 +237,7 @@ namespace LTTngCds.CtfExtensions
             Debug.Assert(eventDescriptor != null);
             if (eventDescriptor == null)
             {
-                throw new LTTngPlaybackException("EventDescriptor is not an LTTNG descriptor.");
+                throw new LTTngPlaybackException("EventDescriptor is not an LTTng descriptor.");
             }
 
             if (!this.streamToCpu.TryGetValue(ctfEventStream, out var cpuId))
@@ -246,7 +246,7 @@ namespace LTTngCds.CtfExtensions
                 string cpu = ctfEventStream.StreamSource.Substring(cpuIndex + 1);
                 if (!uint.TryParse(cpu, out cpuId))
                 {
-                    Debug.Assert(false, "Unable to parse cpu from LTTNG stream channel");
+                    Debug.Assert(false, "Unable to parse cpu from LTTng stream channel");
                     cpuId = uint.MaxValue;
                 }
 

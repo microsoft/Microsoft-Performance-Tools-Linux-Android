@@ -32,7 +32,7 @@ namespace LTTngDataExtensions.SourceDataCookers
         protected long computeTime = 0;
 
         /// <summary>
-        /// All source data cookers that inherit from this reference the LTTNG source parser.
+        /// All source data cookers that inherit from this reference the LTTng source parser.
         /// </summary>
         public string SourceParserId => Path.SourceParserId;
 

@@ -382,7 +382,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         private Timestamp lastEventTimestamp;
         private readonly DiscardedEventsTracker discardedEventsTracker = new DiscardedEventsTracker(); 
 
-        public override string Description => "Processes LTTNG events related to threads and context switches.";
+        public override string Description => "Processes LTTng events related to threads and context switches.";
         public override ReadOnlyHashSet<string> DataKeys { get; }
 
         public override SourceDataCookerOptions Options => SourceDataCookerOptions.ReceiveAllDataElements;

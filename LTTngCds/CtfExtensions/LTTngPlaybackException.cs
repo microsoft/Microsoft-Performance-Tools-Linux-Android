@@ -8,7 +8,7 @@ using CtfPlayback;
 namespace LTTngCds.CtfExtensions
 {
     /// <summary>
-    /// An LTTNG exception related to trace playback
+    /// An LTTng exception related to trace playback
     /// </summary>
     public class LTTngPlaybackException 
         : CtfPlaybackException
@@ -18,12 +18,12 @@ namespace LTTngCds.CtfExtensions
         }
 
         public LTTngPlaybackException(string message) 
-            : base("LTTNG: " + message)
+            : base("LTTng: " + message)
         {
         }
 
         public LTTngPlaybackException(string message, Exception innerException) 
-            : base("LTTNG: " + message, innerException)
+            : base("LTTng: " + message, innerException)
         {
         }
 

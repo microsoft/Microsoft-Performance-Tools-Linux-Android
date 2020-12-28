@@ -19,7 +19,7 @@ namespace LTTngDataExtensions.Tables
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{F5EAF336-EA19-487D-9C1F-527812B02F30}"),
             "Generic Events",
-            "All events in the LTTNG trace",
+            "All events in the LTTng trace",
             "Linux LTTng");
 
         private static readonly ColumnConfiguration eventNameColumnConfig = new ColumnConfiguration(
