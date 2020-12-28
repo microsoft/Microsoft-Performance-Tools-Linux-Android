@@ -53,12 +53,15 @@ jobs:
           CtfUnitTest\CtfUnitTest.csproj
           LTTngCds\LttngCds.csproj
           LTTngDataExtensions\LttngDataExtensions.csproj
+          LTTngDataExtUnitTest\LTTngDataExtUnitTest.csproj
           LTTngDriver\LTTngDriver.csproj
           PerfCds\PerfCds.csproj
           PerfDataExtensions\PerfDataExtensions.csproj
+          PerfUnitTest\PerfUnitTest.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
+          LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
           
         includesymbols: true
         versioningScheme: 'byBuildNumber'
