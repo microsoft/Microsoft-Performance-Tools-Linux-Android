@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Antlr4.Runtime.dotnet", "An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtfPlayback", "CtfPlayback\CtfPlayback.csproj", "{85A74448-3940-481D-B449-EF7FCAC02290}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTTngCds", "LttngCds\LTTngCds.csproj", "{E4EB869C-DBF9-4C7F-95BA-6D28DBC69FD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTTngCds", "LTTngCds\LTTngCds.csproj", "{E4EB869C-DBF9-4C7F-95BA-6D28DBC69FD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTTngDataExtensions", "LttngDataExtensions\LTTngDataExtensions.csproj", "{8EE62907-1246-48FA-9AD5-D1DFEC7F26F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTTngDataExtensions", "LTTngDataExtensions\LTTngDataExtensions.csproj", "{8EE62907-1246-48FA-9AD5-D1DFEC7F26F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtfUnitTest", "CtfUnitTest\CtfUnitTest.csproj", "{FC2236A8-FBE7-43BC-86A1-CBC364DFDF91}"
 EndProject

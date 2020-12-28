@@ -3,7 +3,7 @@
 
 using System;
 
-namespace LttngDriver
+namespace LTTngDriver
 {
     public sealed partial class Program
     {

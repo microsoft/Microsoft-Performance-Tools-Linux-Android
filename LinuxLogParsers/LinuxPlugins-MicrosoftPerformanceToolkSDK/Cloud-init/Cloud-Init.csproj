@@ -19,7 +19,7 @@
   <Target Name="PostBuild" AfterTargets="DeployStagedFiles">
     <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)Linux\WaLinuxAgent\$(OutDir) $(ProjectDir)$(OutDir)WaLinuxAgent" />
     <Exec Command="CALL XCOPY /dickherfy &quot;$(SolutionDir)Linux\DmesgIsoLog\$(OutDir)\Dmesg $(ProjectDir)$(OutDir)Dmesg" />
-    <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)\..\..\LTTNG.CTF\LttngDataExtensions\$(OutDir) $(ProjectDir)$(OutDir)LttngDataExtensions" />
+    <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)\..\..\LTTngDataExtensions\$(OutDir) $(ProjectDir)$(OutDir)LTTngDataExtensions" />
   </Target>
 
 </Project>

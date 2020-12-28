@@ -4,21 +4,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LttngCds;
-using LttngDataExtensions.SourceDataCookers;
-using LttngDataExtensions.DataOutputTypes;
-using LttngDataExtensions.SourceDataCookers.Syscall;
-using LttngDataExtensions.SourceDataCookers.Thread;
+using LTTngCds;
+using LTTngDataExtensions.SourceDataCookers;
+using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers.Syscall;
+using LTTngDataExtensions.SourceDataCookers.Thread;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using UnitTestCommon;
-using LttngDataExtensions.SourceDataCookers.Diagnostic_Messages;
+using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
 using Microsoft.Performance.SDK;
-using LttngDataExtensions.SourceDataCookers.Module;
-using LttngDataExtensions.SourceDataCookers.Disk;
+using LTTngDataExtensions.SourceDataCookers.Module;
+using LTTngDataExtensions.SourceDataCookers.Disk;
 
 namespace LTTngDataExtUnitTest
 {
@@ -33,9 +33,9 @@ namespace LTTngDataExtUnitTest
         private static DataCookerPath LTTngGenericEventDataCookerPath;
         private static DataCookerPath LTTngSyscallDataCookerPath;
         private static DataCookerPath LTTngThreadDataCookerPath;
-        private static DataCookerPath LttngDmesgDataCookerPath;
-        private static DataCookerPath LttngModuleDataCookerPath;
-        private static DataCookerPath LttngDiskDataCookerPath;
+        private static DataCookerPath LTTngDmesgDataCookerPath;
+        private static DataCookerPath LTTngModuleDataCookerPath;
+        private static DataCookerPath LTTngDiskDataCookerPath;
 
         public static void ProcessTrace()
         {
@@ -54,29 +54,29 @@ namespace LTTngDataExtUnitTest
                     runtime.AddFile(lttngDataPath.FullName);
 
                     // Enable our various types of data
-                    var lttngGenericEventDataCooker = new LttngGenericEventDataCooker();
+                    var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
                     LTTngGenericEventDataCookerPath = lttngGenericEventDataCooker.Path;
                     runtime.EnableCooker(LTTngGenericEventDataCookerPath);
 
-                    var lttngSyscallDataCooker = new LttngSyscallDataCooker();
+                    var lttngSyscallDataCooker = new LTTngSyscallDataCooker();
                     LTTngSyscallDataCookerPath = lttngSyscallDataCooker.Path;
                     runtime.EnableCooker(LTTngSyscallDataCookerPath);
 
-                    var lttngThreadDataCooker = new LttngThreadDataCooker();
+                    var lttngThreadDataCooker = new LTTngThreadDataCooker();
                     LTTngThreadDataCookerPath = lttngThreadDataCooker.Path;
                     runtime.EnableCooker(LTTngThreadDataCookerPath);
 
-                    var lttngDmesgDataCooker = new LttngDmesgDataCooker();
-                    LttngDmesgDataCookerPath = lttngDmesgDataCooker.Path;
-                    runtime.EnableCooker(LttngDmesgDataCookerPath);
+                    var lttngDmesgDataCooker = new LTTngDmesgDataCooker();
+                    LTTngDmesgDataCookerPath = lttngDmesgDataCooker.Path;
+                    runtime.EnableCooker(LTTngDmesgDataCookerPath);
 
-                    var lttngModuleDataCooker = new LttngModuleDataCooker();
-                    LttngModuleDataCookerPath = lttngModuleDataCooker.Path;
-                    runtime.EnableCooker(LttngModuleDataCookerPath);
+                    var lttngModuleDataCooker = new LTTngModuleDataCooker();
+                    LTTngModuleDataCookerPath = lttngModuleDataCooker.Path;
+                    runtime.EnableCooker(LTTngModuleDataCookerPath);
 
-                    var lttngDiskDataCooker = new LttngDiskDataCooker();
-                    LttngDiskDataCookerPath = lttngDiskDataCooker.Path;
-                    runtime.EnableCooker(LttngDiskDataCookerPath);
+                    var lttngDiskDataCooker = new LTTngDiskDataCooker();
+                    LTTngDiskDataCookerPath = lttngDiskDataCooker.Path;
+                    runtime.EnableCooker(LTTngDiskDataCookerPath);
 
                     //
                     // Process our data.
@@ -96,8 +96,8 @@ namespace LTTngDataExtUnitTest
 
             var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IDiagnosticMessage>>(
                 new DataOutputPath(
-                    LttngDmesgDataCookerPath,
-                    nameof(LttngDmesgDataCooker.DiagnosticMessages)));
+                    LTTngDmesgDataCookerPath,
+                    nameof(LTTngDmesgDataCooker.DiagnosticMessages)));
 
             Assert.IsTrue(eventData.Count == 0); // TODO - UT - Trace has no DiagMessages
         }
@@ -109,8 +109,8 @@ namespace LTTngDataExtUnitTest
 
             var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<DiskActivity>>(
                 new DataOutputPath(
-                    LttngDiskDataCookerPath,
-                    nameof(LttngDiskDataCooker.DiskActivity)));
+                    LTTngDiskDataCookerPath,
+                    nameof(LTTngDiskDataCooker.DiskActivity)));
 
             Assert.IsTrue(eventData.Count > 0);
         }
@@ -123,7 +123,7 @@ namespace LTTngDataExtUnitTest
             var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IExecutionEvent>>(
                 new DataOutputPath(
                     LTTngThreadDataCookerPath,
-                    nameof(LttngThreadDataCooker.ExecutionEvents)));
+                    nameof(LTTngThreadDataCooker.ExecutionEvents)));
 
             Assert.IsTrue(eventData.Count > 0);
         }
@@ -135,8 +135,8 @@ namespace LTTngDataExtUnitTest
 
             var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<FileEvent>>(
                 new DataOutputPath(
-                    LttngDiskDataCookerPath,
-                    nameof(LttngDiskDataCooker.FileEvents)));
+                    LTTngDiskDataCookerPath,
+                    nameof(LTTngDiskDataCooker.FileEvents)));
 
             Assert.IsTrue(eventData.Count > 0);
         }
@@ -146,10 +146,10 @@ namespace LTTngDataExtUnitTest
         {
             ProcessTrace();
 
-            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<LttngGenericEvent>>(
+            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<LTTngGenericEvent>>(
                 new DataOutputPath(
                     LTTngGenericEventDataCookerPath,
-                    nameof(LttngGenericEventDataCooker.Events)));
+                    nameof(LTTngGenericEventDataCooker.Events)));
 
             Assert.IsTrue(eventData.Count > 0);
         }
@@ -161,8 +161,8 @@ namespace LTTngDataExtUnitTest
 
             var eventData = RuntimeExecutionResults.QueryOutput<IReadOnlyList<ModuleEvent>>(
                 new DataOutputPath(
-                    LttngModuleDataCookerPath,
-                    nameof(LttngModuleDataCooker.ModuleEvents)));
+                    LTTngModuleDataCookerPath,
+                    nameof(LTTngModuleDataCooker.ModuleEvents)));
 
             Assert.IsTrue(eventData.Count == 0);         // TODO - UT - Trace has no ModuleEvents
         }
@@ -175,7 +175,7 @@ namespace LTTngDataExtUnitTest
             var eventData = RuntimeExecutionResults.QueryOutput<List<ISyscall>>(
                 new DataOutputPath(
                     LTTngSyscallDataCookerPath,
-                    nameof(LttngSyscallDataCooker.Syscalls)));
+                    nameof(LTTngSyscallDataCooker.Syscalls)));
 
             Assert.IsTrue(eventData.Count > 0);
         }
@@ -188,7 +188,7 @@ namespace LTTngDataExtUnitTest
             var threads = RuntimeExecutionResults.QueryOutput<IReadOnlyList<IThread>>(
                 new DataOutputPath(
                     LTTngThreadDataCookerPath,
-                    nameof(LttngThreadDataCooker.Threads)));
+                    nameof(LTTngThreadDataCooker.Threads)));
 
             Assert.IsTrue(threads.Count > 0);
         }

@@ -3,7 +3,7 @@
 
 namespace PerfCds.CookerData
 {
-    //todo:do we need/want this interface? LttngContext might be enough
+    //todo:do we need/want this interface? LTTngContext might be enough
     public interface ICursor
     {
         /// <summary>

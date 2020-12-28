@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LttngDataExtensions\LTTngDataExtensions.csproj" />
+    <ProjectReference Include="..\LTTngDataExtensions\LTTngDataExtensions.csproj" />
     <ProjectReference Include="..\UnitTestCommon\UnitTestCommon.csproj" />
   </ItemGroup>
 
