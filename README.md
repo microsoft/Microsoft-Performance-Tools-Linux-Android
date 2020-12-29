@@ -34,8 +34,14 @@ See [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/re
 The tools can be run in several modes:
 
 - Cross-platform with .NET Core
-  - Used as a library
+  - Used as a library to process traces / logs programatically
+    - Examples: 
+    - [LTTng 1](LTTngDriver/Program.cs), [LTTng 2](LTTngDataExtUnitTest/LTTngUnitTest.cs)
+    - [Perf](PerfUnitTest/PerfUnitTest.cs)
+    - [LinuxLogs](LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.cs)
   - With a driver program for example dumping to screen or text format
+    - ./LTTngDriver.exe LTTng-Kernel-Trace.ctf (trace folder is zipped and renamed to .ctf)
+    - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on Issue #6)
 - (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
 - (Coming soon) (Windows) Using the WPA GUI to load these tools as plugins
 
