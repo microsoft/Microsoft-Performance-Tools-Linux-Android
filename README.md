@@ -41,7 +41,7 @@ The tools can be run in several modes:
     - [LinuxLogs](LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.cs)
   - With a driver program for example dumping to screen or text format
     - ./LTTngDriver.exe LTTng-Kernel-Trace.ctf (trace folder is zipped and renamed to .ctf)
-    - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on [Issue #6](#6))
+    - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on [Issue #6](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/issues/6))
 - (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
 - (Coming soon) (Windows) Using the WPA GUI to load these tools as plugins
 
