@@ -94,21 +94,21 @@ jobs:
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/LTTngDriver'
         
     - task: CopyFiles@2
-      displayName: Copy Cloud-initBuild to Output Artifacts
+      displayName: Copy Cloud-init Build to Output Artifacts
       inputs:
         SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Cloud-init'
         
     - task: CopyFiles@2
-      displayName: Copy DmesgIsoLog to Output Artifacts
+      displayName: Copy DmesgIsoLog Build to Output Artifacts
       inputs:
         SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Dmesg'
         
     - task: CopyFiles@2
-      displayName: Copy WaLinuxAgent to Output Artifacts
+      displayName: Copy WaLinuxAgent Build to Output Artifacts
       inputs:
         SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
