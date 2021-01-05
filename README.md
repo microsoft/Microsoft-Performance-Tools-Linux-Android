@@ -42,8 +42,35 @@ The tools can be run in several modes:
   - With a driver program for example dumping to screen or text format
     - ./LTTngDriver.exe LTTng-Kernel-Trace.ctf (trace folder is zipped and renamed to .ctf)
     - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on [Issue #6](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/issues/6))
+- (Windows Only - Install) Using the WPA GUI to load these tools as plugins
+  - Download the latest Windows Performance Toolkit (WPT) that comes in the [ADK Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK)
+	- Note: In the future, the WPA team plans to make it easier to install WPA outside of the ADK
+  - Install Windows Performance Toolkit ![Windows Performance Toolkit](Images/ADK_WPT.jpg)
+    - Verify that this WPA version supports plugins
+    - In Command Prompt
+        ```dos
+        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe" /?
+        ```
+    - Verify that these 2 command line WPA options are supported:
+      - OPTIONS: **-addsearchdir PATH**. Adds a directory path to the plugin search path. ....
+      - ENVIRONMENT VARIABLES: **WPA_ADDITIONAL_SEARCH_DIRECTORIES** - A semicolon (;) delimited list of additional directories to search for plugins. Equivalent to the -addsearchdir option.
+- (Windows Only - Run) Using the WPA GUI to load these tools as plugins
+  - WPA needs to be told where to find these additional plugins. 
+  - Using [Windows Launcher](Launcher/Windows/LaunchWpaPerfToolsLinux.ps1). -LinuxPerfToolsPluginFolder path may need to be specified
+    ```powershell
+    .\LaunchWpaPerfToolsLinux.ps1 -i c:\PATH\TO\lttng-kernel-trace.ctf
+    ```
+  - In Command Prompt with -addsearchdir and -i trace file:
+      ```dos
+        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe" -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-0.8\Microsoft-Performance-Tools-Linux\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
+     ```
+  - OR with Env Variable to pick file from UI (Env variable not currently working in current ADK version)
+       ```dos
+        SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-0.8\Microsoft-Performance-Tools-Linux\MicrosoftPerfToolkitAddins
+        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe"
+      ```
+
 - (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
-- (Coming soon) (Windows) Using the WPA GUI to load these tools as plugins
 
 # How to capture a trace or logs
 Please see [Linux Trace Log Capture](LinuxTraceLogCapture.md)
