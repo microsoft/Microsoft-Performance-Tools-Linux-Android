@@ -113,6 +113,13 @@ jobs:
         SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/WaLinuxAgent'
+        
+    - task: CopyFiles@2
+      displayName: Copy Launchder
+      inputs:
+        SourceFolder: 'Launcher'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/Launcher'
     
     - task: PublishBuildArtifacts@1
       inputs:
