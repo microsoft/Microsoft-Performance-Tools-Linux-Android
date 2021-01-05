@@ -44,6 +44,7 @@ The tools can be run in several modes:
     - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on [Issue #6](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/issues/6))
 - (Windows Only - Install) Using the WPA GUI to load these tools as plugins
   - Download the latest Windows Performance Toolkit (WPT) that comes in the [ADK Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK)
+	- Note: In the future, the WPA team plans to make it easier to install WPA outside of the ADK
   - Install Windows Performance Toolkit ![Windows Performance Toolkit](Images/ADK_WPT.jpg)
     - Verify that this WPA version supports plugins
     - In Command Prompt
