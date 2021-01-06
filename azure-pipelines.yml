@@ -4,9 +4,11 @@ name: "$(date:yyyyMMdd)$(rev:.r)"
 
 trigger:
   - main
+  - develop
 
 pr:
   - main
+  - develop
 
 #
 # Build Variables
