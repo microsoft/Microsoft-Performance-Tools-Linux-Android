@@ -15,6 +15,7 @@ namespace PerfCds
         "Perf",
         "Processes Perf CTF data")]
     [FileDataSource("ctf", "ctf")]
+    [DirectoryDataSource("Perf CTF Folder")]
     public class PerfDataSource
         : CustomDataSourceBase
     {
@@ -23,11 +24,14 @@ namespace PerfCds
         /// <inheritdoc />
         public override IEnumerable<Option> CommandLineOptions => Enumerable.Empty<Option>();
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                ".ctf",
-                Path.GetExtension(path));
+            if (dataSource.IsDirectory())
+            {
+                return Directory.GetFiles(dataSource.Uri.LocalPath, "metadata", SearchOption.AllDirectories).Any();
+            }
+            
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
         public override CustomDataSourceInfo GetAboutInfo()
@@ -68,7 +72,7 @@ namespace PerfCds
 
             var sourceParser = new PerfSourceParser();
 
-            string sourcePath = dataSources.First().GetUri().LocalPath;
+            string sourcePath = dataSources.First().Uri.LocalPath;
             if (Directory.Exists(sourcePath))
             {
                 // handle open directory

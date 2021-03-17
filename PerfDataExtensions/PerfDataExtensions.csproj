@@ -48,10 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.57" GeneratePathProperty="true">
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.66" GeneratePathProperty="true">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.0-gdae746b0cf" />
   </ItemGroup>
 
   <ItemGroup>

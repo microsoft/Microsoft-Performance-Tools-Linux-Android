@@ -21,7 +21,7 @@ namespace DmesgIsoMPTAddin
 
         protected override ICustomDataProcessor CreateProcessorCore(IEnumerable<IDataSource> dataSources, IProcessorEnvironment processorEnvironment, ProcessorOptions options)
         {
-            string[] filePaths = dataSources.Select(x => x.GetUri().LocalPath).ToArray();
+            string[] filePaths = dataSources.Select(x => x.Uri.LocalPath).ToArray();
             var sourceParser = new DmesgIsoLogParser(filePaths);
 
             return new DmesgIsoCustomDataProcessor(
@@ -33,9 +33,9 @@ namespace DmesgIsoMPTAddin
                 this.MetadataTables);
         }
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return path.ToLower().EndsWith("dmesg.iso.log");
+            return dataSource.IsFile() && dataSource.Uri.LocalPath.ToLower().EndsWith("dmesg.iso.log");
         }
 
         protected override void SetApplicationEnvironmentCore(IApplicationEnvironment applicationEnvironment)

@@ -40,8 +40,8 @@ The tools can be run in several modes:
     - [Perf](PerfUnitTest/PerfUnitTest.cs)
     - [LinuxLogs](LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.cs)
   - With a driver program for example dumping to screen or text format
+    - ./LTTngDriver.exe LTTngKernelTraceFolder
     - ./LTTngDriver.exe LTTng-Kernel-Trace.ctf (trace folder is zipped and renamed to .ctf)
-    - ./LTTngDriver.exe LTTngKernelTraceFolder (not currently working - blocked on [Issue #6](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/issues/6))
 - (Windows Only - Install) Using the WPA GUI to load these tools as plugins
   - Download the latest Windows Performance Toolkit (WPT) that comes in the [ADK Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK)
 	- Note: In the future, the WPA team plans to make it easier to install WPA outside of the ADK
@@ -80,6 +80,7 @@ Once you gather the data, there is a tiny bit of prep needed to open them in a s
 
 - LTTng - If you just need to open only a LTTng trace by itself in folder format
   - WPA -> Open -> Folder (Select CTF folder)
+  - Note: Requires >= WPA ADK xxxxx - WPA 10.?.?.?
 - Unified (LTTng or other multiple different logs files together)
   - If you want to open other logs together in single timeline - Copy other Linux logs you want to open to single folder
   - Example: You want to open in the same timeline: LTTng, Perf CPU Sampling, Dmesg

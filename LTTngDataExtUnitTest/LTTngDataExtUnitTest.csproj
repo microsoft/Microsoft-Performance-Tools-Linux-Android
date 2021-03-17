@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
-    <PackageReference Include="Microsoft.Performance.SDK.Runtime" Version="0.108.2" />
-    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="0.108.2" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.0-gdae746b0cf" />
+    <PackageReference Include="Microsoft.Performance.SDK.Runtime" Version="0.109.0-gdae746b0cf" />
+    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="0.109.0-gdae746b0cf" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />

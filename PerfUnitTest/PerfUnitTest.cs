@@ -3,12 +3,14 @@
 
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
+using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PerfDataExtensions.Tables;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using UnitTestCommon;
@@ -28,7 +30,7 @@ namespace PerfUnitTest
 
             var perfDataPathFullPath = perfDataPath.FullName;
             var datasource = new Mock<IDataSource>();
-            datasource.Setup(ds => ds.GetUri()).Returns(new Uri(perfDataPathFullPath));
+            datasource.Setup(ds => ds.Uri).Returns(new Uri(perfDataPathFullPath));
 
             // Env
             var appEnv = new Mock<IApplicationEnvironment>();
