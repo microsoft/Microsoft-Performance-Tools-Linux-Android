@@ -3,29 +3,36 @@
 
 using System.Globalization;
 using CtfPlayback.Metadata;
+using CtfPlayback.Metadata.TypeInterfaces;
 
 namespace CtfPlayback.FieldValues
 {
     /// <summary>
-    /// Represents a float field from a CTF event
+    /// Represents a floating point field from a CTF event
     /// </summary>
-    public class CtfFloatValue
+    public class CtfFloatingPointValue
         : CtfFieldValue
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="value">Float value</param>
-        public CtfFloatValue(float value)
-            : base(CtfTypes.Float)
+        /// <param name="value">Floating point value</param>
+        public CtfFloatingPointValue(double value, ICtfFloatingPointDescriptor descriptor)
+            : base(CtfTypes.FloatingPoint)
         {
             this.Value = value;
+            this.Descriptor = descriptor;
         }
 
         /// <summary>
         /// Field value
         /// </summary>
-        public float Value { get; }
+        public double Value { get; }
+
+        /// <summary>
+        /// CTF floating point descriptor associated with the field
+        /// </summary>
+        public ICtfFloatingPointDescriptor Descriptor { get; }
 
         /// <summary>
         /// Returns a string representation of the field value.

@@ -46,6 +46,6 @@ namespace CtfPlayback.Metadata
         /// <summary>
         /// A float CTF descriptor type
         /// </summary>
-        Float
+        FloatingPoint
     }
 }
