@@ -111,11 +111,12 @@ namespace LTTngDataExtensions.Tables
             tableGenerator.AddColumn(countColumnConfig, Projection.Constant(1));
 
             // Add the field columns, with column names depending on the given event
-            for (int columnIndex = 0; columnIndex < maximumFieldCount; columnIndex++)
+            for (int index = 0; index < maximumFieldCount; index++)
             {
-                string fieldName = "Field " + (columnIndex + 1);
+                var colIndex = index;  // This seems unncessary but causes odd runtime behavior if not done this way. Compiler is confused perhaps because w/o this func will index=genericEvent.FieldNames.Count every time. index is passed as ref but colIndex as value into func
+                string fieldName = "Field " + (colIndex + 1);
 
-                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => columnIndex < genericEvent.FieldNames.Count ? genericEvent.FieldNames[columnIndex] : string.Empty);
+                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.FieldNames.Count ? genericEvent.FieldNames[colIndex] : string.Empty);
 
             // generate a column configuration
             var fieldColumnConfiguration = new ColumnConfiguration(
@@ -127,7 +128,7 @@ namespace LTTngDataExtensions.Tables
                         TextAlignment = TextAlignment.Left,
                     });
 
-                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => columnIndex < genericEvent.FieldNames.Count ? genericEvent.FieldValues[columnIndex] : string.Empty);
+                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.FieldNames.Count ? genericEvent.FieldValues[colIndex] : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }
