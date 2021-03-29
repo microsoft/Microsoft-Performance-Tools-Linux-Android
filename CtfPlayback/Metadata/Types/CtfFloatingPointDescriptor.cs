@@ -31,13 +31,11 @@ namespace CtfPlayback.Metadata.Types
         /// <inheritdoc />
         public string ByteOrder { get; }
 
-        /// <inheritdoc />
         /// exp_dig is the number of digits represented in the exponent.
         public int Exponent { get; }
 
-        /// <inheritdoc />
         /// mant_dig is the number of digits represented in the mantissa. It is specified by the ISO C99 standard, section 5.2.4, as FLT_MANT_DIG, DBL_MANT_DIG and LDBL_MANT_DIG as defined by <float.h>.
-        /// mant_dig is one bit more than its actual size in bits (leading 1 is not needed)
+        /// The mantissa size in bits (+1 for sign) (see CTF spec)
         public int Mantissa { get; }
 
         /// <inheritdoc />
@@ -102,10 +100,9 @@ namespace CtfPlayback.Metadata.Types
         /// <param name=""></param>
         /// <param name="expBits">Number of bits in the exponent</param>
         /// <returns></returns>
-        private static double CreateDouble(long rawValue, int manBits, int expBits)
+        public static double CreateDouble(long rawValue, int manBits, int expBits)
         {
-            double ret = double.NaN;
-
+            // Similar to Trace Compass implementation
             var manShift = 1L << (manBits);
             var manMask = manShift - 1;
             var expMask = (1L << expBits) - 1;
@@ -113,8 +110,8 @@ namespace CtfPlayback.Metadata.Types
             var exp = (int)((rawValue >> (manBits)) & expMask) + 1;
             var man = (rawValue & manMask);
             var offsetExponent = exp - (1 << (expBits - 1));
-            double expPow = Math.Pow(2.0, offsetExponent);
-            ret = man * 1.0f;
+            var expPow = Math.Pow(2.0, offsetExponent);
+            double ret = man * 1.0f;
             ret /= manShift;
             ret += 1.0;
             ret *= expPow;
