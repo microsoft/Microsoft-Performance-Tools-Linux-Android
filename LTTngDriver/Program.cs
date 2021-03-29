@@ -204,7 +204,7 @@ namespace LTTngDriver
 
                     var v = p.GetValue(e);
 
-                    if (IsList(v))
+                    if (p.Name == "FieldNames" && v is IEnumerable)
                     {
                         var list = v as IList;
                         var firstli = true;
@@ -240,14 +240,6 @@ namespace LTTngDriver
 
                 output.WriteLine();
             }
-        }
-
-        public static bool IsList(object o)
-        {
-            if (o == null) return false;
-            return o is IList &&
-                   o.GetType().IsGenericType &&
-                   o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
         }
 
         private static bool IsIndexProperty(PropertyInfo p)
