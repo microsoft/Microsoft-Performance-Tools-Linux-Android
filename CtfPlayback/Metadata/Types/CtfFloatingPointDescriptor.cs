@@ -72,37 +72,39 @@ namespace CtfPlayback.Metadata.Types
             Debug.Assert(byteCount > 0);
             Debug.Assert(byteCount <= 8);  // Up to 64-bits
 
-            long bufferAsLong;
             if (byteCount == 4)
             {
-                bufferAsLong = BitConverter.ToInt32(buffer);
+                var bufferAsInt = BitConverter.ToInt32(buffer);
+                var value = CreateFloat(bufferAsInt);
+
+                return new CtfFloatValue(value, this);
             }
             else if (byteCount == 8)
             {
-                bufferAsLong = BitConverter.ToInt64(buffer);
+                var bufferAsLong = BitConverter.ToInt64(buffer);
+                var value = CreateDouble(bufferAsLong);
+
+                return new CtfDoubleValue(value, this);
             }
             else
             {
                 throw new CtfPlaybackException($"Unrecognized floating_point byteCount:{byteCount}");
             }
-
-            var value = CreateDouble(bufferAsLong, Mantissa - 1, Exponent);
-
-            return new CtfFloatingPointValue(value, this);
         }
 
+        /// Due to the way floats and doubles sometimes represent approximate but not exact values
+        /// there needs to be seperate float vs double funcs. A single func returning double will also not work here
+
         /// <summary>
-        /// Create a float from the raw encoded values
+        /// Create a double from the raw encoded values
         /// </summary>
         /// <param name="rawValue">The raw value( up to 64 bits)</param>
-        /// <param name=""></param>
-        /// <param name="manBits">Number of bits in the mantissa</param>
-        /// <param name=""></param>
-        /// <param name="expBits">Number of bits in the exponent</param>
         /// <returns></returns>
-        public static double CreateDouble(long rawValue, int manBits, int expBits)
+        public static double CreateDouble(long rawValue)
         {
-            // Similar to Trace Compass implementation
+            const int manBits = 52;
+            const int expBits = 11;
+
             var manShift = 1L << (manBits);
             var manMask = manShift - 1;
             var expMask = (1L << expBits) - 1;
@@ -110,11 +112,65 @@ namespace CtfPlayback.Metadata.Types
             var exp = (int)((rawValue >> (manBits)) & expMask) + 1;
             var man = (rawValue & manMask);
             var offsetExponent = exp - (1 << (expBits - 1));
-            var expPow = Math.Pow(2.0, offsetExponent);
-            double ret = man * 1.0f;
+
+            double ret = man * 1.0d;
             ret /= manShift;
-            ret += 1.0;
-            ret *= expPow;
+            // The exponents 0x000 and 0x7ff have a special meaning- see Wikipedia
+            if (offsetExponent == -1023) // subnormal
+            {
+                var expPow = Math.Pow(2.0, -1022);
+                ret *= expPow;
+            }
+            else if (offsetExponent == 1024 && ret != 0) // NaN - Infinity handled automatically
+            {
+                return double.NaN;
+            }
+            else
+            {
+                var expPow = Math.Pow(2.0, offsetExponent);
+                ret += 1.0;
+                ret *= expPow;
+            }
+
+            return isNegative ? -ret : ret;
+        }
+
+        /// <summary>
+        /// Create a float from the raw encoded values
+        /// </summary>
+        /// <param name="rawValue">The raw value( up to 32 bits)</param>
+        /// <returns></returns>
+        public static float CreateFloat(int rawValue)
+        {
+            const int manBits = 23;
+            const int expBits = 8;
+
+            var manShift = 1 << (manBits);
+            var manMask = manShift - 1;
+            var expMask = (1 << expBits) - 1;
+            var isNegative = (rawValue & (1 << (manBits + expBits))) != 0;
+            var exp = (int)((rawValue >> (manBits)) & expMask) + 1;
+            var man = (rawValue & manMask);
+            var offsetExponent = exp - (1 << (expBits - 1));
+
+            float ret = man * 1.0f;
+            ret /= manShift;
+            // The stored exponents 00H and FFH are interpreted specially - see Wikipedia
+            if (offsetExponent == -127) // subnormal
+            {
+                var expPow = (float)Math.Pow(2.0, -126);
+                ret *= expPow;
+            }
+            else if (offsetExponent == 128 && ret != 0) // NaN - Infinity handled automatically
+            {
+                return float.NaN;
+            }
+            else
+            {
+                var expPow = (float)Math.Pow(2.0, offsetExponent);
+                ret += 1.0f;
+                ret *= expPow;
+            }
 
             return isNegative ? -ret : ret;
         }

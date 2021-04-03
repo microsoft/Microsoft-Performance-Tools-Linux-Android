@@ -10,14 +10,14 @@ namespace CtfPlayback.FieldValues
     /// <summary>
     /// Represents a floating point field from a CTF event
     /// </summary>
-    public class CtfFloatingPointValue
+    public class CtfFloatValue
         : CtfFieldValue
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="value">Floating point value</param>
-        public CtfFloatingPointValue(double value, ICtfFloatingPointDescriptor descriptor)
+        public CtfFloatValue(float value, ICtfFloatingPointDescriptor descriptor)
             : base(CtfTypes.FloatingPoint)
         {
             this.Value = value;
@@ -27,7 +27,7 @@ namespace CtfPlayback.FieldValues
         /// <summary>
         /// Field value
         /// </summary>
-        public double Value { get; }
+        public float Value { get; }
 
         /// <summary>
         /// CTF floating point descriptor associated with the field
