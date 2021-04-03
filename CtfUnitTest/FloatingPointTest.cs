@@ -3,13 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using Antlr4.Runtime.Tree;
-using CtfPlayback.Metadata.AntlrParser;
-using CtfPlayback.Metadata.Interfaces;
-using CtfPlayback.Metadata.InternalHelpers;
 using CtfPlayback.Metadata.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
