@@ -105,9 +105,9 @@ namespace CtfPlayback.Metadata.Types
             const int manBits = 52;
             const int expBits = 11;
 
-            var manShift = 1L << (manBits);
-            var manMask = manShift - 1;
-            var expMask = (1L << expBits) - 1;
+            const long manShift = 1L << (manBits);
+            const long manMask = manShift - 1;
+            const long expMask = (1L << expBits) - 1;
             var isNegative = (rawValue & (1L << (manBits + expBits))) != 0;
             var exp = (int)((rawValue >> (manBits)) & expMask) + 1;
             var man = (rawValue & manMask);
@@ -145,11 +145,11 @@ namespace CtfPlayback.Metadata.Types
             const int manBits = 23;
             const int expBits = 8;
 
-            var manShift = 1 << (manBits);
-            var manMask = manShift - 1;
-            var expMask = (1 << expBits) - 1;
+            const int manShift = 1 << (manBits);
+            const int manMask = manShift - 1;
+            const int expMask = (1 << expBits) - 1;
             var isNegative = (rawValue & (1 << (manBits + expBits))) != 0;
-            var exp = (int)((rawValue >> (manBits)) & expMask) + 1;
+            var exp = ((rawValue >> (manBits)) & expMask) + 1;
             var man = (rawValue & manMask);
             var offsetExponent = exp - (1 << (expBits - 1));
 
