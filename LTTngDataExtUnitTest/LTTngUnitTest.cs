@@ -152,6 +152,9 @@ namespace LTTngDataExtUnitTest
                     nameof(LTTngGenericEventDataCooker.Events)));
 
             Assert.IsTrue(eventData.Count > 0);
+
+            Assert.IsTrue(!String.IsNullOrWhiteSpace(eventData[0].FieldNames[0]));
+            Assert.IsTrue(!String.IsNullOrWhiteSpace(eventData[0].FieldValues[0]));
         }
 
         [TestMethod]
