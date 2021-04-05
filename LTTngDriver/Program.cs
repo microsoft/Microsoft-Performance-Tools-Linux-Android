@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -40,6 +41,8 @@ namespace LTTngDriver
             // adding inputs.
             //
 
+            Console.WriteLine($"ExtensionDirectory:{parsed.ExtensionDirectory}");
+
             var runtime = Engine.Create(
                 new EngineCreateInfo
                 {
@@ -50,6 +53,7 @@ namespace LTTngDriver
             Debug.Assert(parsed.CtfInput.Count > 0);
             foreach (var ctf in parsed.CtfInput.Distinct())
             {
+                Console.WriteLine($"CTF Path:{ctf}");
                 runtime.AddFile(ctf);
             }
 
@@ -169,9 +173,12 @@ namespace LTTngDriver
                 {
                     output.Write(',');
                 }
+                else
+                {
+                    first = false;
+                }
 
                 output.Write(p.Name);
-                first = false;
             }
 
             for (var i = 0; i < maxNumFields; ++i)
@@ -190,9 +197,34 @@ namespace LTTngDriver
                     {
                         output.Write(',');
                     }
+                    else
+                    {
+                        first = false;
+                    }
 
                     var v = p.GetValue(e);
-                    output.Write(v);
+
+                    if (p.Name == "FieldNames" && v is IEnumerable)
+                    {
+                        var list = v as IList;
+                        var firstli = true;
+                        foreach (var li in list)
+                        {
+                            if (!firstli)
+                            {
+                                output.Write(';');
+                            }
+                            else
+                            {
+                                firstli = false;
+                            }
+                            output.Write(li);
+                        }
+                    }
+                    else
+                    {
+                        output.Write(v);
+                    }
                 }
 
                 Debug.Assert(e.FieldNames.Count <= maxNumFields);

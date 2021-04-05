@@ -35,7 +35,7 @@ namespace PerfCds.CtfExtensions.FolderInput
                 Debug.Assert(traceDirectoryPath != null, nameof(traceDirectoryPath) + " != null");
 
                 var associatedEntries = Directory.GetFiles(traceDirectoryPath).Where(entry =>
-                    Path.GetFileName(entry).StartsWith("channel"));
+                    Path.GetFileName(entry).StartsWith("chan"));
 
                 traceInput.EventStreams = associatedEntries.Select(
                     fileName => new PerfCTFFileInputStream(fileName)).Cast<ICtfInputStream>().ToList();

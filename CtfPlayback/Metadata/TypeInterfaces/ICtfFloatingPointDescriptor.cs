@@ -4,9 +4,9 @@
 namespace CtfPlayback.Metadata.TypeInterfaces
 {
     /// <summary>
-    /// This interface is not yet implemented
+    /// Describes the properties of a floating point type.
     /// </summary>
-    public interface ICtfFloatDescriptor
+    public interface ICtfFloatingPointDescriptor
         : ICtfTypeDescriptor
     {
         /// <summary>

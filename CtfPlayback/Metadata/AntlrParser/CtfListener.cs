@@ -36,6 +36,7 @@ namespace CtfPlayback.Metadata.AntlrParser
         private int streamCount;
         private int eventCount;
         private int integerCount;
+        private int floatCount;
         private int enumCount;
         private int stringCount;
 
@@ -1037,6 +1038,33 @@ namespace CtfPlayback.Metadata.AntlrParser
                 $"An integer specifier without a 'size' value is undefined: line={context.Start.Line}.");
         }
 
+        // Float
+        public override void EnterTypeSpecifierFloatingPoint(CtfParser.TypeSpecifierFloatingPointContext context)
+        {
+            this.PushFloatScope();
+        }
+
+        // See CTF 1.82 section 4.1.7 FLOATING POINT
+        public override void ExitTypeSpecifierFloatingPoint(CtfParser.TypeSpecifierFloatingPointContext context)
+        {
+            this.PopFloatScope(true);
+            throw new CtfMetadataException(
+                $"An floating_point specifier without fields is undefined: line={context.Start.Line}.");
+        }
+
+        public override void EnterTypeSpecifierFloatingPointWithFields(CtfParser.TypeSpecifierFloatingPointWithFieldsContext context)
+        {
+            this.PushFloatScope();
+        }
+
+        public override void ExitTypeSpecifierFloatingPointWithFields(CtfParser.TypeSpecifierFloatingPointWithFieldsContext context)
+        {
+            var propertyBag = this.CurrentScope.PropertyBag;
+            this.PopFloatScope(true);
+
+            context.TypeSpecifier = new CtfFloatingPointDescriptor(propertyBag);
+        }
+
         // string {}
         public override void ExitTypeSpecifierEmptyString(CtfParser.TypeSpecifierEmptyStringContext context)
         {
@@ -1330,6 +1358,7 @@ namespace CtfPlayback.Metadata.AntlrParser
             this.PopScope();
         }
 
+        // Integer
         private void PushIntegerScope()
         {
             string name = $"[integer]_{this.integerCount}";
@@ -1342,6 +1371,20 @@ namespace CtfPlayback.Metadata.AntlrParser
             this.PopScope(removeFromParent);
         }
 
+        // Float
+        private void PushFloatScope()
+        {
+            string name = $"[floating_point]_{this.floatCount}";
+            this.floatCount++;
+            this.PushScope(name);
+        }
+
+        private void PopFloatScope(bool removeFromParent = false)
+        {
+            this.PopScope(removeFromParent);
+        }
+
+        // String
         private void PushStringScope()
         {
             string name = $"[string]_{this.stringCount}";
