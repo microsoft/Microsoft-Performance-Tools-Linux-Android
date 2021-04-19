@@ -39,7 +39,7 @@ namespace LTTngCds.CtfExtensions.ZipArchiveInput
 
                 var associatedArchiveEntries = archive.Entries.Where(entry =>
                     Path.GetDirectoryName(entry.FullName) == traceDirectoryPath &&
-                    Path.GetFileName(entry.FullName).StartsWith("chan"));
+                    Path.GetFileName(entry.FullName) != "metadata");
 
                 traceInput.EventStreams = associatedArchiveEntries.Select(
                     archiveEntry => new LTTngZipArchiveInputStream(archiveEntry)).Cast<ICtfInputStream>().ToList();

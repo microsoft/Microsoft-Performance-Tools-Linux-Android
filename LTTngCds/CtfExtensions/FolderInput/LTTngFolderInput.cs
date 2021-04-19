@@ -35,7 +35,7 @@ namespace LTTngCds.CtfExtensions.FolderInput
                 Debug.Assert(traceDirectoryPath != null, nameof(traceDirectoryPath) + " != null");
 
                 var associatedEntries = Directory.GetFiles(traceDirectoryPath).Where(entry =>
-                    Path.GetFileName(entry).StartsWith("chan"));
+                    Path.GetFileName(entry) != "metadata");
 
                 traceInput.EventStreams = associatedEntries.Select(
                     fileName => new LTTngFileInputStream(fileName)).Cast<ICtfInputStream>().ToList();
