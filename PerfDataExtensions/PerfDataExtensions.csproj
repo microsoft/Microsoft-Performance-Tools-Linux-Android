@@ -51,7 +51,7 @@
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.66" GeneratePathProperty="true">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.2-preview-gf2ca7860ea" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.11-preview-g61bc0d83f6" />
   </ItemGroup>
 
   <ItemGroup>
