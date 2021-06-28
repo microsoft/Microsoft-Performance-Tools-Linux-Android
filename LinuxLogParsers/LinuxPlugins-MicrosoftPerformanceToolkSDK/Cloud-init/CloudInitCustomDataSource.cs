@@ -52,11 +52,11 @@ namespace CloudInitMPTAddin
             this.applicationEnvironment = applicationEnvironment;
         }
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(
                 "cloud-init.log",
-                Path.GetFileName(path));
+                Path.GetFileName(dataSource.Uri.LocalPath));
         }
 
         protected override ICustomDataProcessor CreateProcessorCore(
@@ -64,7 +64,7 @@ namespace CloudInitMPTAddin
             IProcessorEnvironment processorEnvironment,
             ProcessorOptions options)
         {
-            string[] filePaths = dataSources.Select(x => x.GetUri().LocalPath).ToArray();
+            string[] filePaths = dataSources.Select(x => x.Uri.LocalPath).ToArray();
             var sourceParser = new CloudInitLogParser(filePaths);
 
             return new CloudInitCustomDataProcessor(

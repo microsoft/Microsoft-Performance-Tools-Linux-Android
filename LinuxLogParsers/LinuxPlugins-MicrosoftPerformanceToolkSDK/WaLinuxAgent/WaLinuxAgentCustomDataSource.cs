@@ -53,11 +53,9 @@ namespace WaLinuxAgentMPTAddin
             this.applicationEnvironment = applicationEnvironment;
         }
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                "waagent.log",
-                Path.GetFileName(path));
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals("waagent.log", Path.GetFileName(dataSource.Uri.LocalPath));
         }
 
         protected override ICustomDataProcessor CreateProcessorCore(
@@ -65,7 +63,7 @@ namespace WaLinuxAgentMPTAddin
             IProcessorEnvironment processorEnvironment,
             ProcessorOptions options)
         {
-            string[] filePaths = dataSources.Select(x => x.GetUri().LocalPath).ToArray();
+            string[] filePaths = dataSources.Select(x => x.Uri.LocalPath).ToArray();
             var sourceParser = new WaLinuxAgentLogParser(filePaths);
 
             return new WaLinuxAgentCustomDataProcessor(

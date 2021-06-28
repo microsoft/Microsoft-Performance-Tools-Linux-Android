@@ -15,6 +15,7 @@ namespace LTTngCds
         "LTTng",
         "Processes LTTng CTF data")]
     [FileDataSource("ctf", "ctf")]
+    [DirectoryDataSource("LTTng CTF Folder")]
     public class LTTngDataSource
         : CustomDataSourceBase
     {
@@ -23,11 +24,14 @@ namespace LTTngCds
         /// <inheritdoc />
         public override IEnumerable<Option> CommandLineOptions => Enumerable.Empty<Option>();
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                ".ctf",
-                Path.GetExtension(path));
+            if (dataSource.IsDirectory())
+            {
+                return Directory.GetFiles(dataSource.Uri.LocalPath, "metadata", SearchOption.AllDirectories).Any();
+            }
+
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
         public override CustomDataSourceInfo GetAboutInfo()
@@ -68,8 +72,9 @@ namespace LTTngCds
 
             var sourceParser = new LTTngSourceParser();
 
-            string sourcePath = dataSources.First().GetUri().LocalPath;
-            if (Directory.Exists(sourcePath))
+            var firstDataSource = dataSources.First();
+            string sourcePath = firstDataSource.Uri.LocalPath;
+            if (firstDataSource.IsDirectory() && Directory.Exists(sourcePath))
             {
                 // handle open directory
                 sourceParser.SetFolderInput(sourcePath);

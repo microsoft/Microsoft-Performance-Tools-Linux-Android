@@ -36,6 +36,9 @@ namespace LTTngDriver
                 return false;
             }
 
+            // Debug
+            //Console.ReadLine();
+
             //
             // Create our runtime environment, enabling cookers and
             // adding inputs.

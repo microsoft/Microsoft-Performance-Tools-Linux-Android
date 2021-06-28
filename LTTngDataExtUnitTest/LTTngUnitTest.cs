@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LTTngCds;
 using LTTngDataExtensions.SourceDataCookers;
 using LTTngDataExtensions.DataOutputTypes;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
@@ -13,12 +12,12 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using UnitTestCommon;
 using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
-using Microsoft.Performance.SDK;
 using LTTngDataExtensions.SourceDataCookers.Module;
 using LTTngDataExtensions.SourceDataCookers.Disk;
+using System.IO.Compression;
+using System.Linq;
 
 namespace LTTngDataExtUnitTest
 {
@@ -87,6 +86,29 @@ namespace LTTngDataExtUnitTest
                     IsTraceProcessed = true;
                 }
             }
+        }
+
+        [TestMethod]
+        public void ProcessTraceAsFolder()
+        {
+            // Input data
+            string[] lttngData = { @"..\..\..\..\TestData\LTTng\lttng-kernel-trace.ctf" };
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            ZipFile.ExtractToDirectory(lttngData[0], tempDirectory);
+
+            // Approach #1 - Engine - Doesn't test tables UI but tests processing
+            var runtime = Engine.Create();
+
+            var ds = new DirectoryDataSource(tempDirectory);
+            runtime.AddDataSource(ds);
+
+            Assert.IsTrue(ds.IsDirectory());
+            Assert.IsTrue(runtime.SourceDataCookers.Count() >= 1);
+            Assert.IsTrue(runtime.AvailableTables.Count() >= 1);
+
+            Directory.Delete(tempDirectory, true);
         }
 
         [TestMethod]

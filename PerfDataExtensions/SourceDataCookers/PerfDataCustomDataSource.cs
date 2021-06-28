@@ -59,11 +59,9 @@ namespace PerfDataCustomDataSource
             this.applicationEnvironment = applicationEnvironment;
         }
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                "perf.data.txt",
-                Path.GetFileName(path));
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals("perf.data.txt", Path.GetFileName(dataSource.Uri.LocalPath));
         }
 
         protected override ICustomDataProcessor CreateProcessorCore(
@@ -78,7 +76,7 @@ namespace PerfDataCustomDataSource
             //
 
             return new PerfDataCustomDataProcessor(
-                dataSources.Select(x => x.GetUri().LocalPath).ToArray(),
+                dataSources.Select(x => x.Uri.LocalPath).ToArray(),
                 options,
                 this.applicationEnvironment,
                 processorEnvironment,
