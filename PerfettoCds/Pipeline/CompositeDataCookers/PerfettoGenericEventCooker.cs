@@ -9,6 +9,9 @@ using PerfettoCds.Pipeline.Events;
 
 namespace PerfettoCds.Pipeline.DataCookers
 {
+    /// <summary>
+    /// Pulls data from all the individual SQL tables and joins them to create a Generic Peretto event
+    /// </summary>
     public sealed class PerfettoGenericEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
         public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.GenericEventCookerPath;
@@ -44,11 +47,14 @@ namespace PerfettoCds.Pipeline.DataCookers
 
         public void OnDataAvailable(IDataExtensionRetrieval requiredData)
         {
+            // Gather the data from all the SQL tables
             var sliceData = requiredData.QueryOutput<ProcessedEventData<PerfettoSliceEvent>>(new DataOutputPath(PerfettoPluginConstants.SliceCookerPath, nameof(PerfettoSliceCooker.SliceEvents)));
             var argData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+
+            // Join them all together
 
             // Slice data contains event name and a few more fields
             // Arg data contains the debug annotations
@@ -62,6 +68,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                          join process in processData on thread.Upid equals process.Upid
                          select new { slice, args, threadTrack, thread, process };
 
+            // Create events out of the joined results
             foreach (var result in joined)
             {
                 PerfettoGenericEvent ev = new PerfettoGenericEvent();
@@ -77,6 +84,8 @@ namespace PerfettoCds.Pipeline.DataCookers
                 ev.Process = string.Format($"{result.process.Name} {result.process.Pid}");
                 ev.Thread = string.Format($"{result.thread.Name} {result.thread.Tid}");
 
+                // Each event has multiple of these "debug annotations". They get stored in lists
+                // which can then be displayed in dynamic columns in WPA tables
                 foreach (var arg in result.args)
                 {
                     ev.FlatKeys.Add(arg.Flatkey);
@@ -98,7 +107,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                             ev.Values.Add(arg.RealValue.ToString());
                             break;
                         default:
-                            throw new Exception("Unexpected value type");
+                            throw new Exception("Unexpected Perfetto value type");
                     }
                 }
                 this.GenericEvents.AddEvent(ev);
