@@ -7,7 +7,7 @@ namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
     /// A generic app/component event that contains event name, event metadata, and thread+process
-    /// info
+    /// info.
     /// </summary>
     public class PerfettoGenericEvent
     {
@@ -18,7 +18,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp Timestamp { get; set; }
         public string Category { get; set; }
 
-        // Key betwee slice and args table
+        // Key between slice and args table
         public long ArgSetId { get; set; }
 
         // From Args table. The debug annotations for an event. Variable number per event

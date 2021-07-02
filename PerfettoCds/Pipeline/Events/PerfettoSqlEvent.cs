@@ -5,6 +5,9 @@ using Perfetto.Protos;
 
 namespace PerfettoCds.Pipeline.Events
 {
+    /// <summary>
+    /// Keep track of where we are in the varint, varfloat, and varstring arrays in a Perfetto batch result
+    /// </summary>
     public class CellCounters
     {
         public int IntCounter { get; set; }

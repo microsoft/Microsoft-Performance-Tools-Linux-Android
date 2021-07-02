@@ -11,6 +11,9 @@ using PerfettoCds.Pipeline.Events;
 
 namespace PerfettoCds
 {
+    /// <summary>
+    /// Cooks the data from the Process table in Perfetto traces
+    /// </summary>
     public sealed class PerfettoProcessCooker : BaseSourceDataCooker<PerfettoSqlEvent, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the process Perfetto SQL table";

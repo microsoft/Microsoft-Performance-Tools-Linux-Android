@@ -84,7 +84,7 @@ namespace PerfettoCds
             {
                 CellCounters cellCounters = new CellCounters();
 
-                // String cells get stored as a single string delimieted by null character. Split that up ourselves
+                // String cells get stored as a single string delimited by null character. Split that up ourselves
                 var stringCells = batch.StringCells.Split('\0');
 
                 int cellCount = 0;
@@ -147,7 +147,7 @@ namespace PerfettoCds
             {
                 // Use DateTime.Now as the wall clock time. This doesn't matter for displaying events on a relative timescale
                 // TODO Actual wall clock time needs to be gathered from SQL somehow
-                this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime()); // TODO update me
+                this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
             }
         }
 
@@ -163,7 +163,7 @@ namespace PerfettoCds
 
             try
             {
-                // Start the progress counter to indicate something is happening
+                // Start the progress counter to indicate something is happening because
                 // OpenTraceProcessor could take a few seconds
                 IncreaseProgress(1);
 
@@ -174,15 +174,15 @@ namespace PerfettoCds
                 double queryProgressIncrease = 49.0 / 5.0; // We're doing 5 SQL queries below
                 
                 // Run queries over all the tables we care about
-                var sliceQr = traceProc.QueryTrace(filePath, PerfettoSliceEvent.SqlQuery);
+                var sliceQr = traceProc.QueryTrace(PerfettoSliceEvent.SqlQuery);
                 IncreaseProgress(queryProgressIncrease);
-                var argQr = traceProc.QueryTrace(filePath, PerfettoArgEvent.SqlQuery);
+                var argQr = traceProc.QueryTrace(PerfettoArgEvent.SqlQuery);
                 IncreaseProgress(queryProgressIncrease);
-                var threadTrackQr = traceProc.QueryTrace(filePath, PerfettoThreadTrackEvent.SqlQuery);
+                var threadTrackQr = traceProc.QueryTrace(PerfettoThreadTrackEvent.SqlQuery);
                 IncreaseProgress(queryProgressIncrease);
-                var threadQr = traceProc.QueryTrace(filePath, PerfettoThreadEvent.SqlQuery);
+                var threadQr = traceProc.QueryTrace(PerfettoThreadEvent.SqlQuery);
                 IncreaseProgress(queryProgressIncrease);
-                var processQr = traceProc.QueryTrace(filePath, PerfettoProcessEvent.SqlQuery);
+                var processQr = traceProc.QueryTrace(PerfettoProcessEvent.SqlQuery);
                 IncreaseProgress(queryProgressIncrease);
 
                 // Done with the SQL trace processor

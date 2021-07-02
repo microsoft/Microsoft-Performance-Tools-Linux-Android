@@ -18,8 +18,10 @@ namespace PerfettoCds
     {
         private Process ShellProcess;
 
+        // Default starting port
         private int HttpPort = 22222;
 
+        // Highest ports can go
         private const int PortMax = 65535;
 
         // HTTP request denied takes about 3 seconds so time out after about 2 minutes
@@ -43,6 +45,7 @@ namespace PerfettoCds
             catch (Exception)
             {
                 // Exception here is the connection refused message, meaning the RPC server has not been initialized
+                // Which means this port is not being used by another trace_processor_shell
                 return true;
             }
         }
@@ -60,7 +63,7 @@ namespace PerfettoCds
                 {
                     HttpPort++;
                 }
-                Console.Error.WriteLine($"Current working directory: {System.IO.Directory.GetCurrentDirectory()}");
+
                 ShellProcess = Process.Start(PerfettoPluginConstants.TraceProcessorShellPath, $"-D --http-port {HttpPort} -i {tracePath}");
 
             }
@@ -123,7 +126,12 @@ namespace PerfettoCds
 
         }
 
-        public QueryResult QueryTrace(string tracePath, string sqlQuery)
+        /// <summary>
+        /// Perform a SQL query against trace_processor_shell to gather Perfetto trace data.
+        /// </summary>
+        /// <param name="sqlQuery"></param>
+        /// <returns></returns>
+        public QueryResult QueryTrace(string sqlQuery)
         {
             // Make sure ShellProcess is running
             if (ShellProcess == null || ShellProcess.HasExited)

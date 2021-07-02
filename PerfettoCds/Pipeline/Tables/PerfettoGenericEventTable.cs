@@ -13,8 +13,8 @@ namespace PerfettoCds.Pipeline.Tables
     [Table]
     public class PerfettoGenericEventTable
     {
-        // Set some sort of reasonable max
-        public const int AbsoluteMaxFields = 10;
+        // Set some sort of max to prevent ridiculous field counts
+        public const int AbsoluteMaxFields = 20;
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{37cedaaa-5679-4366-b627-9b638aaefeb3}"),
@@ -63,7 +63,7 @@ namespace PerfettoCds.Pipeline.Tables
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.GenericEvents)));
 
-            // Start construction of the column order. Pivot on process and thread to start
+            // Start construction of the column order. Pivot on process and thread
             List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>() 
             {
                 ProcessNameColumn,
@@ -151,7 +151,6 @@ namespace PerfettoCds.Pipeline.Tables
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
 
-            //tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
             tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
         }
 
