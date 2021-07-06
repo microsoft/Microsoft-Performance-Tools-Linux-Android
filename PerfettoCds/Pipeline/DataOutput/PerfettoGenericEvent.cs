@@ -1,7 +1,7 @@
-﻿using Microsoft.Performance.SDK;
-using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using Microsoft.Performance.SDK;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
@@ -14,7 +14,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         // From Slice table
         public string EventName { get; set; }
         public string Type { get; set; }
-        public long Duration { get; set; }
+        public TimestampDelta Duration { get; set; }
         public Timestamp Timestamp { get; set; }
         public string Category { get; set; }
 

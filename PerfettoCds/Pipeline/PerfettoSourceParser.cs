@@ -1,12 +1,9 @@
-﻿using Microsoft.Performance.SDK.Extensibility.SourceParsing;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using Perfetto.Protos;
 using Microsoft.Performance.SDK;
@@ -15,6 +12,18 @@ using System.Linq;
 
 namespace PerfettoCds
 {
+
+    public class TableQueryResult
+    {
+        public PerfettoSqlEvent EventType;
+        public QueryResult QueryResult;
+
+        public TableQueryResult(PerfettoSqlEvent eventType)
+        {
+            this.EventType = eventType;
+        }
+    }
+
     public sealed class PerfettoSourceParser : ISourceParser<PerfettoSqlEvent, PerfettoSourceParser, string>
     {
         public string Id => PerfettoPluginConstants.ParserId;
@@ -30,7 +39,7 @@ namespace PerfettoCds
 
         public DataSourceInfo DataSourceInfo => this.dataSourceInfo;
 
-        // For WPA's loading bar
+        // For UI progress reporting
         private IProgress<int> Progress;
         private double CurrentProgress;
 
@@ -172,43 +181,41 @@ namespace PerfettoCds
 
                 // We're saying the SQL queries take up about 50 percent of the processing
                 double queryProgressIncrease = 49.0 / 5.0; // We're doing 5 SQL queries below
-                
-                // Run queries over all the tables we care about
-                var sliceQr = traceProc.QueryTrace(PerfettoSliceEvent.SqlQuery);
-                IncreaseProgress(queryProgressIncrease);
-                var argQr = traceProc.QueryTrace(PerfettoArgEvent.SqlQuery);
-                IncreaseProgress(queryProgressIncrease);
-                var threadTrackQr = traceProc.QueryTrace(PerfettoThreadTrackEvent.SqlQuery);
-                IncreaseProgress(queryProgressIncrease);
-                var threadQr = traceProc.QueryTrace(PerfettoThreadEvent.SqlQuery);
-                IncreaseProgress(queryProgressIncrease);
-                var processQr = traceProc.QueryTrace(PerfettoProcessEvent.SqlQuery);
-                IncreaseProgress(queryProgressIncrease);
+
+                List<TableQueryResult> tableQueries = new List<TableQueryResult>()
+                {
+                    new TableQueryResult(new PerfettoSliceEvent()),
+                    new TableQueryResult(new PerfettoArgEvent()),
+                    new TableQueryResult(new PerfettoThreadTrackEvent()),
+                    new TableQueryResult(new PerfettoThreadEvent()),
+                    new TableQueryResult(new PerfettoProcessEvent())
+                };
+
+                int totalCells = 0;
+                foreach (var query in tableQueries)
+                {
+                    logger.Info($"Executing Perfetto SQL query: {query.EventType.GetSqlQuery()}");
+                    query.QueryResult = traceProc.QueryTrace(query.EventType.GetSqlQuery());
+                    IncreaseProgress(queryProgressIncrease);
+                    totalCells += query.QueryResult.Batch.Sum(x => x.Cells.Count);
+                }
+                logger.Info($"Processing {totalCells} total Perfetto cells");
 
                 // Done with the SQL trace processor
                 traceProc.CloseTraceConnection();
 
-                // Count all the cells for our progress calculation
-                var totalCells = sliceQr.Batch.Sum(x => x.Cells.Count);
-                totalCells += argQr.Batch.Sum(x => x.Cells.Count);
-                totalCells += threadTrackQr.Batch.Sum(x => x.Cells.Count);
-                totalCells += threadQr.Batch.Sum(x => x.Cells.Count);
-                totalCells += processQr.Batch.Sum(x => x.Cells.Count);
-
                 // The cell processing takes up the other 50 percent
                 double cellProgressIncrease = 50.0 / (double)totalCells;
 
-                // Process the output of all those queries
-                ProcessSqlQuery(sliceQr, dataProcessor, cancellationToken, PerfettoPluginConstants.SliceEvent, cellProgressIncrease);
-                ProcessSqlQuery(argQr, dataProcessor, cancellationToken, PerfettoPluginConstants.ArgEvent, cellProgressIncrease);
-                ProcessSqlQuery(threadTrackQr, dataProcessor, cancellationToken, PerfettoPluginConstants.ThreadTrackEvent, cellProgressIncrease);
-                ProcessSqlQuery(threadQr, dataProcessor, cancellationToken, PerfettoPluginConstants.ThreadEvent, cellProgressIncrease);
-                ProcessSqlQuery(processQr, dataProcessor, cancellationToken, PerfettoPluginConstants.ProcessEvent, cellProgressIncrease);
+                foreach (var query in tableQueries)
+                {
+                    ProcessSqlQuery(query.QueryResult, dataProcessor, cancellationToken, query.EventType.Key, cellProgressIncrease);
+                }
 
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error while processing Perfetto trace: {e.Message}");
+                logger.Error($"Error while processing Perfetto trace: {e.Message}");
                 traceProc.CloseTraceConnection();
             }
         }

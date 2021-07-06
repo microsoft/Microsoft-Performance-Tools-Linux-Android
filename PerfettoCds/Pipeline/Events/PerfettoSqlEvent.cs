@@ -1,4 +1,6 @@
-﻿using Microsoft.Performance.SDK;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using System;
 using Perfetto.Protos;
@@ -47,6 +49,8 @@ namespace PerfettoCds.Pipeline.Events
         /// 
         /// String cells need to be preprocessed by us because they come as a single string delimited by null characater.
         /// 
+        /// For more information, see comments for QueryResult and CellsBatch inside TraceProcessor.cs
+        /// 
         /// </summary>
         /// <param name="colName">String name of the column</param>
         /// <param name="cellType">Type of cell</param>
@@ -71,7 +75,7 @@ namespace PerfettoCds.Pipeline.Events
         public static string SqlQuery = "select ts, dur, arg_set_id, track_id, name, type, category from slice order by ts";
         public string Name { get; set; }
         public string Type { get; set; }
-        public long Duration { get; set; }
+        public TimestampDelta Duration { get; set; }
         public long ArgSetId { get; set; }
         public Timestamp Timestamp { get; set; }
         public string Category { get; set; }
@@ -101,21 +105,20 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellVarint:
                     var longVal = batch.VarintCells[counters.IntCounter++];
-                    if (col == "ts")
+                    switch (col)
                     {
-                        Timestamp = new Timestamp(longVal);
-                    }
-                    else if (col == "dur")
-                    {
-                        Duration = longVal;
-                    }
-                    else if (col == "arg_set_id")
-                    {
-                        ArgSetId = longVal;
-                    }
-                    else if (col == "track_id")
-                    {
-                        TrackId = longVal;
+                        case "ts":
+                            Timestamp = new Timestamp(longVal);
+                            break;
+                        case "dur":
+                            Duration = new TimestampDelta(longVal);
+                            break;
+                        case "arg_set_id":
+                            ArgSetId = longVal;
+                            break;
+                        case "track_id":
+                            TrackId = longVal;
+                            break;
                     }
 
                     break;
@@ -123,17 +126,17 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
-                    if (col == "name")
+                    switch (col)
                     {
-                        Name = strVal;
-                    }
-                    else if (col == "type")
-                    {
-                        Type = strVal;
-                    }
-                    else if (col == "category")
-                    {
-                        Category = strVal;
+                        case "name":
+                            Name = strVal;
+                            break;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "category":
+                            Category = strVal;
+                            break;
                     }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
@@ -180,13 +183,14 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellVarint:
                     var longVal = batch.VarintCells[counters.IntCounter++];
-                    if (col == "arg_set_id")
+                    switch (col)
                     {
-                        ArgSetId = longVal;
-                    }
-                    else if (col == "int_value")
-                    {
-                        IntValue = longVal;
+                        case "arg_set_id":
+                            ArgSetId = longVal;
+                            break;
+                        case "int_value":
+                            IntValue = longVal;
+                            break;
                     }
 
                     break;
@@ -199,21 +203,20 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
-                    if (col == "flat_key")
+                    switch (col)
                     {
-                        Flatkey = strVal;
-                    }
-                    else if (col == "key")
-                    {
-                        ArgKey = strVal;
-                    }
-                    else if (col == "string_value")
-                    {
-                        StringValue = strVal;
-                    }
-                    else if (col == "value_type")
-                    {
-                        ValueType = strVal;
+                        case "flat_key":
+                            Flatkey = strVal;
+                            break;
+                        case "key":
+                            ArgKey = strVal;
+                            break;
+                        case "string_value":
+                            StringValue = strVal;
+                            break;
+                        case "value_type":
+                            ValueType = strVal;
+                            break;
                     }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
@@ -258,21 +261,20 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellVarint:
                     var longVal = batch.VarintCells[counters.IntCounter++];
-                    if (col == "arg_set_id")
+                    switch (col)
                     {
-                        ArgSetId = longVal;
-                    }
-                    else if (col == "id")
-                    {
-                        Id = longVal;
-                    }
-                    else if (col == "utid")
-                    {
-                        Utid = longVal;
-                    }
-                    else if (col == "source_arg_set_id")
-                    {
-                        SourceArgSetId = longVal;
+                        case "arg_set_id":
+                            ArgSetId = longVal;
+                            break;
+                        case "id":
+                            Id = longVal;
+                            break;
+                        case "utid":
+                            Utid = longVal;
+                            break;
+                        case "source_arg_set_id":
+                            SourceArgSetId = longVal;
+                            break;
                     }
 
                     break;
@@ -280,14 +282,16 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
-                    if (col == "type")
+                    switch (col)
                     {
-                        Type = strVal;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "name":
+                            Name = strVal;
+                            break;
                     }
-                    else if (col == "name")
-                    {
-                        Name = strVal;
-                    }
+
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
                     break;
@@ -334,37 +338,29 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellVarint:
                     var longVal = batch.VarintCells[counters.IntCounter++];
-                    if (col == "utid")
+                    switch (col)
                     {
-                        Utid = longVal;
-                    }
-                    else if (col == "id")
-                    {
-                        Id = longVal;
-                    }
-                    else if (col == "utid")
-                    {
-                        Utid = longVal;
-                    }
-                    else if (col == "upid")
-                    {
-                        Upid = longVal;
-                    }
-                    else if (col == "tid")
-                    {
-                        Tid = longVal;
-                    }
-                    else if (col == "is_main_thread")
-                    {
-                        IsMainThread = longVal;
-                    }
-                    else if (col == "start_ts")
-                    {
-                        StartTimestamp = new Timestamp(longVal);
-                    }
-                    else if (col == "end_ts")
-                    {
-                        EndTimestamp = new Timestamp(longVal);
+                        case "utid":
+                            Utid = longVal;
+                            break;
+                        case "id":
+                            Id = longVal;
+                            break;
+                        case "upid":
+                            Upid = longVal;
+                            break;
+                        case "tid":
+                            Tid = longVal;
+                            break;
+                        case "is_main_thread":
+                            IsMainThread = longVal;
+                            break;
+                        case "start_ts":
+                            StartTimestamp = new Timestamp(longVal);
+                            break;
+                        case "end_ts":
+                            EndTimestamp = new Timestamp(longVal);
+                            break;
                     }
 
                     break;
@@ -372,13 +368,14 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
-                    if (col == "type")
+                    switch (col)
                     {
-                        Type = strVal;
-                    }
-                    else if (col == "name")
-                    {
-                        Name = strVal;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "name":
+                            Name = strVal;
+                            break;
                     }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
@@ -429,41 +426,35 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellVarint:
                     var longVal = batch.VarintCells[counters.IntCounter++];
-                    if (col == "upid")
+                    switch (col)
                     {
-                        Upid = longVal;
-                    }
-                    else if (col == "id")
-                    {
-                        Id = longVal;
-                    }
-                    else if (col == "pid")
-                    {
-                        Pid = longVal;
-                    }
-                    else if (col == "upid")
-                    {
-                        Upid = longVal;
-                    }
-                    else if (col == "parent_upid")
-                    {
-                        ParentUpid = longVal;
-                    }
-                    else if (col == "android_appid")
-                    {
-                        AndroidAppId = longVal;
-                    }
-                    else if (col == "arg_set_id")
-                    {
-                        ArgSetId = longVal;
-                    }
-                    else if (col == "start_ts")
-                    {
-                        StartTimestamp = new Timestamp(longVal);
-                    }
-                    else if (col == "end_ts")
-                    {
-                        EndTimestamp = new Timestamp(longVal);
+                        case "upid":
+                            Upid = longVal;
+                            break;
+                        case "id":
+                            Id = longVal;
+                            break;
+                        case "pid":
+                            Pid = longVal;
+                            break;
+                        case "uid":
+                            Uid = longVal;
+                            break;
+                        case "parent_upid":
+                            ParentUpid = longVal;
+                            break;
+                        case "android_appid":
+                            AndroidAppId = longVal;
+                            break;
+                        case "arg_set_id":
+                            ArgSetId = longVal;
+                            break;
+                        case "start_ts":
+                            StartTimestamp = new Timestamp(longVal); ;
+                            break;
+                        case "end_ts":
+                            EndTimestamp = new Timestamp(longVal); ;
+                            break;
                     }
 
                     break;
@@ -471,14 +462,19 @@ namespace PerfettoCds.Pipeline.Events
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
-                    if (col == "type")
+                    switch (col)
                     {
-                        Type = strVal;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "cmdline":
+                            CmdLine = strVal;
+                            break;
+                        case "name":
+                            Name = strVal;
+                            break;
                     }
-                    else if (col == "cmdline")
-                    {
-                        CmdLine = strVal;
-                    }
+
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
                     break;

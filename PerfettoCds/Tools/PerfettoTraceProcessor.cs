@@ -1,4 +1,6 @@
-﻿using Google.Protobuf;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using Google.Protobuf;
 using Perfetto.Protos;
 using System;
 using System.Collections.Generic;
@@ -64,7 +66,7 @@ namespace PerfettoCds
                     HttpPort++;
                 }
 
-                ShellProcess = Process.Start(PerfettoPluginConstants.TraceProcessorShellPath, $"-D --http-port {HttpPort} -i {tracePath}");
+                ShellProcess = Process.Start(PerfettoPluginConstants.TraceProcessorShellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
 
             }
             if (ShellProcess.HasExited)

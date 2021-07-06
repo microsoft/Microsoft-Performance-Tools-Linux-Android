@@ -1,4 +1,6 @@
-﻿using Microsoft.Performance.SDK.Extensibility;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
@@ -98,8 +100,8 @@ namespace PerfettoCds.Pipeline.Tables
                 TimestampColumn,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Timestamp));
             tableGenerator.AddColumn(timestampColumn);
-
-            var durationColumn = new BaseDataColumn<long>(
+            
+            var durationColumn = new BaseDataColumn<TimestampDelta>(
                 DurationColumn,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Duration));
             tableGenerator.AddColumn(durationColumn);
@@ -150,6 +152,7 @@ namespace PerfettoCds.Pipeline.Tables
                 Layout = TableLayoutStyle.GraphAndTable
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
             tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
         }

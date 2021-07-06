@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK.Extensibility;
@@ -85,7 +87,6 @@ namespace PerfettoCds.Pipeline.DataCookers
                 ev.Thread = string.Format($"{result.thread.Name} {result.thread.Tid}");
 
                 // Each event has multiple of these "debug annotations". They get stored in lists
-                // which can then be displayed in dynamic columns in WPA tables
                 foreach (var arg in result.args)
                 {
                     ev.FlatKeys.Add(arg.Flatkey);
