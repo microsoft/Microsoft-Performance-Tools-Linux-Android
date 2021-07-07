@@ -51,7 +51,8 @@ namespace PerfettoProcessor
         /// <summary>
         /// Initializes trace_processor_shell.exe in HTTP/RPC mode with the trace file
         /// </summary>
-        /// <param name="tracePath"></param>
+        /// <param name="shellPath">Full path to trace_processor_shell.exe</param>
+        /// <param name="tracePath">Full path to the Perfetto trace file</param>
         public void OpenTraceProcessor(string shellPath, string tracePath)
         {
             using (var client = new HttpClient())
@@ -74,6 +75,7 @@ namespace PerfettoProcessor
         /// <summary>
         /// Initializes trace_processor_shell.exe in HTTP/RPC mode without the trace file
         /// </summary>
+        /// <param name="shellPath">Full path to trace_processor_shell.exe</param>
         public void OpenTraceProcessor(string shellPath)
         {
             using (var client = new HttpClient())

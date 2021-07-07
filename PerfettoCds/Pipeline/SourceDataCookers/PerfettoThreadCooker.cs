@@ -15,7 +15,7 @@ namespace PerfettoCds
     /// <summary>
     /// Cooks the data from the Thread table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoThreadCooker : BaseSourceDataCooker<MyNewEvent, PerfettoSourceParser, string>
+    public sealed class PerfettoThreadCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the thread Perfetto SQL table";
 
@@ -36,7 +36,7 @@ namespace PerfettoCds
             this.ThreadEvents = new ProcessedEventData<PerfettoThreadEvent>();
         }
 
-        public override DataProcessingResult CookDataElement(MyNewEvent perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
+        public override DataProcessingResult CookDataElement(PerfettoSqlEventKeyed perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
         {
             this.ThreadEvents.AddEvent((PerfettoThreadEvent)perfettoEvent.SqlEvent);
 

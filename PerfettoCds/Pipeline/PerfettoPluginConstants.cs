@@ -7,7 +7,7 @@ namespace PerfettoCds
 {
     public static class PerfettoPluginConstants
     {
-        public const string TraceProcessorShellPath = @"trace_processor_shell.exe";
+        public const string TraceProcessorShellFileName = @"trace_processor_shell.exe";
 
         // ID for source parser
         public const string ParserId = "PerfettoSourceParser";

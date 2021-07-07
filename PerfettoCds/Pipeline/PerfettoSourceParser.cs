@@ -8,11 +8,13 @@ using System.Threading;
 using Microsoft.Performance.SDK;
 using PerfettoProcessor;
 using PerfettoCds.Pipeline.Events;
+using System.IO;
+using System.Reflection;
 
 namespace PerfettoCds
 {
 
-    public sealed class PerfettoSourceParser : ISourceParser<MyNewEvent, PerfettoSourceParser, string>
+    public sealed class PerfettoSourceParser : ISourceParser<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public string Id => PerfettoPluginConstants.ParserId;
 
@@ -56,7 +58,7 @@ namespace PerfettoCds
             // No preperation needed
         }
 
-        public void ProcessSource(ISourceDataProcessor<MyNewEvent, PerfettoSourceParser, string> dataProcessor,
+        public void ProcessSource(ISourceDataProcessor<PerfettoSqlEventKeyed, PerfettoSourceParser, string> dataProcessor,
             ILogger logger,
             IProgress<int> progress,
             CancellationToken cancellationToken)
@@ -73,8 +75,12 @@ namespace PerfettoCds
                 // OpenTraceProcessor could take a few seconds
                 IncreaseProgress(1);
 
+                // Shell .exe should be located in same directory as this assembly.
+                var shellDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var shellPath = Path.Combine(shellDir, PerfettoPluginConstants.TraceProcessorShellFileName);
+
                 // Start the Perfetto trace processor shell with the trace file
-                traceProc.OpenTraceProcessor(PerfettoPluginConstants.TraceProcessorShellPath, filePath);
+                traceProc.OpenTraceProcessor(shellPath, filePath);
 
                 double queryProgressIncrease = 99.0 / 5.0; // We're doing 5 SQL queries below
 
@@ -92,7 +98,7 @@ namespace PerfettoCds
                     }
 
 
-                    MyNewEvent newEvent = new MyNewEvent(eventType, ev);
+                    PerfettoSqlEventKeyed newEvent = new PerfettoSqlEventKeyed(eventType, ev);
 
                     // Store the event
                     var result = dataProcessor.ProcessDataElement(newEvent, this, cancellationToken);
