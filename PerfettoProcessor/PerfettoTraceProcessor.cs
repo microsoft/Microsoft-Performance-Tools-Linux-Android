@@ -3,14 +3,10 @@
 using Google.Protobuf;
 using Perfetto.Protos;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 
-namespace PerfettoCds
+namespace PerfettoProcessor
 {
     /// <summary>
     /// Responsible for managing trace_processor_shell.exe. The shell executable loads the Perfetto trace and allows for SQL querying
@@ -27,7 +23,7 @@ namespace PerfettoCds
         private const int PortMax = 65535;
 
         // HTTP request denied takes about 3 seconds so time out after about 2 minutes
-        private const int MaxRetryLimit = 40; 
+        private const int MaxRetryLimit = 40;
 
         /// <summary>
         /// Check if another instance of trace_processor_shell is running on this port
@@ -56,17 +52,17 @@ namespace PerfettoCds
         /// Initializes trace_processor_shell.exe in HTTP/RPC mode with the trace file
         /// </summary>
         /// <param name="tracePath"></param>
-        public void OpenTraceProcessor(string tracePath)
+        public void OpenTraceProcessor(string shellPath, string tracePath)
         {
             using (var client = new HttpClient())
             {
                 // Make sure another instance of trace_processor_shell isn't already running
-                while(!IsPortAvailable(HttpPort) && HttpPort < PortMax)
+                while (!IsPortAvailable(HttpPort) && HttpPort < PortMax)
                 {
                     HttpPort++;
                 }
 
-                ShellProcess = Process.Start(PerfettoPluginConstants.TraceProcessorShellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
+                ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
 
             }
             if (ShellProcess.HasExited)
@@ -78,7 +74,7 @@ namespace PerfettoCds
         /// <summary>
         /// Initializes trace_processor_shell.exe in HTTP/RPC mode without the trace file
         /// </summary>
-        public void OpenTraceProcessor()
+        public void OpenTraceProcessor(string shellPath)
         {
             using (var client = new HttpClient())
             {
@@ -87,7 +83,7 @@ namespace PerfettoCds
                 {
                     HttpPort++;
                 }
-                ShellProcess = Process.Start(PerfettoPluginConstants.TraceProcessorShellPath, $"-D --http-port {HttpPort}");
+                ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort}");
 
             }
             if (ShellProcess.HasExited)
@@ -167,6 +163,67 @@ namespace PerfettoCds
             }
 
             return qr;
+        }
+
+        public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent, string, long> eventCallback)
+        {
+            var qr = QueryTrace(sqlQuery);
+
+            var numColumns = qr.ColumnNames.Count;
+            var cols = qr.ColumnNames;
+            var numBatches = qr.Batch.Count;
+
+            foreach (var batch in qr.Batch)
+            {
+                CellCounters cellCounters = new CellCounters();
+
+                // String cells get stored as a single string delimited by null character. Split that up ourselves
+                var stringCells = batch.StringCells.Split('\0');
+
+                int cellCount = 0;
+                PerfettoSqlEvent ev = null;
+                foreach (var cell in batch.Cells)
+                {
+                    if (ev == null)
+                    {
+                        switch (eventKey)
+                        {
+                            case PerfettoSliceEvent.Key:
+                                ev = new PerfettoSliceEvent();
+                                break;
+                            case PerfettoArgEvent.Key:
+                                ev = new PerfettoArgEvent();
+                                break;
+                            case PerfettoThreadTrackEvent.Key:
+                                ev = new PerfettoThreadTrackEvent();
+                                break;
+                            case PerfettoThreadEvent.Key:
+                                ev = new PerfettoThreadEvent();
+                                break;
+                            case PerfettoProcessEvent.Key:
+                                ev = new PerfettoProcessEvent();
+                                break;
+                            default:
+                                throw new Exception("Invalid event type");
+                        }
+                    }
+
+                    var colIndex = cellCount % numColumns;
+                    var colName = cols[colIndex].ToLower();
+
+                    // The event itself is responsible for figuring out how to process and store cell contents
+                    ev.ProcessCell(colName, cell, batch, stringCells, cellCounters);
+
+                    // If we've reached the end of a row, we've finished an event.
+                    if (++cellCount % numColumns == 0)
+                    {
+                        // Report the event back
+                        eventCallback(ev, eventKey, cellCount);
+
+                        ev = null;
+                    }
+                }
+            }
         }
 
         public void CloseTraceConnection()

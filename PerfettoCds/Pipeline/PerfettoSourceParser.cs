@@ -5,26 +5,14 @@ using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Perfetto.Protos;
 using Microsoft.Performance.SDK;
+using PerfettoProcessor;
 using PerfettoCds.Pipeline.Events;
-using System.Linq;
 
 namespace PerfettoCds
 {
 
-    public class TableQueryResult
-    {
-        public PerfettoSqlEvent EventType;
-        public QueryResult QueryResult;
-
-        public TableQueryResult(PerfettoSqlEvent eventType)
-        {
-            this.EventType = eventType;
-        }
-    }
-
-    public sealed class PerfettoSourceParser : ISourceParser<PerfettoSqlEvent, PerfettoSourceParser, string>
+    public sealed class PerfettoSourceParser : ISourceParser<MyNewEvent, PerfettoSourceParser, string>
     {
         public string Id => PerfettoPluginConstants.ParserId;
 
@@ -68,107 +56,16 @@ namespace PerfettoCds
             // No preperation needed
         }
 
-        /// <summary>
-        /// Process a SQL query result (a QueryResult protobuf object). The result is split into batches
-        /// and within each batch are the cells. Cells are processed by the type of event that they are.
-        /// </summary>
-        /// <param name="qr">QueryResult</param>
-        /// <param name="dataProcessor"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="eventType">Type of event that is being processed.</param>
-        /// <param name="progressIncrease">Amount of progress to increase for processing a single cell.</param>
-        public void ProcessSqlQuery(QueryResult qr, 
-            ISourceDataProcessor<PerfettoSqlEvent, PerfettoSourceParser, string> dataProcessor,
-            CancellationToken cancellationToken,
-            string eventType,
-            double progressIncrease)
-        {
-            var numColumns = qr.ColumnNames.Count;
-            var cols = qr.ColumnNames;
-            var numBatches = qr.Batch.Count;
-            Timestamp? traceStartTime = null;
-            Timestamp? traceEndTime = null;
-
-            foreach (var batch in qr.Batch)
-            {
-                CellCounters cellCounters = new CellCounters();
-
-                // String cells get stored as a single string delimited by null character. Split that up ourselves
-                var stringCells = batch.StringCells.Split('\0');
-
-                int cellCount = 0;
-                PerfettoSqlEvent ev = null;
-                foreach (var cell in batch.Cells)
-                {
-                    if (ev == null)
-                    {
-                        switch (eventType)
-                        {
-                            case PerfettoPluginConstants.SliceEvent:
-                                ev = new PerfettoSliceEvent();
-                                break;
-                            case PerfettoPluginConstants.ArgEvent:
-                                ev = new PerfettoArgEvent();
-                                break;
-                            case PerfettoPluginConstants.ThreadTrackEvent:
-                                ev = new PerfettoThreadTrackEvent();
-                                break;
-                            case PerfettoPluginConstants.ThreadEvent:
-                                ev = new PerfettoThreadEvent();
-                                break;
-                            case PerfettoPluginConstants.ProcessEvent:
-                                ev = new PerfettoProcessEvent();
-                                break;
-                            default:
-                                throw new Exception("Invalid event type");
-                        }
-                    }
-
-                    var colIndex = cellCount % numColumns;
-                    var colName = cols[colIndex].ToLower();
-
-                    // The event itself is responsible for figuring out how to process and store cell contents
-                    ev.ProcessCell(colName, cell, batch, stringCells, cellCounters);
-
-                    // If we've reached the end of a row, we've finished an event. Store it.
-                    if (++cellCount % numColumns == 0)
-                    {
-                        if (ev.GetType() == typeof(PerfettoSliceEvent))
-                        {
-                            // We get the timestamps used for displaying these events from the slice event
-                            if (traceStartTime == null)
-                            {
-                                traceStartTime = ((PerfettoSliceEvent)ev).Timestamp;
-                            }
-                            traceEndTime = ((PerfettoSliceEvent)ev).Timestamp;
-                        }
-
-                        // Store the event
-                        var result = dataProcessor.ProcessDataElement(ev, this, cancellationToken);
-
-                        ev = null;
-                    }
-                    IncreaseProgress(progressIncrease);
-                }
-            }
-
-            if (traceStartTime.HasValue)
-            {
-                // Use DateTime.Now as the wall clock time. This doesn't matter for displaying events on a relative timescale
-                // TODO Actual wall clock time needs to be gathered from SQL somehow
-                this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
-            }
-        }
-
-
-        public void ProcessSource(ISourceDataProcessor<PerfettoSqlEvent, PerfettoSourceParser, string> dataProcessor,
+        public void ProcessSource(ISourceDataProcessor<MyNewEvent, PerfettoSourceParser, string> dataProcessor,
             ILogger logger,
             IProgress<int> progress,
             CancellationToken cancellationToken)
         {
             this.Progress = progress;
-
             PerfettoTraceProcessor traceProc = new PerfettoTraceProcessor();
+
+            Timestamp? traceStartTime = null;
+            Timestamp? traceEndTime = null;
 
             try
             {
@@ -177,39 +74,48 @@ namespace PerfettoCds
                 IncreaseProgress(1);
 
                 // Start the Perfetto trace processor shell with the trace file
-                traceProc.OpenTraceProcessor(filePath);
+                traceProc.OpenTraceProcessor(PerfettoPluginConstants.TraceProcessorShellPath, filePath);
 
-                // We're saying the SQL queries take up about 50 percent of the processing
-                double queryProgressIncrease = 49.0 / 5.0; // We're doing 5 SQL queries below
+                double queryProgressIncrease = 99.0 / 5.0; // We're doing 5 SQL queries below
 
-                List<TableQueryResult> tableQueries = new List<TableQueryResult>()
+                // Use this callback to receive events parsed
+                void EventCallback(PerfettoSqlEvent ev, string eventType, long cellsProcessed)
                 {
-                    new TableQueryResult(new PerfettoSliceEvent()),
-                    new TableQueryResult(new PerfettoArgEvent()),
-                    new TableQueryResult(new PerfettoThreadTrackEvent()),
-                    new TableQueryResult(new PerfettoThreadEvent()),
-                    new TableQueryResult(new PerfettoProcessEvent())
-                };
+                    if (ev.GetType() == typeof(PerfettoSliceEvent))
+                    {
+                        // We get the timestamps used for displaying these events from the slice event
+                        if (traceStartTime == null)
+                        {
+                            traceStartTime = new Timestamp(((PerfettoSliceEvent)ev).Timestamp);
+                        }
+                        traceEndTime = new Timestamp(((PerfettoSliceEvent)ev).Timestamp);
+                    }
 
-                int totalCells = 0;
-                foreach (var query in tableQueries)
-                {
-                    logger.Info($"Executing Perfetto SQL query: {query.EventType.GetSqlQuery()}");
-                    query.QueryResult = traceProc.QueryTrace(query.EventType.GetSqlQuery());
-                    IncreaseProgress(queryProgressIncrease);
-                    totalCells += query.QueryResult.Batch.Sum(x => x.Cells.Count);
+
+                    MyNewEvent newEvent = new MyNewEvent(eventType, ev);
+
+                    // Store the event
+                    var result = dataProcessor.ProcessDataElement(newEvent, this, cancellationToken);
                 }
-                logger.Info($"Processing {totalCells} total Perfetto cells");
+
+                traceProc.QueryTraceForEvents(PerfettoSliceEvent.SqlQuery, PerfettoPluginConstants.SliceEvent, EventCallback);
+                IncreaseProgress(queryProgressIncrease);
+                traceProc.QueryTraceForEvents(PerfettoArgEvent.SqlQuery, PerfettoPluginConstants.ArgEvent, EventCallback);
+                IncreaseProgress(queryProgressIncrease);
+                traceProc.QueryTraceForEvents(PerfettoThreadTrackEvent.SqlQuery, PerfettoPluginConstants.ThreadTrackEvent, EventCallback);
+                IncreaseProgress(queryProgressIncrease);
+                traceProc.QueryTraceForEvents(PerfettoThreadEvent.SqlQuery, PerfettoPluginConstants.ThreadEvent, EventCallback);
+                IncreaseProgress(queryProgressIncrease);
+                traceProc.QueryTraceForEvents(PerfettoProcessEvent.SqlQuery, PerfettoPluginConstants.ProcessEvent, EventCallback);
 
                 // Done with the SQL trace processor
                 traceProc.CloseTraceConnection();
 
-                // The cell processing takes up the other 50 percent
-                double cellProgressIncrease = 50.0 / (double)totalCells;
-
-                foreach (var query in tableQueries)
+                if (traceStartTime.HasValue)
                 {
-                    ProcessSqlQuery(query.QueryResult, dataProcessor, cancellationToken, query.EventType.Key, cellProgressIncrease);
+                    // Use DateTime.Now as the wall clock time. This doesn't matter for displaying events on a relative timescale
+                    // TODO Actual wall clock time needs to be gathered from SQL somehow
+                    this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
                 }
 
             }

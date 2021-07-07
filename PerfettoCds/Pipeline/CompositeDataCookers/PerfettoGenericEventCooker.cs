@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
 using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
-using PerfettoCds.Pipeline.Events;
+using PerfettoProcessor;
 
 namespace PerfettoCds.Pipeline.DataCookers
 {
@@ -76,8 +77,8 @@ namespace PerfettoCds.Pipeline.DataCookers
                 PerfettoGenericEvent ev = new PerfettoGenericEvent();
                 ev.EventName = result.slice.Name;
                 ev.Type = result.slice.Type;
-                ev.Duration = result.slice.Duration;
-                ev.Timestamp = result.slice.Timestamp;
+                ev.Duration = new TimestampDelta(result.slice.Duration);
+                ev.Timestamp = new Timestamp(result.slice.Timestamp);
                 ev.Category = result.slice.Category;
                 ev.ArgSetId = result.slice.ArgSetId;
 

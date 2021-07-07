@@ -8,13 +8,14 @@ using Microsoft.Performance.SDK.Processing;
 using System.Collections.Generic;
 using System.Threading;
 using PerfettoCds.Pipeline.Events;
+using PerfettoProcessor;
 
 namespace PerfettoCds
 {
     /// <summary>
     /// Cooks the data from the ThreadTrack table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoThreadTrackCooker : BaseSourceDataCooker<PerfettoSqlEvent, PerfettoSourceParser, string>
+    public sealed class PerfettoThreadTrackCooker : BaseSourceDataCooker<MyNewEvent, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the thread_tracks Perfetto SQL table";
 
@@ -36,9 +37,9 @@ namespace PerfettoCds
                 new ProcessedEventData<PerfettoThreadTrackEvent>();
         }
 
-        public override DataProcessingResult CookDataElement(PerfettoSqlEvent perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
+        public override DataProcessingResult CookDataElement(MyNewEvent perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
         {
-            this.ThreadTrackEvents.AddEvent((PerfettoThreadTrackEvent)perfettoEvent);
+            this.ThreadTrackEvents.AddEvent((PerfettoThreadTrackEvent)perfettoEvent.SqlEvent);
 
             return DataProcessingResult.Processed;
         }

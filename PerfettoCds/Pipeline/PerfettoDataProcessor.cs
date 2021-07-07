@@ -15,10 +15,10 @@ namespace PerfettoCds
     ///     Since our table has required data cookers, the SDK takes care of making sure it
     ///     gets built.
     /// </summary>
-    public class PerfettoDataProcessor : CustomDataProcessorBaseWithSourceParser<PerfettoSqlEvent, PerfettoSourceParser, string>
+    public class PerfettoDataProcessor : CustomDataProcessorBaseWithSourceParser<MyNewEvent, PerfettoSourceParser, string>
     {
         internal PerfettoDataProcessor(
-            ISourceParser<PerfettoSqlEvent, PerfettoSourceParser, string> sourceParser,
+            ISourceParser<MyNewEvent, PerfettoSourceParser, string> sourceParser,
             ProcessorOptions options,
             IApplicationEnvironment applicationEnvironment,
             IProcessorEnvironment processorEnvironment,

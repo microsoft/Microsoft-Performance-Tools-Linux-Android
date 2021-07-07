@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
+using PerfettoProcessor;
 
 namespace PerfettoCds
 {
@@ -22,11 +23,11 @@ namespace PerfettoCds
         public const string GenericEventCookerId = "PerfettoGenericEventCooker";
 
         // Events for source cookers
-        public const string SliceEvent = "PerfettoSliceEvent";
-        public const string ArgEvent = "PerfettoArgEvent";
-        public const string ThreadTrackEvent = "PerfettoThreadTrackEvent";
-        public const string ThreadEvent = "PerfettoThreadEvent";
-        public const string ProcessEvent = "PerfettoProcessEvent";
+        public const string SliceEvent = PerfettoSliceEvent.Key;
+        public const string ArgEvent = PerfettoArgEvent.Key;
+        public const string ThreadTrackEvent = PerfettoThreadTrackEvent.Key;
+        public const string ThreadEvent = PerfettoThreadEvent.Key;
+        public const string ProcessEvent = PerfettoProcessEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = "PerfettoGenericEvent";

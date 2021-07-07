@@ -1,11 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.Performance.SDK;
-using Microsoft.Performance.SDK.Extensibility;
 using System;
 using Perfetto.Protos;
 
-namespace PerfettoCds.Pipeline.Events
+namespace PerfettoProcessor
 {
     /// <summary>
     /// Keep track of where we are in the varint, varfloat, and varstring arrays in a Perfetto batch result
@@ -20,25 +18,8 @@ namespace PerfettoCds.Pipeline.Events
     /// <summary>
     /// Base class for a row in a Perfetto SQL table
     /// </summary>
-    public abstract class PerfettoSqlEvent : IKeyedDataType<String>
+    public abstract class PerfettoSqlEvent
     {
-        public readonly string Key;
-
-        public PerfettoSqlEvent(string key)
-        {
-            this.Key = key;
-        }
-
-        public int CompareTo(string other)
-        {
-            return this.Key.CompareTo(other);
-        }
-
-        public string GetKey()
-        {
-            return Key;
-        }
-
         /// <summary>
         /// This method is responsible for processing an individual cell in a SQL query, which is stored in the QueryResult
         /// protobuf object (QueryResult.Batch.Cells)
@@ -72,16 +53,18 @@ namespace PerfettoCds.Pipeline.Events
 
     public class PerfettoSliceEvent : PerfettoSqlEvent
     {
+        public const string Key = "PerfettoSliceEvent";
+
         public static string SqlQuery = "select ts, dur, arg_set_id, track_id, name, type, category from slice order by ts";
         public string Name { get; set; }
         public string Type { get; set; }
-        public TimestampDelta Duration { get; set; }
+        public long Duration { get; set; }
         public long ArgSetId { get; set; }
-        public Timestamp Timestamp { get; set; }
+        public long Timestamp { get; set; }
         public string Category { get; set; }
         public long TrackId { get; set; }
 
-        public PerfettoSliceEvent() : base(PerfettoPluginConstants.SliceEvent)
+        public PerfettoSliceEvent()
         {
 
         }
@@ -108,10 +91,10 @@ namespace PerfettoCds.Pipeline.Events
                     switch (col)
                     {
                         case "ts":
-                            Timestamp = new Timestamp(longVal);
+                            Timestamp = longVal;
                             break;
                         case "dur":
-                            Duration = new TimestampDelta(longVal);
+                            Duration = longVal;
                             break;
                         case "arg_set_id":
                             ArgSetId = longVal;
@@ -149,6 +132,8 @@ namespace PerfettoCds.Pipeline.Events
 
     public class PerfettoArgEvent : PerfettoSqlEvent
     {
+        public const string Key = "PerfettoArgEvent";
+
         public static string SqlQuery = "select arg_set_id, flat_key, key, int_value, string_value, real_value, value_type from args order by arg_set_id";
         public long ArgSetId { get; set; }
         public string Flatkey { get; set; }
@@ -158,8 +143,7 @@ namespace PerfettoCds.Pipeline.Events
         public double RealValue { get; set; }
         public string ValueType { get; set; }
 
-
-        public PerfettoArgEvent() : base(PerfettoPluginConstants.ArgEvent)
+        public PerfettoArgEvent()
         {
 
         }
@@ -229,6 +213,8 @@ namespace PerfettoCds.Pipeline.Events
 
     public class PerfettoThreadTrackEvent : PerfettoSqlEvent
     {
+        public const string Key = "PerfettoThreadTrackEvent";
+
         public static string SqlQuery = "select id, type, name, source_arg_set_id, utid from thread_track";
         public long ArgSetId { get; set; }
         public long Id { get; set; }
@@ -237,7 +223,7 @@ namespace PerfettoCds.Pipeline.Events
         public long SourceArgSetId { get; set; }
         public long Utid { get; set; }
 
-        public PerfettoThreadTrackEvent() : base(PerfettoPluginConstants.ThreadTrackEvent)
+        public PerfettoThreadTrackEvent()
         {
 
         }
@@ -303,18 +289,20 @@ namespace PerfettoCds.Pipeline.Events
 
     public class PerfettoThreadEvent : PerfettoSqlEvent
     {
+        public const string Key = "PerfettoThreadEvent";
+
         public static string SqlQuery = "select utid, id, type, tid, name, start_ts, end_ts, upid, is_main_thread from thread";
         public long Utid { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }
         public long Tid { get; set; }
         public string Name{ get; set; }
-        public Timestamp StartTimestamp { get; set; }
-        public Timestamp EndTimestamp{ get; set; }
+        public long StartTimestamp { get; set; }
+        public long EndTimestamp { get; set; }
         public long Upid { get; set; }
         public long IsMainThread{ get; set; }
 
-        public PerfettoThreadEvent() : base(PerfettoPluginConstants.ThreadEvent)
+        public PerfettoThreadEvent()
         {
 
         }
@@ -356,10 +344,10 @@ namespace PerfettoCds.Pipeline.Events
                             IsMainThread = longVal;
                             break;
                         case "start_ts":
-                            StartTimestamp = new Timestamp(longVal);
+                            StartTimestamp = longVal;
                             break;
                         case "end_ts":
-                            EndTimestamp = new Timestamp(longVal);
+                            EndTimestamp = longVal;
                             break;
                     }
 
@@ -388,21 +376,23 @@ namespace PerfettoCds.Pipeline.Events
 
     public class PerfettoProcessEvent : PerfettoSqlEvent
     {
+        public const string Key = "PerfettoProcessEvent";
+
         public static string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
         public long Upid { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }
         public long Pid { get; set; }
         public string Name { get; set; }
-        public Timestamp StartTimestamp { get; set; }
-        public Timestamp EndTimestamp{ get; set; }
+        public long StartTimestamp { get; set; }
+        public long EndTimestamp{ get; set; }
         public long ParentUpid { get; set; }
         public long Uid { get; set; }
         public long AndroidAppId { get; set; }
         public string CmdLine { get; set; }
         public long ArgSetId { get; set; }
 
-        public PerfettoProcessEvent() : base(PerfettoPluginConstants.ProcessEvent)
+        public PerfettoProcessEvent()
         {
 
         }
@@ -450,10 +440,10 @@ namespace PerfettoCds.Pipeline.Events
                             ArgSetId = longVal;
                             break;
                         case "start_ts":
-                            StartTimestamp = new Timestamp(longVal); ;
+                            StartTimestamp = longVal;
                             break;
                         case "end_ts":
-                            EndTimestamp = new Timestamp(longVal); ;
+                            EndTimestamp = longVal;
                             break;
                     }
 
