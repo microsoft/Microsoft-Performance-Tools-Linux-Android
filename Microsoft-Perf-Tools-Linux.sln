@@ -51,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfUnitTest", "PerfUnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfettoCds", "PerfettoCds\PerfettoCds.csproj", "{83418D84-CACE-40E8-A0C3-8EEAF7E71969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfettoProcessor", "PerfettoProcessor\PerfettoProcessor.csproj", "{90FE5422-631F-4B5A-8EF7-88FE542739DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfettoProcessor", "PerfettoProcessor\PerfettoProcessor.csproj", "{90FE5422-631F-4B5A-8EF7-88FE542739DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfettoUnitTest", "PerfettoUnitTest\PerfettoUnitTest.csproj", "{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +137,10 @@ Global
 		{90FE5422-631F-4B5A-8EF7-88FE542739DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90FE5422-631F-4B5A-8EF7-88FE542739DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90FE5422-631F-4B5A-8EF7-88FE542739DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
