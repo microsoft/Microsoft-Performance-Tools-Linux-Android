@@ -74,44 +74,47 @@ namespace PerfettoCds.Pipeline.DataCookers
             // Create events out of the joined results
             foreach (var result in joined)
             {
-                PerfettoGenericEvent ev = new PerfettoGenericEvent();
-                ev.EventName = result.slice.Name;
-                ev.Type = result.slice.Type;
-                ev.Duration = new TimestampDelta(result.slice.Duration);
-                ev.Timestamp = new Timestamp(result.slice.Timestamp);
-                ev.Category = result.slice.Category;
-                ev.ArgSetId = result.slice.ArgSetId;
-
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
 
-                ev.Process = string.Format($"{result.process.Name} {result.process.Pid}");
-                ev.Thread = string.Format($"{result.thread.Name} {result.thread.Tid}");
-
+                List<string> argKeys = new List<string>();
+                List<string> values = new List<string>();
                 // Each event has multiple of these "debug annotations". They get stored in lists
                 foreach (var arg in result.args)
                 {
-                    ev.FlatKeys.Add(arg.Flatkey);
-                    ev.ArgKeys.Add(arg.ArgKey);
+                    argKeys.Add(arg.ArgKey);
                     switch (arg.ValueType)
                     {
                         case "string":
-                            ev.Values.Add(arg.StringValue);
+                            values.Add(arg.StringValue);
                             break;
                         case "bool":
                         case "int":
-                            ev.Values.Add(arg.IntValue.ToString());
+                            values.Add(arg.IntValue.ToString());
                             break;
                         case "uint":
                         case "pointer":
-                            ev.Values.Add(((uint)arg.IntValue).ToString());
+                            values.Add(((uint)arg.IntValue).ToString());
                             break;
                         case "real":
-                            ev.Values.Add(arg.RealValue.ToString());
+                            values.Add(arg.RealValue.ToString());
                             break;
                         default:
                             throw new Exception("Unexpected Perfetto value type");
                     }
                 }
+                PerfettoGenericEvent ev = new PerfettoGenericEvent
+                (
+                   result.slice.Name,
+                   result.slice.Type,
+                   new TimestampDelta(result.slice.Duration),
+                   new Timestamp(result.slice.Timestamp),
+                   result.slice.Category,
+                   result.slice.ArgSetId,
+                   values,
+                   argKeys,
+                   string.Format($"{result.process.Name} {result.process.Pid}"),
+                   string.Format($"{result.thread.Name} {result.thread.Tid}")
+                );
                 this.GenericEvents.AddEvent(ev);
             }
             this.GenericEvents.FinalizeData();

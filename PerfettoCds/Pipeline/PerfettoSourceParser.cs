@@ -117,11 +117,15 @@ namespace PerfettoCds
 
                 foreach (var query in eventsToQuery)
                 {
-                    logger.Info($"Performing Perfetto SQL query: {query.GetSqlQuery()}");
+                    logger.Verbose($"Querying for {query.GetEventKey()} using SQL query: {query.GetSqlQuery()}");
 
                     // Run the query and process the events.
+                    var dateTimeQueryStarted = DateTime.UtcNow;
                     traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
-
+                    var dateTimeQueryFinished = DateTime.UtcNow;
+                    
+                    logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
+                    
                     IncreaseProgress(queryProgressIncrease);
                 }
 

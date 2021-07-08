@@ -9,34 +9,49 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// A generic app/component event that contains event name, event metadata, and thread+process
     /// info.
     /// </summary>
-    public class PerfettoGenericEvent
+    public readonly struct PerfettoGenericEvent
     {
         // From Slice table
-        public string EventName { get; set; }
-        public string Type { get; set; }
-        public TimestampDelta Duration { get; set; }
-        public Timestamp Timestamp { get; set; }
-        public string Category { get; set; }
+        public string EventName { get; }
+        public string Type { get; }
+        public TimestampDelta Duration { get; }
+        public Timestamp Timestamp { get; }
+        public string Category { get; }
 
         // Key between slice and args table
-        public long ArgSetId { get; set; }
+        public long ArgSetId { get; }
 
         // From Args table. The debug annotations for an event. Variable number per event
-        public List<string> FlatKeys { get; set; }
-        public List<string> Values{ get; set; }
-        public List<string> ArgKeys{ get; set; }
+        public List<string> Values { get; }
+        public List<string> ArgKeys { get; }
 
         // From Process table
-        public string Process { get; set; }
+        public string Process { get; }
 
         // From Thread table
-        public string Thread { get; set; }
+        public string Thread { get; }
 
-        public PerfettoGenericEvent()
+        public PerfettoGenericEvent(string eventName, 
+            string type, 
+            TimestampDelta duration, 
+            Timestamp timestamp, 
+            string category, 
+            long argSetId, 
+            List<string> values,
+            List<string> argKeys,
+            string process,
+            string thread)
         {
-            FlatKeys = new List<string>();
-            ArgKeys = new List<string>();
-            Values = new List<string>();
+            this.EventName = eventName;
+            this.Type = type;
+            this.Duration = duration;
+            this.Timestamp = timestamp;
+            this.Category = category;
+            this.ArgSetId = argSetId;
+            this.Values = values;
+            this.ArgKeys = argKeys;
+            this.Process = process;
+            this.Thread = thread;
         }
     }
 }
