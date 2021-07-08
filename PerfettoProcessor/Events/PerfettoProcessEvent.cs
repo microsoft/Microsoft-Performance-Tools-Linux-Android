@@ -23,14 +23,14 @@ namespace PerfettoProcessor
         public string CmdLine { get; set; }
         public long ArgSetId { get; set; }
 
-        public PerfettoProcessEvent()
-        {
-
-        }
-
         public override string GetSqlQuery()
         {
             return SqlQuery;
+        }
+
+        public override string GetEventKey()
+        {
+            return Key;
         }
 
         public override void ProcessCell(string colName,

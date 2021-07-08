@@ -82,10 +82,9 @@ namespace PerfettoCds
                 // Start the Perfetto trace processor shell with the trace file
                 traceProc.OpenTraceProcessor(shellPath, filePath);
 
-                double queryProgressIncrease = 99.0 / 5.0; // We're doing 5 SQL queries below
-
-                // Use this callback to receive events parsed
-                void EventCallback(PerfettoSqlEvent ev, string eventType, long cellsProcessed)
+                // Use this callback to receive events parsed and turn them in events with keys
+                // that get used by data cookers
+                void EventCallback(PerfettoSqlEvent ev)
                 {
                     if (ev.GetType() == typeof(PerfettoSliceEvent))
                     {
@@ -97,22 +96,34 @@ namespace PerfettoCds
                         traceEndTime = new Timestamp(((PerfettoSliceEvent)ev).Timestamp);
                     }
 
-
-                    PerfettoSqlEventKeyed newEvent = new PerfettoSqlEventKeyed(eventType, ev);
+                    PerfettoSqlEventKeyed newEvent = new PerfettoSqlEventKeyed(ev.GetEventKey(), ev);
 
                     // Store the event
                     var result = dataProcessor.ProcessDataElement(newEvent, this, cancellationToken);
                 }
 
-                traceProc.QueryTraceForEvents(PerfettoSliceEvent.SqlQuery, PerfettoPluginConstants.SliceEvent, EventCallback);
-                IncreaseProgress(queryProgressIncrease);
-                traceProc.QueryTraceForEvents(PerfettoArgEvent.SqlQuery, PerfettoPluginConstants.ArgEvent, EventCallback);
-                IncreaseProgress(queryProgressIncrease);
-                traceProc.QueryTraceForEvents(PerfettoThreadTrackEvent.SqlQuery, PerfettoPluginConstants.ThreadTrackEvent, EventCallback);
-                IncreaseProgress(queryProgressIncrease);
-                traceProc.QueryTraceForEvents(PerfettoThreadEvent.SqlQuery, PerfettoPluginConstants.ThreadEvent, EventCallback);
-                IncreaseProgress(queryProgressIncrease);
-                traceProc.QueryTraceForEvents(PerfettoProcessEvent.SqlQuery, PerfettoPluginConstants.ProcessEvent, EventCallback);
+                // Perform queries for the events we need
+                List<PerfettoSqlEvent> eventsToQuery = new List<PerfettoSqlEvent> 
+                { 
+                    new PerfettoSliceEvent(), 
+                    new PerfettoArgEvent(), 
+                    new PerfettoThreadTrackEvent(), 
+                    new PerfettoThreadEvent(), 
+                    new PerfettoProcessEvent()
+                };
+
+                // Increment progress for each table queried.
+                double queryProgressIncrease = 99.0 / eventsToQuery.Count;
+
+                foreach (var query in eventsToQuery)
+                {
+                    logger.Info($"Performing Perfetto SQL query: {query.GetSqlQuery()}");
+
+                    // Run the query and process the events.
+                    traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
+
+                    IncreaseProgress(queryProgressIncrease);
+                }
 
                 // Done with the SQL trace processor
                 traceProc.CloseTraceConnection();
@@ -123,7 +134,6 @@ namespace PerfettoCds
                     // TODO Actual wall clock time needs to be gathered from SQL somehow
                     this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
                 }
-
             }
             catch (Exception e)
             {

@@ -18,14 +18,14 @@ namespace PerfettoProcessor
         public double RealValue { get; set; }
         public string ValueType { get; set; }
 
-        public PerfettoArgEvent()
-        {
-
-        }
-
         public override string GetSqlQuery()
         {
             return SqlQuery;
+        }
+
+        public override string GetEventKey()
+        {
+            return Key;
         }
 
         public override void ProcessCell(string colName,

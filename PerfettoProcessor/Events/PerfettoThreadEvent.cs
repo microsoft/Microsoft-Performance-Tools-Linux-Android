@@ -20,14 +20,14 @@ namespace PerfettoProcessor
         public long Upid { get; set; }
         public long IsMainThread{ get; set; }
 
-        public PerfettoThreadEvent()
-        {
-
-        }
-
         public override string GetSqlQuery()
         {
             return SqlQuery;
+        }
+
+        public override string GetEventKey()
+        {
+            return Key;
         }
 
         public override void ProcessCell(string colName,

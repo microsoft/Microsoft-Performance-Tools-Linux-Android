@@ -64,7 +64,6 @@ namespace PerfettoProcessor
                 }
 
                 ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
-
             }
             if (ShellProcess.HasExited)
             {
@@ -129,7 +128,7 @@ namespace PerfettoProcessor
         /// <summary>
         /// Perform a SQL query against trace_processor_shell to gather Perfetto trace data.
         /// </summary>
-        /// <param name="sqlQuery"></param>
+        /// <param name="sqlQuery">The query to perform against the loaded trace in trace_processor_shell</param>
         /// <returns></returns>
         public QueryResult QueryTrace(string sqlQuery)
         {
@@ -167,7 +166,14 @@ namespace PerfettoProcessor
             return qr;
         }
 
-        public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent, string, long> eventCallback)
+        /// <summary>
+        /// Perform a SQL query against trace_processor_shell to gather Perfetto trace data. Processes the QueryResult
+        /// and returns PerfettoSqlObjects through a callback
+        /// </summary>
+        /// <param name="sqlQuery">The query to perform against the loaded trace in trace_processor_shell</param>
+        /// <param name="eventKey">The event key that corresponds to the type of PerfettoSqlEvent to process for this query</param>
+        /// <param name="eventCallback">Completed PerfettoSqlEvents will be sent here</param>
+        public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent> eventCallback)
         {
             var qr = QueryTrace(sqlQuery);
 
@@ -220,7 +226,7 @@ namespace PerfettoProcessor
                     if (++cellCount % numColumns == 0)
                     {
                         // Report the event back
-                        eventCallback(ev, eventKey, cellCount);
+                        eventCallback(ev);
 
                         ev = null;
                     }

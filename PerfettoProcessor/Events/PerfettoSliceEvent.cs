@@ -18,14 +18,14 @@ namespace PerfettoProcessor
         public string Category { get; set; }
         public long TrackId { get; set; }
 
-        public PerfettoSliceEvent()
-        {
-
-        }
-
         public override string GetSqlQuery()
         {
             return SqlQuery;
+        }
+
+        public override string GetEventKey()
+        {
+            return Key;
         }
 
         public override void ProcessCell(string colName,

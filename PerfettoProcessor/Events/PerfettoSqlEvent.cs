@@ -48,5 +48,11 @@ namespace PerfettoProcessor
         /// </summary>
         /// <returns></returns>
         public abstract string GetSqlQuery();
+
+        /// <summary>
+        /// String representation of this event type
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetEventKey();
     }
 }

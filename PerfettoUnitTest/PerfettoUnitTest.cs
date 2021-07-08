@@ -24,7 +24,6 @@ namespace PerfettoUnitTest
         private static DataCookerPath PerfettoThreadCookerPath;
         private static DataCookerPath PerfettoProcessCookerPath;
 
-
         public static void ProcessTrace()
         {
             lock (IsTraceProcessedLock)

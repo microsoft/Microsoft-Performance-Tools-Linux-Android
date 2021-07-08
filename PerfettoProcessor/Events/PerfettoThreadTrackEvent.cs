@@ -17,14 +17,14 @@ namespace PerfettoProcessor
         public long SourceArgSetId { get; set; }
         public long Utid { get; set; }
 
-        public PerfettoThreadTrackEvent()
-        {
-
-        }
-
         public override string GetSqlQuery()
         {
             return SqlQuery;
+        }
+
+        public override string GetEventKey()
+        {
+            return Key;
         }
 
         public override void ProcessCell(string colName,

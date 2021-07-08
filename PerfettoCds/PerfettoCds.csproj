@@ -19,9 +19,6 @@
     <None Update="trace_processor_shell.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="WpaPerfettoLauncher.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <Target Name="CopyRulesToTarget" AfterTargets="Build">
