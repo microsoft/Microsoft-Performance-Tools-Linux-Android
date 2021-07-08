@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.17.3">
+      <GeneratePathProperty>true</GeneratePathProperty>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.11-preview-g61bc0d83f6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
+  </ItemGroup>
+
+  <Target Name="CopyRulesToTarget" AfterTargets="Build">
+    <Copy SourceFiles="$(PkgGoogle_Protobuf)\lib\netstandard2.0\Google.Protobuf.dll" DestinationFolder="$(TargetDir)" />
+  </Target>
+</Project>
