@@ -6,10 +6,8 @@ using Perfetto.Protos;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace PerfettoProcessor
 {
@@ -30,7 +28,12 @@ namespace PerfettoProcessor
         // HTTP request denied takes about 3 seconds so time out after about 2 minutes
         private const int MaxRetryLimit = 40;
 
-
+        /// <summary>
+        /// Sends an RPC request to trace_processor_shell. This utilizies the bidirectional pipe that exists with the /rpc endpoint
+        /// TraceProcessorRpcStream objects get passed back and forth
+        /// </summary>
+        /// <param name="rpc">RPC object that contains the request</param>
+        /// <returns>RPC stream object that contains the response</returns>
         private TraceProcessorRpcStream SendRpcRequest(TraceProcessorRpc rpc)
         {
             TraceProcessorRpcStream rpcStream = new TraceProcessorRpcStream();
@@ -64,22 +67,20 @@ namespace PerfettoProcessor
         {
             try
             {
-                //using (var client = new HttpClient())
-                //{
-                //    var response = client.GetStringAsync($"http://localhost:{HttpPort}/status").Result;
-                //    return !(response.Contains("Perfetto"));
-                //}
                 TraceProcessorRpc rpc = new TraceProcessorRpc();
                 rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
+
+                // Send the request
                 var rpcResult = SendRpcRequest(rpc);
-                StatusResult statusResult = rpcResult.Msg[0].Status;
+
                 if (rpcResult.Msg.Count != 1 || rpcResult.Msg[0].Status == null)
                 {
                     throw new Exception("Invalid RPC stream result from trace_processor_shell");
                 }
                 else
                 {
-                    return !rpcResult.Msg[0].Status.HumanReadableVersion.Contains("Perfetto"); // TODO test this against
+                    // If the response contains Perfetto, trace_processor_shell is already running on this port
+                    return !rpcResult.Msg[0].Status.HumanReadableVersion.Contains("Perfetto");
                 }
             }
             catch (HttpRequestException e)
@@ -106,13 +107,11 @@ namespace PerfettoProcessor
                 }
 
                 ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
-                //ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort}");
             }
             if (ShellProcess.HasExited)
             {
                 throw new Exception("Problem starting trace_processor_shell.exe");
             }
-            //LoadTrace(tracePath);
         }
 
         /// <summary>
@@ -136,57 +135,11 @@ namespace PerfettoProcessor
             }
         }
 
-        public void LoadTrace(string tracePath)
-        {
-            if (ShellProcess == null || ShellProcess.HasExited)
-            {
-                throw new Exception("The trace_process_shell is not running");
-            }
-
-            TraceProcessorRpc appendTrace = new TraceProcessorRpc();
-            appendTrace.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmAppendTraceData;
-            FileStream file = new FileStream(tracePath, FileMode.Open);
-            appendTrace.AppendTraceData = ByteString.FromStream(file);
-            SendRpcRequest(appendTrace);
-
-            TraceProcessorRpc endTrace = new TraceProcessorRpc();
-            endTrace.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmFinalizeTraceData;
-            SendRpcRequest(endTrace);
-        }
-
         /// <summary>
         /// Check if the trace_processor_shell has a loaded trace. Assumes the shell executable is already running. Will throw otherwise.
         /// </summary>
         /// <returns></returns>
         private bool CheckIfTraceIsLoaded()
-        {
-            if (ShellProcess == null || ShellProcess.HasExited)
-            {
-                throw new Exception("The trace_process_shell is not running");
-            }
-
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    Perfetto.Protos.StatusResult statusResult = new StatusResult();
-                    var response = client.GetAsync($"http://localhost:{HttpPort}/status").GetAwaiter().GetResult();
-                    var byteArray = response.Content.ReadAsByteArrayAsync().Result;
-                    statusResult = StatusResult.Parser.ParseFrom(byteArray);
-
-                    // TODO could also check that the trace name is the same
-                    return statusResult.HasLoadedTraceName;
-                }
-            }
-            catch (Exception)
-            {
-                // Exception here is the connection refused message, meaning the RPC server has not been initialized
-                return false;
-            }
-
-        }
-
-        private bool CheckIfTraceIsLoaded2()
         {
             if (ShellProcess == null || ShellProcess.HasExited)
             {
@@ -204,7 +157,7 @@ namespace PerfettoProcessor
                 }
                 else
                 {
-                    return rpcResult.Msg[0].Status.HasLoadedTraceName; // TODO test this against
+                    return rpcResult.Msg[0].Status.HasLoadedTraceName;
                 }
             }
             catch (HttpRequestException)
@@ -219,8 +172,8 @@ namespace PerfettoProcessor
         /// Perform a SQL query against trace_processor_shell to gather Perfetto trace data.
         /// </summary>
         /// <param name="sqlQuery">The query to perform against the loaded trace in trace_processor_shell</param>
-        /// <returns></returns>
-        public QueryResult QueryTrace(string sqlQuery)
+        /// <returns>List of RPC objects that contain the QueryResults</returns>
+        public RepeatedField<TraceProcessorRpc> QueryTrace(string sqlQuery)
         {
             // Make sure ShellProcess is running
             if (ShellProcess == null || ShellProcess.HasExited)
@@ -233,43 +186,6 @@ namespace PerfettoProcessor
             // We know the shell is running, so the trace could still be in the loading process. Give it a little while to finish loading
             // before we error out.
             while (!CheckIfTraceIsLoaded())
-            {
-                if (cnt++ > MaxRetryLimit)
-                {
-                    throw new Exception("Unable to query Perfetto trace because trace_processor_shell.exe does not appear to have loaded it");
-                }
-            }
-
-            QueryResult qr = null;
-
-            using (var client = new HttpClient())
-            {
-                // Query with protobuf over RPC using /query endpoint
-                //Perfetto.Protos.RawQueryArgs queryArgs = new Perfetto.Protos.RawQueryArgs();
-                Perfetto.Protos.QueryArgs queryArgs = new Perfetto.Protos.QueryArgs();
-                queryArgs.SqlQuery = sqlQuery;
-                HttpContent sc = new ByteArrayContent(queryArgs.ToByteArray());
-                var response = client.PostAsync($"http://localhost:{HttpPort}/query", sc).GetAwaiter().GetResult();
-                var byteArray = response.Content.ReadAsByteArrayAsync().Result;
-                qr = QueryResult.Parser.ParseFrom(byteArray);
-            }
-
-            return qr;
-        }
-
-        public RepeatedField<TraceProcessorRpc> QueryTrace2(string sqlQuery)
-        {
-            // Make sure ShellProcess is running
-            if (ShellProcess == null || ShellProcess.HasExited)
-            {
-                throw new Exception("The trace_process_shell is not running");
-            }
-
-            int cnt = 0;
-            // Check if the trace is loaded
-            // We know the shell is running, so the trace could still be in the loading process. Give it a little while to finish loading
-            // before we error out.
-            while (!CheckIfTraceIsLoaded2())
             {
                 if (cnt++ > MaxRetryLimit)
                 {
@@ -295,8 +211,7 @@ namespace PerfettoProcessor
         /// <param name="eventCallback">Completed PerfettoSqlEvents will be sent here</param>
         public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent> eventCallback)
         {
-            //var qr = QueryTrace(sqlQuery);
-            var rpcs = QueryTrace2(sqlQuery);
+            var rpcs = QueryTrace(sqlQuery);
 
             if (rpcs.Count == 0)
             {
@@ -346,10 +261,6 @@ namespace PerfettoProcessor
                             }
                         }
 
-                        if (numColumns == 0)
-                        {
-                            Console.WriteLine("bad stuff");
-                        }
                         var colIndex = cellCount % numColumns;
                         var colName = cols[colIndex].ToLower();
 
