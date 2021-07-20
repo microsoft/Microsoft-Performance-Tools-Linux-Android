@@ -108,6 +108,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                    result.slice.Type,
                    new TimestampDelta(result.slice.Duration),
                    new Timestamp(result.slice.Timestamp),
+                   new Timestamp(result.slice.Timestamp + result.slice.Duration),
                    result.slice.Category,
                    result.slice.ArgSetId,
                    values,
