@@ -29,10 +29,10 @@ namespace PerfettoProcessor
         private const int MaxRetryLimit = 40;
 
         /// <summary>
-        /// Sends an RPC request to trace_processor_shell. This utilizies the bidirectional pipe that exists with the /rpc endpoint
+        /// Sends an RPC request to trace_processor_shell. This utilizies the bidirectional pipe that exists with the /rpc endpoint.
         /// TraceProcessorRpcStream objects get passed back and forth
         /// </summary>
-        /// <param name="rpc">RPC object that contains the request</param>
+        /// <param name="rpc">RPC stream object that contains the request</param>
         /// <returns>RPC stream object that contains the response</returns>
         private TraceProcessorRpcStream SendRpcRequest(TraceProcessorRpc rpc)
         {
@@ -43,7 +43,7 @@ namespace PerfettoProcessor
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Connection", "keep-alive");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf"));//ACCEPT header
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf")); //ACCEPT header
 
                 HttpContent sc = new ByteArrayContent(rpcStream.ToByteArray());
 
@@ -150,7 +150,10 @@ namespace PerfettoProcessor
             {
                 TraceProcessorRpc rpc = new TraceProcessorRpc();
                 rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
+
+                // Send the request
                 var rpcResult = SendRpcRequest(rpc);
+
                 if (rpcResult.Msg.Count != 1 || rpcResult.Msg[0].Status == null)
                 {
                     throw new Exception("Invalid RPC stream result from trace_processor_shell");
