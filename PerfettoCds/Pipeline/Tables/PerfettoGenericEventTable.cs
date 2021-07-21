@@ -39,11 +39,11 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 210 });
 
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{d458382b-1320-45c6-ba86-885da9dae71d}"), "StartTimestamp", "Android start timestamp for the event"),
+            new ColumnMetadata(new Guid("{d458382b-1320-45c6-ba86-885da9dae71d}"), "StartTimestamp", "Start timestamp for the event"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration EndTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{4642871b-d0d8-4f74-9516-1ae1d7e9fe27}"), "EndTimestamp", "Android end timestamp for the event"),
+            new ColumnMetadata(new Guid("{4642871b-d0d8-4f74-9516-1ae1d7e9fe27}"), "EndTimestamp", "End timestamp for the event"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
