@@ -38,8 +38,12 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{d3bc5189-c9d1-4c14-9ce2-7bb4dc4d5ee7}"), "Name", "Name of the Perfetto event"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration TimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{d458382b-1320-45c6-ba86-885da9dae71d}"), "Timestamp", "Android timestamp for the event"),
+        private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{d458382b-1320-45c6-ba86-885da9dae71d}"), "StartTimestamp", "Start timestamp for the event"),
+            new UIHints { Width = 120 });
+
+        private static readonly ColumnConfiguration EndTimestampColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{4642871b-d0d8-4f74-9516-1ae1d7e9fe27}"), "EndTimestamp", "End timestamp for the event"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
@@ -72,9 +76,10 @@ namespace PerfettoCds.Pipeline.Tables
                 ThreadNameColumn,
                 TableConfiguration.PivotColumn, // Columns before this get pivotted on
                 EventNameColumn,
-                DurationColumn,
                 CategoryColumn,
-                TypeColumn 
+                TypeColumn,
+                EndTimestampColumn,
+                DurationColumn,
             };
 
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
@@ -96,11 +101,16 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
-            var timestampColumn = new BaseDataColumn<Timestamp>(
-                TimestampColumn,
-                genericEventProjection.Compose((genericEvent) => genericEvent.Timestamp));
-            tableGenerator.AddColumn(timestampColumn);
-            
+            var startTimestampColumn = new BaseDataColumn<Timestamp>(
+                StartTimestampColumn,
+                genericEventProjection.Compose((genericEvent) => genericEvent.StartTimestamp));
+            tableGenerator.AddColumn(startTimestampColumn);
+
+            var endTimestampColumn = new BaseDataColumn<Timestamp>(
+                EndTimestampColumn,
+                genericEventProjection.Compose((genericEvent) => genericEvent.EndTimestamp));
+            tableGenerator.AddColumn(endTimestampColumn);
+
             var durationColumn = new BaseDataColumn<TimestampDelta>(
                 DurationColumn,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Duration));
@@ -144,14 +154,15 @@ namespace PerfettoCds.Pipeline.Tables
 
             // Finish the column order with the timestamp columned being graphed
             allColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
-            allColumns.Add(TimestampColumn);
+            allColumns.Add(StartTimestampColumn);
 
             var tableConfig = new TableConfiguration("Perfetto Trace Events")
             {
                 Columns = allColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
-            tableConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
             tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);

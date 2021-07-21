@@ -15,7 +15,8 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string EventName { get; }
         public string Type { get; }
         public TimestampDelta Duration { get; }
-        public Timestamp Timestamp { get; }
+        public Timestamp StartTimestamp { get; }
+        public Timestamp EndTimestamp { get; }
         public string Category { get; }
 
         // Key between slice and args table
@@ -34,7 +35,8 @@ namespace PerfettoCds.Pipeline.DataOutput
         public PerfettoGenericEvent(string eventName, 
             string type, 
             TimestampDelta duration, 
-            Timestamp timestamp, 
+            Timestamp startTimestamp, 
+            Timestamp endTimestamp, 
             string category, 
             long argSetId, 
             List<string> values,
@@ -45,7 +47,8 @@ namespace PerfettoCds.Pipeline.DataOutput
             this.EventName = eventName;
             this.Type = type;
             this.Duration = duration;
-            this.Timestamp = timestamp;
+            this.StartTimestamp = startTimestamp;
+            this.EndTimestamp = endTimestamp;
             this.Category = category;
             this.ArgSetId = argSetId;
             this.Values = values;

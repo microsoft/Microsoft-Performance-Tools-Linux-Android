@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 using Perfetto.Protos;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace PerfettoProcessor
 {
@@ -26,6 +29,36 @@ namespace PerfettoProcessor
         private const int MaxRetryLimit = 40;
 
         /// <summary>
+        /// Sends an RPC request to trace_processor_shell. This utilizies the bidirectional pipe that exists with the /rpc endpoint.
+        /// TraceProcessorRpcStream objects get passed back and forth
+        /// </summary>
+        /// <param name="rpc">RPC stream object that contains the request</param>
+        /// <returns>RPC stream object that contains the response</returns>
+        private TraceProcessorRpcStream SendRpcRequest(TraceProcessorRpc rpc)
+        {
+            TraceProcessorRpcStream rpcStream = new TraceProcessorRpcStream();
+            rpcStream.Msg.Add(rpc);
+
+            TraceProcessorRpcStream returnStream = null;
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Connection", "keep-alive");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf")); //ACCEPT header
+
+                HttpContent sc = new ByteArrayContent(rpcStream.ToByteArray());
+
+                var response = client.PostAsync($"http://localhost:{HttpPort}/rpc", sc).GetAwaiter().GetResult();
+                var byteArray = response.Content.ReadAsByteArrayAsync().Result;
+                returnStream = TraceProcessorRpcStream.Parser.ParseFrom(byteArray);
+            }
+            if (returnStream == null)
+            {
+                throw new Exception("Problem with the RPC stream returned from trace_processor_shell.exe");
+            }
+            return returnStream;
+        }
+
+        /// <summary>
         /// Check if another instance of trace_processor_shell is running on this port
         /// </summary>
         /// <param name="port"></param>
@@ -34,13 +67,23 @@ namespace PerfettoProcessor
         {
             try
             {
-                using (var client = new HttpClient())
+                TraceProcessorRpc rpc = new TraceProcessorRpc();
+                rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
+
+                // Send the request
+                var rpcResult = SendRpcRequest(rpc);
+
+                if (rpcResult.Msg.Count != 1 || rpcResult.Msg[0].Status == null)
                 {
-                    var response = client.GetStringAsync($"http://localhost:{HttpPort}/status").Result;
-                    return !(response.Contains("Perfetto"));
+                    throw new Exception("Invalid RPC stream result from trace_processor_shell");
+                }
+                else
+                {
+                    // If the response contains Perfetto, trace_processor_shell is already running on this port
+                    return !rpcResult.Msg[0].Status.HumanReadableVersion.Contains("Perfetto");
                 }
             }
-            catch (Exception)
+            catch (HttpRequestException e)
             {
                 // Exception here is the connection refused message, meaning the RPC server has not been initialized
                 // Which means this port is not being used by another trace_processor_shell
@@ -85,7 +128,6 @@ namespace PerfettoProcessor
                     HttpPort++;
                 }
                 ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort}");
-
             }
             if (ShellProcess.HasExited)
             {
@@ -106,18 +148,22 @@ namespace PerfettoProcessor
 
             try
             {
-                using (var client = new HttpClient())
-                {
-                    Perfetto.Protos.StatusResult statusResult = new StatusResult();
-                    var response = client.GetAsync($"http://localhost:{HttpPort}/status").GetAwaiter().GetResult();
-                    var byteArray = response.Content.ReadAsByteArrayAsync().Result;
-                    statusResult = StatusResult.Parser.ParseFrom(byteArray);
+                TraceProcessorRpc rpc = new TraceProcessorRpc();
+                rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
 
-                    // TODO could also check that the trace name is the same
-                    return statusResult.HasLoadedTraceName;
+                // Send the request
+                var rpcResult = SendRpcRequest(rpc);
+
+                if (rpcResult.Msg.Count != 1 || rpcResult.Msg[0].Status == null)
+                {
+                    throw new Exception("Invalid RPC stream result from trace_processor_shell");
+                }
+                else
+                {
+                    return rpcResult.Msg[0].Status.HasLoadedTraceName;
                 }
             }
-            catch (Exception)
+            catch (HttpRequestException)
             {
                 // Exception here is the connection refused message, meaning the RPC server has not been initialized
                 return false;
@@ -129,8 +175,8 @@ namespace PerfettoProcessor
         /// Perform a SQL query against trace_processor_shell to gather Perfetto trace data.
         /// </summary>
         /// <param name="sqlQuery">The query to perform against the loaded trace in trace_processor_shell</param>
-        /// <returns></returns>
-        public QueryResult QueryTrace(string sqlQuery)
+        /// <returns>List of RPC objects that contain the QueryResults</returns>
+        public RepeatedField<TraceProcessorRpc> QueryTrace(string sqlQuery)
         {
             // Make sure ShellProcess is running
             if (ShellProcess == null || ShellProcess.HasExited)
@@ -150,20 +196,13 @@ namespace PerfettoProcessor
                 }
             }
 
-            QueryResult qr = null;
+            TraceProcessorRpc rpc = new TraceProcessorRpc();
+            rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmQueryStreaming;
+            rpc.QueryArgs = new QueryArgs();
+            rpc.QueryArgs.SqlQuery = sqlQuery;
+            var rpcResult = SendRpcRequest(rpc);
 
-            using (var client = new HttpClient())
-            {
-                // Query with protobuf over RPC using /query endpoint
-                Perfetto.Protos.RawQueryArgs queryArgs = new Perfetto.Protos.RawQueryArgs();
-                queryArgs.SqlQuery = sqlQuery;
-                HttpContent sc = new ByteArrayContent(queryArgs.ToByteArray());
-                var response = client.PostAsync($"http://localhost:{HttpPort}/query", sc).GetAwaiter().GetResult();
-                var byteArray = response.Content.ReadAsByteArrayAsync().Result;
-                qr = QueryResult.Parser.ParseFrom(byteArray);
-            }
-
-            return qr;
+            return rpcResult.Msg;
         }
 
         /// <summary>
@@ -175,60 +214,70 @@ namespace PerfettoProcessor
         /// <param name="eventCallback">Completed PerfettoSqlEvents will be sent here</param>
         public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent> eventCallback)
         {
-            var qr = QueryTrace(sqlQuery);
+            var rpcs = QueryTrace(sqlQuery);
 
-            var numColumns = qr.ColumnNames.Count;
-            var cols = qr.ColumnNames;
-            var numBatches = qr.Batch.Count;
-
-            foreach (var batch in qr.Batch)
+            if (rpcs.Count == 0)
             {
-                CellCounters cellCounters = new CellCounters();
+                return;
+            }
 
-                // String cells get stored as a single string delimited by null character. Split that up ourselves
-                var stringCells = batch.StringCells.Split('\0');
+            // Column information is only available in first result
+            var numColumns = rpcs[0].QueryResult.ColumnNames.Count;
+            var cols = rpcs[0].QueryResult.ColumnNames;
 
-                int cellCount = 0;
-                PerfettoSqlEvent ev = null;
-                foreach (var cell in batch.Cells)
+            foreach (var rpc in rpcs)
+            {
+                var qr = rpc.QueryResult;
+
+                foreach (var batch in qr.Batch)
                 {
-                    if (ev == null)
+                    CellCounters cellCounters = new CellCounters();
+
+                    // String cells get stored as a single string delimited by null character. Split that up ourselves
+                    var stringCells = batch.StringCells.Split('\0');
+
+                    int cellCount = 0;
+                    PerfettoSqlEvent ev = null;
+                    foreach (var cell in batch.Cells)
                     {
-                        switch (eventKey)
+                        if (ev == null)
                         {
-                            case PerfettoSliceEvent.Key:
-                                ev = new PerfettoSliceEvent();
-                                break;
-                            case PerfettoArgEvent.Key:
-                                ev = new PerfettoArgEvent();
-                                break;
-                            case PerfettoThreadTrackEvent.Key:
-                                ev = new PerfettoThreadTrackEvent();
-                                break;
-                            case PerfettoThreadEvent.Key:
-                                ev = new PerfettoThreadEvent();
-                                break;
-                            case PerfettoProcessEvent.Key:
-                                ev = new PerfettoProcessEvent();
-                                break;
-                            default:
-                                throw new Exception("Invalid event type");
+                            switch (eventKey)
+                            {
+                                case PerfettoSliceEvent.Key:
+                                    ev = new PerfettoSliceEvent();
+                                    break;
+                                case PerfettoArgEvent.Key:
+                                    ev = new PerfettoArgEvent();
+                                    break;
+                                case PerfettoThreadTrackEvent.Key:
+                                    ev = new PerfettoThreadTrackEvent();
+                                    break;
+                                case PerfettoThreadEvent.Key:
+                                    ev = new PerfettoThreadEvent();
+                                    break;
+                                case PerfettoProcessEvent.Key:
+                                    ev = new PerfettoProcessEvent();
+                                    break;
+                                default:
+                                    throw new Exception("Invalid event type");
+                            }
                         }
-                    }
 
-                    var colIndex = cellCount % numColumns;
-                    var colName = cols[colIndex].ToLower();
+                        var colIndex = cellCount % numColumns;
+                        var colName = cols[colIndex].ToLower();
 
-                    // The event itself is responsible for figuring out how to process and store cell contents
-                    ev.ProcessCell(colName, cell, batch, stringCells, cellCounters);
+                        // The event itself is responsible for figuring out how to process and store cell contents
+                        ev.ProcessCell(colName, cell, batch, stringCells, cellCounters);
 
-                    // If we've reached the end of a row, we've finished an event.
-                    if (++cellCount % numColumns == 0)
-                    {
-                        // Report the event back
-                        eventCallback(ev);
+                        // If we've reached the end of a row, we've finished an event.
+                        if (++cellCount % numColumns == 0)
+                        {
+                            // Report the event back
+                            eventCallback(ev);
 
-                        ev = null;
+                            ev = null;
+                        }
                     }
                 }
             }
