@@ -3,6 +3,7 @@
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Perfetto.Protos;
+using PerfettoProcessor.Events;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -200,7 +201,10 @@ namespace PerfettoProcessor
             rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmQueryStreaming;
             rpc.QueryArgs = new QueryArgs();
             rpc.QueryArgs.SqlQuery = sqlQuery;
+            var dateTimeQueryStarted = DateTime.UtcNow;
             var rpcResult = SendRpcRequest(rpc);
+            var dateTimeQueryFinished = DateTime.UtcNow;
+            Console.Error.WriteLine($"*** RPC Query for {sqlQuery} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
 
             return rpcResult.Msg;
         }
@@ -221,6 +225,7 @@ namespace PerfettoProcessor
                 return;
             }
 
+            var dateTimeQueryStarted = DateTime.UtcNow;
             // Column information is only available in first result
             var numColumns = rpcs[0].QueryResult.ColumnNames.Count;
             var cols = rpcs[0].QueryResult.ColumnNames;
@@ -259,6 +264,9 @@ namespace PerfettoProcessor
                                 case PerfettoProcessEvent.Key:
                                     ev = new PerfettoProcessEvent();
                                     break;
+                                case PerfettoSchedSliceEvent.Key:
+                                    ev = new PerfettoSchedSliceEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }
@@ -281,6 +289,8 @@ namespace PerfettoProcessor
                     }
                 }
             }
+            var dateTimeQueryFinished = DateTime.UtcNow;
+            Console.Error.WriteLine($"*** Cell processing for {sqlQuery} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
         }
 
         public void CloseTraceConnection()
