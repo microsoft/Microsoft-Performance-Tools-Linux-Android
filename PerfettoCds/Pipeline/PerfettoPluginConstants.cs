@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
 using PerfettoProcessor;
-using PerfettoProcessor.Events;
 
 namespace PerfettoCds
 {

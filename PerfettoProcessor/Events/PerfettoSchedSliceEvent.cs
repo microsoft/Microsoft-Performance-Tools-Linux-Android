@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace PerfettoProcessor.Events
+namespace PerfettoProcessor
 {
     public class PerfettoSchedSliceEvent : PerfettoSqlEvent
     {

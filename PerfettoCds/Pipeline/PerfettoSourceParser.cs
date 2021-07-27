@@ -10,7 +10,6 @@ using PerfettoProcessor;
 using PerfettoCds.Pipeline.Events;
 using System.IO;
 using System.Reflection;
-using PerfettoProcessor.Events;
 
 namespace PerfettoCds
 {

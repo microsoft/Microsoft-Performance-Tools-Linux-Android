@@ -1,18 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
-using PerfettoProcessor.Events;
-using System.Collections.Generic;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
-    /// A generic app/component event that contains event name, event metadata, and thread+process
+    /// A CPU scheduled event that displays which process and threads were running on which CPUs at specific times
     /// info.
     /// </summary>
     public readonly struct PerfettoCpuSchedEvent
     {
-        // From Slice table
         public string ProcessName { get; }
         public string ThreadName { get; }
         public TimestampDelta Duration { get; }

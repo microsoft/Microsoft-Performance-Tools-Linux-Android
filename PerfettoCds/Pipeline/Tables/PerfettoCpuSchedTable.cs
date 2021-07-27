@@ -19,8 +19,8 @@ namespace PerfettoCds.Pipeline.Tables
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{db17169e-afe5-41f6-ba24-511af1d869f9}"),
             "Perfetto CPU Scheduler Events",
-            "TODO",
-            "PerfettoCpuSched",
+            "Displays CPU scheduling events for processes and threads",
+            "Perfetto",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
         );
 
