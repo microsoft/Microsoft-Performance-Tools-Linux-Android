@@ -102,7 +102,7 @@ namespace PerfettoCds
                     var result = dataProcessor.ProcessDataElement(newEvent, this, cancellationToken);
                 }
 
-                // Perform queries for the events we need
+                // Perform the base queries for all the events we need
                 List<PerfettoSqlEvent> eventsToQuery = new List<PerfettoSqlEvent>
                 {
                     new PerfettoSliceEvent(),

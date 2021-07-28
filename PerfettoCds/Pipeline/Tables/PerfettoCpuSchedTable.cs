@@ -82,23 +82,14 @@ namespace PerfettoCds.Pipeline.Tables
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var baseProjection = Projection.Index(events);
 
-            var cpuProjection = baseProjection.Compose(x => x.Cpu);
-            var processNameProjection = baseProjection.Compose(x => x.ProcessName);
-            var threadNameProjection = baseProjection.Compose(x => x.ThreadName);
-            var durationProjection = baseProjection.Compose(x => x.Duration);
-            var endStateProjection = baseProjection.Compose(x => x.EndState);
-            var priorityProjection = baseProjection.Compose(x => x.Priority);
-            var endTimestampProjection = baseProjection.Compose(x => x.EndTimestamp);
-            var startTimestampProjection = baseProjection.Compose(x => x.StartTimestamp);
-
-            tableGenerator.AddColumn(CpuColumn, cpuProjection);
-            tableGenerator.AddColumn(ProcessNameColumn, processNameProjection);
-            tableGenerator.AddColumn(ThreadNameColumn, threadNameProjection);
-            tableGenerator.AddColumn(DurationColumn, durationProjection);
-            tableGenerator.AddColumn(EndStateColumn, endStateProjection);
-            tableGenerator.AddColumn(PriorityColumn, priorityProjection);
-            tableGenerator.AddColumn(StartTimestampColumn, startTimestampProjection);
-            tableGenerator.AddColumn(EndTimestampColumn, endTimestampProjection);
+            tableGenerator.AddColumn(CpuColumn, baseProjection.Compose(x => x.Cpu));
+            tableGenerator.AddColumn(ProcessNameColumn, baseProjection.Compose(x => x.ProcessName));
+            tableGenerator.AddColumn(ThreadNameColumn, baseProjection.Compose(x => x.ThreadName));
+            tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
+            tableGenerator.AddColumn(EndStateColumn, baseProjection.Compose(x => x.EndState));
+            tableGenerator.AddColumn(PriorityColumn, baseProjection.Compose(x => x.Priority));
+            tableGenerator.AddColumn(StartTimestampColumn, baseProjection.Compose(x => x.StartTimestamp));
+            tableGenerator.AddColumn(EndTimestampColumn, baseProjection.Compose(x => x.EndTimestamp));
 
             var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {

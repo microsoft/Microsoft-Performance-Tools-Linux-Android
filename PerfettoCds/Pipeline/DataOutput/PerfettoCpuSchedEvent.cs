@@ -5,8 +5,7 @@ using Microsoft.Performance.SDK;
 namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
-    /// A CPU scheduled event that displays which process and threads were running on which CPUs at specific times
-    /// info.
+    /// A CPU scheduled event that displays which process and threads were running on which CPUs at specific times.
     /// </summary>
     public readonly struct PerfettoCpuSchedEvent
     {
