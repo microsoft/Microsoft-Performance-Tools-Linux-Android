@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Threading;
 using PerfettoCds.Pipeline.Events;
 using PerfettoProcessor;
-using PerfettoProcessor.Events;
 
 namespace PerfettoCds
 {

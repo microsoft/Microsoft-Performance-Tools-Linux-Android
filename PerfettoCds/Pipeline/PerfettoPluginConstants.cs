@@ -34,6 +34,7 @@ namespace PerfettoCds
 
         // Output events for composite cookers
         public const string GenericEvent = "PerfettoGenericEvent";
+        public const string CpuSchedEvent = "PerfettoCpuSchedEvent";
 
         // Path from source parser to example data cooker. This is the path
         // that is used to programatically access the data cooker's data outputs,

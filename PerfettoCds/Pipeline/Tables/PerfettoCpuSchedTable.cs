@@ -24,7 +24,6 @@ namespace PerfettoCds.Pipeline.Tables
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
         );
 
-        // TODO new guids everywhere
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{91a51bf2-85d6-4932-9df5-dc44445e8521}"), "Process", "Name of the process"),
             new UIHints { Width = 210 });
@@ -104,8 +103,7 @@ namespace PerfettoCds.Pipeline.Tables
             var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
                 Columns = allColumns,
-                Layout = TableLayoutStyle.GraphAndTable,
-                ChartType = ChartType.Line
+                Layout = TableLayoutStyle.GraphAndTable
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
