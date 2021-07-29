@@ -19,7 +19,7 @@ namespace PerfettoCds.Pipeline.Tables
         public const int AbsoluteMaxFields = 20;
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
-            Guid.Parse("{37cedaaa-5679-4366-b627-9b638aaefeb3}"),
+            Guid.Parse("{506777b6-f1a3-437a-b976-bc48190450b6}"),
             "Perfetto Generic Events",
             "All app/component events in the Perfetto trace",
             "Perfetto",

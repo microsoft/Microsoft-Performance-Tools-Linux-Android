@@ -5,7 +5,6 @@ using Google.Protobuf.Collections;
 using Perfetto.Protos;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -258,6 +257,9 @@ namespace PerfettoProcessor
                                     break;
                                 case PerfettoProcessEvent.Key:
                                     ev = new PerfettoProcessEvent();
+                                    break;
+                                case PerfettoSchedSliceEvent.Key:
+                                    ev = new PerfettoSchedSliceEvent();
                                     break;
                                 default:
                                     throw new Exception("Invalid event type");

@@ -102,14 +102,15 @@ namespace PerfettoCds
                     var result = dataProcessor.ProcessDataElement(newEvent, this, cancellationToken);
                 }
 
-                // Perform queries for the events we need
-                List<PerfettoSqlEvent> eventsToQuery = new List<PerfettoSqlEvent> 
-                { 
-                    new PerfettoSliceEvent(), 
-                    new PerfettoArgEvent(), 
-                    new PerfettoThreadTrackEvent(), 
-                    new PerfettoThreadEvent(), 
-                    new PerfettoProcessEvent()
+                // Perform the base queries for all the events we need
+                List<PerfettoSqlEvent> eventsToQuery = new List<PerfettoSqlEvent>
+                {
+                    new PerfettoSliceEvent(),
+                    new PerfettoArgEvent(),
+                    new PerfettoThreadTrackEvent(),
+                    new PerfettoThreadEvent(),
+                    new PerfettoProcessEvent(),
+                    new PerfettoSchedSliceEvent(),
                 };
 
                 // Increment progress for each table queried.
@@ -123,9 +124,9 @@ namespace PerfettoCds
                     var dateTimeQueryStarted = DateTime.UtcNow;
                     traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
                     var dateTimeQueryFinished = DateTime.UtcNow;
-                    
+
                     logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
-                    
+
                     IncreaseProgress(queryProgressIncrease);
                 }
 

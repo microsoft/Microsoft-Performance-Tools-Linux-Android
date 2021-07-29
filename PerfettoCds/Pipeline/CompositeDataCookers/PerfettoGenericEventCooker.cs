@@ -13,7 +13,7 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from all the individual SQL tables and joins them to create a Generic Peretto event
+    /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event
     /// </summary>
     public sealed class PerfettoGenericEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {

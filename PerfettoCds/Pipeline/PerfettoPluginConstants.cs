@@ -18,9 +18,11 @@ namespace PerfettoCds
         public const string ThreadCookerId = "PerfettoThreadCooker";
         public const string ThreadTrackCookerId = "PerfettoThreadCookerId";
         public const string ProcessCookerId = "PerfettoProcessCooker";
+        public const string SchedSliceCookerId = "PerfettoSchedSliceCooker";
 
         // ID for composite data cookers
         public const string GenericEventCookerId = "PerfettoGenericEventCooker";
+        public const string CpuSchedEventCookerId = "PerfettoCpuSchedEventCooker";
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -28,9 +30,11 @@ namespace PerfettoCds
         public const string ThreadTrackEvent = PerfettoThreadTrackEvent.Key;
         public const string ThreadEvent = PerfettoThreadEvent.Key;
         public const string ProcessEvent = PerfettoProcessEvent.Key;
+        public const string SchedSliceEvent = PerfettoSchedSliceEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = "PerfettoGenericEvent";
+        public const string CpuSchedEvent = "PerfettoCpuSchedEvent";
 
         // Path from source parser to example data cooker. This is the path
         // that is used to programatically access the data cooker's data outputs,
@@ -46,8 +50,12 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadCookerId);
         public static readonly DataCookerPath ProcessCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCookerId);
+        public static readonly DataCookerPath SchedSliceCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SchedSliceCookerId);
 
         public static readonly DataCookerPath GenericEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.GenericEventCookerId);
+        public static readonly DataCookerPath CpuSchedEventCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.CpuSchedEventCookerId);
     }
 }
