@@ -40,6 +40,10 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{9c242b6d-bc9a-440d-8eff-82b1b6571d38}"), "StartTimestamp", "Start timestamp for the frequency sample"),
             new UIHints { Width = 120 });
 
+        private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{9601099b-21d5-4d7b-8d25-39b70ca8e6ed}"), "Duration", "Start timestamp for the frequency sample"),
+            new UIHints { Width = 120 });
+
         private static readonly ColumnConfiguration CpuStateColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{5d37669b-7ae3-471b-97b2-06b593565cd6}"), "CpuState", "CPU state for the frequency sample"),
             new UIHints { Width = 120 });
@@ -57,6 +61,7 @@ namespace PerfettoCds.Pipeline.Tables
                 TableConfiguration.PivotColumn, // Columns before this get pivotted on
                 StartTimestampColumn,
                 CpuStateColumn,
+                DurationColumn,
                 TableConfiguration.GraphColumn, // Columns after this get graphed
                 CpuFrequencyColumn
             };
@@ -68,6 +73,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(CpuFrequencyColumn, baseProjection.Compose(x => x.CpuFrequency));
             tableGenerator.AddColumn(StartTimestampColumn, baseProjection.Compose(x => x.StartTimestamp));
             tableGenerator.AddColumn(CpuStateColumn, baseProjection.Compose(x => x.Name));
+            tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
 
             var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
@@ -76,7 +82,7 @@ namespace PerfettoCds.Pipeline.Tables
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             tableConfig.AddColumnRole(ColumnRole.ResourceId, CpuNumColumn);
-
+            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
 
             tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
         }

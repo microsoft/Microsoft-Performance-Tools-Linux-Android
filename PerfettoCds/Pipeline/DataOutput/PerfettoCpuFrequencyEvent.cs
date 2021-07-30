@@ -16,12 +16,14 @@ namespace PerfettoCds.Pipeline.DataOutput
         public long CpuNum { get; }
         public Timestamp StartTimestamp { get; }
         public string Name { get; }
+        public TimestampDelta Duration { get; }
 
-        public PerfettoCpuFrequencyEvent(double cpuFrequency, long cpuNum, Timestamp startTimestamp, string name)
+        public PerfettoCpuFrequencyEvent(double cpuFrequency, long cpuNum, Timestamp startTimestamp, TimestampDelta duration, string name)
         {
             this.CpuFrequency = cpuFrequency;
             this.CpuNum = cpuNum;
             this.StartTimestamp = startTimestamp;
+            this.Duration = duration;
             this.Name = name;
         }
     }

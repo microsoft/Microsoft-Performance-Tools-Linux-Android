@@ -139,7 +139,8 @@ namespace PerfettoCds
                 {
                     // Use DateTime.Now as the wall clock time. This doesn't matter for displaying events on a relative timescale
                     // TODO Actual wall clock time needs to be gathered from SQL somehow
-                    this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
+                    //this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
+                    this.dataSourceInfo = new DataSourceInfo(0, traceEndTime.Value.ToNanoseconds - traceStartTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
                 }
             }
             catch (Exception e)

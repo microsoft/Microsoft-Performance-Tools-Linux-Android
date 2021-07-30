@@ -50,27 +50,54 @@ namespace PerfettoCds.Pipeline.DataCookers
             var joined = from counter in counterData
                          join cpuCounterTrack in cpuCounterTrackData on counter.TrackId equals cpuCounterTrack.Id
                          where cpuCounterTrack.Name == "cpuidle" || cpuCounterTrack.Name == "cpufreq"
-                         select new { counter, cpuCounterTrack };
+                         orderby counter.Timestamp descending
+                         //group new { counter, cpuCounterTrack } by cpuCounterTrack.Cpu into test
+                            select new { counter, cpuCounterTrack };
 
             // Create events out of the joined results
-            foreach (var result in joined)
+            foreach (var result in joined.GroupBy(x=>x.cpuCounterTrack.Cpu))
             {
-                var frequency = result.counter.FloatValue;
-                var name = result.cpuCounterTrack.Name;
-                // TODO explain
-                if (result.counter.FloatValue == 4294967295)
+                long lastTs = result.FirstOrDefault().counter.Timestamp;
+                foreach (var thing in result)
                 {
-                    frequency = 0;
-                    name = name + "back to not-idle";
+                    var frequency = thing.counter.FloatValue;
+                    var name = thing.cpuCounterTrack.Name;
+                    // TODO explain
+                    if (thing.counter.FloatValue == 4294967295)
+                    {
+                        frequency = 0;
+                        name = name + "back to not-idle";
+                    }
+
+                    var duration = lastTs - thing.counter.Timestamp;
+                    lastTs = thing.counter.Timestamp;
+
+                    PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
+                    (
+                        frequency,
+                        thing.cpuCounterTrack.Cpu,
+                        new Timestamp(thing.counter.Timestamp - 1052133000000000),
+                        new TimestampDelta(duration),
+                        name
+                    );
+                    this.CpuFrequencyEvents.AddEvent(ev);
                 }
-                PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
-                (
-                    frequency,
-                    result.cpuCounterTrack.Cpu,
-                    new Timestamp(result.counter.Timestamp),
-                    name
-                );
-                this.CpuFrequencyEvents.AddEvent(ev);
+                //var frequency = result.counter.FloatValue;
+                //var name = result.cpuCounterTrack.Name;
+                //// TODO explain
+                //if (result.counter.FloatValue == 4294967295)
+                //{
+                //    frequency = 0;
+                //    name = name + "back to not-idle";
+                //}
+                //PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
+                //(
+                //    frequency,
+                //    result.cpuCounterTrack.Cpu,
+                //    new Timestamp(result.counter.Timestamp),
+                //    name
+                //);
+                //this.CpuFrequencyEvents.AddEvent(ev);
             }
             this.CpuFrequencyEvents.FinalizeData();
         }
