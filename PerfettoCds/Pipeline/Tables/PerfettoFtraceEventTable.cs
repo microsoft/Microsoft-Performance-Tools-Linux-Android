@@ -13,59 +13,55 @@ using PerfettoCds.Pipeline.DataCookers;
 namespace PerfettoCds.Pipeline.Tables
 {
     [Table]
-    public class PerfettoLogcatEventTable
+    public class PerfettoFtraceEventTable
     {
         // Set some sort of max to prevent ridiculous field counts
         public const int AbsoluteMaxFields = 20;
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
-            Guid.Parse("{1b25fe8d-887c-4de9-850f-284eb4c28ad7}"),
-            "Perfetto Logcat Events",
-            "All logcat events in the Perfetto trace",
+            Guid.Parse("{96beb7a0-5a9e-4713-b1f7-4ee74d27851c}"),
+            "Perfetto Ftrace Events",
+            "All Ftrace events in the Perfetto trace",
             "Perfetto",
-            requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
+            requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.FtraceEventCookerPath }
         );
 
         // TODO update descriptions
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{01649d8a-6d7b-4024-a07b-b5c1adb6e358}"), "StartTimestamp", "Start timestamp of the event"),
+            new ColumnMetadata(new Guid("{e9675de9-4a76-4bba-a387-169c7ee38425}"), "StartTimestamp", "Start timestamp of the event"),
             new UIHints { Width = 180 });
 
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{c149eeb0-8f9d-41b1-9513-728bea20535d}"), "ProcessName", "Name of the process that logged the event"),
+            new ColumnMetadata(new Guid("{8027964f-4c41-4309-ada1-b9a40d685b24}"), "ProcessName", "Name of the process that logged the event"),
             new UIHints { Width = 210 });
         
         private static readonly ColumnConfiguration ThreadNameColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{8b0c4b2a-675e-40d2-9c34-164f6a4751f7}"), "ThreadName", "Name of the thread that logged the event"),
+            new ColumnMetadata(new Guid("{276ab2ad-722c-4a1b-8d9f-dc7b562d3a5c}"), "ThreadName", "Name of the thread that logged the event"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration PriorityColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{b03c591b-da3d-4866-a762-c44c5017de31}"), "Priority", "Priority of the logcat message"),
+        private static readonly ColumnConfiguration CpuColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{16b7cf75-de7c-4cb7-9d72-3302a1cdf54f}"), "Cpu", "CPU"),
             new UIHints { Width = 150 });
 
-        private static readonly ColumnConfiguration TagColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{365a2cd8-1b17-4c52-a23a-35ad8e0b126a}"), "Tag", "Logcat message tag"),
+        private static readonly ColumnConfiguration NameColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{ea581f83-b632-4b5b-9a89-844994f497ca}"), "Name", "Name of the Ftrace event"),
             new UIHints { Width = 120 });
-
-        private static readonly ColumnConfiguration MessageColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{28a51601-ccdc-4a9a-b484-1e85dad75ea5}"), "Message", "Logcat message"),
-            new UIHints { Width = 300 });
 
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // Get data from the cooker
-            var events = tableData.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
-                new DataOutputPath(PerfettoPluginConstants.LogcatEventCookerPath, nameof(PerfettoLogcatEventCooker.LogcatEvents)));
+            var events = tableData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents)));
 
             // Start construction of the column order. Pivot on process and thread
             List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>() 
             {
+                CpuColumn,
+                TableConfiguration.PivotColumn, // Columns before this get pivotted
                 ProcessNameColumn,
                 ThreadNameColumn,
-                TagColumn,
-                MessageColumn,
-                PriorityColumn,
+                NameColumn,
                 TableConfiguration.GraphColumn, // Columns after this get graphed
                 StartTimestampColumn
             };
@@ -76,9 +72,8 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(StartTimestampColumn, baseProjection.Compose(x => x.StartTimestamp));
             tableGenerator.AddColumn(ProcessNameColumn, baseProjection.Compose(x => x.ProcessName));
             tableGenerator.AddColumn(ThreadNameColumn, baseProjection.Compose(x => x.ThreadName));
-            tableGenerator.AddColumn(PriorityColumn, baseProjection.Compose(x => x.Priority));
-            tableGenerator.AddColumn(TagColumn, baseProjection.Compose(x => x.Tag));
-            tableGenerator.AddColumn(MessageColumn, baseProjection.Compose(x => x.Message));
+            tableGenerator.AddColumn(CpuColumn, baseProjection.Compose(x => x.Cpu));
+            tableGenerator.AddColumn(NameColumn, baseProjection.Compose(x => x.Name));
 
             var tableConfig = new TableConfiguration("Perfetto Logcat Events")
             {

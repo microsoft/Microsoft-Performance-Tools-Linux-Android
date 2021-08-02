@@ -15,9 +15,9 @@ namespace PerfettoCds.Pipeline.DataCookers
     /// <summary>
     /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event TODO
     /// </summary>
-    public sealed class PerfettoLogcatEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
+    public sealed class PerfettoFtraceEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
-        public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.LogcatEventCookerPath;
+        public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.FtraceEventCookerPath;
 
         public string Description => "Generic Event composite cooker";
 
@@ -26,13 +26,14 @@ namespace PerfettoCds.Pipeline.DataCookers
         // Declare all of the cookers that are used by this CompositeCooker.
         public IReadOnlyCollection<DataCookerPath> RequiredDataCookers => new[]
         {
-            PerfettoPluginConstants.AndroidLogCookerPath,
+            PerfettoPluginConstants.RawCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath
+            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ArgCookerPath
         };
 
         [DataOutput]
-        public ProcessedEventData<PerfettoLogcatEvent> LogcatEvents { get; }
+        public ProcessedEventData<PerfettoFtraceEvent> FtraceEvents { get; }
 
         /// <summary>
         /// The highest number of fields found in any single event.
@@ -40,42 +41,43 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public int MaximumEventFieldCount { get; private set; }
 
-        public PerfettoLogcatEventCooker() : base(PerfettoPluginConstants.LogcatEventCookerPath)
+        public PerfettoFtraceEventCooker() : base(PerfettoPluginConstants.FtraceEventCookerPath)
         {
-            this.LogcatEvents =
-                new ProcessedEventData<PerfettoLogcatEvent>();
+            this.FtraceEvents =
+                new ProcessedEventData<PerfettoFtraceEvent>();
         }
 
         public void OnDataAvailable(IDataExtensionRetrieval requiredData)
         {
             // Gather the data from all the SQL tables
+            var rawData = requiredData.QueryOutput<ProcessedEventData<PerfettoRawEvent>>(new DataOutputPath(PerfettoPluginConstants.RawCookerPath, nameof(PerfettoRawCooker.RawEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
-            var androidLogData = requiredData.QueryOutput<ProcessedEventData<PerfettoAndroidLogEvent>>(new DataOutputPath(PerfettoPluginConstants.AndroidLogCookerPath, nameof(PerfettoAndroidLogCooker.AndroidLogEvents)));
+            var argsData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
 
             // Join them all together
 
             // TODO describe data
-            var joined = from log in androidLogData
-                         join thread in threadData on log.Utid equals thread.Utid
+            var joined = from raw in rawData
+                         join thread in threadData on raw.Utid equals thread.Utid
                          join process in processData on thread.Upid equals process.Upid
-                         select new { log, thread, process };
+                         join arg in argsData on raw.ArgSetId equals arg.ArgSetId into args
+                         select new { raw, args, thread, process };
 
             // Create events out of the joined results
             foreach (var result in joined)
             {
-                PerfettoLogcatEvent ev = new PerfettoLogcatEvent
+                PerfettoFtraceEvent ev = new PerfettoFtraceEvent
                 (
-                    new Timestamp(result.log.Timestamp),
+                    new Timestamp(result.raw.Timestamp),
                     result.process.Name,
                     result.thread.Name,
-                    result.log.PriorityString,
-                    result.log.Tag,
-                    result.log.Message
+                    result.raw.Cpu, 
+                    result.raw.Name                 
                 );
-                this.LogcatEvents.AddEvent(ev);
+                this.FtraceEvents.AddEvent(ev);
             }
-            this.LogcatEvents.FinalizeData();
+            this.FtraceEvents.FinalizeData();
         }
     }
 }

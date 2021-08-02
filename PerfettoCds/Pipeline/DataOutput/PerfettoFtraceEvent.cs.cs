@@ -9,28 +9,25 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// A logcat message
     /// info.
     /// </summary>
-    public readonly struct PerfettoLogcatEvent
+    public readonly struct PerfettoFtraceEvent
     {
         public Timestamp StartTimestamp { get; }
         public string ProcessName { get; }
         public string ThreadName { get; }
-        public string Priority { get; }
-        public string Tag { get; }
-        public string Message { get; }
+        public long Cpu { get; }
+        public string Name { get; }
 
-        public PerfettoLogcatEvent(Timestamp startTimestamp,
+        public PerfettoFtraceEvent(Timestamp startTimestamp,
             string processName,
             string threadName,
-            string priority,
-            string tag,
-            string message)
+            long cpu,
+            string name)
         {
             this.StartTimestamp = startTimestamp;
             this.ProcessName = processName;
             this.ThreadName = threadName;
-            this.Priority = priority;
-            this.Tag = tag;
-            this.Message = message;
+            this.Cpu = cpu;
+            this.Name = name;
         }
     }
 }
