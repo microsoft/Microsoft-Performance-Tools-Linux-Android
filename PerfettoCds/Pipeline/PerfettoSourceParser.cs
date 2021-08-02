@@ -111,6 +111,7 @@ namespace PerfettoCds
                     new PerfettoThreadEvent(),
                     new PerfettoProcessEvent(),
                     new PerfettoSchedSliceEvent(),
+                    new PerfettoAndroidLogEvent()
                 };
 
                 // Increment progress for each table queried.
