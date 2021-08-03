@@ -67,13 +67,44 @@ namespace PerfettoCds.Pipeline.DataCookers
             // Create events out of the joined results
             foreach (var result in joined)
             {
+                MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
+
+                List<string> argKeys = new List<string>();
+                List<string> values = new List<string>();
+                // Each event has multiple of these "debug annotations". They get stored in lists
+                foreach (var arg in result.args)
+                {
+                    argKeys.Add(arg.ArgKey);
+                    switch (arg.ValueType)
+                    {
+                        case "string":
+                            values.Add(arg.StringValue);
+                            break;
+                        case "bool":
+                        case "int":
+                            values.Add(arg.IntValue.ToString());
+                            break;
+                        case "uint":
+                        case "pointer":
+                            values.Add(((uint)arg.IntValue).ToString());
+                            break;
+                        case "real":
+                            values.Add(arg.RealValue.ToString());
+                            break;
+                        default:
+                            throw new Exception("Unexpected Perfetto value type");
+                    }
+                }
+
                 PerfettoFtraceEvent ev = new PerfettoFtraceEvent
                 (
                     new Timestamp(result.raw.Timestamp),
                     result.process.Name,
                     result.thread.Name,
-                    result.raw.Cpu, 
-                    result.raw.Name                 
+                    result.raw.Cpu,
+                    result.raw.Name,
+                    values, 
+                    argKeys
                 );
                 this.FtraceEvents.AddEvent(ev);
             }
