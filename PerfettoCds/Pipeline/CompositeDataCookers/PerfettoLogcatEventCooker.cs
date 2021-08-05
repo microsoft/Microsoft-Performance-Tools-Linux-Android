@@ -13,13 +13,13 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event TODO
+    /// Pulls data from multiple individual SQL tables and joins them to create events for logcat output
     /// </summary>
     public sealed class PerfettoLogcatEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
         public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.LogcatEventCookerPath;
 
-        public string Description => "Generic Event composite cooker";
+        public string Description => "Logcat event composite cooker";
 
         public DataCookerPath Path => DataCookerPath;
 
@@ -55,7 +55,8 @@ namespace PerfettoCds.Pipeline.DataCookers
 
             // Join them all together
 
-            // TODO describe data
+            // Log contains the information for each logcat message
+            // Thread and process info are gathered from their respective tables
             var joined = from log in androidLogData
                          join thread in threadData on log.Utid equals thread.Utid
                          join process in processData on thread.Upid equals process.Upid

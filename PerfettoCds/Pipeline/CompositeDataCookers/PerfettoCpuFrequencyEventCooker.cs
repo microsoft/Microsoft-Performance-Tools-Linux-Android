@@ -13,7 +13,8 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event
+    /// Pulls data from multiple individual SQL tables and joins them to create a a CPU frequency event. CPU frequency events
+    /// include the current CPU frequency each CPU is running at and whether or not the CPU is idle
     /// </summary>
     public sealed class PerfettoCpuFrequencyEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
@@ -33,6 +34,9 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public ProcessedEventData<PerfettoCpuFrequencyEvent> CpuFrequencyEvents { get; }
 
+        private const string CpuIdleString = "cpuidle";
+        private const string CpuFreqString = "cpufreq";
+
         public PerfettoCpuFrequencyEventCooker() : base(PerfettoPluginConstants.CpuFrequencyEventCookerPath)
         { 
             this.CpuFrequencyEvents =
@@ -46,74 +50,67 @@ namespace PerfettoCds.Pipeline.DataCookers
             var cpuCounterTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoCpuCounterTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.CpuCounterTrackCookerPath, nameof(PerfettoCpuCounterTrackCooker.CpuCounterTrackEvents)));
 
             // Join them all together
-            // TODO describe tables
+            // Counter table contains the frequency, timestamp
+            // Cpu counter track contains the event type and CPU number
+            // Event type is either cpuidle or cpufreq. See below for further explanation
             var joined = from counter in counterData
                          join cpuCounterTrack in cpuCounterTrackData on counter.TrackId equals cpuCounterTrack.Id
-                         where cpuCounterTrack.Name == "cpuidle" || cpuCounterTrack.Name == "cpufreq"
+                         where cpuCounterTrack.Name == CpuIdleString || cpuCounterTrack.Name == CpuFreqString
                          orderby counter.Timestamp ascending
-                         //group new { counter, cpuCounterTrack } by cpuCounterTrack.Cpu into test
                             select new { counter, cpuCounterTrack };
 
-            int cnt = 0;
+            // CPU frequency can change and the idle state can change independently of the CPU frequency.
+            // Events are emitted every time a CPU state changes, whether it's an idle change or CPU frequency change
+            // 'cpufreq' events indicate that the CPU is active and the frequency has changed from the previous frequency
+            // 'cpuidle' events with a value of 0 indicate the CPU moving to idle
+            // 'cpuidle' events with a value of 4294967295 indicate the CPU moving back to non-idle at the last specified frequency
+
             // Create events out of the joined results
-            foreach (var result in joined.GroupBy(x=>x.cpuCounterTrack.Cpu))
+            foreach (var cpuGroup in joined.GroupBy(x=>x.cpuCounterTrack.Cpu))
             {
                 double lastFreq = 0;
 
-                //foreach (var thing in result)
-                for(int i = 0; i < result.Count(); i++)
+                for(int i = 0; i < cpuGroup.Count(); i++)
                 {
-                    var thing = result.ElementAt(i);
-                    var frequency = thing.counter.FloatValue;
-                    var name = thing.cpuCounterTrack.Name;
-                    var ts = thing.counter.Timestamp;
+                    var result = cpuGroup.ElementAt(i);
+
+                    var frequency = result.counter.FloatValue;
+                    var name = result.cpuCounterTrack.Name;
+                    var ts = result.counter.Timestamp;
                     bool isIdle = true;
 
-                    // TODO explain
-                    if (thing.counter.FloatValue == 4294967295)
+                    // This means the CPU is going back to non-idle at the last frequency
+                    if (result.counter.FloatValue == 4294967295 && name == CpuIdleString)
                     {
                         frequency = lastFreq;
                         isIdle = false;
                     }
-                    else if (frequency != 0)
+                    // This means the CPU is non-idle at a new frequency
+                    else if (frequency != 0 && name == CpuFreqString)
                     {
                         lastFreq = frequency;
                         isIdle = false;
                     }
 
                     long nextTs = ts;
-                    if (i < result.Count() - 1)
+                    if (i < cpuGroup.Count() - 1)
                     {
-                        nextTs = result.ElementAt(i + 1).counter.Timestamp;
+                        // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
+                        // is needed for WPA line graphs
+                        nextTs = cpuGroup.ElementAt(i + 1).counter.Timestamp;
                     }
                     
                     PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
                     (
                         frequency,
-                        thing.cpuCounterTrack.Cpu,
-                        new Timestamp(thing.counter.Timestamp),
+                        result.cpuCounterTrack.Cpu,
+                        new Timestamp(result.counter.Timestamp),
                         new TimestampDelta(nextTs - ts),
                         name,
                         isIdle
                     );
                     this.CpuFrequencyEvents.AddEvent(ev);
                 }
-                //var frequency = result.counter.FloatValue;
-                //var name = result.cpuCounterTrack.Name;
-                //// TODO explain
-                //if (result.counter.FloatValue == 4294967295)
-                //{
-                //    frequency = 0;
-                //    name = name + "back to not-idle";
-                //}
-                //PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
-                //(
-                //    frequency,
-                //    result.cpuCounterTrack.Cpu,
-                //    new Timestamp(result.counter.Timestamp),
-                //    name
-                //);
-                //this.CpuFrequencyEvents.AddEvent(ev);
             }
             this.CpuFrequencyEvents.FinalizeData();
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
-    /// A logcat message
+    /// An Ftrace event with extra args
     /// info.
     /// </summary>
     public readonly struct PerfettoFtraceEvent
@@ -15,6 +15,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string ProcessName { get; }
         public string ThreadName { get; }
         public long Cpu { get; }
+        // Name of the ftrace event
         public string Name { get; }
 
         // From Args table. Variable number per event

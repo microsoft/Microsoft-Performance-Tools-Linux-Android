@@ -21,12 +21,11 @@ namespace PerfettoCds.Pipeline.Tables
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{1b25fe8d-887c-4de9-850f-284eb4c28ad7}"),
             "Perfetto Logcat Events",
-            "All logcat events in the Perfetto trace",
+            "All logcat events/messages in the Perfetto trace",
             "Perfetto",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
         );
 
-        // TODO update descriptions
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{01649d8a-6d7b-4024-a07b-b5c1adb6e358}"), "StartTimestamp", "Start timestamp of the event"),
             new UIHints { Width = 180 });

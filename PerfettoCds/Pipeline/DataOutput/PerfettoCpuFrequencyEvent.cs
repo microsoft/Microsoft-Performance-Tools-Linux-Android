@@ -11,10 +11,12 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// </summary>
     public readonly struct PerfettoCpuFrequencyEvent
     {
-        // From Slice table
+        // The current frequency of this CPU
         public double CpuFrequency { get; }
+        // The specific CPU core
         public long CpuNum { get; }
         public Timestamp StartTimestamp { get; }
+        // Type of CPU frequency event. Whether it's an idle change or frequency change event
         public string Name { get; }
         public TimestampDelta Duration { get; }
         public bool IsIdle { get; }

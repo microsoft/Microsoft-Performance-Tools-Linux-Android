@@ -13,13 +13,13 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event TODO
+    /// Pulls data from multiple individual SQL tables and joins them to create a Ftrace Perfetto event
     /// </summary>
     public sealed class PerfettoFtraceEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
         public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.FtraceEventCookerPath;
 
-        public string Description => "Generic Event composite cooker";
+        public string Description => "Ftrace Event composite cooker";
 
         public DataCookerPath Path => DataCookerPath;
 
@@ -57,7 +57,9 @@ namespace PerfettoCds.Pipeline.DataCookers
 
             // Join them all together
 
-            // TODO describe data
+            // Raw contains all the ftrace events, timestamps, and CPU
+            // Arg contains a variable number of extra arguments for each event.
+            // Thread and process info is contained in their respective tables
             var joined = from raw in rawData
                          join thread in threadData on raw.Utid equals thread.Utid
                          join process in processData on thread.Upid equals process.Upid

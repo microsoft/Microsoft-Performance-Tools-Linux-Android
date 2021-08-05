@@ -19,17 +19,17 @@ namespace PerfettoCds.Pipeline.Tables
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{5b9689d4-617c-484c-9b0a-c7242565ec13}"),
             "Perfetto CPU Frequency Events",
-            "Displays CPU scheduling events for processes and threads", // TODO
+            "Displays CPU frequency scaling events and idle states for CPUs",
             "Perfetto",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuFrequencyEventCookerPath }
         );
 
         private static readonly ColumnConfiguration CpuNumColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{cae82fa3-65c6-43b3-8fc8-2e94c17840bd}"), "CpuNumber", "CPU number"),
+            new ColumnMetadata(new Guid("{cae82fa3-65c6-43b3-8fc8-2e94c17840bd}"), "CpuCore", "Specific CPU core"),
             new UIHints { Width = 210, SortOrder = SortOrder.Ascending });
 
         private static readonly ColumnConfiguration CpuFrequencyColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{cb753d1a-2c97-414a-9985-06509b6f8ba3}"), "CpuFrequency", "CPU frequency"),
+            new ColumnMetadata(new Guid("{cb753d1a-2c97-414a-9985-06509b6f8ba3}"), "CpuFrequency", "Current frequency for this CPU"),
             new UIHints 
             { 
                 Width = 210,
@@ -37,7 +37,7 @@ namespace PerfettoCds.Pipeline.Tables
             });
 
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{196f823d-646c-4bd2-a263-3fb2c5110f74}"), "StartTimestamp", "Start timestamp for the frequency sample"),
+            new ColumnMetadata(new Guid("{196f823d-646c-4bd2-a263-3fb2c5110f74}"), "StartTimestamp", "Start timestamp for the frequency event"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
@@ -45,11 +45,11 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration CpuStateColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{009c2448-eec0-47b4-a6fe-6ef19ab136f7}"), "CpuState", "CPU state for the frequency sample"),
+            new ColumnMetadata(new Guid("{009c2448-eec0-47b4-a6fe-6ef19ab136f7}"), "CpuState", "Indicates CPU change events. 'cpuidle' indicates a change in idle state. 'cpufreq' indicates a change of frequency"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration IsIdleColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{1b06c328-0d33-49bb-a1fc-381a4b447493}"), "IsIdle", "TODO"),
+            new ColumnMetadata(new Guid("{1b06c328-0d33-49bb-a1fc-381a4b447493}"), "IsIdle", "Whether or not this CPU is idle"),
             new UIHints { Width = 120 });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
@@ -81,11 +81,12 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
             tableGenerator.AddColumn(IsIdleColumn, baseProjection.Compose(x => x.IsIdle));
 
+            // We are graphing CPU frequency + duration with MAX accumulation, which gives a steady line graph of the current CPU frequency
             var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
                 Columns = allColumns,
                 Layout = TableLayoutStyle.GraphAndTable,
-                ChartType = ChartType.StackedLine
+                ChartType = ChartType.Line
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             tableConfig.AddColumnRole(ColumnRole.ResourceId, CpuNumColumn);

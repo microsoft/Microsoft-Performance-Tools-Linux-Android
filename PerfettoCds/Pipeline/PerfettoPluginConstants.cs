@@ -50,10 +50,7 @@ namespace PerfettoCds
         public const string FtraceEvent = "PerfettoFtraceEvent";
         public const string CpuFrequencyEvent = "PerfettoCpuFrequencyEvent";
 
-        // Path from source parser to example data cooker. This is the path
-        // that is used to programatically access the data cooker's data outputs,
-        // and can be created by external binaries by just knowing the
-        // parser and cooker IDs defined above
+        // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SliceCookerId);
         public static readonly DataCookerPath ArgCookerPath =
@@ -75,6 +72,7 @@ namespace PerfettoCds
         public static readonly DataCookerPath CpuCounterTrackCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CpuCounterTrackCookerId);
 
+        // Paths for composite cookers
         public static readonly DataCookerPath GenericEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.GenericEventCookerId);
         public static readonly DataCookerPath CpuSchedEventCookerPath =

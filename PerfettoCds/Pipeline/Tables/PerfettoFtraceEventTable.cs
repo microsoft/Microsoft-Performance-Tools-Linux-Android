@@ -27,7 +27,6 @@ namespace PerfettoCds.Pipeline.Tables
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.FtraceEventCookerPath }
         );
 
-        // TODO update descriptions
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{e9675de9-4a76-4bba-a387-169c7ee38425}"), "StartTimestamp", "Start timestamp of the event"),
             new UIHints { Width = 180 });
@@ -41,7 +40,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 210 });
 
         private static readonly ColumnConfiguration CpuColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{16b7cf75-de7c-4cb7-9d72-3302a1cdf54f}"), "Cpu", "CPU"),
+            new ColumnMetadata(new Guid("{16b7cf75-de7c-4cb7-9d72-3302a1cdf54f}"), "CpuCore", "Specific CPU core"),
             new UIHints { Width = 150 });
 
         private static readonly ColumnConfiguration NameColumn = new ColumnConfiguration(

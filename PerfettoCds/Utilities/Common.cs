@@ -22,7 +22,6 @@ namespace PerfettoCds.Utilities
         public T this[int value] => this.events[(uint)value];
     }
 
-    // TODO Move these into a 
     public class Common
     {
         [SuppressMessage("Microsoft.Security.Cryptography", "CA5354:SHA1CannotBeUsed", Justification = "Not a security related usage - just generating probabilistically unique id to identify a column from its name.")]
