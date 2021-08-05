@@ -21,12 +21,15 @@ namespace PerfettoCds
         public const string SchedSliceCookerId = "PerfettoSchedSliceCooker";
         public const string AndroidLogCookerId = "PerfettoAndroidLogCooker";
         public const string RawCookerId = "PerfettoRawCooker";
+        public const string CounterCookerId = "PerfettoCounterCooker";
+        public const string CpuCounterTrackCookerId = "PerfettoCpuCounterTrackCooker";
 
         // ID for composite data cookers
         public const string GenericEventCookerId = "PerfettoGenericEventCooker";
         public const string CpuSchedEventCookerId = "PerfettoCpuSchedEventCooker";
         public const string LogcatEventCookerId = "PerfettoLogcatEventCooker";
         public const string FtraceEventCookerId = "PerfettoFtraceEventCooker";
+        public const string CpuFrequencyEventCookerId = "PerfettoCpuFrequencyEventCooker";
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -37,12 +40,15 @@ namespace PerfettoCds
         public const string SchedSliceEvent = PerfettoSchedSliceEvent.Key;
         public const string AndroidLogEvent = PerfettoAndroidLogEvent.Key;
         public const string RawEvent = PerfettoRawEvent.Key;
+        public const string CounterEvent = PerfettoCounterEvent.Key;
+        public const string CpuCounterTrackEvent = PerfettoCpuCounterTrackEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = "PerfettoGenericEvent";
         public const string CpuSchedEvent = "PerfettoCpuSchedEvent";
         public const string LogcatEvent = "PerfettoLogcatEvent";
         public const string FtraceEvent = "PerfettoFtraceEvent";
+        public const string CpuFrequencyEvent = "PerfettoCpuFrequencyEvent";
 
         // Path from source parser to example data cooker. This is the path
         // that is used to programatically access the data cooker's data outputs,
@@ -64,6 +70,10 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.AndroidLogCookerId);
         public static readonly DataCookerPath RawCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.RawCookerId);
+        public static readonly DataCookerPath CounterCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterCookerId);
+        public static readonly DataCookerPath CpuCounterTrackCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CpuCounterTrackCookerId);
 
         public static readonly DataCookerPath GenericEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.GenericEventCookerId);
@@ -73,5 +83,8 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.LogcatEventCookerId);
         public static readonly DataCookerPath FtraceEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.FtraceEventCookerId);
+        public static readonly DataCookerPath CpuFrequencyEventCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.CpuFrequencyEventCookerId);
+
     }
 }
