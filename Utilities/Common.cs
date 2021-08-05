@@ -3,10 +3,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
-namespace PerfettoCds.Utilities
+namespace Utilities
 {
-    public struct EventProjection<T>
-    : IProjection<int, T>
+    public struct EventProjection<T>: IProjection<int, T>
     {
         private readonly ProcessedEventData<T> events;
 

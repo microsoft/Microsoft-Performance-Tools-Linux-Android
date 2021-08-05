@@ -4,12 +4,10 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
 using PerfettoCds.Pipeline.DataCookers;
-using PerfettoCds.Utilities;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.Tables
 {
