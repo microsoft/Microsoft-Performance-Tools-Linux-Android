@@ -39,7 +39,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration CpuColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{16b7cf75-de7c-4cb7-9d72-3302a1cdf54f}"), "CpuCore", "Specific CPU core"),
-            new UIHints { Width = 150 });
+            new UIHints { Width = 150, SortOrder = SortOrder.Ascending });
 
         private static readonly ColumnConfiguration NameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{ea581f83-b632-4b5b-9a89-844994f497ca}"), "Name", "Name of the Ftrace event"),

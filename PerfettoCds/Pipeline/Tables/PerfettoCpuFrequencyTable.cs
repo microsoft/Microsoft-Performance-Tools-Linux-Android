@@ -29,7 +29,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 210, SortOrder = SortOrder.Ascending });
 
         private static readonly ColumnConfiguration CpuFrequencyColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{cb753d1a-2c97-414a-9985-06509b6f8ba3}"), "CpuFrequency", "Current frequency for this CPU"),
+            new ColumnMetadata(new Guid("{cb753d1a-2c97-414a-9985-06509b6f8ba3}"), "CpuFrequency(Hz)", "Current frequency for this CPU. When idle, displays 0"),
             new UIHints 
             { 
                 Width = 210,

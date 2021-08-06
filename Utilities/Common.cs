@@ -1,26 +1,9 @@
-﻿using Microsoft.Performance.SDK.Processing;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
 namespace Utilities
 {
-    public struct EventProjection<T>: IProjection<int, T>
-    {
-        private readonly ProcessedEventData<T> events;
-
-        public EventProjection(ProcessedEventData<T> events)
-        {
-            this.events = events;
-        }
-
-        public Type SourceType => typeof(int);
-
-        public Type ResultType => typeof(T);
-
-        public T this[int value] => this.events[(uint)value];
-    }
-
     public class Common
     {
         [SuppressMessage("Microsoft.Security.Cryptography", "CA5354:SHA1CannotBeUsed", Justification = "Not a security related usage - just generating probabilistically unique id to identify a column from its name.")]
