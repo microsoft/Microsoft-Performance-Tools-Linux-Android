@@ -7,7 +7,6 @@ namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
     /// A logcat message
-    /// info.
     /// </summary>
     public readonly struct PerfettoLogcatEvent
     {

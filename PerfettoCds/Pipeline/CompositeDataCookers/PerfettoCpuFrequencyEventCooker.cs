@@ -34,8 +34,10 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public ProcessedEventData<PerfettoCpuFrequencyEvent> CpuFrequencyEvents { get; }
 
+        // CPU frequency related constants
         private const string CpuIdleString = "cpuidle";
         private const string CpuFreqString = "cpufreq";
+        private const long BackToNoIdleLong = 4294967295;
 
         public PerfettoCpuFrequencyEventCooker() : base(PerfettoPluginConstants.CpuFrequencyEventCookerPath)
         { 
@@ -51,13 +53,15 @@ namespace PerfettoCds.Pipeline.DataCookers
 
             // Join them all together
             // Counter table contains the frequency, timestamp
-            // Cpu counter track contains the event type and CPU number
+            // CpuCounterTrack contains the event type and CPU number
             // Event type is either cpuidle or cpufreq. See below for further explanation
             var joined = from counter in counterData
                          join cpuCounterTrack in cpuCounterTrackData on counter.TrackId equals cpuCounterTrack.Id
                          where cpuCounterTrack.Name == CpuIdleString || cpuCounterTrack.Name == CpuFreqString
                          orderby counter.Timestamp ascending
-                            select new { counter, cpuCounterTrack };
+                         select new { counter, cpuCounterTrack };
+
+            // See the following Perfetto docs for their documentation: repo_root/docs/data-sources/cpu-freq
 
             // CPU frequency can change and the idle state can change independently of the CPU frequency.
             // Events are emitted every time a CPU state changes, whether it's an idle change or CPU frequency change
@@ -80,7 +84,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     bool isIdle = true;
 
                     // This means the CPU is going back to non-idle at the last frequency
-                    if (result.counter.FloatValue == 4294967295 && name == CpuIdleString)
+                    if (result.counter.FloatValue == BackToNoIdleLong && name == CpuIdleString)
                     {
                         frequency = lastFreq;
                         isIdle = false;

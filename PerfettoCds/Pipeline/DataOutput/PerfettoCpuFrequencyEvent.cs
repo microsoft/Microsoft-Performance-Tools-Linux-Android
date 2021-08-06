@@ -7,7 +7,6 @@ namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
     /// A event that represents the frequency and state of a CPU at a point in time
-    /// info.
     /// </summary>
     public readonly struct PerfettoCpuFrequencyEvent
     {

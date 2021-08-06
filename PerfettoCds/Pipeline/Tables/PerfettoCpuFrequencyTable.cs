@@ -19,7 +19,7 @@ namespace PerfettoCds.Pipeline.Tables
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{5b9689d4-617c-484c-9b0a-c7242565ec13}"),
             "Perfetto CPU Frequency Events",
-            "Displays CPU frequency scaling events and idle states for CPUs",
+            "Displays CPU frequency scaling events and idle states for CPUs. Idle CPUs show a frequency of 0.",
             "Perfetto",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuFrequencyEventCookerPath }
         );

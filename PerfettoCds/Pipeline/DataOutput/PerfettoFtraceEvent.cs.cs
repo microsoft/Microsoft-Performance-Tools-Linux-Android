@@ -7,7 +7,6 @@ namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
     /// An Ftrace event with extra args
-    /// info.
     /// </summary>
     public readonly struct PerfettoFtraceEvent
     {

@@ -13,7 +13,7 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a Ftrace Perfetto event
+    /// Pulls data from multiple individual SQL tables and joins them to create an Ftrace Perfetto event
     /// </summary>
     public sealed class PerfettoFtraceEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
@@ -73,7 +73,8 @@ namespace PerfettoCds.Pipeline.DataCookers
 
                 List<string> argKeys = new List<string>();
                 List<string> values = new List<string>();
-                // Each event has multiple of these "debug annotations". They get stored in lists
+
+                // Each event has multiple of these arguments. They get stored in lists
                 foreach (var arg in result.args)
                 {
                     argKeys.Add(arg.ArgKey);

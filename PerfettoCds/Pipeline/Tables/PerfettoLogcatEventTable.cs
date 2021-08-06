@@ -20,9 +20,9 @@ namespace PerfettoCds.Pipeline.Tables
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{1b25fe8d-887c-4de9-850f-284eb4c28ad7}"),
-            "Perfetto Logcat Events",
+            "Android Logcat Events",
             "All logcat events/messages in the Perfetto trace",
-            "Perfetto",
+            "Android",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
         );
 
