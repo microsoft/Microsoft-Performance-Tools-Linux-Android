@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
   <Target Name="CopyRulesToTarget" AfterTargets="Build">

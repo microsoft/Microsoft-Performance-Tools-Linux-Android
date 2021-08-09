@@ -62,8 +62,6 @@ namespace PerfettoCds.Pipeline.Tables
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.CpuSchedEventCookerPath, nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
 
-            var test = events.OrderBy(x => x.Cpu);
-
             // Start construction of the column order. Pivot on process and thread
             List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>()
             {

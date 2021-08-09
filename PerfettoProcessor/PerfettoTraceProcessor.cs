@@ -261,6 +261,18 @@ namespace PerfettoProcessor
                                 case PerfettoSchedSliceEvent.Key:
                                     ev = new PerfettoSchedSliceEvent();
                                     break;
+                                case PerfettoAndroidLogEvent.Key:
+                                    ev = new PerfettoAndroidLogEvent();
+                                    break;
+                                case PerfettoRawEvent.Key:
+                                    ev = new PerfettoRawEvent();
+                                    break;
+                                case PerfettoCounterEvent.Key:
+                                    ev = new PerfettoCounterEvent();
+                                    break;
+                                case PerfettoCpuCounterTrackEvent.Key:
+                                    ev = new PerfettoCpuCounterTrackEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }
