@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using System;
 using Microsoft.Performance.SDK.Processing;
 
 namespace Utilities

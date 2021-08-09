@@ -34,10 +34,12 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public ProcessedEventData<PerfettoCpuFrequencyEvent> CpuFrequencyEvents { get; }
 
-        // CPU frequency related constants
-        private const string CpuIdleString = "cpuidle";
-        private const string CpuFreqString = "cpufreq";
-        private const long BackToNoIdleLong = 4294967295;
+        /// Frequency scaling related constants. See docs/data-sources/cpu-freq in the Perfetto repo
+        // String constants that define the types of CpuCounterTrack events
+        private const string CpuIdleString = "cpuidle"; // Cpu is transitioning in/out of idle
+        private const string CpuFreqString = "cpufreq"; // Cpu is changing frequency
+        // This value for a 'cpuidle' event indicates the CPU is going back to not-idle.
+        private const long BackToNotIdleCode = 4294967295;
 
         public PerfettoCpuFrequencyEventCooker() : base(PerfettoPluginConstants.CpuFrequencyEventCookerPath)
         { 
@@ -84,7 +86,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     bool isIdle = true;
 
                     // This means the CPU is going back to non-idle at the last frequency
-                    if (result.counter.FloatValue == BackToNoIdleLong && name == CpuIdleString)
+                    if (result.counter.FloatValue == BackToNotIdleCode && name == CpuIdleString)
                     {
                         frequency = lastFreq;
                         isIdle = false;
