@@ -32,6 +32,8 @@ namespace PerfettoCds.Pipeline.DataOutput
         // From Thread table
         public string Thread { get; }
 
+        public string Provider { get; }
+
         public PerfettoGenericEvent(string eventName, 
             string type, 
             TimestampDelta duration, 
@@ -42,7 +44,8 @@ namespace PerfettoCds.Pipeline.DataOutput
             List<string> values,
             List<string> argKeys,
             string process,
-            string thread)
+            string thread,
+            string provider)
         {
             this.EventName = eventName;
             this.Type = type;
@@ -55,6 +58,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             this.ArgKeys = argKeys;
             this.Process = process;
             this.Thread = thread;
+            this.Provider = provider;
         }
     }
 }
