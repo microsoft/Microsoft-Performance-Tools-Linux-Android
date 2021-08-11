@@ -21,7 +21,7 @@ Perfetto does not surface the name of an event's provider. As a workaround, the 
 
 To use:
 1. Your GenericEvents should be instrumented to output debug annotations where the argument key is the string "ProviderGuid" and the argument value is the provider GUID string.
-2. Add an XML file with the exact name "ProviderMapping.xml" to the same directory that contains the Perfetto plugin binaries. That directory should contain "PerfettoCds.dll". The XML schema should look like the following. The "DebugAnnotationKey" attribute is optional. That specifies which debug annotation key to look for. It defaults to "ProviderGuid". Add an EventProvider node for each Provider you want mapped.
+2. Add an XML file with the exact name "ProviderMapping.xml" to the same directory that contains the Perfetto plugin binaries. That directory is the one containing "PerfettoCds.dll". The XML schema should look like the following. The "DebugAnnotationKey" attribute is optional. That specifies which debug annotation key to look for. It defaults to "ProviderGuid". Add an EventProvider node for each Provider you want mapped.
 
         <?xml version="1.0" encoding="utf-8"?>
         <EventProviders DebugAnnotationKey="MyCustomDebugAnnotationKey">
