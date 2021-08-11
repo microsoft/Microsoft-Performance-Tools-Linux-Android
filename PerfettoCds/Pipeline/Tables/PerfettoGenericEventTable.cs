@@ -59,7 +59,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration ProviderColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{e7d08f97-f52c-4686-bc49-737f7a6a8bbb}"), "Provider", "Provider name of the event"),
-            new UIHints { Width = 210 });
+            new UIHints { Width = 240 });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
@@ -68,7 +68,7 @@ namespace PerfettoCds.Pipeline.Tables
             int maxFieldCount = Math.Min(AbsoluteMaxFields, tableData.QueryOutput<int>(
                 new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.MaximumEventFieldCount))));
 
-            bool hasProviderMapping = tableData.QueryOutput<bool>(
+            bool hasProviders = tableData.QueryOutput<bool>(
                 new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.HasProviders)));
 
             // Get data from the cooker
@@ -139,7 +139,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(providerColumn);
 
             // The provider column is optionally populated depending on whether or not the user specified a ProviderGUID mapping file
-            ProviderColumn.DisplayHints.IsVisible = hasProviderMapping;
+            ProviderColumn.DisplayHints.IsVisible = hasProviders;
 
             // Add the field columns, with column names depending on the given event
             for (int index = 0; index < maxFieldCount; index++)

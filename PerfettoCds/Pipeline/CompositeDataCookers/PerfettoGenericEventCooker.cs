@@ -16,6 +16,9 @@ using System.IO;
 
 namespace PerfettoCds.Pipeline.DataCookers
 {
+    /// <summary>
+    /// XML deserialized EventProvider
+    /// </summary>
     public class EventProvider
     {
         [XmlAttribute("Id")]
@@ -24,6 +27,9 @@ namespace PerfettoCds.Pipeline.DataCookers
         public string Guid { get; set; }
     }
 
+    /// <summary>
+    /// Deserialized root of the ProviderGUID XML file
+    /// </summary>
     [XmlRoot("EventProviders")]
     public class EventProvidersRoot
     {
@@ -91,7 +97,7 @@ namespace PerfettoCds.Pipeline.DataCookers
         }
 
         /// <summary>
-        /// The user can specify a ProviderMapping.xml file that contains a mapping between a Provider name and the provider GUID
+        /// The user can specify a ProviderMapping.xml file that contains a mapping between a Provider name and the Provider GUID
         /// Check for the file in the assembly directory and load the mappings
         /// </summary>
         private void TryLoadProviderGuidXml()
