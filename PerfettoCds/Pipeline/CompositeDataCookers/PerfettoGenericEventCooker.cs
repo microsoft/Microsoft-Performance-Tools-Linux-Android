@@ -30,8 +30,8 @@ namespace PerfettoCds.Pipeline.DataCookers
         [XmlElement("EventProvider")]
         public EventProvider[] EventProviders { get; set; }
 
-        [XmlAttribute("DebugAnnotationName")]
-        public string DebugAnnotationName { get; set; }
+        [XmlAttribute("DebugAnnotationKey")]
+        public string DebugAnnotationKey { get; set; }
     }
 
     /// <summary>
@@ -64,12 +64,22 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public int MaximumEventFieldCount { get; private set; }
 
+        /// <summary>
+        /// Whether or not there are any provider fields set
+        /// </summary>
         [DataOutput]
-        public bool HasProviderMapping { get; private set; }
+        public bool HasProviders { get; private set; }
 
+        /// <summary>
+        /// A mapping between a provider GUID and the provider string name
+        /// </summary>
         private Dictionary<Guid, string> ProviderGuidMapping;
 
-        private string ProviderDebugAnnotationName = "providerguid";
+        // Look for this debug annotation key when looking for provider GUIDs
+        private string ProviderDebugAnnotationKey = "providerguid";
+
+        // The name of the optional ProviderGuid mapping file
+        private const string ProviderMappingXmlFilename = "ProviderMapping.xml";
 
         public PerfettoGenericEventCooker() : base(PerfettoPluginConstants.GenericEventCookerPath)
         {
@@ -80,10 +90,14 @@ namespace PerfettoCds.Pipeline.DataCookers
             TryLoadProviderGuidXml();
         }
 
+        /// <summary>
+        /// The user can specify a ProviderMapping.xml file that contains a mapping between a Provider name and the provider GUID
+        /// Check for the file in the assembly directory and load the mappings
+        /// </summary>
         private void TryLoadProviderGuidXml()
         {
             var pluginDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var providerMappingXmlFile = System.IO.Path.Combine(pluginDir, "ProviderMapping.xml");
+            var providerMappingXmlFile = System.IO.Path.Combine(pluginDir, ProviderMappingXmlFilename);
 
             if (File.Exists(providerMappingXmlFile))
             {
@@ -94,14 +108,15 @@ namespace PerfettoCds.Pipeline.DataCookers
                         XmlSerializer serializer = new XmlSerializer(typeof(EventProvidersRoot));
                         var result = (EventProvidersRoot)serializer.Deserialize(reader);
 
-                        if (result.DebugAnnotationName != null)
+                        // The user can set an optional custom debug annotation key
+                        if (result.DebugAnnotationKey != null)
                         {
-                            this.ProviderDebugAnnotationName = result.DebugAnnotationName.ToLower();
+                            this.ProviderDebugAnnotationKey = result.DebugAnnotationKey.ToLower();
                         }
 
                         if (result.EventProviders.Length == 0)
                         {
-                            Console.Error.WriteLine("Error: No Provider GUID entries found. Please check your input XML");
+                            Console.Error.WriteLine($"Error: No Provider GUID entries found. Please check your {ProviderMappingXmlFilename}");
                         }
                         else
                         {
@@ -158,12 +173,16 @@ namespace PerfettoCds.Pipeline.DataCookers
                     {
                         case "string":
                             values.Add(arg.StringValue);
-                            if (arg.ArgKey.ToLower().Contains(ProviderDebugAnnotationName))
+
+                            // Check if there are mappings present and if the arg key is the keyword we're looking for
+                            if (ProviderGuidMapping.Count > 0 && arg.ArgKey.ToLower().Contains(ProviderDebugAnnotationKey))
                             {
+                                // The value for this key was flagged as containing a provider GUID that needs to be mapped to its provider name
+                                // Check if the mapping exists
                                 Guid guid = new Guid(arg.StringValue);
                                 if (ProviderGuidMapping.ContainsKey(guid))
                                 {
-                                    HasProviderMapping = true;
+                                    HasProviders = true;
                                     provider = ProviderGuidMapping[guid];
                                 }
                             }
