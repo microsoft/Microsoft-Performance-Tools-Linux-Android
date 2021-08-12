@@ -3,15 +3,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
 using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoProcessor;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace PerfettoCds.Pipeline.DataCookers
 {
+    /// <summary>
+    /// XML deserialized EventProvider
+    /// </summary>
+    public class EventProvider
+    {
+        [XmlAttribute("Id")]
+        public string Provider { get; set; }
+        [XmlAttribute("Name")] 
+        public string Guid { get; set; }
+    }
+
+    /// <summary>
+    /// Deserialized root of the ProviderGUID XML file
+    /// </summary>
+    [XmlRoot("EventProviders")]
+    public class EventProvidersRoot
+    {
+        [XmlElement("EventProvider")]
+        public EventProvider[] EventProviders { get; set; }
+
+        [XmlAttribute("DebugAnnotationKey")]
+        public string DebugAnnotationKey { get; set; }
+    }
+
     /// <summary>
     /// Pulls data from multiple individual SQL tables and joins them to create a Generic Peretto event
     /// </summary>
@@ -42,10 +70,74 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public int MaximumEventFieldCount { get; private set; }
 
+        /// <summary>
+        /// Whether or not there are any provider fields set
+        /// </summary>
+        [DataOutput]
+        public bool HasProviders { get; private set; }
+
+        /// <summary>
+        /// A mapping between a provider GUID and the provider string name
+        /// </summary>
+        private Dictionary<Guid, string> ProviderGuidMapping;
+
+        // Look for this debug annotation key when looking for provider GUIDs
+        private string ProviderDebugAnnotationKey = "providerguid";
+
+        // The name of the optional ProviderGuid mapping file
+        private const string ProviderMappingXmlFilename = "ProviderMapping.xml";
+
         public PerfettoGenericEventCooker() : base(PerfettoPluginConstants.GenericEventCookerPath)
         {
             this.GenericEvents =
                 new ProcessedEventData<PerfettoGenericEvent>();
+            this.ProviderGuidMapping = new Dictionary<Guid, string>();
+
+            TryLoadProviderGuidXml();
+        }
+
+        /// <summary>
+        /// The user can specify a ProviderMapping.xml file that contains a mapping between a Provider name and the Provider GUID
+        /// Check for the file in the assembly directory and load the mappings
+        /// </summary>
+        private void TryLoadProviderGuidXml()
+        {
+            var pluginDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var providerMappingXmlFile = System.IO.Path.Combine(pluginDir, ProviderMappingXmlFilename);
+
+            if (File.Exists(providerMappingXmlFile))
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(providerMappingXmlFile))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(EventProvidersRoot));
+                        var result = (EventProvidersRoot)serializer.Deserialize(reader);
+
+                        // The user can set an optional custom debug annotation key
+                        if (result.DebugAnnotationKey != null)
+                        {
+                            this.ProviderDebugAnnotationKey = result.DebugAnnotationKey.ToLower();
+                        }
+
+                        if (result.EventProviders.Length == 0)
+                        {
+                            Console.Error.WriteLine($"Error: No Provider GUID entries found. Please check your {ProviderMappingXmlFilename}");
+                        }
+                        else
+                        {
+                            foreach(var provider in result.EventProviders)
+                            {
+                                this.ProviderGuidMapping.Add(new Guid(provider.Guid), provider.Provider);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"Error processing Provider GUID XML file: {e.Message}");
+                }
+            }
         }
 
         public void OnDataAvailable(IDataExtensionRetrieval requiredData)
@@ -76,6 +168,7 @@ namespace PerfettoCds.Pipeline.DataCookers
             {
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
 
+                string provider = string.Empty;
                 List<string> argKeys = new List<string>();
                 List<string> values = new List<string>();
                 // Each event has multiple of these "debug annotations". They get stored in lists
@@ -86,6 +179,19 @@ namespace PerfettoCds.Pipeline.DataCookers
                     {
                         case "string":
                             values.Add(arg.StringValue);
+
+                            // Check if there are mappings present and if the arg key is the keyword we're looking for
+                            if (ProviderGuidMapping.Count > 0 && arg.ArgKey.ToLower().Contains(ProviderDebugAnnotationKey))
+                            {
+                                // The value for this key was flagged as containing a provider GUID that needs to be mapped to its provider name
+                                // Check if the mapping exists
+                                Guid guid = new Guid(arg.StringValue);
+                                if (ProviderGuidMapping.ContainsKey(guid))
+                                {
+                                    HasProviders = true;
+                                    provider = ProviderGuidMapping[guid];
+                                }
+                            }
                             break;
                         case "bool":
                         case "int":
@@ -114,7 +220,8 @@ namespace PerfettoCds.Pipeline.DataCookers
                    values,
                    argKeys,
                    string.Format($"{result.process.Name} {result.process.Pid}"),
-                   string.Format($"{result.thread.Name} {result.thread.Tid}")
+                   string.Format($"{result.thread.Name} {result.thread.Tid}"),
+                   provider
                 );
                 this.GenericEvents.AddEvent(ev);
             }

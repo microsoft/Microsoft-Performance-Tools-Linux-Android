@@ -24,8 +24,8 @@ namespace PerfettoProcessor
         // Highest ports can go
         private const int PortMax = 65535;
 
-        // HTTP request denied takes about 3 seconds so time out after about 2 minutes
-        private const int MaxRetryLimit = 40;
+        // HTTP request denied takes about 3 seconds so time out after about 5 minutes
+        private const int MaxRetryLimit = 100;
 
         /// <summary>
         /// Sends an RPC request to trace_processor_shell. This utilizies the bidirectional pipe that exists with the /rpc endpoint.
