@@ -11,6 +11,7 @@ namespace PerfettoProcessor
 
         public static string SqlQuery = "select ts, prio, tag, msg, utid from android_logs";
         public long Timestamp { get; set; }
+        public long RelativeTimestamp { get; set; }
         public long Priority { get; set; }
         public string PriorityString { get; set; }
         public string Tag { get; set; }

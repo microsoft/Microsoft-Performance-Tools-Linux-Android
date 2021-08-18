@@ -273,6 +273,12 @@ namespace PerfettoProcessor
                                 case PerfettoCpuCounterTrackEvent.Key:
                                     ev = new PerfettoCpuCounterTrackEvent();
                                     break;
+                                case PerfettoClockSnapshotEvent.Key:
+                                    ev = new PerfettoClockSnapshotEvent();
+                                    break;
+                                case PerfettoTraceBoundsEvent.Key:
+                                    ev = new PerfettoTraceBoundsEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }

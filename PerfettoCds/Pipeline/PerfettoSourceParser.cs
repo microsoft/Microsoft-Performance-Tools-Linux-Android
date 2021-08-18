@@ -33,6 +33,12 @@ namespace PerfettoCds
         private IProgress<int> Progress;
         private double CurrentProgress;
 
+        public Timestamp FirstEventTimestamp { get; private set; }
+
+        public Timestamp LastEventTimestamp { get; private set; }
+
+        public DateTime FirstEventWallClock { get; private set; }
+
         /// <summary>
         /// Increase the progress percentage by a fixed percent
         /// </summary>
@@ -66,8 +72,12 @@ namespace PerfettoCds
             this.Progress = progress;
             PerfettoTraceProcessor traceProc = new PerfettoTraceProcessor();
 
-            Timestamp? traceStartTime = null;
-            Timestamp? traceEndTime = null;
+            Timestamp firstSnapTime = Timestamp.MaxValue;
+            Timestamp lastSnapTime = Timestamp.MinValue;
+            Timestamp traceBoundsStart = Timestamp.MaxValue;
+            Timestamp traceBoundsEnd = Timestamp.MinValue;
+            Timestamp traceStartTime = Timestamp.MinValue;
+            DateTime? traceStartDateTime = null;
 
             try
             {
@@ -86,14 +96,38 @@ namespace PerfettoCds
                 // that get used by data cookers
                 void EventCallback(PerfettoSqlEvent ev)
                 {
-                    if (ev.GetType() == typeof(PerfettoSliceEvent))
+                    // Get all the timings we need from the snapshot events
+                    if (ev.GetType() == typeof(PerfettoClockSnapshotEvent))
                     {
-                        // We get the timestamps used for displaying these events from the slice event
-                        if (traceStartTime == null)
+                        var clockSnapshot = (PerfettoClockSnapshotEvent)ev;
+
+                        // Each "snapshot" is a collection of timings at a point of time in a trace. Each snapshot has a snapshot_ID
+                        // that is incremented started from 0.
+
+                        // SnapshotId of 0 indicates the first clock snapshot. This corresponds with the start of the trace
+                        if (clockSnapshot.SnapshotId == 0 && clockSnapshot.ClockName == PerfettoClockSnapshotEvent.REALTIME)
                         {
-                            traceStartTime = new Timestamp(((PerfettoSliceEvent)ev).Timestamp);
+                            // Convert from Unix time in nanoseconds to a DateTime
+                            traceStartDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                            traceStartDateTime = traceStartDateTime.Value.AddSeconds(clockSnapshot.ClockValue / 1000000000);
                         }
-                        traceEndTime = new Timestamp(((PerfettoSliceEvent)ev).Timestamp);
+                        else if (clockSnapshot.SnapshotId == 0 && clockSnapshot.ClockName == PerfettoClockSnapshotEvent.BOOTTIME)
+                        {
+                            // Capture the relative start time of the trace
+                            firstSnapTime = new Timestamp(clockSnapshot.Timestamp);
+                        }
+                        if (clockSnapshot.ClockName == PerfettoClockSnapshotEvent.BOOTTIME)
+                        {
+                            // Events are ordered ASCENDING so keep overwritting and the last event is the actual end time
+                            lastSnapTime = new Timestamp(clockSnapshot.Timestamp);
+                        }
+                    }
+                    else if (ev.GetType() == typeof(PerfettoTraceBoundsEvent))
+                    {
+                        // The trace_bounds table stores a single event with the timestamps of the first and last events
+                        var traceBounds = (PerfettoTraceBoundsEvent)ev;
+                        traceBoundsStart = new Timestamp(traceBounds.StartTimestamp);
+                        traceBoundsEnd = new Timestamp(traceBounds.EndTimestamp);
                     }
 
                     PerfettoSqlEventKeyed newEvent = new PerfettoSqlEventKeyed(ev.GetEventKey(), ev);
@@ -105,6 +139,8 @@ namespace PerfettoCds
                 // Perform the base queries for all the events we need
                 List<PerfettoSqlEvent> eventsToQuery = new List<PerfettoSqlEvent>
                 {
+                    new PerfettoTraceBoundsEvent(),
+                    new PerfettoClockSnapshotEvent(),
                     new PerfettoSliceEvent(),
                     new PerfettoArgEvent(),
                     new PerfettoThreadTrackEvent(),
@@ -119,7 +155,7 @@ namespace PerfettoCds
 
                 // Increment progress for each table queried.
                 double queryProgressIncrease = 99.0 / eventsToQuery.Count;
-
+                int cnt = 0;
                 foreach (var query in eventsToQuery)
                 {
                     logger.Verbose($"Querying for {query.GetEventKey()} using SQL query: {query.GetSqlQuery()}");
@@ -132,17 +168,71 @@ namespace PerfettoCds
                     logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
 
                     IncreaseProgress(queryProgressIncrease);
+
+                    if (++cnt == 2)
+                    {
+                        // Snapshot timings and trace_bounds timings sometimes disagree. Take the lowest start time and highest start time
+                        // to ensure that our range covers as much as possible
+                        Timestamp startTime = Timestamp.Min(firstSnapTime, traceBoundsStart);
+                        // TODO explain
+                        var startDelta = startTime - firstSnapTime;
+                        Timestamp endTime = Timestamp.Max(lastSnapTime, traceBoundsEnd);
+                        Timestamp delta = new Timestamp(endTime.ToNanoseconds - startTime.ToNanoseconds);
+                        //Timestamp startTime = firstSnapTime;
+                        //Timestamp endTime = lastSnapTime;
+                        this.FirstEventTimestamp = startTime;
+                        this.LastEventTimestamp = endTime;
+
+                        if (startTime != Timestamp.MaxValue && endTime != Timestamp.MinValue && traceStartDateTime.HasValue)
+                        {
+                            logger.Verbose($"Perfetto trace UTC start: {traceStartDateTime.Value.ToUniversalTime().ToString()}");
+
+                            //this.FirstEventWallClock = traceStartDateTime.Value;
+                            //this.dataSourceInfo = new DataSourceInfo(startTime.ToNanoseconds, endTime.ToNanoseconds, traceStartDateTime.Value.ToUniversalTime());
+
+                            // TODO explain DateTime accuracy of 100 nanosecond chunks
+                            DateTime adjusted = traceStartDateTime.Value.AddTicks(startDelta.ToNanoseconds / 100);
+                            this.FirstEventWallClock = traceStartDateTime.Value;
+                            this.dataSourceInfo = new DataSourceInfo(0, delta.ToNanoseconds, adjusted.ToUniversalTime());
+                        }
+                        else
+                        {
+                            throw new Exception("Start and end time were not able to be determined by the Perfetto trace");
+                        }
+                    }
                 }
 
                 // Done with the SQL trace processor
                 traceProc.CloseTraceConnection();
 
-                if (traceStartTime.HasValue)
-                {
-                    // Use DateTime.Now as the wall clock time. This doesn't matter for displaying events on a relative timescale
-                    // TODO Actual wall clock time needs to be gathered from SQL somehow
-                    this.dataSourceInfo = new DataSourceInfo(traceStartTime.Value.ToNanoseconds, traceEndTime.Value.ToNanoseconds, DateTime.Now.ToUniversalTime());
-                }
+                //// Snapshot timings and trace_bounds timings sometimes disagree. Take the lowest start time and highest start time
+                //// to ensure that our range covers as much as possible
+                //Timestamp startTime = Timestamp.Min(firstSnapTime, traceBoundsStart);
+                //// TODO explain
+                //var startDelta = startTime - firstSnapTime;
+                //Timestamp endTime = Timestamp.Max(lastSnapTime, traceBoundsEnd);
+                //Timestamp delta = new Timestamp(endTime.ToNanoseconds - startTime.ToNanoseconds);
+                ////Timestamp startTime = firstSnapTime;
+                ////Timestamp endTime = lastSnapTime;
+                //this.FirstEventTimestamp = startTime;
+                //this.LastEventTimestamp = endTime;
+
+                //if (startTime != Timestamp.MaxValue && endTime != Timestamp.MinValue && traceStartDateTime.HasValue)
+                //{
+                //    logger.Verbose($"Perfetto trace UTC start: {traceStartDateTime.Value.ToUniversalTime().ToString()}");
+
+                //    //this.FirstEventWallClock = traceStartDateTime.Value;
+                //    //this.dataSourceInfo = new DataSourceInfo(startTime.ToNanoseconds, endTime.ToNanoseconds, traceStartDateTime.Value.ToUniversalTime());
+
+                //    // TODO explain DateTime accuracy of 100 nanosecond chunks
+                //    DateTime adjusted = traceStartDateTime.Value.AddTicks(startDelta.ToNanoseconds / 100);
+                //    this.FirstEventWallClock = traceStartDateTime.Value;
+                //    this.dataSourceInfo = new DataSourceInfo(0, delta.ToNanoseconds, adjusted.ToUniversalTime());
+                //}
+                //else
+                //{
+                //    throw new Exception("Start and end time were not able to be determined by the Perfetto trace");
+                //}
             }
             catch (Exception e)
             {
