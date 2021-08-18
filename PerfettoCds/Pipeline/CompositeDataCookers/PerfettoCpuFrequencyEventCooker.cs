@@ -110,7 +110,6 @@ namespace PerfettoCds.Pipeline.DataCookers
                     (
                         frequency,
                         result.cpuCounterTrack.Cpu,
-                        //new Timestamp(result.counter.Timestamp),
                         new Timestamp(result.counter.RelativeTimestamp),
                         new TimestampDelta(nextTs - ts),
                         name,

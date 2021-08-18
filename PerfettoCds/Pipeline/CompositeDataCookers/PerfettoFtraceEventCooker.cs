@@ -101,7 +101,6 @@ namespace PerfettoCds.Pipeline.DataCookers
 
                 PerfettoFtraceEvent ev = new PerfettoFtraceEvent
                 (
-                    //new Timestamp(result.raw.Timestamp),
                     new Timestamp(result.raw.RelativeTimestamp),
                     result.process.Name,
                     result.thread.Name,

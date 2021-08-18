@@ -38,7 +38,6 @@ namespace PerfettoCds
 
         public override DataProcessingResult CookDataElement(PerfettoSqlEventKeyed perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
         {
-            //this.RawEvents.AddEvent((PerfettoRawEvent)perfettoEvent.SqlEvent);
             var newEvent = (PerfettoRawEvent)perfettoEvent.SqlEvent;
             newEvent.RelativeTimestamp = newEvent.Timestamp - context.FirstEventTimestamp.ToNanoseconds;
             this.RawEvents.AddEvent(newEvent);

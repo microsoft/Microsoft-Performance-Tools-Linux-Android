@@ -35,10 +35,6 @@ namespace PerfettoCds
 
         public Timestamp FirstEventTimestamp { get; private set; }
 
-        public Timestamp LastEventTimestamp { get; private set; }
-
-        public DateTime FirstEventWallClock { get; private set; }
-
         /// <summary>
         /// Increase the progress percentage by a fixed percent
         /// </summary>
@@ -119,7 +115,7 @@ namespace PerfettoCds
                         }
                         if (clockSnapshot.ClockName == PerfettoClockSnapshotEvent.BOOTTIME)
                         {
-                            // Events are ordered ASCENDING so keep overwritting and the last event is the actual end time
+                            // Events are ordered ASCENDING so keep overwriting and the last event is the actual end time
                             lastSnapTime = new Timestamp(clockSnapshot.Timestamp);
                         }
                     }
@@ -186,7 +182,6 @@ namespace PerfettoCds
                         // Get the delta between the first and last event
                         var eventDelta = new Timestamp(lastEventTime.ToNanoseconds - firstEventTime.ToNanoseconds);
                         this.FirstEventTimestamp = firstEventTime;
-                        this.LastEventTimestamp = lastEventTime;
 
                         if (firstEventTime != Timestamp.MaxValue && lastEventTime != Timestamp.MinValue && traceStartDateTime.HasValue)
                         {
@@ -195,7 +190,6 @@ namespace PerfettoCds
                             DateTime adjustedTraceStartDateTime = traceStartDateTime.Value.AddTicks(startDelta.ToNanoseconds / 100);
 
                             logger.Verbose($"Perfetto trace UTC start: {adjustedTraceStartDateTime.ToUniversalTime().ToString()}");
-                            this.FirstEventWallClock = adjustedTraceStartDateTime;
                             this.dataSourceInfo = new DataSourceInfo(0, eventDelta.ToNanoseconds, adjustedTraceStartDateTime.ToUniversalTime());
                         }
                         else

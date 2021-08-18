@@ -67,7 +67,6 @@ namespace PerfettoCds.Pipeline.DataCookers
             {
                 PerfettoLogcatEvent ev = new PerfettoLogcatEvent
                 (
-                    //new Timestamp(result.log.Timestamp),
                     new Timestamp(result.log.RelativeTimestamp),
                     result.process.Name,
                     result.thread.Name,
