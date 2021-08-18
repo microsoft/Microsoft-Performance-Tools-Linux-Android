@@ -176,15 +176,15 @@ namespace PerfettoCds
                     // If we have all the timing data we need, create the DataSourceInfo
                     if (++cnt == minQueriesForTimings)
                     {
-                        // Get the delta between the first event time and the first snapshot time
-                        var startDelta = firstEventTime - firstSnapTime;
-
-                        // Get the delta between the first and last event
-                        var eventDelta = new Timestamp(lastEventTime.ToNanoseconds - firstEventTime.ToNanoseconds);
-                        this.FirstEventTimestamp = firstEventTime;
-
                         if (firstEventTime != Timestamp.MaxValue && lastEventTime != Timestamp.MinValue && traceStartDateTime.HasValue)
                         {
+                            // Get the delta between the first event time and the first snapshot time
+                            var startDelta = firstEventTime - firstSnapTime;
+
+                            // Get the delta between the first and last event
+                            var eventDelta = new Timestamp(lastEventTime.ToNanoseconds - firstEventTime.ToNanoseconds);
+                            this.FirstEventTimestamp = firstEventTime;
+
                             // The starting UTC time is from the snapshot. We need to adjust it based on when the first event happened
                             // The highest precision DateTime has is ticks (a tick is a group of 100 nanoseconds)
                             DateTime adjustedTraceStartDateTime = traceStartDateTime.Value.AddTicks(startDelta.ToNanoseconds / 100);
