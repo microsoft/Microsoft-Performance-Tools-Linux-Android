@@ -80,6 +80,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     argKeys.Add(arg.ArgKey);
                     switch (arg.ValueType)
                     {
+                        case "json":
                         case "string":
                             values.Add(arg.StringValue);
                             break;

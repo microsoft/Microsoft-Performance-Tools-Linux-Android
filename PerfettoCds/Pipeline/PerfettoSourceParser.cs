@@ -176,8 +176,13 @@ namespace PerfettoCds
                     // If we have all the timing data we need, create the DataSourceInfo
                     if (++cnt == minQueriesForTimings)
                     {
-                        if (firstEventTime != Timestamp.MaxValue && lastEventTime != Timestamp.MinValue && traceStartDateTime.HasValue)
+                        if (firstEventTime != Timestamp.MaxValue && lastEventTime != Timestamp.MinValue)
                         {
+                            if (!traceStartDateTime.HasValue)
+                            {
+                                logger.Warn($"Absolute trace start time can't be determined. Setting trace start time to now");
+                                traceStartDateTime = DateTime.Now;
+                            }
                             // Get the delta between the first event time and the first snapshot time
                             var startDelta = firstEventTime - firstSnapTime;
 
