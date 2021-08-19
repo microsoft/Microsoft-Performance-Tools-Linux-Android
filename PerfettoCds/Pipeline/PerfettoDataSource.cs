@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PerfettoCds
 {
-    [CustomDataSource("9fc8515e-9206-4690-b14a-3e7b54745c5f", "Perfetto DataSource", "Processes Perfetto trace files")]
+    [CustomDataSource("9fc8515e-9206-4690-b14a-3e7b54745c5f", "PerfettoTraceDataSource", "Processes Perfetto trace files")]
     [FileDataSource(".perfetto-trace", "Perfetto trace files")]
     public sealed class PerfettoDataSource : CustomDataSourceBase
     {
@@ -70,7 +70,7 @@ namespace PerfettoCds
         }
     }
 
-    [CustomDataSource("99e4223a-6211-4ce7-a0da-917a893797f2", "Perfetto DataSource", "Processes Perfetto trace files")]
+    [CustomDataSource("99e4223a-6211-4ce7-a0da-917a893797f2", "PftraceDataSource", "Processes .pftrace Perfetto trace files")]
     [FileDataSource(".pftrace", "Perfetto trace files")]
     public sealed class PfDataSource : CustomDataSourceBase
     {
