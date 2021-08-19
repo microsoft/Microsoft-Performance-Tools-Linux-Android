@@ -15,6 +15,7 @@ namespace PerfettoProcessor
         public long Duration { get; set; }
         public long ArgSetId { get; set; }
         public long Timestamp { get; set; }
+        public long RelativeTimestamp { get; set; }
         public string Category { get; set; }
         public long TrackId { get; set; }
 

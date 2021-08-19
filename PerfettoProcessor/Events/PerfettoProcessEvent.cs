@@ -16,7 +16,9 @@ namespace PerfettoProcessor
         public long Pid { get; set; }
         public string Name { get; set; }
         public long StartTimestamp { get; set; }
+        public long RelativeStartTimestamp { get; set; }
         public long EndTimestamp{ get; set; }
+        public long RelativeEndTimestamp { get; set; }
         public long ParentUpid { get; set; }
         public long Uid { get; set; }
         public long AndroidAppId { get; set; }

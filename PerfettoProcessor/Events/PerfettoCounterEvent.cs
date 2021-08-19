@@ -11,6 +11,7 @@ namespace PerfettoProcessor
 
         public static string SqlQuery = "select ts, track_id, value from counter";
         public long Timestamp { get; set; }
+        public long RelativeTimestamp { get; set; }
         public long TrackId { get; set; }
         public double FloatValue { get; set; }
         public long IntValue { get; set; }

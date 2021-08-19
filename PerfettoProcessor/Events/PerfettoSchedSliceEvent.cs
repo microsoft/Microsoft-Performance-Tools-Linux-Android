@@ -12,6 +12,7 @@ namespace PerfettoProcessor
 
         public long Utid { get; set; }
         public long Timestamp { get; set; }
+        public long RelativeTimestamp { get; set; }
         public long Duration { get; set; }
         public long Cpu { get; set; }
         public string EndStateCode { get; set; }
