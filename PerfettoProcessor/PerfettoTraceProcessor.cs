@@ -279,6 +279,9 @@ namespace PerfettoProcessor
                                 case PerfettoTraceBoundsEvent.Key:
                                     ev = new PerfettoTraceBoundsEvent();
                                     break;
+                                case PerfettoMetadataEvent.Key:
+                                    ev = new PerfettoMetadataEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }

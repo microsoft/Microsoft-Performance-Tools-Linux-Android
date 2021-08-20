@@ -93,8 +93,9 @@ namespace PerfettoCds
                 // that get used by data cookers
                 void EventCallback(PerfettoSqlEvent ev)
                 {
+                    var eventType = ev.GetType();
                     // Get all the timings we need from the snapshot events
-                    if (ev.GetType() == typeof(PerfettoClockSnapshotEvent))
+                    if (eventType == typeof(PerfettoClockSnapshotEvent))
                     {
                         var clockSnapshot = (PerfettoClockSnapshotEvent)ev;
 
@@ -119,12 +120,26 @@ namespace PerfettoCds
                             lastSnapTime = new Timestamp(clockSnapshot.Timestamp);
                         }
                     }
-                    else if (ev.GetType() == typeof(PerfettoTraceBoundsEvent))
+                    else if (eventType == typeof(PerfettoTraceBoundsEvent))
                     {
                         // The trace_bounds table stores a single row with the timestamps of the first and last events of the trace
                         var traceBounds = (PerfettoTraceBoundsEvent)ev;
                         firstEventTime = new Timestamp(traceBounds.StartTimestamp);
                         lastEventTime = new Timestamp(traceBounds.EndTimestamp);
+                    }
+                    else if (eventType == typeof(PerfettoMetadataEvent))
+                    {
+                        var metadata = (PerfettoMetadataEvent)ev;
+
+                        if (!traceStartDateTime.HasValue && metadata.Name == "cr-trace-capture-datetime")
+                        {
+                            DateTime chromiumTraceCaptureDateTime;
+                            if (DateTime.TryParse(metadata.StrValue, out chromiumTraceCaptureDateTime))
+                            {
+                                // Need to explicitly say time is in UTC, otherwise it will be interpreted as local
+                                traceStartDateTime = DateTime.FromFileTimeUtc(chromiumTraceCaptureDateTime.ToFileTimeUtc());
+                            }
+                        }
                     }
 
                     PerfettoSqlEventKeyed newEvent = new PerfettoSqlEventKeyed(ev.GetEventKey(), ev);
@@ -138,6 +153,7 @@ namespace PerfettoCds
                 {
                     new PerfettoTraceBoundsEvent(),
                     new PerfettoClockSnapshotEvent(),
+                    new PerfettoMetadataEvent(),
                     new PerfettoSliceEvent(),
                     new PerfettoArgEvent(),
                     new PerfettoThreadTrackEvent(),
@@ -157,7 +173,7 @@ namespace PerfettoCds
                 // gather the timing information. We want the timing information before we start to process the rest of the events,
                 // so that the source cookers can calculate relative timestamps
                 int cnt = 0;
-                int minQueriesForTimings = 2; // Need TraceBounds and ClockSnapshot to have been processed
+                int minQueriesForTimings = 3; // Need TraceBounds and ClockSnapshot to have been processed
 
                 // Run all the queries
                 foreach (var query in eventsToQuery)
@@ -183,6 +199,7 @@ namespace PerfettoCds
                                 logger.Warn($"Absolute trace start time can't be determined. Setting trace start time to now");
                                 traceStartDateTime = DateTime.Now;
                             }
+
                             // Get the delta between the first event time and the first snapshot time
                             var startDelta = firstEventTime - firstSnapTime;
 
