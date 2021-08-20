@@ -169,11 +169,11 @@ namespace PerfettoCds
                 // Increment progress for each table queried.
                 double queryProgressIncrease = 99.0 / eventsToQuery.Count;
 
-                // We need to run the first 2 queries (TraceBounds and ClockSnapshot) in order to have all the information we need to
+                // We need to run the first 3 queries (TraceBounds, ClockSnapshot, Metadata) in order to have all the information we need to
                 // gather the timing information. We want the timing information before we start to process the rest of the events,
                 // so that the source cookers can calculate relative timestamps
                 int cnt = 0;
-                int minQueriesForTimings = 3; // Need TraceBounds and ClockSnapshot to have been processed
+                int minQueriesForTimings = 3; // Need TraceBounds, ClockSnapshot, Metadata to have been processed
 
                 // Run all the queries
                 foreach (var query in eventsToQuery)
