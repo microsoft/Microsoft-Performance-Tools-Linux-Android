@@ -16,10 +16,6 @@ namespace PerfettoUnitTest
 
         private static RuntimeExecutionResults RuntimeExecutionResults;
 
-        public PerfettoUnitTest()
-        {
-        }
-
         public static void LoadTrace(string traceFilename)
         {
             lock (IsTraceProcessedLock)
@@ -80,7 +76,6 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.FtraceEventCookerPath,
                     nameof(PerfettoFtraceEventCooker.FtraceEvents)));
-
             Assert.IsTrue(ftraceEventData.Count == 35877);
             Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper");
             Assert.IsTrue(ftraceEventData[1].Cpu == 3);
@@ -89,7 +84,6 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuFrequencyEventCookerPath,
                     nameof(PerfettoCpuFrequencyEventCooker.CpuFrequencyEvents)));
-
             Assert.IsTrue(cpuFreqEventData.Count == 11855);
             Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
             Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
