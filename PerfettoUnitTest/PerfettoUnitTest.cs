@@ -12,114 +12,109 @@ namespace PerfettoUnitTest
     [TestClass]
     public class PerfettoUnitTest
     {
-        public static bool IsTraceProcessed = false;
         public static object IsTraceProcessedLock = new object();
 
         private static RuntimeExecutionResults RuntimeExecutionResults;
 
         public PerfettoUnitTest()
         {
-            LoadTrace(@"..\..\..\..\TestData\Perfetto\test_trace.perfetto-trace");
         }
 
         public static void LoadTrace(string traceFilename)
         {
             lock (IsTraceProcessedLock)
             {
-                if (!IsTraceProcessed)
-                {
-                    // Input data
-                    var perfettoDataPath = new FileInfo(traceFilename);
-                    Assert.IsTrue(perfettoDataPath.Exists);
+                // Input data
+                var perfettoDataPath = new FileInfo(traceFilename);
+                Assert.IsTrue(perfettoDataPath.Exists);
 
-                    // Start the SDK engine
-                    var runtime = Engine.Create();
-                    runtime.AddFile(perfettoDataPath.FullName);
+                // Start the SDK engine
+                var runtime = Engine.Create();
+                runtime.AddFile(perfettoDataPath.FullName);
 
-                    // Enable the source data cookers
-                    runtime.EnableCooker(PerfettoPluginConstants.SliceCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.ArgCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.ThreadTrackCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.ThreadCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.ProcessCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.SchedSliceCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
+                // Enable the source data cookers
+                runtime.EnableCooker(PerfettoPluginConstants.SliceCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ArgCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ThreadTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ThreadCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.SchedSliceCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
 
-                    // Enable the composite data cookers
-                    runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.CpuSchedEventCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
-                    runtime.EnableCooker(PerfettoPluginConstants.CpuFrequencyEventCookerPath);
+                // Enable the composite data cookers
+                runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CpuSchedEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CpuFrequencyEventCookerPath);
 
-                    // Process our data.
-                    RuntimeExecutionResults = runtime.Process();
-                    IsTraceProcessed = true;
-                }
+                // Process our data.
+                RuntimeExecutionResults = runtime.Process();
             }
         }
 
-        /// <summary>
-        /// PerfettoGenericEvents gather data from multiple source cookers. Valid PerfettoGenericEvents ensure
-        /// that the cookers below it also worked successfully.
-        /// </summary>
         [TestMethod]
-        public void TestPerfettoGenericEvents()
+        public void TestAndroidTrace()
         {
-            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\test_trace.perfetto-trace");
+
+            var genericEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.GenericEventCookerPath,
                     nameof(PerfettoGenericEventCooker.GenericEvents)));
+            Assert.IsTrue(genericEventData.Count == 1);
+            Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
+            Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest 20855");
 
-            Assert.IsTrue(eventData.Count == 1);
-
-            Assert.IsTrue(eventData[0].EventName == "Hello Trace");
-
-            Assert.IsTrue(eventData[0].Thread == "TraceLogApiTest 20855");
-        }
-
-        [TestMethod]
-        public void TestPerfettoCpuSchedEvents()
-        {
-            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
+            var cpuSchedEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuSchedEventCookerPath,
                     nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
+            Assert.IsTrue(cpuSchedEventData.Count == 15267);
+            Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
+            Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
 
-            Assert.IsTrue(eventData.Count == 15267);
-
-            Assert.IsTrue(eventData[0].ThreadName == "kworker/u17:9");
-            Assert.IsTrue(eventData[1].EndState == "Task Dead");
-        }
-
-        [TestMethod]
-        public void TestPerfettoFtraceEvents()
-        {
-            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
+            var ftraceEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.FtraceEventCookerPath,
                     nameof(PerfettoFtraceEventCooker.FtraceEvents)));
 
-            Assert.IsTrue(eventData.Count == 35877);
+            Assert.IsTrue(ftraceEventData.Count == 35877);
+            Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper");
+            Assert.IsTrue(ftraceEventData[1].Cpu == 3);
 
-            Assert.IsTrue(eventData[0].ThreadName == "swapper");
-            Assert.IsTrue(eventData[1].Cpu == 3);
-        }
-
-        [TestMethod]
-        public void TestCpuFrequencyEvents()
-        {
-            var eventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
+            var cpuFreqEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuFrequencyEventCookerPath,
                     nameof(PerfettoCpuFrequencyEventCooker.CpuFrequencyEvents)));
 
-            Assert.IsTrue(eventData.Count == 11855);
+            Assert.IsTrue(cpuFreqEventData.Count == 11855);
+            Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
+            Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
+        }
 
-            Assert.IsTrue(eventData[0].CpuNum == 3);
-            Assert.IsTrue(eventData[1].Name == "cpuidle");
+        [TestMethod]
+        public void TestChromeTrace()
+        {
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\chrome.pftrace");
+
+            var genericEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.GenericEventCookerPath,
+                    nameof(PerfettoGenericEventCooker.GenericEvents)));
+            Assert.IsTrue(genericEventData.Count == 144194);
+            Assert.IsTrue(genericEventData[0].EventName == "WebContentsImpl::DidReceiveInputEvent");
+            Assert.IsTrue(genericEventData[0].Thread == "CrBrowserMain 14448");
+
+            var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.LogcatEventCookerPath,
+                    nameof(PerfettoLogcatEventCooker.LogcatEvents)));
+            Assert.IsTrue(logcatEventData.Count == 43);
+            Assert.IsTrue(logcatEventData[0].Message == "type: 97 score: 0.8\n");
+            Assert.IsTrue(logcatEventData[1].ProcessName == "Browser");
         }
     }
 }
