@@ -82,7 +82,7 @@ namespace PerfettoProcessor
                     return !rpcResult.Msg[0].Status.HumanReadableVersion.Contains("Perfetto");
                 }
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 // Exception here is the connection refused message, meaning the RPC server has not been initialized
                 // Which means this port is not being used by another trace_processor_shell

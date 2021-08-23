@@ -25,4 +25,17 @@
     <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
   </ItemGroup>
 
+  <Target Name="DownloadTraceProcessorShell">
+    <!-- Download the trace_processor.exe from Perfetto's GitHub release and copy it to the output directory-->
+    <DownloadFile SourceUrl="https://github.com/google/perfetto/releases/download/v18.0/windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Unzip SourceFiles="$(TargetDir)\windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(TargetDir)\windows-amd64\trace_processor_shell.exe" DestinationFolder="$(TargetDir)" />
+    <RemoveDir Directories="$(TargetDir)\windows-amd64"/>
+    <Delete Files="$(TargetDir)\windows-amd64.zip"/>
+  </Target>
+
+  <Target Name="CopyRulesToTarget" AfterTargets="Build">
+    <!-- Download trace_processor_shell to the output directory if it doesn't exist -->
+    <CallTarget Condition="!Exists('$(TargetDir)\trace_processor_shell.exe')" Targets="DownloadTraceProcessorShell"  />
+  </Target>
 </Project>

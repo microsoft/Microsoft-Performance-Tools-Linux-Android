@@ -101,7 +101,7 @@ jobs:
       inputs:
         SourceFolder: 'PerfettoCds/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/PerfettoAddin'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Perfetto'
         
     - task: CopyFiles@2
       displayName: Copy Cloud-init Build to Output Artifacts
