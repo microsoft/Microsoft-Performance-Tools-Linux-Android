@@ -1,4 +1,4 @@
-# Microsoft Performance Tools Linux
+# Microsoft Performance Tools Linux / Android
 
 > This repo contains various Linux and Android Performance Analysis tools built with the [Microsoft Performance Toolkit SDK](https://github.com/microsoft/microsoft-performance-toolkit-sdk).
 
@@ -6,9 +6,15 @@
 
 >Not only are the raw logs parsed, but a lot of smart post processing / correlation is done to make your life easier as a perf analyst. We hope you can solve & debug tough issues on you or your customers systems with this toolset!
 
-> Tracing supported: [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc), [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock), [Perfetto](https://perfetto.dev/)
+> Tracing supported: 
+- [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
+- [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock)
+- [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks)
 
-> Logs supported: [Dmesg](https://en.wikipedia.org/wiki/Dmesg), [Cloud-Init](https://cloud-init.io/), [WaLinuxAgent](https://github.com/Azure/WALinuxAgent)
+> Logs supported: 
+- [Dmesg](https://en.wikipedia.org/wiki/Dmesg)
+- [Cloud-Init](https://cloud-init.io/)
+- [WaLinuxAgent](https://github.com/Azure/WALinuxAgent)
 
 **Optional** WPA GUI:
 ![WpaLinux](Images/WpaLinux.JPG)
@@ -78,6 +84,8 @@ The tools can be run in several modes:
 - Perfetto
   - Android - Please see [Record traces on Android](https://perfetto.dev/docs/quickstart/android-tracing)
   - Linux - Please see [Record traces on Linux](https://perfetto.dev/docs/quickstart/linux-tracing)
+  - Chromium - In chrome://tracing/ Record choose "Use protobuf" OR use UI at https://ui.perfetto.dev/
+    - Also see https://www.chromium.org/developers/how-tos/trace-event-profiling-tool/recording-tracing-runs
 
 # How to load the logs in the UI
 Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
