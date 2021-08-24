@@ -56,6 +56,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PerfCds\PerfCds.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

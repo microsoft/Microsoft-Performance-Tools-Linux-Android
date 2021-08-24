@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.17.3">
+      <GeneratePathProperty>true</GeneratePathProperty>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.11-preview-g61bc0d83f6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
+  <Target Name="DownloadTraceProcessorShell">
+    <!-- Download the trace_processor.exe from Perfetto's GitHub release and copy it to the output directory-->
+    <DownloadFile SourceUrl="https://github.com/google/perfetto/releases/download/v18.0/windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Unzip SourceFiles="$(TargetDir)\windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(TargetDir)\windows-amd64\trace_processor_shell.exe" DestinationFolder="$(TargetDir)" />
+    <RemoveDir Directories="$(TargetDir)\windows-amd64"/>
+    <Delete Files="$(TargetDir)\windows-amd64.zip"/>
+  </Target>
+
+  <Target Name="CopyRulesToTarget" AfterTargets="Build">
+    <Copy SourceFiles="$(PkgGoogle_Protobuf)\lib\netstandard2.0\Google.Protobuf.dll" DestinationFolder="$(TargetDir)" />
+    <!-- Download trace_processor_shell to the output directory if it doesn't exist -->
+    <CallTarget Condition="!Exists('$(TargetDir)\trace_processor_shell.exe')" Targets="DownloadTraceProcessorShell"  />
+  </Target>
+</Project>

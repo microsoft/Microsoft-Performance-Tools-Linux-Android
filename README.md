@@ -1,12 +1,12 @@
 # Microsoft Performance Tools Linux
 
-> This repo contains various Linux Performance Analysis tools built with the [Microsoft Performance Toolkit SDK](https://github.com/microsoft/microsoft-performance-toolkit-sdk).
+> This repo contains various Linux and Android Performance Analysis tools built with the [Microsoft Performance Toolkit SDK](https://github.com/microsoft/microsoft-performance-toolkit-sdk).
 
 > Tools are built with open source .NET Core and can be run on the cmd-line or in the WPA GUI. All the logs that are supported are open source. 
 
 >Not only are the raw logs parsed, but a lot of smart post processing / correlation is done to make your life easier as a perf analyst. We hope you can solve & debug tough issues on you or your customers systems with this toolset!
 
-> Tracing supported: [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc), [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock)
+> Tracing supported: [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc), [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock), [Perfetto](https://perfetto.dev/)
 
 > Logs supported: [Dmesg](https://en.wikipedia.org/wiki/Dmesg), [Cloud-Init](https://cloud-init.io/), [WaLinuxAgent](https://github.com/Azure/WALinuxAgent)
 
@@ -73,18 +73,25 @@ The tools can be run in several modes:
 - (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
 
 # How to capture a trace or logs
-Please see [Linux Trace Log Capture](LinuxTraceLogCapture.md)
+- Linux 
+  - Please see [Linux Trace Log Capture](LinuxTraceLogCapture.md)
+- Perfetto
+  - Android - Please see [Record traces on Android](https://perfetto.dev/docs/quickstart/android-tracing)
+  - Linux - Please see [Record traces on Linux](https://perfetto.dev/docs/quickstart/linux-tracing)
 
 # How to load the logs in the UI
 Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
 
 - LTTng - If you just need to open only a LTTng trace by itself in folder format
   - WPA -> Open -> Folder (Select CTF folder)
-  - Note: Requires >= WPA ADK xxxxx - WPA 10.?.?.?
-- Unified (LTTng or other multiple different logs files together)
-  - If you want to open other logs together in single timeline - Copy other Linux logs you want to open to single folder
+    - Note: Requires >= WPA ADK xxxxx - WPA 10.?.?.?
+- Perfetto
+  - WPA -> Open -> Folder (Select Perfetto trace file)
+    - Note: The Perfetto plugin explicitly supports the _.perfetto-trace_ and _.pftrace_ file types, but it does support more (e.g. Protobuf, Chrome JSON). You just need to rename to one of the stated supported types
+- Unified (LTTng, Perfetto, or other multiple different logs files together)
+  - If you want to open multiple logs together in single timeline - Copy all trace files and logs you want to open to single folder
   - Example: You want to open in the same timeline: LTTng, Perf CPU Sampling, Dmesg
-  - Ensure that the Linux CTF folder/trace is zipped and renamed to .ctf in the same folder (hack so open Unified works)
+    - Ensure that the Linux CTF folder/trace is zipped and renamed to .ctf in the same folder (hack so open Unified works)
   - WPA -> File -> Open -> Multi-select all files and choose "Open Unified"
 
 # How do I use WPA in general?
