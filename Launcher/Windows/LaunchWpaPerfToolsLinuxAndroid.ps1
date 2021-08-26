@@ -3,7 +3,7 @@
 
 <#
     .Synopsis
-      Launches WPA UI with the Microsoft-Performance-Tools-Linux plugins
+      Launches WPA UI with the Microsoft-Performance-Tools-Linux-Android plugins
 #>
 
 Param( 
@@ -29,25 +29,25 @@ Write-Host "Using root folder as:" $LinuxPerfToolsPluginFolder
 
 if ($LinuxPerfToolsPluginFolder)
 {
-    $localLinuxPerfWpaAddins = Join-Path -Path $LinuxPerfToolsPluginFolder -ChildPath "MicrosoftPerfToolkitAddins\LTTngDataExtensions" # TODO - Remove LTTngDataExtensions path to include all plugins - Bug only 1 extension is supported at a time in current ADK DROP"
+    $localLinuxPerfWpaAddins = Join-Path -Path $LinuxPerfToolsPluginFolder -ChildPath "MicrosoftPerfToolkitAddins"
 }
 
 Write-Host "Using plugins folder as:" $localLinuxPerfWpaAddins
 
 if ($LinuxPerfToolsPluginFolder -and -not (Test-Path -Path $localLinuxPerfWpaAddins))
 {
-    Write-Host "Please download the latest release from https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases"
-    Start-Process "https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases"
+    Write-Host "Please download the latest release from https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android/releases"
+    Start-Process "https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android/releases"
     Pause
     Exit
 }
 
-$wpaProcess = "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe"
+$wpaProcess = "wpa.exe"
 
 if (-not (Test-Path -Path $wpaProcess))
 {
-    Write-Host "Please download the latest ADK Preview and install Windows Performance Toolkit"
-    Start-Process "https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK"
+    Write-Host "Please download the latest Store Windows Performance Analyzer (Preview)"
+    Start-Process "https://www.microsoft.com/en-us/p/windows-performance-analyzer-preview/9n58qrw40dfw"
     Pause
     Exit
 }
@@ -72,9 +72,7 @@ if ($InputFile)
 }
 else
 {
-    # TODO - Add back in for just launch - Current ADK DROP has bug to not allow launch w/o -i
-    #$startInfo.Arguments = "-addsearchdir `"$localLinuxPerfWpaAddins`""
-    Write-Error "Current ADK DROP has bug to not allow launch WPA UI just configured with plugins (use -i and -addsearchdir)"
+    $startInfo.Arguments = "-addsearchdir `"$localLinuxPerfWpaAddins`""
     Pause
     Exit
 }

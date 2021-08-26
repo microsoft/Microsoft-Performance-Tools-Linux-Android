@@ -34,49 +34,53 @@ If you want to see a demo or get more in-depth info on using these tools check o
 - [Visual Studio](https://visualstudio.microsoft.com/), [VSCode](https://visualstudio.microsoft.com/), or your favorite editor!
 
 # Download
-See [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases)
+- **For plugins Download** see [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases)
+
+- **(Windows Only GUI - Install)** Using the WPA GUI to load these tools as plugins
+  - Download the latest Store [Windows Performance Analyzer (Preview)](https://www.microsoft.com/en-us/p/windows-performance-analyzer-preview/9n58qrw40dfw)
 
 # How to run the tools
 The tools can be run in several modes:
 
-- Cross-platform with .NET Core
+- **Cross-platform with .NET Core** (Any OS that .NET Core supports)
   - Used as a library to process traces / logs programatically
     - Examples: 
     - [LTTng 1](LTTngDriver/Program.cs), [LTTng 2](LTTngDataExtUnitTest/LTTngUnitTest.cs)
     - [Perf](PerfUnitTest/PerfUnitTest.cs)
     - [LinuxLogs](LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.cs)
+    - [Perfetto](PerfettoUnitTest/PerfettoUnitTest.cs)
   - With a driver program for example dumping to screen or text format
     - ./LTTngDriver.exe LTTngKernelTraceFolder
     - ./LTTngDriver.exe LTTng-Kernel-Trace.ctf (trace folder is zipped and renamed to .ctf)
-- (Windows Only - Install) Using the WPA GUI to load these tools as plugins
-  - Download the latest Windows Performance Toolkit (WPT) that comes in the [ADK Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK)
-	- Note: In the future, the WPA team plans to make it easier to install WPA outside of the ADK
-  - Install Windows Performance Toolkit ![Windows Performance Toolkit](Images/ADK_WPT.jpg)
-    - Verify that this WPA version supports plugins
-    - In Command Prompt
+- **(Windows Only - Run)** Using the WPA GUI to load these tools as plugins
+  - WPA needs to be told where to find these additional plugins. 
+  - Using [Windows Launcher](Launcher/Windows/LaunchWpaPerfToolsLinuxAndroid.ps1) script
+    ```powershell
+    .\LaunchWpaPerfToolsLinuxAndroid.ps1 -i c:\PATH\TO\lttng-kernel-trace.ctf
+    ```
+    - -LinuxPerfToolsPluginFolder path may need to be specified if not auto-found correctly
+  - In Command Prompt with -addsearchdir and -i trace file:
+      ```dos
+        wpa.exe -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-0.9\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
+     ```
+  - OR with Env Variable to pick file from UI (Env variable not currently working in current ADK version)
+       ```dos
+        SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-0.9\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins
+        wpa.exe
+      ```
+  - Optional Troubleshooting - Verify that this WPA version supports plugins
+    - In Command Prompt - Example:
         ```dos
-        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe" /?
+        wpa.exe /?
+        "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22000.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpa.exe" /?
         ```
     - Verify that these 2 command line WPA options are supported:
       - OPTIONS: **-addsearchdir PATH**. Adds a directory path to the plugin search path. ....
       - ENVIRONMENT VARIABLES: **WPA_ADDITIONAL_SEARCH_DIRECTORIES** - A semicolon (;) delimited list of additional directories to search for plugins. Equivalent to the -addsearchdir option.
-- (Windows Only - Run) Using the WPA GUI to load these tools as plugins
-  - WPA needs to be told where to find these additional plugins. 
-  - Using [Windows Launcher](Launcher/Windows/LaunchWpaPerfToolsLinux.ps1). -LinuxPerfToolsPluginFolder path may need to be specified
-    ```powershell
-    .\LaunchWpaPerfToolsLinux.ps1 -i c:\PATH\TO\lttng-kernel-trace.ctf
+- **(Windows) Command-line dumping to a text format** based on the WPA UI (say CSV) (wpaexporter.exe)
+    ```dos
+    "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22000.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpaexporter.exe" -addsearchdir PLUGIN_FOLDER -i traceFile
     ```
-  - In Command Prompt with -addsearchdir and -i trace file:
-      ```dos
-        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe" -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-0.8\Microsoft-Performance-Tools-Linux\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
-     ```
-  - OR with Env Variable to pick file from UI (Env variable not currently working in current ADK version)
-       ```dos
-        SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-0.8\Microsoft-Performance-Tools-Linux\MicrosoftPerfToolkitAddins
-        "C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\wpa.exe"
-      ```
-
-- (Coming soon) (Windows) Command-line dumping to a text format (say CSV)
 
 # How to capture a trace or logs
 - Linux 
@@ -88,15 +92,15 @@ The tools can be run in several modes:
     - Also see https://www.chromium.org/developers/how-tos/trace-event-profiling-tool/recording-tracing-runs
 
 # How to load the logs in the UI
-Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
 
 - LTTng - If you just need to open only a LTTng trace by itself in folder format
   - WPA -> Open -> Folder (Select CTF folder)
-    - Note: Requires >= WPA ADK xxxxx - WPA 10.?.?.?
+    - Note: Requires >= 0.9 release AND WPA >= 10.6.20.1
 - Perfetto
   - WPA -> Open -> Folder (Select Perfetto trace file)
     - Note: The Perfetto plugin explicitly supports the _.perfetto-trace_ and _.pftrace_ file types, but it does support more (e.g. Protobuf, Chrome JSON). You just need to rename to one of the stated supported types
 - Unified (LTTng, Perfetto, or other multiple different logs files together)
+  - Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
   - If you want to open multiple logs together in single timeline - Copy all trace files and logs you want to open to single folder
   - Example: You want to open in the same timeline: LTTng, Perf CPU Sampling, Dmesg
     - Ensure that the Linux CTF folder/trace is zipped and renamed to .ctf in the same folder (hack so open Unified works)

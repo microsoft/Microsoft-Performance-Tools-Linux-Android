@@ -55,7 +55,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfettoProcessor", "Perfet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfettoUnitTest", "PerfettoUnitTest\PerfettoUnitTest.csproj", "{CF89184C-8CE8-4656-9C5C-3F6C547EF2A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{0BA62F1B-1456-48FD-B2DE-C9FE1CB94B8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{0BA62F1B-1456-48FD-B2DE-C9FE1CB94B8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Launcher", "Launcher", "{6A9515FC-D4B2-4221-8E74-78E7AFF0E421}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{DB7FCF02-C949-4545-B58C-F514E85AB1FA}"
+	ProjectSection(SolutionItems) = preProject
+		Launcher\Windows\LaunchWpaPerfToolsLinuxAndroid.bat = Launcher\Windows\LaunchWpaPerfToolsLinuxAndroid.bat
+		Launcher\Windows\LaunchWpaPerfToolsLinuxAndroid.ps1 = Launcher\Windows\LaunchWpaPerfToolsLinuxAndroid.ps1
+		Launcher\Windows\MicrosoftPerfToolsLinuxAndroid.url = Launcher\Windows\MicrosoftPerfToolsLinuxAndroid.url
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -158,6 +167,7 @@ Global
 		{04455C36-F127-4D40-BCB3-78E7DE21E70E} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{F910A8EA-9B0F-4BDA-87D4-0765EE973421} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
+		{DB7FCF02-C949-4545-B58C-F514E85AB1FA} = {6A9515FC-D4B2-4221-8E74-78E7AFF0E421}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E96603EA-8E1D-4AA9-A474-D267A116C316}
