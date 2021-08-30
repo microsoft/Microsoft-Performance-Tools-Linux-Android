@@ -13,9 +13,9 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a a CPU usage event.
-    /// CPU usage events include multiple CPU counters polled throughout the trace from  the /proc/stat file
-    /// Percent use values are calculated by comparing the difference in the counter between 2 adjacent events
+    /// Pulls data from multiple individual SQL tables and joins them to create a CPU usage event.
+    /// CPU usage events include multiple CPU counters polled throughout the trace from  the /proc/stat file.
+    /// Percent use values are calculated by comparing the difference in the counter between 2 adjacent events:
     /// time2.counterAPercent = (time2.counterA - time1.counterA) / (time2 - time1) * 100
     /// </summary>
     public sealed class PerfettoCpuUsageEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
@@ -61,7 +61,7 @@ namespace PerfettoCds.Pipeline.DataCookers
             // The names and cores are stored in the cpu_counter_track table and the actual counter values are stored
             // in the counter table
             // 
-            // We will create one PerfettoCpuUsageEvent for each time that contains all 7 counter values
+            // We will create one PerfettoCpuUsageEvent for each time grouping that contains all 7 counter values
 
             foreach (var cpuGroup in joined.GroupBy(x => x.cpuCounterTrack.Cpu))
             {
@@ -120,6 +120,8 @@ namespace PerfettoCds.Pipeline.DataCookers
 
                     if (lastEvent == null)
                     {
+                        // Can't determine % change from the first event because we don't have the previous event to compare to.
+                        // Don't graph this event
                         lastEvent = new PerfettoCpuUsageEvent
                         (
                             cpu, startTimestamp, duration, userNs, userNiceNs, systemModeNs, idleNs, ioWaitNs, irqNs, softIrqNs
