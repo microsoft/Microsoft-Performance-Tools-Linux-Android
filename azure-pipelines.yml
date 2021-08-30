@@ -40,7 +40,7 @@ jobs:
       displayName: DotNetCore restore
       inputs:
         command: 'restore'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux.sln'
+        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
         verbosityRestore: $(Debug.NuGetVerbosityRestore)
         includeNugetOrg: true
 
@@ -73,7 +73,7 @@ jobs:
       displayName: DotNetCore test
       inputs:
         command: 'test'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux.sln'
+        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
     
     - task: CopyFiles@2
       displayName: Copy PerfDataExtensions Build to Output Artifacts
