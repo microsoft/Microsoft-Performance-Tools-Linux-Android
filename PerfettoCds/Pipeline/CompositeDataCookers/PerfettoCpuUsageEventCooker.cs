@@ -34,13 +34,6 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public ProcessedEventData<PerfettoCpuUsageEvent> CpuUsageEvents { get; }
 
-        /// Frequency scaling related constants. See docs/data-sources/cpu-freq in the Perfetto repo
-        // String constants that define the types of CpuCounterTrack events
-        private const string CpuIdleString = "cpuidle"; // Cpu is transitioning in/out of idle
-        private const string CpuFreqString = "cpufreq"; // Cpu is changing frequency
-        // This value for a 'cpuidle' event indicates the CPU is going back to not-idle.
-        private const long BackToNotIdleCode = 4294967295;
-
         public PerfettoCpuUsageEventCooker() : base(PerfettoPluginConstants.CpuUsageEventCookerPath)
         { 
             this.CpuUsageEvents =
@@ -55,7 +48,7 @@ namespace PerfettoCds.Pipeline.DataCookers
 
             // Join them all together
             // Counter table contains the frequency, timestamp
-            // CpuCounterTrack contains the event type and CPU number
+            // CpuCounterTrack contains the event type and CPU number TODO
             // Event type is either cpuidle or cpufreq. See below for further explanation
             var joined = from counter in counterData
                          join cpuCounterTrack in cpuCounterTrackData on counter.TrackId equals cpuCounterTrack.Id
@@ -63,14 +56,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                          orderby counter.Timestamp ascending
                          select new { counter, cpuCounterTrack };
 
-            // See the following Perfetto docs for their documentation: repo_root/docs/data-sources/cpu-freq
-
-            // CPU frequency can change and the idle state can change independently of the CPU frequency.
-            // Events are emitted every time a CPU state changes, whether it's an idle change or CPU frequency change
-            // 'cpufreq' events indicate that the CPU is active and the frequency has changed from the previous frequency
-            // 'cpuidle' events with a value of 0 indicate the CPU moving to idle
-            // 'cpuidle' events with a value of 4294967295 indicate the CPU moving back to non-idle at the last specified frequency
-
+            // TODO explain
 
             foreach (var cpuGroup in joined.GroupBy(x => x.cpuCounterTrack.Cpu))
             {
@@ -140,56 +126,13 @@ namespace PerfettoCds.Pipeline.DataCookers
                         (
                             cpu, startTimestamp, duration, userNs, userNiceNs, systemModeNs, idleNs, ioWaitNs, irqNs, softIrqNs, lastEvent.Value
                         );
+                        lastEvent = ev;
                         this.CpuUsageEvents.AddEvent(ev);
                     }
 
                 }
             }
 
-            // Create events out of the joined results
-            //foreach (var cpuGroup in joined.GroupBy(x=>x.cpuCounterTrack.Cpu))
-            //{
-            //    foreach (var nameGroup in cpuGroup.GroupBy(y => y.cpuCounterTrack.Name))
-            //    {
-            //        PerfettoCpuUsageEvent? lastEvent = null;
-
-            //        for (int i = 0; i < nameGroup.Count(); i++)
-            //        {
-            //            var result = nameGroup.ElementAt(i);
-
-            //            var value = result.counter.FloatValue;
-            //            var name = result.cpuCounterTrack.Name;
-            //            var ts = result.counter.Timestamp;
-            //            double percentage = 0;
-
-            //            long nextTs = ts;
-            //            if (i < nameGroup.Count() - 1)
-            //            {
-            //                // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
-            //                // is needed for WPA line graphs
-            //                nextTs = nameGroup.ElementAt(i + 1).counter.Timestamp;
-            //            }
-
-            //            if (lastEvent != null)
-            //            {
-            //                //percentage = (value - lastEvent.Value.Value) / (result.counter.RelativeTimestamp - lastEvent.Value.StartTimestamp.ToNanoseconds);
-            //                percentage *= 100;
-            //            }
-
-            //            //PerfettoCpuUsageEvent ev = new PerfettoCpuUsageEvent
-            //            //(
-            //            //    value,
-            //            //    percentage,
-            //            //    result.cpuCounterTrack.Cpu,
-            //            //    new Timestamp(result.counter.RelativeTimestamp),
-            //            //    new TimestampDelta(nextTs - ts),
-            //            //    name
-            //            //);
-            //            //lastEvent = ev;
-            //            //this.CpuUsageEvents.AddEvent(ev);
-            //        }
-            //    }
-            //}
             this.CpuUsageEvents.FinalizeData();
         }
     }

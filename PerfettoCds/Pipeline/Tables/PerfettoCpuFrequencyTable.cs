@@ -18,7 +18,7 @@ namespace PerfettoCds.Pipeline.Tables
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{5b9689d4-617c-484c-9b0a-c7242565ec13}"),
-            "Perfetto CPU Frequency Events",
+            "Perfetto CPU Frequency Scaling",
             "Displays CPU frequency scaling events and idle states for CPUs. Idle CPUs show a frequency of 0.",
             "Perfetto",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuFrequencyEventCookerPath }
@@ -82,7 +82,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(IsIdleColumn, baseProjection.Compose(x => x.IsIdle));
 
             // We are graphing CPU frequency + duration with MAX accumulation, which gives a steady line graph of the current CPU frequency
-            var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
+            var tableConfig = new TableConfiguration("Perfetto CPU Frequency")
             {
                 Columns = allColumns,
                 Layout = TableLayoutStyle.GraphAndTable,
