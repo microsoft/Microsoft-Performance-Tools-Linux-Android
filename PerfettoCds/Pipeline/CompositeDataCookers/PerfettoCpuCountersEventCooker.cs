@@ -13,16 +13,16 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a CPU usage event.
-    /// CPU usage events include multiple CPU counters polled throughout the trace from  the /proc/stat file.
+    /// Pulls data from multiple individual SQL tables and joins them to create a CPU counters event.
+    /// CPU counters events include multiple CPU counters polled throughout the trace from  the /proc/stat file.
     /// Percent use values are calculated by comparing the difference in the counter between 2 adjacent events:
     /// time2.counterAPercent = (time2.counterA - time1.counterA) / (time2 - time1) * 100
     /// </summary>
-    public sealed class PerfettoCpuUsageEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
+    public sealed class PerfettoCpuCountersEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
-        public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.CpuUsageEventCookerPath;
+        public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.CpuCountersEventCookerPath;
 
-        public string Description => "CPU usage composite cooker";
+        public string Description => "CPU counters composite cooker";
 
         public DataCookerPath Path => DataCookerPath;
 
@@ -34,12 +34,12 @@ namespace PerfettoCds.Pipeline.DataCookers
         };
 
         [DataOutput]
-        public ProcessedEventData<PerfettoCpuUsageEvent> CpuUsageEvents { get; }
+        public ProcessedEventData<PerfettoCpuCountersEvent> CpuCountersEvents { get; }
 
-        public PerfettoCpuUsageEventCooker() : base(PerfettoPluginConstants.CpuUsageEventCookerPath)
+        public PerfettoCpuCountersEventCooker() : base(PerfettoPluginConstants.CpuCountersEventCookerPath)
         { 
-            this.CpuUsageEvents =
-                new ProcessedEventData<PerfettoCpuUsageEvent>();
+            this.CpuCountersEvents =
+                new ProcessedEventData<PerfettoCpuCountersEvent>();
         }
 
         public void OnDataAvailable(IDataExtensionRetrieval requiredData)
@@ -61,12 +61,12 @@ namespace PerfettoCds.Pipeline.DataCookers
             // The names and cores are stored in the cpu_counter_track table and the actual counter values are stored
             // in the counter table
             // 
-            // We will create one PerfettoCpuUsageEvent for each time grouping that contains all 7 counter values
+            // We will create one PerfettoCpuCountersEvent for each time grouping that contains all 7 counter values
 
             foreach (var cpuGroup in joined.GroupBy(x => x.cpuCounterTrack.Cpu))
             {
                 var timeGroups = cpuGroup.GroupBy(z => z.counter.RelativeTimestamp);
-                PerfettoCpuUsageEvent? lastEvent = null;
+                PerfettoCpuCountersEvent? lastEvent = null;
                 for (int i = 0; i < timeGroups.Count(); i++)
                 {
                     var timeGroup = timeGroups.ElementAt(i);
@@ -74,8 +74,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     long nextTs = timeGroup.Key;
                     if (i < timeGroups.Count() - 1)
                     {
-                        // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
-                        // is needed for WPA line graphs
+                        // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration
                         nextTs = timeGroups.ElementAt(i + 1).Key;
                     }
 
@@ -122,25 +121,25 @@ namespace PerfettoCds.Pipeline.DataCookers
                     {
                         // Can't determine % change from the first event because we don't have the previous event to compare to.
                         // Don't graph this event
-                        lastEvent = new PerfettoCpuUsageEvent
+                        lastEvent = new PerfettoCpuCountersEvent
                         (
                             cpu, startTimestamp, duration, userNs, userNiceNs, systemModeNs, idleNs, ioWaitNs, irqNs, softIrqNs
                         );
                     }
                     else
                     {
-                        var ev = new PerfettoCpuUsageEvent
+                        var ev = new PerfettoCpuCountersEvent
                         (
                             cpu, startTimestamp, duration, userNs, userNiceNs, systemModeNs, idleNs, ioWaitNs, irqNs, softIrqNs, lastEvent.Value
                         );
                         lastEvent = ev;
-                        this.CpuUsageEvents.AddEvent(ev);
+                        this.CpuCountersEvents.AddEvent(ev);
                     }
 
                 }
             }
 
-            this.CpuUsageEvents.FinalizeData();
+            this.CpuCountersEvents.FinalizeData();
         }
     }
 }

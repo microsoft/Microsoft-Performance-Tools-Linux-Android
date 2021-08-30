@@ -14,14 +14,14 @@ using System.Linq;
 namespace PerfettoCds.Pipeline.Tables
 {
     [Table]
-    public class PerfettoCpuUsageTable
+    public class PerfettoCpuCountersTable
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{cc2db5d6-5abb-4094-b8c0-475a2f4d9946}"),
-            "Perfetto CPU Usage (coarse)",
+            "Perfetto CPU Counters (coarse)",
             "Displays coarse CPU usage based on /proc/stat counters",
             "Perfetto",
-            requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuUsageEventCookerPath }
+            requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuCountersEventCookerPath }
         );
 
         private static readonly ColumnConfiguration CpuNumColumn = new ColumnConfiguration(
@@ -59,35 +59,35 @@ namespace PerfettoCds.Pipeline.Tables
                 AggregationMode = AggregationMode.Max,
             });
         private static readonly ColumnConfiguration SystemModePercentColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{914976e2-d812-4577-97ae-bf7edfc8b500}"), "SystemModePercentColumn", "Total % time spent running in system/kernel mode"),
+            new ColumnMetadata(new Guid("{914976e2-d812-4577-97ae-bf7edfc8b500}"), "SystemModePercent", "Total % time spent running in system/kernel mode"),
             new UIHints
             {
                 Width = 100,
                 AggregationMode = AggregationMode.Max,
             });
         private static readonly ColumnConfiguration IdlePercentColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{ba945491-c77b-4fe1-b03a-0021d508c3a1}"), "IdlePercentColumn", "Total % time spent in idle task"),
+            new ColumnMetadata(new Guid("{ba945491-c77b-4fe1-b03a-0021d508c3a1}"), "IdlePercent", "Total % time spent in idle task"),
             new UIHints
             {
                 Width = 100,
                 AggregationMode = AggregationMode.Max,
             });
         private static readonly ColumnConfiguration IoWaitPercentColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{2ff90dae-14c0-4fe5-b28b-727eb1325993}"), "IoWaitPercentColumn", "Total % time spent waiting for IO to complete"),
+            new ColumnMetadata(new Guid("{2ff90dae-14c0-4fe5-b28b-727eb1325993}"), "IoWaitPercent", "Total % time spent waiting for IO to complete"),
             new UIHints
             {
                 Width = 100,
                 AggregationMode = AggregationMode.Max,
             });
         private static readonly ColumnConfiguration IrqPercentColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{951074d6-e32a-4144-9409-1f31aa0c3310}"), "IrqPercentColumn", "Total % time spent servicing interrupts"),
+            new ColumnMetadata(new Guid("{951074d6-e32a-4144-9409-1f31aa0c3310}"), "IrqPercent", "Total % time spent servicing interrupts"),
             new UIHints
             {
                 Width = 100,
                 AggregationMode = AggregationMode.Max,
             });
         private static readonly ColumnConfiguration SoftIrqPercentColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{bb18f4c8-2050-4a99-a79d-770d4c0e22e5}"), "SoftIrqPercentColumn", "Total % time spent spent servicing softirqs"),
+            new ColumnMetadata(new Guid("{bb18f4c8-2050-4a99-a79d-770d4c0e22e5}"), "SoftIrqPercent", "Total % time spent spent servicing softirqs"),
             new UIHints
             {
                 Width = 100,
@@ -103,8 +103,8 @@ namespace PerfettoCds.Pipeline.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // Get data from the cooker
-            var events = tableData.QueryOutput<ProcessedEventData<PerfettoCpuUsageEvent>>(
-                new DataOutputPath(PerfettoPluginConstants.CpuUsageEventCookerPath, nameof(PerfettoCpuUsageEventCooker.CpuUsageEvents)));
+            var events = tableData.QueryOutput<ProcessedEventData<PerfettoCpuCountersEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.CpuCountersEventCookerPath, nameof(PerfettoCpuCountersEventCooker.CpuCountersEvents)));
 
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var baseProjection = Projection.Index(events);
@@ -123,7 +123,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
 
             // Only display the total CPU usage column
-            var cpuUsageConfig = new TableConfiguration("Perfetto CPU Usage")
+            var cpuUsageConfig = new TableConfiguration("Perfetto CPU usage")
             {
                 Columns = new[]
                 {
@@ -150,7 +150,7 @@ namespace PerfettoCds.Pipeline.Tables
             cpuUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
 
             // Display all CPU counter columns
-            var allCountersConfig = new TableConfiguration("Perfetto CPU counters")
+            var allCountersConfig = new TableConfiguration("Perfetto CPU Counters - All")
             {
                 Columns = new[]
                 {

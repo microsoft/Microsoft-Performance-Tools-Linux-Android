@@ -30,7 +30,7 @@ namespace PerfettoCds
         public const string LogcatEventCookerId = "PerfettoLogcatEventCooker";
         public const string FtraceEventCookerId = "PerfettoFtraceEventCooker";
         public const string CpuFrequencyEventCookerId = "PerfettoCpuFrequencyEventCooker";
-        public const string CpuUsageEventCookerId = "PerfettoCpuUsageEventCooker";
+        public const string CpuCountersEventCookerId = "PerfettoCpuCountersEventCooker";
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -50,7 +50,7 @@ namespace PerfettoCds
         public const string LogcatEvent = "PerfettoLogcatEvent";
         public const string FtraceEvent = "PerfettoFtraceEvent";
         public const string CpuFrequencyEvent = "PerfettoCpuFrequencyEvent";
-        public const string CpuUsageEvent = "PerfettoCpuUsageEvent";
+        public const string CpuCountersEvent = "PerfettoCpuCountersEvent";
 
         // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =
@@ -85,8 +85,8 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.FtraceEventCookerId);
         public static readonly DataCookerPath CpuFrequencyEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.CpuFrequencyEventCookerId);
-        public static readonly DataCookerPath CpuUsageEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.CpuUsageEventCookerId);
+        public static readonly DataCookerPath CpuCountersEventCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.CpuCountersEventCookerId);
 
     }
 }
