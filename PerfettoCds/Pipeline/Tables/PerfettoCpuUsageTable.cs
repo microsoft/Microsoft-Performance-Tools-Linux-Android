@@ -97,7 +97,7 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{666c7a85-19fe-4ee6-99f3-abc0004e7d57}"), "Count", "Extra column used to create new pivots"),
             new UIHints
             {
-                Width = 80,
+                Width = 60,
             });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
@@ -122,7 +122,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(TotalCpuUsagePercentColumn, baseProjection.Compose(x => x.CpuPercent));
             tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
 
-            // TODO explain
+            // Only display the total CPU usage column
             var cpuUsageConfig = new TableConfiguration("Perfetto CPU Usage")
             {
                 Columns = new[]
@@ -149,7 +149,7 @@ namespace PerfettoCds.Pipeline.Tables
             cpuUsageConfig.AddColumnRole(ColumnRole.ResourceId, CpuNumColumn);
             cpuUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
 
-
+            // Display all CPU counter columns
             var allCountersConfig = new TableConfiguration("Perfetto CPU counters")
             {
                 Columns = new[]

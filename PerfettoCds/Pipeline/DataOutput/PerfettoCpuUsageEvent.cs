@@ -12,6 +12,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp StartTimestamp { get; }
         public TimestampDelta Duration { get; }
 
+        // All the absolute counters from /proc/stat
         public double UserNs { get; }
         public double UserNiceNs { get; }
         public double SystemModeNs { get; }
@@ -20,6 +21,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public double IrqNs { get; }
         public double SoftIrqNs { get; }
 
+        // The % change in counter values
         public double UserPercent { get; }
         public double UserNicePercent { get; }
         public double SystemModePercent { get; }
@@ -28,8 +30,12 @@ namespace PerfettoCds.Pipeline.DataOutput
         public double IrqPercent { get; }
         public double SoftIrqPercent { get; }
 
+        // All counters together except idle. Or (100 - IdlePercent)
         public double CpuPercent { get; }
 
+        /// <summary>
+        /// For populating the current counter values
+        /// </summary>
         public PerfettoCpuUsageEvent(long cpuNum, Timestamp startTimestamp, TimestampDelta duration,
             double userNs,
             double userNiceNs,
@@ -61,6 +67,9 @@ namespace PerfettoCds.Pipeline.DataOutput
             this.SoftIrqPercent = 0;
         }
 
+        /// <summary>
+        /// When we have a previous event to compare to, we can calculate the percent change
+        /// </summary>
         public PerfettoCpuUsageEvent(long cpuNum, Timestamp startTimestamp, TimestampDelta duration,
             double userNs,
             double userNiceNs,

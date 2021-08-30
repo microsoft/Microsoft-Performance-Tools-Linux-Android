@@ -86,7 +86,7 @@ namespace PerfettoCds
         public static readonly DataCookerPath CpuFrequencyEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.CpuFrequencyEventCookerId);
         public static readonly DataCookerPath CpuUsageEventCookerPath =
-    new DataCookerPath(PerfettoPluginConstants.CpuUsageEventCookerId);
+            new DataCookerPath(PerfettoPluginConstants.CpuUsageEventCookerId);
 
     }
 }

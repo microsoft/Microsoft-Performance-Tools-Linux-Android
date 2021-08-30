@@ -13,8 +13,10 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a a CPU frequency event. CPU frequency events
-    /// include the current CPU frequency each CPU is running at and whether or not the CPU is idle
+    /// Pulls data from multiple individual SQL tables and joins them to create a a CPU usage event.
+    /// CPU usage events include multiple CPU counters polled throughout the trace from  the /proc/stat file
+    /// Percent use values are calculated by comparing the difference in the counter between 2 adjacent events
+    /// time2.counterAPercent = (time2.counterA - time1.counterA) / (time2 - time1) * 100
     /// </summary>
     public sealed class PerfettoCpuUsageEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
@@ -47,16 +49,19 @@ namespace PerfettoCds.Pipeline.DataCookers
             var cpuCounterTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoCpuCounterTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.CpuCounterTrackCookerPath, nameof(PerfettoCpuCounterTrackCooker.CpuCounterTrackEvents)));
 
             // Join them all together
-            // Counter table contains the frequency, timestamp
-            // CpuCounterTrack contains the event type and CPU number TODO
-            // Event type is either cpuidle or cpufreq. See below for further explanation
+            // Counter table contains the timestamp and all /proc/stat counters
+            // CpuCounterTrack contains the counter name and CPU core
             var joined = from counter in counterData
                          join cpuCounterTrack in cpuCounterTrackData on counter.TrackId equals cpuCounterTrack.Id
                          where cpuCounterTrack.Name.StartsWith("cpu.times")
                          orderby counter.Timestamp ascending
                          select new { counter, cpuCounterTrack };
 
-            // TODO explain
+            // 7 different CPU counters are polled at regular intervals through the trace, for each CPU core. 
+            // The names and cores are stored in the cpu_counter_track table and the actual counter values are stored
+            // in the counter table
+            // 
+            // We will create one PerfettoCpuUsageEvent for each time that contains all 7 counter values
 
             foreach (var cpuGroup in joined.GroupBy(x => x.cpuCounterTrack.Cpu))
             {
