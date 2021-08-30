@@ -49,7 +49,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration IsIdleColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{1b06c328-0d33-49bb-a1fc-381a4b447493}"), "IsIdle", "Whether or not this CPU is idle"),
+            new ColumnMetadata(new Guid("{628be4e5-1c34-4e6b-8a7b-d08f055ec179}"), "IsIdle", "Whether or not this CPU is idle"),
             new UIHints { Width = 120 });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
