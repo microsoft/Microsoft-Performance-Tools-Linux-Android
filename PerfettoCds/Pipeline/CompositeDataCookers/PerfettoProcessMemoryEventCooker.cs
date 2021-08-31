@@ -13,14 +13,14 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a a CPU frequency event. CPU frequency events
-    /// include the current CPU frequency each CPU is running at and whether or not the CPU is idle
+    /// Pulls data from multiple individual SQL tables and joins them to create a process memory event. Process
+    /// memory events list different memory counts per process
     /// </summary>
     public sealed class PerfettoProcessMemoryEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
         public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.ProcessMemoryEventCookerPath;
 
-        public string Description => "CPU Frequency composite cooker";
+        public string Description => "Process memory composite cooker";
 
         public DataCookerPath Path => DataCookerPath;
 
@@ -49,17 +49,15 @@ namespace PerfettoCds.Pipeline.DataCookers
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
 
             // Join them all together
-            // Counter table contains the frequency, timestamp
-            // CpuCounterTrack contains the event type and CPU number
-            // Event type is either cpuidle or cpufreq. See below for further explanation
+            // Counter table contains the memory count value, timestamp
+            // ProcessCounterTrack contains the UPID and memory type name. All the memory types we care about start with "mem."
+            // Process contains the process name
             var joined = from counter in counterData
                          join processCounterTrack in processCounterTrackData on counter.TrackId equals processCounterTrack.Id
                          join process in processData on processCounterTrack.Upid equals process.Upid
                          where processCounterTrack.Name.StartsWith("mem.")
                          orderby counter.Timestamp ascending
                          select new { counter, processCounterTrack, process };
-
-            // TODO explain
 
             // Create events out of the joined results
             foreach (var processGroup in joined.GroupBy(x => x.processCounterTrack.Upid))
@@ -71,8 +69,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     var timeGroup = timeGroups.ElementAt(i);
 
                     var ts = timeGroup.Key;
-                    var processName = timeGroup.ElementAt(0).process.Name + processGroup.Key;
-                    double virt = 0.0, rss = 0.0, rssAnon = 0.0, rssFile = 0.0, rssShMem = 0.0, rssHwm = 0.0, swap = 0.0, locked = 0.0;
+                    var processName = timeGroup.ElementAt(0).process.Name + " " + processGroup.Key;
                     long nextTs = ts;
                     if (i < timeGroups.Count() - 1)
                     {
@@ -81,6 +78,8 @@ namespace PerfettoCds.Pipeline.DataCookers
                         nextTs = timeGroups.ElementAt(i + 1).Key;
                     }
 
+                    double virt = 0.0, rss = 0.0, rssAnon = 0.0, rssFile = 0.0, rssShMem = 0.0, rssHwm = 0.0, swap = 0.0, locked = 0.0;
+                    // Gather each type of memory
                     foreach (var thing in timeGroup)
                     {
                         switch (thing.processCounterTrack.Name)
@@ -113,53 +112,20 @@ namespace PerfettoCds.Pipeline.DataCookers
                     }
                     PerfettoProcessMemoryEvent ev = new PerfettoProcessMemoryEvent
                     (
-                        0.0,
                         processName,
                         new Timestamp(ts),
-                        "",
                         new TimestampDelta(nextTs - ts),
                         rssAnon,
-                        locked,
                         rssShMem,
                         rssFile,
                         rssHwm,
                         rss,
+                        locked,
                         swap,
                         virt
                     );
                     this.ProcessMemoryEvents.AddEvent(ev);
                 }
-
-                //    foreach (var memoryTypeGroup in processGroup.GroupBy(y => y.processCounterTrack.Name))
-                //    {
-                //        for (int i = 0; i < memoryTypeGroup.Count(); i++)
-                //        {
-                //            var result = memoryTypeGroup.ElementAt(i);
-                //            var ts = result.counter.RelativeTimestamp;
-                //            var processName = result.process.Name;
-                //            var memoryTypeName = result.processCounterTrack.Name;
-                //            var value = result.counter.FloatValue;
-
-                //            long nextTs = ts;
-                //            if (i < memoryTypeGroup.Count() - 1)
-                //            {
-                //                // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
-                //                // is needed for WPA line graphs
-                //                nextTs = memoryTypeGroup.ElementAt(i + 1).counter.RelativeTimestamp;
-                //            }
-                //            PerfettoProcessMemoryEvent ev = new PerfettoProcessMemoryEvent
-                //            (
-                //                value, 
-                //                processName, 
-                //                new Timestamp(ts),
-                //                memoryTypeName,
-                //                new TimestampDelta(nextTs - ts),
-                //                0,0,0,0,0,0,0,0
-                //            );
-                //            this.ProcessMemoryEvents.AddEvent(ev);
-                //        }
-                //    }
-                //}
             }
             this.ProcessMemoryEvents.FinalizeData();
         }

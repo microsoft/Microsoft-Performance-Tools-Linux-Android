@@ -10,36 +10,40 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// </summary>
     public readonly struct PerfettoProcessMemoryEvent
     {
-        public double Value { get; }
         public string ProcessName { get; }
         public Timestamp StartTimestamp { get; }
-        public string MemoryType { get; }
         public TimestampDelta Duration { get; }
 
+        // Resident set size - anonymous memory
         public double RssAnon { get; }
-        public double Locked { get; }
+        // Resident set size - shared memory
         public double RssShMem { get; }
+        // Resident set size - file mappings
         public double RssFile { get; }
+        // Resident set size - Peak (high water mark)
         public double RssHwm { get; }
+        // Resident set size - Sum of anon, file, ShMem
         public double Rss { get; }
+        // Locked memory size
+        public double Locked { get; }
+        // Swapped out VM size by anonymous private pages
         public double Swap { get; }
+        // Peak virtual memory size
         public double Virt { get; }
 
-        public PerfettoProcessMemoryEvent(double value, string processName, Timestamp startTimestamp, string memoryType, TimestampDelta duration,
+        public PerfettoProcessMemoryEvent(string processName, Timestamp startTimestamp, TimestampDelta duration,
             double rssAnon,
-            double locked,
             double rssShMem,
             double rssFile,
             double rssHwm,
             double rss,
+            double locked,
             double swap,
             double virt)
         {
-            this.Value = value;
             this.ProcessName = processName;
             this.StartTimestamp = startTimestamp;
             this.Duration = duration;
-            this.MemoryType = memoryType;
 
             this.RssAnon = rssAnon;
             this.Locked = locked;
