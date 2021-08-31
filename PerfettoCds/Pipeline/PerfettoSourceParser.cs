@@ -163,7 +163,8 @@ namespace PerfettoCds
                     new PerfettoAndroidLogEvent(),
                     new PerfettoRawEvent(),
                     new PerfettoCpuCounterTrackEvent(),
-                    new PerfettoCounterEvent()
+                    new PerfettoCounterEvent(),
+                    new PerfettoProcessCounterTrackEvent()
                 };
 
                 // Increment progress for each table queried.
