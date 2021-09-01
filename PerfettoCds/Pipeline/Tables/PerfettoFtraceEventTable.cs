@@ -21,7 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{96beb7a0-5a9e-4713-b1f7-4ee74d27851c}"),
             "Perfetto Ftrace Events",
             "All Ftrace events in the Perfetto trace",
-            "Perfetto",
+            "Perfetto - Events",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.FtraceEventCookerPath }
         );
 

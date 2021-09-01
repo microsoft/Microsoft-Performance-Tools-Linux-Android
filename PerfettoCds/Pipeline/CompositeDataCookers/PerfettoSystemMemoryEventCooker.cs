@@ -14,7 +14,7 @@ namespace PerfettoCds.Pipeline.DataCookers
 {
     /// <summary>
     /// Pulls data from multiple individual SQL tables and joins them to create a system memory event. System
-    /// memory events capture period system memory counts
+    /// memory events capture periodic system memory counts
     /// </summary>
     public sealed class PerfettoSystemMemoryEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {

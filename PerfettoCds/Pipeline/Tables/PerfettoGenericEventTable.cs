@@ -21,7 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{506777b6-f1a3-437a-b976-bc48190450b6}"),
             "Perfetto Generic Events",
             "All app/component events in the Perfetto trace",
-            "Perfetto",
+            "Perfetto - Events",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GenericEventCookerPath }
         );
 

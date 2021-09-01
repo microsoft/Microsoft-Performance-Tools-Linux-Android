@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{edbd3ddd-5610-4929-a85f-f9ca6eceb9b2}"),
             "Perfetto System Memory",
             "Displays system memory counts gathered from /proc/meminfo",
-            "Perfetto",
+            "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.SystemMemoryEventCookerPath }
         );
 

@@ -1,4 +1,4 @@
-﻿ // Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
@@ -13,7 +13,7 @@ using PerfettoProcessor;
 namespace PerfettoCds
 {
     /// <summary>
-    /// Cooks the data from the Counter table in Perfetto traces
+    /// Cooks the data from the counter_track table in Perfetto traces
     /// </summary>
     public sealed class PerfettoCounterTrackCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {

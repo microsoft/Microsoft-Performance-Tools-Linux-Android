@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{db17169e-afe5-41f6-ba24-511af1d869f9}"),
             "Perfetto CPU Scheduler Events",
             "Displays CPU scheduling events for processes and threads",
-            "Perfetto",
+            "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
         );
 
