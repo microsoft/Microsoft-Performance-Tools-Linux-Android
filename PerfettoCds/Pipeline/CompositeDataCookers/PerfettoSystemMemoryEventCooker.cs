@@ -34,6 +34,46 @@ namespace PerfettoCds.Pipeline.DataCookers
         [DataOutput]
         public ProcessedEventData<PerfettoSystemMemoryEvent> SystemMemoryEvents { get; }
 
+        // Perfetto captures memory counts from /proc/meminfo and outputs events with
+        // the following names.
+        // Set sys_stats_counters.h in Perfetto repo.
+        public HashSet<string> MemoryTypes = new HashSet<string>() {
+            "MemUnspecified",
+            "MemTotal",
+            "MemFree",
+            "MemAvailable",
+            "Buffers",
+            "Cached",
+            "SwapCached",
+            "Active",
+            "Inactive",
+            "Active(anon)",
+            "Inactive(anon)",
+            "Active(file)",
+            "Inactive(file)",
+            "Unevictable",
+            "Mlocked",
+            "SwapTotal",
+            "SwapFree",
+            "Dirty",
+            "Writeback",
+            "AnonPages",
+            "Mapped",
+            "Shmem",
+            "Slab",
+            "SReclaimable",
+            "SUnreclaim",
+            "KernelStack",
+            "PageTables",
+            "CommitLimit",
+            "Committed_AS",
+            "VmallocTotal",
+            "VmallocUsed",
+            "VmallocChunk",
+            "CmaTotal",
+            "CmaFree"
+        };
+
         public PerfettoSystemMemoryEventCooker() : base(PerfettoPluginConstants.SystemMemoryEventCookerPath)
         { 
             this.SystemMemoryEvents =
@@ -48,11 +88,11 @@ namespace PerfettoCds.Pipeline.DataCookers
 
             // Join them all together
             // Counter table contains the memory count value, timestamp
-            // ProcessCounterTrack contains the UPID and memory type name. All the memory types we care about start with "mem."
+            // counterTrackData contains the name of the memory type
             // Process contains the process name
             var joined = from counter in counterData
                          join counterTrack in counterTrackData on counter.TrackId equals counterTrack.Id
-                         where counterTrack.Name.StartsWith("Buffers") || counterTrack.Name.StartsWith("Active")
+                         where MemoryTypes.Contains(counterTrack.Name)
                          orderby counter.Timestamp ascending
                          select new { counter, counterTrack };
 
@@ -66,14 +106,15 @@ namespace PerfettoCds.Pipeline.DataCookers
                     var thing = memoryGroup.ElementAt(i);
                     double val = thing.counter.FloatValue;
                     var ts = thing.counter.RelativeTimestamp;
-                    long nextTs = ts;
 
+                    long nextTs = ts;
                     if (i < memoryGroup.Count() - 1)
                     {
                         // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
                         // is needed for WPA line graphs
                         nextTs = memoryGroup.ElementAt(i + 1).counter.RelativeTimestamp;
                     }
+
                     PerfettoSystemMemoryEvent ev = new PerfettoSystemMemoryEvent
                     (
                         val, 
@@ -87,5 +128,7 @@ namespace PerfettoCds.Pipeline.DataCookers
             }
             this.SystemMemoryEvents.FinalizeData();
         }
+
+
     }
 }
