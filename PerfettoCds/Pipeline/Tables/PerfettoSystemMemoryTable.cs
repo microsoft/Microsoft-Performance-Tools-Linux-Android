@@ -25,19 +25,18 @@ namespace PerfettoCds.Pipeline.Tables
         );
 
         private static readonly ColumnConfiguration MemoryTypeColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{ac84aa1d-ea66-46d2-8fc3-8ead853f81b4}"), "MemoryType", "Current frequency for this CPU. When idle, displays 0"),
+            new ColumnMetadata(new Guid("{ac84aa1d-ea66-46d2-8fc3-8ead853f81b4}"), "MemoryType", "Type of memory"),
             new UIHints { Width = 210, });
         private static readonly ColumnConfiguration MemoryValueColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{3ada3dda-2893-4366-b1a7-a5fe8344e17b}"), "MemoryValue", "Current frequency for this CPU. When idle, displays 0"),
+            new ColumnMetadata(new Guid("{3ada3dda-2893-4366-b1a7-a5fe8344e17b}"), "MemoryValue(kb)", "Memory value"),
             new UIHints { Width = 210,  AggregationMode = AggregationMode.Max});
 
-
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{6a9f870f-103c-461c-b909-9b098fe3695f}"), "StartTimestamp", "Start timestamp for the frequency event"),
+            new ColumnMetadata(new Guid("{6a9f870f-103c-461c-b909-9b098fe3695f}"), "StartTimestamp", "Start timestamp for the memory event"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{bade2ff2-0a7c-4358-a736-058163739ae4}"), "Duration", "Start timestamp for the frequency sample"),
+            new ColumnMetadata(new Guid("{bade2ff2-0a7c-4358-a736-058163739ae4}"), "Duration", "Start timestamp for the memory sample"),
             new UIHints { Width = 120 });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
@@ -55,7 +54,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
 
             // Virtual
-            var tableConfig = new TableConfiguration("Virtual")
+            var tableConfig = new TableConfiguration("System Memory")
             {
                 Columns = new[]
                 {
@@ -70,7 +69,6 @@ namespace PerfettoCds.Pipeline.Tables
                 ChartType = ChartType.Line
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
-            //tableConfig.AddColumnRole(ColumnRole.ResourceId, MemoryTypeColumn);
             tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
 
             tableBuilder.AddTableConfiguration(tableConfig)

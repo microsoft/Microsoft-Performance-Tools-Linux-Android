@@ -13,7 +13,7 @@ using PerfettoProcessor;
 namespace PerfettoCds
 {
     /// <summary>
-    /// Cooks the data from the counter_track table in Perfetto traces
+    /// Cooks the data from the CounterTrack table in Perfetto traces
     /// </summary>
     public sealed class PerfettoCounterTrackCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {

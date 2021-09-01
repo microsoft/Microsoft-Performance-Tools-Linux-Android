@@ -110,8 +110,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     long nextTs = ts;
                     if (i < memoryGroup.Count() - 1)
                     {
-                        // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration which
-                        // is needed for WPA line graphs
+                        // Need to look ahead in the future at the next event to get the timestamp so that we can calculate the duration
                         nextTs = memoryGroup.ElementAt(i + 1).counter.RelativeTimestamp;
                     }
 

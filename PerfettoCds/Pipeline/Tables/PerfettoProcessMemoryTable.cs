@@ -25,43 +25,38 @@ namespace PerfettoCds.Pipeline.Tables
         );
 
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{5f47812f-85ab-42e8-bae3-1e7bf377a689}"), "Process", "Current frequency for this CPU. When idle, displays 0"),
-            new UIHints 
-            { 
-                Width = 210,
-            });
-
+            new ColumnMetadata(new Guid("{5f47812f-85ab-42e8-bae3-1e7bf377a689}"), "Process", "Process name"),
+            new UIHints { Width = 210 });
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{4b2c0e42-04ee-4e4f-916f-bf7065f34018}"), "StartTimestamp", "Start timestamp for the frequency event"),
+            new ColumnMetadata(new Guid("{4b2c0e42-04ee-4e4f-916f-bf7065f34018}"), "StartTimestamp", "Start timestamp for the memory event"),
             new UIHints { Width = 120 });
-
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{1db8a444-3bcc-4787-bc4c-f8ffd25ccf98}"), "Duration", "Start timestamp for the frequency sample"),
+            new ColumnMetadata(new Guid("{1db8a444-3bcc-4787-bc4c-f8ffd25ccf98}"), "Duration", "Start timestamp for the memory sample"),
             new UIHints { Width = 120 });
 
         private static readonly ColumnConfiguration RssAnonColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{59db9b2a-09aa-42c5-9da7-631a507f0dbc}"), "RssAnonymous", "Resident set size - anonymous memory"),
+            new ColumnMetadata(new Guid("{59db9b2a-09aa-42c5-9da7-631a507f0dbc}"), "RssAnonymous(kb)", "Resident set size - anonymous memory"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration RssShMemColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{2969f7a3-54b3-492c-a393-1bd937389bd2}"), "RssSharedMem", "Resident set size - shared memory"),
+            new ColumnMetadata(new Guid("{2969f7a3-54b3-492c-a393-1bd937389bd2}"), "RssSharedMem(kb)", "Resident set size - shared memory"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration RssFileColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{96a12428-279e-4ef7-830b-89268c1d90cf}"), "RssFile", "Resident set size - file mappings"),
+            new ColumnMetadata(new Guid("{96a12428-279e-4ef7-830b-89268c1d90cf}"), "RssFile(kb)", "Resident set size - file mappings"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration RssHwmColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{88f8d32e-c884-4263-9712-44166aee1f95}"), "RssHighWatermark", "Resident set size - peak (high water mark)"),
+            new ColumnMetadata(new Guid("{88f8d32e-c884-4263-9712-44166aee1f95}"), "RssHighWatermark(kb)", "Resident set size - peak (high water mark)"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration RssColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{1ea71b65-4a32-4fc0-8a87-273073a51aa9}"), "Rss", "Resident set size - sum of anon, file, shared mem"),
+            new ColumnMetadata(new Guid("{1ea71b65-4a32-4fc0-8a87-273073a51aa9}"), "Rss(kb)", "Resident set size - sum of anon, file, shared mem"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration LockedColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{b9a65a94-f421-40cf-840e-74dffb84857f}"), "Locked", "Locked memory size"),
+            new ColumnMetadata(new Guid("{b9a65a94-f421-40cf-840e-74dffb84857f}"), "Locked(kb)", "Locked memory size"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration SwapColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{f0ebf9e8-39a1-44b7-8bf0-5f11ff6a8089}"), "Swap", "Swapped out VM size by anonymous private pages"),
+            new ColumnMetadata(new Guid("{f0ebf9e8-39a1-44b7-8bf0-5f11ff6a8089}"), "Swap(kb)", "Swapped out VM size by anonymous private pages"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
         private static readonly ColumnConfiguration VirtColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{83d575ba-2c24-46f7-901e-57241f72b918}"), "Virtual", "Peak virtual memory size"),
+            new ColumnMetadata(new Guid("{83d575ba-2c24-46f7-901e-57241f72b918}"), "Virtual(kb)", "Peak virtual memory size"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
