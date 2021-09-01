@@ -24,6 +24,7 @@ namespace PerfettoCds
         public const string CounterCookerId = "PerfettoCounterCooker";
         public const string CpuCounterTrackCookerId = "PerfettoCpuCounterTrackCooker";
         public const string ProcessCounterTrackCookerId = "PerfettoProcessCounterTrackCooker";
+        public const string CounterTrackCookerId = "PerfettoCounterTrackCooker";
 
         // ID for composite data cookers
         public const string GenericEventCookerId = "PerfettoGenericEventCooker";
@@ -33,6 +34,7 @@ namespace PerfettoCds
         public const string CpuFrequencyEventCookerId = "PerfettoCpuFrequencyEventCooker";
         public const string CpuCountersEventCookerId = "PerfettoCpuCountersEventCooker";
         public const string ProcessMemoryEventCookerId = "PerfettoProcessMemoryEventCooker";
+        public const string SystemMemoryEventCookerId = "PerfettoSystemMemoryEventCooker";
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -46,6 +48,7 @@ namespace PerfettoCds
         public const string CounterEvent = PerfettoCounterEvent.Key;
         public const string CpuCounterTrackEvent = PerfettoCpuCounterTrackEvent.Key;
         public const string ProcessCounterTrackEvent = PerfettoProcessCounterTrackEvent.Key;
+        public const string CounterTrackEvent = PerfettoCounterTrackEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = "PerfettoGenericEvent";
@@ -55,6 +58,7 @@ namespace PerfettoCds
         public const string CpuFrequencyEvent = "PerfettoCpuFrequencyEvent";
         public const string CpuCountersEvent = "PerfettoCpuCountersEvent";
         public const string ProcessMemoryEvent = "PerfettoProcessMemoryEvent";
+        public const string SystemMemoryEvent = "PerfettoSystemMemoryEvent";
 
         // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =
@@ -79,6 +83,8 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CpuCounterTrackCookerId);
         public static readonly DataCookerPath ProcessCounterTrackCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCounterTrackCookerId);
+        public static readonly DataCookerPath CounterTrackCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterTrackCookerId);
 
         // Paths for composite cookers
         public static readonly DataCookerPath GenericEventCookerPath =
@@ -95,6 +101,8 @@ namespace PerfettoCds
             new DataCookerPath(PerfettoPluginConstants.CpuCountersEventCookerId);
         public static readonly DataCookerPath ProcessMemoryEventCookerPath =
             new DataCookerPath(PerfettoPluginConstants.ProcessMemoryEventCookerId);
+        public static readonly DataCookerPath SystemMemoryEventCookerPath =
+            new DataCookerPath(PerfettoPluginConstants.SystemMemoryEventCookerId);
 
     }
 }

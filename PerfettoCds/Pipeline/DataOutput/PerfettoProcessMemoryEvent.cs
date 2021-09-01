@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace PerfettoCds.Pipeline.DataOutput
 {
     /// <summary>
-    /// A event that represents the frequency and state of a CPU at a point in time
+    /// A event that represents several memory values for a process at a point in time
     /// </summary>
     public readonly struct PerfettoProcessMemoryEvent
     {

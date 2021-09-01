@@ -29,7 +29,6 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints 
             { 
                 Width = 210,
-                AggregationMode = AggregationMode.Max,
             });
 
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
