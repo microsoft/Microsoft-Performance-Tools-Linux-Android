@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 using Utilities;
 
 namespace PerfettoCds.Pipeline.Tables

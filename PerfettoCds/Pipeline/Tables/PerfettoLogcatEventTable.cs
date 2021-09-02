@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 
 namespace PerfettoCds.Pipeline.Tables
 {

@@ -8,9 +8,10 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
 using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
+using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
 
-namespace PerfettoCds.Pipeline.DataCookers
+namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
     /// <summary>
     /// Pulls data from multiple individual SQL tables and joins them to create a process memory event. Process
@@ -69,7 +70,7 @@ namespace PerfettoCds.Pipeline.DataCookers
                     var timeGroup = timeGroups.ElementAt(i);
 
                     var ts = timeGroup.Key;
-                    var processName = timeGroup.ElementAt(0).process.Name + " " + processGroup.Key;
+                    var processName = $"{timeGroup.ElementAt(0).process.Name} {processGroup.Key}";
                     long nextTs = ts;
                     if (i < timeGroups.Count() - 1)
                     {

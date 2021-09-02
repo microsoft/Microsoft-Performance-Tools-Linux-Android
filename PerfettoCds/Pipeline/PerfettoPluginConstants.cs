@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.SourceDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using PerfettoProcessor;
 
 namespace PerfettoCds
@@ -13,28 +16,28 @@ namespace PerfettoCds
         public const string ParserId = "PerfettoSourceParser";
 
         // ID for source data cookers
-        public const string SliceCookerId = "PerfettoSliceCooker";
-        public const string ArgCookerId = "PerfettoArgCooker";
-        public const string ThreadCookerId = "PerfettoThreadCooker";
-        public const string ThreadTrackCookerId = "PerfettoThreadCookerId";
-        public const string ProcessCookerId = "PerfettoProcessCooker";
-        public const string SchedSliceCookerId = "PerfettoSchedSliceCooker";
-        public const string AndroidLogCookerId = "PerfettoAndroidLogCooker";
-        public const string RawCookerId = "PerfettoRawCooker";
-        public const string CounterCookerId = "PerfettoCounterCooker";
-        public const string CpuCounterTrackCookerId = "PerfettoCpuCounterTrackCooker";
-        public const string ProcessCounterTrackCookerId = "PerfettoProcessCounterTrackCooker";
-        public const string CounterTrackCookerId = "PerfettoCounterTrackCooker";
+        public const string SliceCookerId = nameof(PerfettoSliceCooker);
+        public const string ArgCookerId = nameof(PerfettoArgCooker);
+        public const string ThreadCookerId = nameof(PerfettoThreadCooker);
+        public const string ThreadTrackCookerId = nameof(PerfettoThreadTrackCooker);
+        public const string ProcessCookerId = nameof(PerfettoProcessCooker);
+        public const string SchedSliceCookerId = nameof(PerfettoSchedSliceCooker);
+        public const string AndroidLogCookerId = nameof(PerfettoAndroidLogCooker);
+        public const string RawCookerId = nameof(PerfettoRawCooker);
+        public const string CounterCookerId = nameof(PerfettoCounterCooker);
+        public const string CpuCounterTrackCookerId = nameof(PerfettoCpuCounterTrackCooker);
+        public const string ProcessCounterTrackCookerId = nameof(PerfettoProcessCounterTrackCooker);
+        public const string CounterTrackCookerId = nameof(PerfettoCounterTrackCooker);
 
         // ID for composite data cookers
-        public const string GenericEventCookerId = "PerfettoGenericEventCooker";
-        public const string CpuSchedEventCookerId = "PerfettoCpuSchedEventCooker";
-        public const string LogcatEventCookerId = "PerfettoLogcatEventCooker";
-        public const string FtraceEventCookerId = "PerfettoFtraceEventCooker";
-        public const string CpuFrequencyEventCookerId = "PerfettoCpuFrequencyEventCooker";
-        public const string CpuCountersEventCookerId = "PerfettoCpuCountersEventCooker";
-        public const string ProcessMemoryEventCookerId = "PerfettoProcessMemoryEventCooker";
-        public const string SystemMemoryEventCookerId = "PerfettoSystemMemoryEventCooker";
+        public const string GenericEventCookerId = nameof(PerfettoGenericEventCooker);
+        public const string CpuSchedEventCookerId = nameof(PerfettoCpuSchedEventCooker);
+        public const string LogcatEventCookerId = nameof(PerfettoLogcatEventCooker);
+        public const string FtraceEventCookerId = nameof(PerfettoFtraceEventCooker);
+        public const string CpuFrequencyEventCookerId = nameof(PerfettoCpuFrequencyEventCooker);
+        public const string CpuCountersEventCookerId = nameof(PerfettoCpuCountersEventCooker);
+        public const string ProcessMemoryEventCookerId = nameof(PerfettoProcessMemoryEventCooker);
+        public const string SystemMemoryEventCookerId = nameof(PerfettoSystemMemoryEventCooker);
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -51,14 +54,14 @@ namespace PerfettoCds
         public const string CounterTrackEvent = PerfettoCounterTrackEvent.Key;
 
         // Output events for composite cookers
-        public const string GenericEvent = "PerfettoGenericEvent";
-        public const string CpuSchedEvent = "PerfettoCpuSchedEvent";
-        public const string LogcatEvent = "PerfettoLogcatEvent";
-        public const string FtraceEvent = "PerfettoFtraceEvent";
-        public const string CpuFrequencyEvent = "PerfettoCpuFrequencyEvent";
-        public const string CpuCountersEvent = "PerfettoCpuCountersEvent";
-        public const string ProcessMemoryEvent = "PerfettoProcessMemoryEvent";
-        public const string SystemMemoryEvent = "PerfettoSystemMemoryEvent";
+        public const string GenericEvent = nameof(PerfettoGenericEvent);
+        public const string CpuSchedEvent = nameof(PerfettoCpuSchedEvent);
+        public const string LogcatEvent = nameof(PerfettoLogcatEvent);
+        public const string FtraceEvent = nameof(PerfettoFtraceEvent);
+        public const string CpuFrequencyEvent = nameof(PerfettoCpuFrequencyEvent);
+        public const string CpuCountersEvent = nameof(PerfettoCpuCountersEvent);
+        public const string ProcessMemoryEvent = nameof(PerfettoProcessMemoryEvent);
+        public const string SystemMemoryEvent = nameof(PerfettoSystemMemoryEvent);
 
         // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =

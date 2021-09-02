@@ -13,8 +13,9 @@ using PerfettoProcessor;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using PerfettoCds.Pipeline.SourceDataCookers;
 
-namespace PerfettoCds.Pipeline.DataCookers
+namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
     /// <summary>
     /// XML deserialized EventProvider

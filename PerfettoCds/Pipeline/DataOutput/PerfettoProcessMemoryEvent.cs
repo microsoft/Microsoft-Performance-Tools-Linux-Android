@@ -14,21 +14,21 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp StartTimestamp { get; }
         public TimestampDelta Duration { get; }
 
-        // Resident set size - anonymous memory
+        /// Resident set size - anonymous memory
         public double RssAnon { get; }
-        // Resident set size - shared memory
+        /// Resident set size - shared memory
         public double RssShMem { get; }
-        // Resident set size - file mappings
+        /// Resident set size - file mappings
         public double RssFile { get; }
-        // Resident set size - Peak (high water mark)
+        /// Resident set size - Peak (high water mark)
         public double RssHwm { get; }
-        // Resident set size - Sum of anon, file, ShMem
+        /// Resident set size - Sum of anon, file, ShMem
         public double Rss { get; }
-        // Locked memory size
+        /// Locked memory size
         public double Locked { get; }
-        // Swapped out VM size by anonymous private pages
+        /// Swapped out VM size by anonymous private pages
         public double Swap { get; }
-        // Peak virtual memory size
+        /// Peak virtual memory size
         public double Virt { get; }
 
         public PerfettoProcessMemoryEvent(string processName, Timestamp startTimestamp, TimestampDelta duration,
