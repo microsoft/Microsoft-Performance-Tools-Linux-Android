@@ -111,7 +111,6 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processMemoryEventData.Count == 10811);
             Assert.IsTrue(processMemoryEventData[0].RssFile == 2822144);
             Assert.IsTrue(processMemoryEventData[1].ProcessName == "/system/bin/init 1");
-
         }
 
         [TestMethod]

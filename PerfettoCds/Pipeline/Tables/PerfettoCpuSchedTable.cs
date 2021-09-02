@@ -53,7 +53,7 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{73984a25-99b1-43a9-8412-c57b55de5518}"), "Priority", "Priority of the event"),
             new UIHints { Width = 70 });
 
-        private static readonly ColumnConfiguration percentCpuUsagePreset = new ColumnConfiguration(
+        private static readonly ColumnConfiguration PercentCpuUsageColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{4dda5bb8-3921-4122-9dec-3b3c5c2d95b0}"), "% CPU Usage") { IsPercent = true },
             new UIHints
             {
@@ -97,8 +97,10 @@ namespace PerfettoCds.Pipeline.Tables
                     new ReduceTimeSinceLastDiff());
 
             var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
-            tableGenerator.AddColumn(percentCpuUsagePreset, percentCpuUsageColumn);
+            tableGenerator.AddColumn(PercentCpuUsageColumn, percentCpuUsageColumn);
 
+            // We want to exclude the idle thread ('swapper' on Android/Linux) from the display because it messes up CPU usage and clutters
+            // the scheduler view
             const string swapperIdleFilter = "[Thread]:=\"swapper\"";
 
             var cpuSchedConfig = new TableConfiguration("Perfetto CPU Scheduling")
@@ -138,7 +140,7 @@ namespace PerfettoCds.Pipeline.Tables
                     EndStateColumn,
                     PriorityColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
-                    percentCpuUsagePreset
+                    PercentCpuUsageColumn
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
@@ -162,7 +164,7 @@ namespace PerfettoCds.Pipeline.Tables
                     EndStateColumn,
                     PriorityColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
-                    percentCpuUsagePreset
+                    PercentCpuUsageColumn
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
