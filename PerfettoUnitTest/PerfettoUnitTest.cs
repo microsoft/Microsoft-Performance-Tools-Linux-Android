@@ -38,6 +38,8 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessCounterTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CounterTrackCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
@@ -87,6 +89,31 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuFreqEventData.Count == 11855);
             Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
             Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
+        }
+
+        [TestMethod]
+        public void TestAndroidMemoryTrace()
+        {
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\androidBasicMemory.pftrace");
+
+            var systemMemoryEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoSystemMemoryEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.SystemMemoryEventCookerPath,
+                    nameof(PerfettoSystemMemoryEventCooker.SystemMemoryEvents)));
+            Assert.IsTrue(systemMemoryEventData.Count == 810);
+            Assert.IsTrue(systemMemoryEventData[0].Value == 4008026112);
+            Assert.IsTrue(systemMemoryEventData[1].Duration.ToNanoseconds == 249555208);
+            //Assert.IsTrue(systemMemoryEventData[0].EventName == "Hello Trace");
+            //Assert.IsTrue(systemMemoryEventData[0].Thread == "TraceLogApiTest 20855");
+
+            var processMemoryEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessMemoryEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.ProcessMemoryEventCookerPath,
+                    nameof(PerfettoProcessMemoryEventCooker.ProcessMemoryEvents)));
+            Assert.IsTrue(processMemoryEventData.Count == 10811);
+            Assert.IsTrue(processMemoryEventData[0].RssFile == 2822144);
+            Assert.IsTrue(processMemoryEventData[1].ProcessName == "/system/bin/init 1");
+
         }
 
         [TestMethod]

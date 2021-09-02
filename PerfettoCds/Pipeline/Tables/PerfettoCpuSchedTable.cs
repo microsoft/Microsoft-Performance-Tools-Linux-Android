@@ -4,12 +4,9 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
 using PerfettoCds.Pipeline.CompositeDataCookers;
-using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -55,16 +52,6 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration PriorityColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{73984a25-99b1-43a9-8412-c57b55de5518}"), "Priority", "Priority of the event"),
             new UIHints { Width = 70 });
-
-        //private static readonly ColumnConfiguration cpuUsagePreset = new ColumnConfiguration(
-        //    new ColumnMetadata(new Guid("{6b0089b7-9bfa-4208-a601-5c1e9bed0db8}"), "CPU Usage"),
-        //    new UIHints
-        //    {
-        //        IsVisible = false,
-        //        Width = 100,
-        //        TextAlignment = TextAlignment.Right,
-        //        CellFormat = TimestampFormatter.FormatMillisecondsGrouped,
-        //    });
 
         private static readonly ColumnConfiguration percentCpuUsagePreset = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{4dda5bb8-3921-4122-9dec-3b3c5c2d95b0}"), "% CPU Usage") { IsPercent = true },
