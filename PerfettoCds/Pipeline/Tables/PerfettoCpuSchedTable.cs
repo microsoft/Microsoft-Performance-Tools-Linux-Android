@@ -99,6 +99,8 @@ namespace PerfettoCds.Pipeline.Tables
             var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
             tableGenerator.AddColumn(percentCpuUsagePreset, percentCpuUsageColumn);
 
+            const string swapperIdleFilter = "[Thread]:=\"swapper\"";
+
             var cpuSchedConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
                 Columns =new[]
@@ -114,7 +116,9 @@ namespace PerfettoCds.Pipeline.Tables
                     StartTimestampColumn,
                     EndTimestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false,
+                InitialFilterQuery = swapperIdleFilter
             };
             cpuSchedConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             cpuSchedConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
@@ -136,7 +140,9 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     percentCpuUsagePreset
                 },
-                Layout = TableLayoutStyle.GraphAndTable
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false,
+                InitialFilterQuery = swapperIdleFilter
             };
             perCpuUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             perCpuUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
@@ -158,7 +164,9 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     percentCpuUsagePreset
                 },
-                Layout = TableLayoutStyle.GraphAndTable
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false,
+                InitialFilterQuery = swapperIdleFilter
             };
             perProcessUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             perProcessUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);

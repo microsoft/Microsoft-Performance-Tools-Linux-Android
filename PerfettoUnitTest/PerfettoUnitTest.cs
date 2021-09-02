@@ -70,7 +70,7 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuSchedEventCookerPath,
                     nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
-            Assert.IsTrue(cpuSchedEventData.Count == 9615);
+            Assert.IsTrue(cpuSchedEventData.Count == 15267);
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
 
@@ -103,8 +103,6 @@ namespace PerfettoUnitTest
             Assert.IsTrue(systemMemoryEventData.Count == 810);
             Assert.IsTrue(systemMemoryEventData[0].Value == 4008026112);
             Assert.IsTrue(systemMemoryEventData[1].Duration.ToNanoseconds == 249555208);
-            //Assert.IsTrue(systemMemoryEventData[0].EventName == "Hello Trace");
-            //Assert.IsTrue(systemMemoryEventData[0].Thread == "TraceLogApiTest 20855");
 
             var processMemoryEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessMemoryEvent>>(
                 new DataOutputPath(

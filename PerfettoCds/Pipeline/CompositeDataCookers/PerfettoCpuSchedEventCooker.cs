@@ -58,12 +58,6 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Create events out of the joined results
             foreach (var result in joined)
             {
-                // 'swapper' is the idle process on Linux/Android. We want to exclude this from the scheduler view
-                // It always has a Utid of 0.
-                if (result.thread?.Name.ToLower() == "swapper" && result.thread?.Utid == 0)
-                {
-                    continue;
-                }
                 PerfettoCpuSchedEvent ev = new PerfettoCpuSchedEvent
                 (
                     result.process.Name,
