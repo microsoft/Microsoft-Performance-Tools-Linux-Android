@@ -10,7 +10,7 @@ using System.Threading;
 using PerfettoCds.Pipeline.Events;
 using PerfettoProcessor;
 
-namespace PerfettoCds
+namespace PerfettoCds.Pipeline.SourceDataCookers
 {
     /// <summary>
     /// Cooks the data from the Android_Logs table in Perfetto traces

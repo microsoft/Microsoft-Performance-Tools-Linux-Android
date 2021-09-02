@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{5b9689d4-617c-484c-9b0a-c7242565ec13}"),
             "Perfetto CPU Frequency Scaling",
             "Displays CPU frequency scaling events and idle states for CPUs. Idle CPUs show a frequency of 0.",
-            "Perfetto",
+            "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuFrequencyEventCookerPath }
         );
 

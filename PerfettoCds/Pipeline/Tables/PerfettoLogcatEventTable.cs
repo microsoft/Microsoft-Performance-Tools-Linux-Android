@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -22,7 +22,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{1b25fe8d-887c-4de9-850f-284eb4c28ad7}"),
             "Android Logcat Events",
             "All logcat events/messages in the Perfetto trace",
-            "Android",
+            "Perfetto - Android",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
         );
 
