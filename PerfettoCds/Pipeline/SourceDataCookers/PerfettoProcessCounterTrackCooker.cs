@@ -13,31 +13,33 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.SourceDataCookers
 {
     /// <summary>
-    /// Cooks the data from the CpuCounterTrack table in Perfetto traces
+    /// Cooks the data from the ProcessCounterTrack table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoCpuCounterTrackCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoProcessCounterTrackCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
-        public override string Description => "Processes events from the CpuCounterTrack Perfetto SQL table";
+        public override string Description => "Processes events from the process_counter_track Perfetto SQL table";
 
         //
         //  The data this cooker outputs. Tables or other cookers can query for this data
         //  via the SDK runtime
         //
         [DataOutput]
-        public ProcessedEventData<PerfettoCpuCounterTrackEvent> CpuCounterTrackEvents { get; }
+        public ProcessedEventData<PerfettoProcessCounterTrackEvent> ProcessCounterTrackEvents { get; }
 
         // Instructs runtime to only send events with the given keys this data cooker
         public override ReadOnlyHashSet<string> DataKeys =>
-            new ReadOnlyHashSet<string>(new HashSet<string> { PerfettoPluginConstants.CpuCounterTrackEvent });
+            new ReadOnlyHashSet<string>(new HashSet<string> { PerfettoPluginConstants.ProcessCounterTrackEvent });
 
-        public PerfettoCpuCounterTrackCooker() : base(PerfettoPluginConstants.CpuCounterTrackCookerPath)
+
+        public PerfettoProcessCounterTrackCooker() : base(PerfettoPluginConstants.ProcessCounterTrackCookerPath)
         {
-            this.CpuCounterTrackEvents = new ProcessedEventData<PerfettoCpuCounterTrackEvent>();
+            this.ProcessCounterTrackEvents =
+                new ProcessedEventData<PerfettoProcessCounterTrackEvent>();
         }
 
         public override DataProcessingResult CookDataElement(PerfettoSqlEventKeyed perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
         {
-            this.CpuCounterTrackEvents.AddEvent((PerfettoCpuCounterTrackEvent)perfettoEvent.SqlEvent);
+            this.ProcessCounterTrackEvents.AddEvent((PerfettoProcessCounterTrackEvent)perfettoEvent.SqlEvent);
 
             return DataProcessingResult.Processed;
         }
@@ -45,7 +47,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
         public override void EndDataCooking(CancellationToken cancellationToken)
         {
             base.EndDataCooking(cancellationToken);
-            this.CpuCounterTrackEvents.FinalizeData();
+            this.ProcessCounterTrackEvents.FinalizeData();
         }
     }
 }

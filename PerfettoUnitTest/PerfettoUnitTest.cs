@@ -3,7 +3,7 @@ using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PerfettoCds;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using System.IO;
 

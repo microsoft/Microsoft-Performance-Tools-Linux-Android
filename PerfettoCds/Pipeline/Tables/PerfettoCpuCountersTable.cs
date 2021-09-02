@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.DataCookers;
+using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
             Guid.Parse("{cc2db5d6-5abb-4094-b8c0-475a2f4d9946}"),
             "Perfetto CPU Counters (coarse)",
             "Displays coarse CPU usage based on /proc/stat counters",
-            "Perfetto",
+            "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuCountersEventCookerPath }
         );
 
@@ -123,7 +123,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
 
             // Only display the total CPU usage column
-            var cpuUsageConfig = new TableConfiguration("Perfetto CPU usage")
+            var cpuUsageConfig = new TableConfiguration("Perfetto CPU Usage")
             {
                 Columns = new[]
                 {
