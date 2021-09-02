@@ -70,7 +70,7 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuSchedEventCookerPath,
                     nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
-            Assert.IsTrue(cpuSchedEventData.Count == 15267);
+            Assert.IsTrue(cpuSchedEventData.Count == 9615);
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
 
