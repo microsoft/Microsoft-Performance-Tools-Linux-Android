@@ -119,7 +119,7 @@ namespace PerfettoCds.Pipeline.Tables
                     EndTimestampColumn
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
-                InitialFilterShouldKeep = false,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
             cpuSchedConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -143,7 +143,7 @@ namespace PerfettoCds.Pipeline.Tables
                     PercentCpuUsageColumn
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
-                InitialFilterShouldKeep = false,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
             perCpuUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -167,7 +167,7 @@ namespace PerfettoCds.Pipeline.Tables
                     PercentCpuUsageColumn
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
-                InitialFilterShouldKeep = false,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
             perProcessUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
