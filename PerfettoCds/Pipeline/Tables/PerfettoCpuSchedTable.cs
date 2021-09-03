@@ -4,12 +4,9 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
 using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
 using PerfettoCds.Pipeline.CompositeDataCookers;
-using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -56,29 +53,30 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{73984a25-99b1-43a9-8412-c57b55de5518}"), "Priority", "Priority of the event"),
             new UIHints { Width = 70 });
 
+        private static readonly ColumnConfiguration PercentCpuUsageColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{4dda5bb8-3921-4122-9dec-3b3c5c2d95b0}"), "% CPU Usage") { IsPercent = true },
+            new UIHints
+            {
+                IsVisible = true,
+                Width = 100,
+                TextAlignment = TextAlignment.Right,
+                CellFormat = ColumnFormats.PercentFormat,
+                AggregationMode = AggregationMode.Sum,
+                SortOrder = SortOrder.Descending,
+                SortPriority = 0,
+            });
+
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // Get data from the cooker
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.CpuSchedEventCookerPath, nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
 
-            // Start construction of the column order. Pivot on process and thread
-            List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>()
-            {
-                CpuColumn,
-                ProcessNameColumn,
-                ThreadNameColumn,
-                TableConfiguration.PivotColumn, // Columns before this get pivotted on
-                DurationColumn,
-                EndStateColumn,
-                PriorityColumn,
-                TableConfiguration.GraphColumn, // Columns after this get graphed
-                StartTimestampColumn,
-                EndTimestampColumn
-            };
-
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var baseProjection = Projection.Index(events);
+
+            var startProjection = baseProjection.Compose(x => x.StartTimestamp);
+            var endProjection = baseProjection.Compose(x => x.EndTimestamp);
 
             tableGenerator.AddColumn(CpuColumn, baseProjection.Compose(x => x.Cpu));
             tableGenerator.AddColumn(ProcessNameColumn, baseProjection.Compose(x => x.ProcessName));
@@ -86,19 +84,111 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
             tableGenerator.AddColumn(EndStateColumn, baseProjection.Compose(x => x.EndState));
             tableGenerator.AddColumn(PriorityColumn, baseProjection.Compose(x => x.Priority));
-            tableGenerator.AddColumn(StartTimestampColumn, baseProjection.Compose(x => x.StartTimestamp));
-            tableGenerator.AddColumn(EndTimestampColumn, baseProjection.Compose(x => x.EndTimestamp));
+            tableGenerator.AddColumn(StartTimestampColumn, startProjection);
+            tableGenerator.AddColumn(EndTimestampColumn, endProjection);
 
-            var tableConfig = new TableConfiguration("Perfetto CPU Scheduling")
+            // Create projections that are used for calculating CPU usage%
+            var viewportClippedSwitchOutTimeForNextOnCpuColumn = Projection.ClipTimeToViewport.Create(startProjection);
+            var viewportClippedSwitchOutTimeForPreviousOnCpuColumn = Projection.ClipTimeToViewport.Create(endProjection);
+
+            IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
+                    viewportClippedSwitchOutTimeForNextOnCpuColumn,
+                    viewportClippedSwitchOutTimeForPreviousOnCpuColumn,
+                    new ReduceTimeSinceLastDiff());
+
+            var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
+            tableGenerator.AddColumn(PercentCpuUsageColumn, percentCpuUsageColumn);
+
+            // We want to exclude the idle thread ('swapper' on Android/Linux) from the display because it messes up CPU usage and clutters
+            // the scheduler view
+            const string swapperIdleFilter = "[Thread]:=\"swapper\"";
+
+            var cpuSchedConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
-                Columns = allColumns,
-                Layout = TableLayoutStyle.GraphAndTable
+                Columns =new[]
+                {
+                    CpuColumn,
+                    ProcessNameColumn,
+                    ThreadNameColumn,
+                    TableConfiguration.PivotColumn, // Columns before this get pivotted on
+                    DurationColumn,
+                    EndStateColumn,
+                    PriorityColumn,
+                    TableConfiguration.GraphColumn, // Columns after this get graphed
+                    StartTimestampColumn,
+                    EndTimestampColumn
+                },
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
+                InitialFilterQuery = swapperIdleFilter
             };
-            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+            cpuSchedConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            cpuSchedConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            cpuSchedConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
+            var perCpuUsageConfig = new TableConfiguration("Perfetto Utilization by CPU")
+            {
+                Columns = new[]
+                {
+                    CpuColumn,
+                    TableConfiguration.PivotColumn, // Columns before this get pivotted on
+                    ProcessNameColumn,
+                    ThreadNameColumn,
+                    DurationColumn,
+                    StartTimestampColumn,
+                    EndTimestampColumn,
+                    EndStateColumn,
+                    PriorityColumn,
+                    TableConfiguration.GraphColumn, // Columns after this get graphed
+                    PercentCpuUsageColumn
+                },
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
+                InitialFilterQuery = swapperIdleFilter
+            };
+            perCpuUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            perCpuUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            perCpuUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+
+            var perProcessUsageConfig = new TableConfiguration("Perfetto Utilization by Process, Thread")
+            {
+                Columns = new[]
+                {
+                    ProcessNameColumn,
+                    ThreadNameColumn,
+                    TableConfiguration.PivotColumn, // Columns before this get pivotted on
+                    CpuColumn,
+                    DurationColumn,
+                    StartTimestampColumn,
+                    EndTimestampColumn,
+                    EndStateColumn,
+                    PriorityColumn,
+                    TableConfiguration.GraphColumn, // Columns after this get graphed
+                    PercentCpuUsageColumn
+                },
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
+                InitialFilterQuery = swapperIdleFilter
+            };
+            perProcessUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            perProcessUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            perProcessUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+
+            tableBuilder
+                .AddTableConfiguration(cpuSchedConfig)
+                .AddTableConfiguration(perCpuUsageConfig)
+                .AddTableConfiguration(perProcessUsageConfig)
+                .SetDefaultTableConfiguration(cpuSchedConfig);
         }
+
+        struct ReduceTimeSinceLastDiff
+            : IFunc<int, Timestamp, Timestamp, TimestampDelta>
+        {
+            public TimestampDelta Invoke(int value, Timestamp timeSinceLast1, Timestamp timeSinceLast2)
+            {
+                return timeSinceLast1 - timeSinceLast2;
+            }
+        }
+
     }
 }
