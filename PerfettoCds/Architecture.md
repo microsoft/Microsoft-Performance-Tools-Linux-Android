@@ -2,11 +2,11 @@
 
 The WPA Perfetto plugin follows the standard Microsoft Performance Toolkit SDK [architecture](https://github.com/microsoft/microsoft-performance-toolkit-sdk/tree/main/documentation/Architecture)
 
-![PerfettoPluginArchitecture](..\Images\PerfettoPluginArchitecture.png)
+![PerfettoPluginArchitecture](../Images/PerfettoPluginArchitecture.png)
 
 Here is a closer look at the bottom half of that diagram, the data cooking pipeline:
 
-![PerfettoCookerPipeline](..\Images\PerfettoCookerPipeline.png)
+![PerfettoCookerPipeline](../Images/PerfettoCookerPipeline.png)
 
 PerfettoSourceParser will start the trace_processor_shell.exe process and load the Perfetto trace file. Trace_processor_shell will process the trace file and will load all the trace data into SQL tables (such as slice, process, thread). SQL Queries will be made over HTTP/RPC with Protobuf objects. One query will be made per SQL table. Each query will produce events of the corresponding type (PerfettoSliceEvent). 
 
