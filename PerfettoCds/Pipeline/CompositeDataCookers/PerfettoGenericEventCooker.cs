@@ -59,7 +59,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.ArgCookerPath,
             PerfettoPluginConstants.ThreadTrackCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath
+            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessTrackCookerPath
         };
 
         [DataOutput]
@@ -149,6 +150,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessTrackCookerPath, nameof(PerfettoProcessTrackCooker.ProcessTrackEvents)));
 
             // Join them all together
 
@@ -157,12 +159,15 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // ThreadTrack data allows us to get to the thread
             // Thread data gives us the thread name+ID and gets us the process
             // Process data gives us the process name+ID
+            // ProcessTrack gives us events that only have a process and not a thread
             var joined = from slice in sliceData
                          join arg in argData on slice.ArgSetId equals arg.ArgSetId into args
-                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id
-                         join thread in threadData on threadTrack.Utid equals thread.Utid
-                         join process in processData on thread.Upid equals process.Upid
-                         select new { slice, args, threadTrack, thread, process };
+                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd from threadTrack in ttd.DefaultIfEmpty()
+                         join thread in threadData on threadTrack?.Utid equals thread.Utid into td from thread in td.DefaultIfEmpty()
+                         join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd from threadProcess in pd.DefaultIfEmpty()
+                         join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd from processTrack in ptd.DefaultIfEmpty()
+                         join process in processData on processTrack?.Upid equals process.Upid into pd2 from process in pd2.DefaultIfEmpty()
+                         select new { slice, args, threadTrack, thread, threadProcess, process };
 
             // Create events out of the joined results
             foreach (var result in joined)
@@ -210,6 +215,21 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                             throw new Exception("Unexpected Perfetto value type");
                     }
                 }
+
+                string processName = string.Empty;
+                string threadName = string.Empty;
+
+                // An event can have a thread+process or just a process
+                if (result.threadProcess != null)
+                {
+                    processName = $"{result.threadProcess.Name} {result.threadProcess.Pid}";
+                    threadName = $"{result.thread.Name} {result.thread.Tid}";
+                }
+                if (result.process != null)
+                {
+                    processName = $"{result.process.Name} {result.process.Pid}";
+                }
+
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
                 (
                    result.slice.Name,
@@ -221,8 +241,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    result.slice.ArgSetId,
                    values,
                    argKeys,
-                   string.Format($"{result.process.Name} {result.process.Pid}"),
-                   string.Format($"{result.thread.Name} {result.thread.Tid}"),
+                   processName,
+                   threadName,
                    provider
                 );
                 this.GenericEvents.AddEvent(ev);

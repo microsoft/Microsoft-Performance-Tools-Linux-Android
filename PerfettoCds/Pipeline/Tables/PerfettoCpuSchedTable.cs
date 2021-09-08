@@ -105,7 +105,7 @@ namespace PerfettoCds.Pipeline.Tables
 
             var cpuSchedConfig = new TableConfiguration("Perfetto CPU Scheduling")
             {
-                Columns =new[]
+                Columns = new[]
                 {
                     CpuColumn,
                     ProcessNameColumn,

@@ -61,6 +61,10 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{e7d08f97-f52c-4686-bc49-737f7a6a8bbb}"), "Provider", "Provider name of the event"),
             new UIHints { Width = 240 });
 
+        private static readonly ColumnConfiguration CountColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{99192cbf-5888-4873-a3b3-4faf5beaea15}"), "Count", "Constant column of 1 for summing"),
+            new UIHints { Width = 80, AggregationMode = AggregationMode.Sum });
+
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // We dynamically adjust the column headers
@@ -74,20 +78,6 @@ namespace PerfettoCds.Pipeline.Tables
             // Get data from the cooker
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.GenericEvents)));
-
-            // Start construction of the column order. Pivot on process and thread
-            List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>()
-            {
-                ProviderColumn,
-                ProcessNameColumn,
-                ThreadNameColumn,
-                TableConfiguration.PivotColumn, // Columns before this get pivotted on
-                EventNameColumn,
-                CategoryColumn,
-                TypeColumn,
-                EndTimestampColumn,
-                DurationColumn,
-            };
 
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var genericEventProjection = new EventProjection<PerfettoGenericEvent>(events);
@@ -138,9 +128,12 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.Provider));
             tableGenerator.AddColumn(providerColumn);
 
+            tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
+
             // The provider column is optionally populated depending on whether or not the user specified a ProviderGUID mapping file
             ProviderColumn.DisplayHints.IsVisible = hasProviders;
 
+            List<ColumnConfiguration> fieldColumns = new List<ColumnConfiguration>();
             // Add the field columns, with column names depending on the given event
             for (int index = 0; index < maxFieldCount; index++)
             {
@@ -151,36 +144,79 @@ namespace PerfettoCds.Pipeline.Tables
 
                 // generate a column configuration
                 var fieldColumnConfiguration = new ColumnConfiguration(
-                        new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName),
-                        new UIHints
-                        {
-                            IsVisible = true,
-                            Width = 150,
-                            TextAlignment = TextAlignment.Left,
-                        });
+                    new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName)
+                    {
+                        IsDynamic = true
+                    }, 
+                    new UIHints
+                    {
+                        IsVisible = true,
+                        Width = 150,
+                        TextAlignment = TextAlignment.Left,
+                    });
 
                 // Add this column to the column order
-                allColumns.Add(fieldColumnConfiguration);
+                fieldColumns.Add(fieldColumnConfiguration);
 
                 var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Values.Count ? genericEvent.Values[colIndex] : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }
 
-            // Finish the column order with the timestamp columned being graphed
-            allColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
-            allColumns.Add(StartTimestampColumn);
-
-            var tableConfig = new TableConfiguration("Perfetto Trace Events")
+            List<ColumnConfiguration> defaultColumns = new List<ColumnConfiguration>()
             {
-                Columns = allColumns,
+                ProviderColumn,
+                ProcessNameColumn,
+                ThreadNameColumn,
+                TableConfiguration.PivotColumn, // Columns before this get pivotted on
+                EventNameColumn,
+                CategoryColumn,
+                TypeColumn,
+                EndTimestampColumn,
+                DurationColumn,
+            };
+            defaultColumns.AddRange(fieldColumns);
+            defaultColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
+            defaultColumns.Add(StartTimestampColumn);
+
+            var processThreadConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread")
+            {
+                Columns = defaultColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
-            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+            processThreadConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            processThreadConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            processThreadConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
+            var processThreadActivityColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadActivityColumns.Remove(StartTimestampColumn);
+            processThreadActivityColumns.Add(CountColumn);
+            var processThreadActivityConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread Activity")
+            {
+                Columns = processThreadActivityColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            processThreadActivityConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            processThreadActivityConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            processThreadActivityConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+
+            var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadNameColumns.Remove(EventNameColumn);
+            processThreadNameColumns.Insert(3, EventNameColumn);
+            var processThreadNameConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-Name")
+            {
+                Columns = processThreadNameColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            processThreadNameConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            processThreadNameConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            processThreadNameConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+
+            tableBuilder
+                .AddTableConfiguration(processThreadConfig)
+                .AddTableConfiguration(processThreadActivityConfig)
+                .AddTableConfiguration(processThreadNameConfig)
+                .SetDefaultTableConfiguration(processThreadConfig);
         }
     }
 }
