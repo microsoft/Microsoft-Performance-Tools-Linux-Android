@@ -222,12 +222,12 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 // An event can have a thread+process or just a process
                 if (result.threadProcess != null)
                 {
-                    processName = string.Format($"{result.threadProcess.Name} {result.threadProcess.Pid}");
-                    threadName = string.Format($"{result.thread.Name} {result.thread.Tid}");
+                    processName = $"{result.threadProcess.Name} {result.threadProcess.Pid}";
+                    threadName = $"{result.thread.Name} {result.thread.Tid}";
                 }
                 if (result.process != null)
                 {
-                    processName = string.Format($"{result.process.Name} {result.process.Pid}");
+                    processName = $"{result.process.Name} {result.process.Pid}";
                 }
 
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
