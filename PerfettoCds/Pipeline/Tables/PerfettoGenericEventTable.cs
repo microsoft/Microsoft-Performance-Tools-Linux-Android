@@ -19,7 +19,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{506777b6-f1a3-437a-b976-bc48190450b6}"),
-            "Perfetto Generic Events",
+            " Perfetto Generic Events",  // Space at the start so it shows up alphabetically first in the table list
             "All app/component events in the Perfetto trace",
             "Perfetto - Events",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GenericEventCookerPath }
