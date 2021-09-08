@@ -122,9 +122,9 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.GenericEventCookerPath,
                     nameof(PerfettoGenericEventCooker.GenericEvents)));
-            Assert.IsTrue(genericEventData.Count == 144194);
-            Assert.IsTrue(genericEventData[0].EventName == "WebContentsImpl::DidReceiveInputEvent");
-            Assert.IsTrue(genericEventData[0].Thread == "CrBrowserMain 14448");
+            Assert.IsTrue(genericEventData.Count == 147906);
+            Assert.IsTrue(genericEventData[0].EventName == "PipelineReporter");
+            Assert.IsTrue(genericEventData[0].Process == "Renderer 6908");
 
             var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
                 new DataOutputPath(
