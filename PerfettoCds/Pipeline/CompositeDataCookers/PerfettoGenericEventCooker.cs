@@ -216,18 +216,18 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     }
                 }
 
-                string processName = "";
-                string threadName = "";
+                string processName = string.Empty;
+                string threadName = string.Empty;
 
                 // An event can have a thread+process or just a process
                 if (result.threadProcess != null)
                 {
-                    processName = string.Format($"{result?.threadProcess.Name} {result?.threadProcess.Pid}");
-                    threadName = string.Format($"{result?.thread.Name} {result?.thread.Tid}");
+                    processName = string.Format($"{result.threadProcess.Name} {result.threadProcess.Pid}");
+                    threadName = string.Format($"{result.thread.Name} {result.thread.Tid}");
                 }
                 if (result.process != null)
                 {
-                    processName = string.Format($"{result?.process.Name} {result?.process.Pid}");
+                    processName = string.Format($"{result.process.Name} {result.process.Pid}");
                 }
 
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
