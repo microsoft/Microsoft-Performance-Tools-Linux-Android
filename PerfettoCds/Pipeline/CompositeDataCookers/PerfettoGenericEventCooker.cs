@@ -159,6 +159,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // ThreadTrack data allows us to get to the thread
             // Thread data gives us the thread name+ID and gets us the process
             // Process data gives us the process name+ID
+            // ProcessTrack gives us events that only have a process and not a thread
             var joined = from slice in sliceData
                          join arg in argData on slice.ArgSetId equals arg.ArgSetId into args
                          join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd from threadTrack in ttd.DefaultIfEmpty()
@@ -218,6 +219,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 string processName = "";
                 string threadName = "";
 
+                // An event can have a thread+process or just a process
                 if (result.threadProcess != null)
                 {
                     processName = string.Format($"{result?.threadProcess.Name} {result?.threadProcess.Pid}");
@@ -242,7 +244,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    processName,
                    threadName,
                    provider
-                 );
+                );
                 this.GenericEvents.AddEvent(ev);
             }
             this.GenericEvents.FinalizeData();

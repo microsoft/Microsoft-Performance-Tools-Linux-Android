@@ -79,20 +79,6 @@ namespace PerfettoCds.Pipeline.Tables
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.GenericEvents)));
 
-            // Start construction of the column order. Pivot on process and thread
-            //List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>()
-            //{
-            //    ProviderColumn,
-            //    ProcessNameColumn,
-            //    ThreadNameColumn,
-            //    TableConfiguration.PivotColumn, // Columns before this get pivotted on
-            //    EventNameColumn,
-            //    CategoryColumn,
-            //    TypeColumn,
-            //    EndTimestampColumn,
-            //    DurationColumn,
-            //};
-
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var genericEventProjection = new EventProjection<PerfettoGenericEvent>(events);
 
@@ -170,17 +156,12 @@ namespace PerfettoCds.Pipeline.Tables
                     });
 
                 // Add this column to the column order
-                //allColumns.Add(fieldColumnConfiguration);
                 fieldColumns.Add(fieldColumnConfiguration);
 
                 var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Values.Count ? genericEvent.Values[colIndex] : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }
-
-            // Finish the column order with the timestamp columned being graphed
-            //allColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
-            //allColumns.Add(StartTimestampColumn);
 
             List<ColumnConfiguration> defaultColumns = new List<ColumnConfiguration>()
             {
@@ -230,7 +211,6 @@ namespace PerfettoCds.Pipeline.Tables
             processThreadNameConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             processThreadNameConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             processThreadNameConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
-
 
             tableBuilder
                 .AddTableConfiguration(processThreadConfig)

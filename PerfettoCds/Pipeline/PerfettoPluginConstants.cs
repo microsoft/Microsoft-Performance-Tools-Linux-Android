@@ -28,7 +28,6 @@ namespace PerfettoCds
         public const string CpuCounterTrackCookerId = nameof(PerfettoCpuCounterTrackCooker);
         public const string ProcessCounterTrackCookerId = nameof(PerfettoProcessCounterTrackCooker);
         public const string CounterTrackCookerId = nameof(PerfettoCounterTrackCooker);
-        //public const string TrackCookerId = nameof(PerfettoTrackCooker);
         public const string ProcessTrackCookerId = nameof(PerfettoProcessTrackCooker);
 
         // ID for composite data cookers
