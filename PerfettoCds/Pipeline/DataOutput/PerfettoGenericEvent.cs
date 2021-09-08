@@ -28,7 +28,6 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         // From Process table
         public string Process { get; }
-        public string Process2 { get; }
 
         // From Thread table
         public string Thread { get; }
@@ -46,7 +45,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             List<string> argKeys,
             string process,
             string thread,
-            string provider, string process2)
+            string provider)
         {
             this.EventName = eventName;
             this.Type = type;
@@ -60,7 +59,6 @@ namespace PerfettoCds.Pipeline.DataOutput
             this.Process = process;
             this.Thread = thread;
             this.Provider = provider;
-            this.Process2 = process2;
         }
     }
 }

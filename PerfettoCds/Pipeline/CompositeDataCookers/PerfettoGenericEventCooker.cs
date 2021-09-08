@@ -163,10 +163,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          join arg in argData on slice.ArgSetId equals arg.ArgSetId into args
                          join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd from threadTrack in ttd.DefaultIfEmpty()
                          join thread in threadData on threadTrack?.Utid equals thread.Utid into td from thread in td.DefaultIfEmpty()
-                         join process in processData on thread?.Upid equals process.Upid into pd from process in pd.DefaultIfEmpty()
+                         join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd from threadProcess in pd.DefaultIfEmpty()
                          join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd from processTrack in ptd.DefaultIfEmpty()
-                         join process2 in processData on processTrack?.Upid equals process2.Upid into pd2 from process2 in pd2.DefaultIfEmpty()
-                         select new { slice, args, threadTrack, thread, process, process2 };
+                         join process in processData on processTrack?.Upid equals process.Upid into pd2 from process in pd2.DefaultIfEmpty()
+                         select new { slice, args, threadTrack, thread, threadProcess, process };
 
             // Create events out of the joined results
             foreach (var result in joined)
@@ -217,17 +217,15 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                 string processName = "";
                 string threadName = "";
-                string process2Name = "";
 
+                if (result.threadProcess != null)
+                {
+                    processName = string.Format($"{result?.threadProcess.Name} {result?.threadProcess.Pid}");
+                    threadName = string.Format($"{result?.thread.Name} {result?.thread.Tid}");
+                }
                 if (result.process != null)
                 {
                     processName = string.Format($"{result?.process.Name} {result?.process.Pid}");
-                    threadName = string.Format($"{result?.thread.Name} {result?.thread.Tid}");
-                }
-                if (result.process2 != null)
-                {
-                    process2Name = string.Format($"{result?.process2.Name} {result?.process2.Pid}");
-                    processName = string.Format($"{result?.process2.Name} {result?.process2.Pid}");
                 }
 
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
@@ -243,9 +241,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    argKeys,
                    processName,
                    threadName,
-                   provider,
-                   process2Name
-                );
+                   provider
+                 );
                 this.GenericEvents.AddEvent(ev);
             }
             this.GenericEvents.FinalizeData();
