@@ -188,7 +188,7 @@ namespace PerfettoCds.Pipeline.Tables
             processThreadConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             processThreadConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            var processThreadActivityColumns = defaultColumns;
+            var processThreadActivityColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadActivityColumns.Remove(StartTimestampColumn);
             processThreadActivityColumns.Add(CountColumn);
             var processThreadActivityConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread Activity")
@@ -200,7 +200,7 @@ namespace PerfettoCds.Pipeline.Tables
             processThreadActivityConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             processThreadActivityConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            var processThreadNameColumns = defaultColumns;
+            var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadNameColumns.Remove(EventNameColumn);
             processThreadNameColumns.Insert(3, EventNameColumn);
             var processThreadNameConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-Name")
