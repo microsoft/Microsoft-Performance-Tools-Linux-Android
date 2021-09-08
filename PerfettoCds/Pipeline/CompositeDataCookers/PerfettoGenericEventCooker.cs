@@ -59,7 +59,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.ArgCookerPath,
             PerfettoPluginConstants.ThreadTrackCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath
+            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessTrackCookerPath
         };
 
         [DataOutput]
@@ -149,6 +150,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessTrackCookerPath, nameof(PerfettoProcessTrackCooker.ProcessTrackEvents)));
 
             // Join them all together
 
@@ -159,10 +161,12 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Process data gives us the process name+ID
             var joined = from slice in sliceData
                          join arg in argData on slice.ArgSetId equals arg.ArgSetId into args
-                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id
-                         join thread in threadData on threadTrack.Utid equals thread.Utid
-                         join process in processData on thread.Upid equals process.Upid
-                         select new { slice, args, threadTrack, thread, process };
+                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd from threadTrack in ttd.DefaultIfEmpty()
+                         join thread in threadData on threadTrack?.Utid equals thread.Utid into td from thread in td.DefaultIfEmpty()
+                         join process in processData on thread?.Upid equals process.Upid into pd from process in pd.DefaultIfEmpty()
+                         join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd from processTrack in ptd.DefaultIfEmpty()
+                         join process2 in processData on processTrack?.Upid equals process2.Upid into pd2 from process2 in pd2.DefaultIfEmpty()
+                         select new { slice, args, threadTrack, thread, process, process2 };
 
             // Create events out of the joined results
             foreach (var result in joined)
@@ -210,6 +214,22 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                             throw new Exception("Unexpected Perfetto value type");
                     }
                 }
+
+                string processName = "";
+                string threadName = "";
+                string process2Name = "";
+
+                if (result.process != null)
+                {
+                    processName = string.Format($"{result?.process.Name} {result?.process.Pid}");
+                    threadName = string.Format($"{result?.thread.Name} {result?.thread.Tid}");
+                }
+                if (result.process2 != null)
+                {
+                    process2Name = string.Format($"{result?.process2.Name} {result?.process2.Pid}");
+                    processName = string.Format($"{result?.process2.Name} {result?.process2.Pid}");
+                }
+
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
                 (
                    result.slice.Name,
@@ -221,9 +241,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    result.slice.ArgSetId,
                    values,
                    argKeys,
-                   string.Format($"{result.process.Name} {result.process.Pid}"),
-                   string.Format($"{result.thread.Name} {result.thread.Tid}"),
-                   provider
+                   processName,
+                   threadName,
+                   provider,
+                   process2Name
                 );
                 this.GenericEvents.AddEvent(ev);
             }

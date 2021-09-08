@@ -56,7 +56,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          select new { schedSlice, thread, process };
 
             // Create events out of the joined results
-            foreach (var result in joined)
+            foreach (var result in joined.Where(x=>x.schedSlice.Cpu == 0 || x.schedSlice.Cpu == 1))
             {
                 PerfettoCpuSchedEvent ev = new PerfettoCpuSchedEvent
                 (

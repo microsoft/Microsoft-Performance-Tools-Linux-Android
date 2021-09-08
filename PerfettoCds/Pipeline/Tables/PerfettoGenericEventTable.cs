@@ -61,6 +61,10 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{e7d08f97-f52c-4686-bc49-737f7a6a8bbb}"), "Provider", "Provider name of the event"),
             new UIHints { Width = 240 });
 
+        private static readonly ColumnConfiguration Process2Column = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{d3bc3819-99dd-4fb6-a64b-ec2fff03a144}"), "Process2", "Provider name of the event"),
+            new UIHints { Width = 240 });
+
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // We dynamically adjust the column headers
@@ -138,6 +142,11 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.Provider));
             tableGenerator.AddColumn(providerColumn);
 
+            var process2Column = new BaseDataColumn<string>(
+                Process2Column,
+                genericEventProjection.Compose((genericEvent) => genericEvent.Process2));
+            tableGenerator.AddColumn(process2Column);
+
             // The provider column is optionally populated depending on whether or not the user specified a ProviderGUID mapping file
             ProviderColumn.DisplayHints.IsVisible = hasProviders;
 
@@ -151,13 +160,16 @@ namespace PerfettoCds.Pipeline.Tables
 
                 // generate a column configuration
                 var fieldColumnConfiguration = new ColumnConfiguration(
-                        new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName),
-                        new UIHints
-                        {
-                            IsVisible = true,
-                            Width = 150,
-                            TextAlignment = TextAlignment.Left,
-                        });
+                    new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName)
+                    {
+                        IsDynamic = true
+                    }, 
+                    new UIHints
+                    {
+                        IsVisible = true,
+                        Width = 150,
+                        TextAlignment = TextAlignment.Left,
+                    });
 
                 // Add this column to the column order
                 allColumns.Add(fieldColumnConfiguration);

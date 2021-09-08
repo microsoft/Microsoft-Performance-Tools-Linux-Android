@@ -165,7 +165,8 @@ namespace PerfettoCds
                     new PerfettoCpuCounterTrackEvent(),
                     new PerfettoCounterEvent(),
                     new PerfettoProcessCounterTrackEvent(),
-                    new PerfettoCounterTrackEvent()
+                    new PerfettoCounterTrackEvent(),
+                    new PerfettoProcessTrackEvent()
                 };
 
                 // Increment progress for each table queried.

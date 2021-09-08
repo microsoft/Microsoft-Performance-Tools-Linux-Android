@@ -92,8 +92,8 @@ namespace PerfettoCds.Pipeline.Tables
             var viewportClippedSwitchOutTimeForPreviousOnCpuColumn = Projection.ClipTimeToViewport.Create(endProjection);
 
             IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
-                    viewportClippedSwitchOutTimeForNextOnCpuColumn,
                     viewportClippedSwitchOutTimeForPreviousOnCpuColumn,
+                    viewportClippedSwitchOutTimeForNextOnCpuColumn,
                     new ReduceTimeSinceLastDiff());
 
             var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
@@ -149,6 +149,7 @@ namespace PerfettoCds.Pipeline.Tables
             perCpuUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             perCpuUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             perCpuUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+            perCpuUsageConfig.AddColumnRole(ColumnRole.ResourceId, ProcessNameColumn.Metadata.Guid);
 
             var perProcessUsageConfig = new TableConfiguration("Perfetto Utilization by Process, Thread")
             {
@@ -173,6 +174,8 @@ namespace PerfettoCds.Pipeline.Tables
             perProcessUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             perProcessUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             perProcessUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+            perProcessUsageConfig.AddColumnRole(ColumnRole.ResourceId, ProcessNameColumn.Metadata.Guid);
+            //perProcessUsageConfig.AddColumnRole(ColumnRole.ResourceId, ThreadNameColumn.Metadata.Guid);
 
             tableBuilder
                 .AddTableConfiguration(cpuSchedConfig)
