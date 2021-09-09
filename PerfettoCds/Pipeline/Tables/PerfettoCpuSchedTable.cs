@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.Tables
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{db17169e-afe5-41f6-ba24-511af1d869f9}"),
-            "Perfetto CPU Scheduler Events",
+            " Perfetto CPU Scheduler Events", // Space at the start so it shows up alphabetically first in the table list
             "Displays CPU scheduling events for processes and threads",
             "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
@@ -88,12 +88,12 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(EndTimestampColumn, endProjection);
 
             // Create projections that are used for calculating CPU usage%
-            var viewportClippedSwitchOutTimeForNextOnCpuColumn = Projection.ClipTimeToViewport.Create(startProjection);
-            var viewportClippedSwitchOutTimeForPreviousOnCpuColumn = Projection.ClipTimeToViewport.Create(endProjection);
+            var startProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(startProjection);
+            var endProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(endProjection);
 
             IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
-                    viewportClippedSwitchOutTimeForNextOnCpuColumn,
-                    viewportClippedSwitchOutTimeForPreviousOnCpuColumn,
+                    endProjectionClippedToViewport,
+                    startProjectionClippedToViewport,
                     new ReduceTimeSinceLastDiff());
 
             var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
@@ -178,7 +178,7 @@ namespace PerfettoCds.Pipeline.Tables
                 .AddTableConfiguration(cpuSchedConfig)
                 .AddTableConfiguration(perCpuUsageConfig)
                 .AddTableConfiguration(perProcessUsageConfig)
-                .SetDefaultTableConfiguration(cpuSchedConfig);
+                .SetDefaultTableConfiguration(perCpuUsageConfig);
         }
 
         struct ReduceTimeSinceLastDiff
