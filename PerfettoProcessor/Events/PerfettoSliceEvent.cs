@@ -9,7 +9,7 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoSliceEvent";
 
-        public static string SqlQuery = "select id, ts, dur, arg_set_id, track_id, name, type, category, parent_id from slice order by ts";
+        public static string SqlQuery = "select id, ts, dur, arg_set_id, track_id, name, type, category, parent_id from slice order by id";
         public long Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }

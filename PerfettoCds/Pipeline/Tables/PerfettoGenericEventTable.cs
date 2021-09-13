@@ -180,7 +180,9 @@ namespace PerfettoCds.Pipeline.Tables
 
             var trackNameIdColumn = new BaseDataColumn<string>(
                 TrackNameIdColumn,
-                genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ? (String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString()) : String.Empty));
+                genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ? 
+                                                                    (!String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString()) 
+                                                                    : String.Empty));
             tableGenerator.AddColumn(trackNameIdColumn);
 
             var parentIdColumn = new BaseDataColumn<long>(

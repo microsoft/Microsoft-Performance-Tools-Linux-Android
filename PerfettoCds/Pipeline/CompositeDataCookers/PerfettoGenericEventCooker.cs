@@ -241,7 +241,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 while (currentParentId.HasValue)
                 {
                     var parentPerfettoSliceEvent = sliceData[(int) currentParentId.Value];
-                    Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Since we relying on index being the Id
+                    // Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Should be guaranteed by slice Id ordering. Since we are relying on index being the Id
                     currentParentId = parentPerfettoSliceEvent != null ? parentPerfettoSliceEvent.ParentId : null;
                     parentTreeDepthLevel++;
                 }
