@@ -6,6 +6,7 @@ using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using System.IO;
+using System.Linq;
 
 namespace PerfettoUnitTest
 {
@@ -65,6 +66,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(genericEventData.Count == 1);
             Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
             Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest 20855");
+            Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest 20855");
 
             var cpuSchedEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(
@@ -73,6 +75,11 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData.Count == 15267);
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
+            Assert.IsTrue(cpuSchedEventData[0].ProcessName == null);
+
+            Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
+            Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest");
+            Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest");
 
             var ftraceEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
                 new DataOutputPath(
@@ -123,8 +130,15 @@ namespace PerfettoUnitTest
                     PerfettoPluginConstants.GenericEventCookerPath,
                     nameof(PerfettoGenericEventCooker.GenericEvents)));
             Assert.IsTrue(genericEventData.Count == 147906);
-            Assert.IsTrue(genericEventData[0].EventName == "PipelineReporter");
-            Assert.IsTrue(genericEventData[0].Process == "Renderer 6908");
+            Assert.IsTrue(genericEventData[1].EventName == "PipelineReporter");
+            Assert.IsTrue(genericEventData[1].Process == "Renderer 27768");
+            Assert.IsTrue(genericEventData[1].ParentId == null);
+            Assert.IsTrue(genericEventData[1].ParentTreeDepthLevel == 0);
+
+            Assert.IsTrue(genericEventData[2].EventName == "BeginImplFrameToSendBeginMainFrame");
+            Assert.IsTrue(genericEventData[2].Process == "Renderer 27768");
+            Assert.IsTrue(genericEventData[2].ParentId == 1);
+            Assert.IsTrue(genericEventData[2].ParentTreeDepthLevel == 1);
 
             var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
                 new DataOutputPath(

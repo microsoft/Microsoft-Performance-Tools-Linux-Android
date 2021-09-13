@@ -63,7 +63,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Thread and process info is contained in their respective tables
             var joined = from raw in rawData
                          join thread in threadData on raw.Utid equals thread.Utid
-                         join process in processData on thread.Upid equals process.Upid
+                         join process in processData on thread.Upid equals process.Upid into pd from process in pd.DefaultIfEmpty()
                          join arg in argsData on raw.ArgSetId equals arg.ArgSetId into args
                          select new { raw, args, thread, process };
 
@@ -104,7 +104,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 PerfettoFtraceEvent ev = new PerfettoFtraceEvent
                 (
                     new Timestamp(result.raw.RelativeTimestamp),
-                    result.process.Name,
+                    result.process?.Name,
                     result.thread.Name,
                     result.raw.Cpu,
                     result.raw.Name,

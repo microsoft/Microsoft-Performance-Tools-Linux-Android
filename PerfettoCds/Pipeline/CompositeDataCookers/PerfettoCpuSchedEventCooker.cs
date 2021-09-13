@@ -52,7 +52,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // those respective tables
             var joined = from schedSlice in schedSliceData
                          join thread in threadData on schedSlice.Utid equals thread.Utid
-                         join process in processData on thread.Upid equals process.Upid
+                         join process in processData on thread.Upid equals process.Upid into pd from process in pd.DefaultIfEmpty()
                          select new { schedSlice, thread, process };
 
             // Create events out of the joined results
@@ -60,7 +60,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             {
                 PerfettoCpuSchedEvent ev = new PerfettoCpuSchedEvent
                 (
-                    result.process.Name,
+                    result.process?.Name,
                     result.thread.Name,
                     new TimestampDelta(result.schedSlice.Duration),
                     new Timestamp(result.schedSlice.RelativeTimestamp),
