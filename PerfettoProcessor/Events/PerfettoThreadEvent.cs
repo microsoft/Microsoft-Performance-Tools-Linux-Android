@@ -15,13 +15,13 @@ namespace PerfettoProcessor
         public string Type { get; set; }
         public long Tid { get; set; }
         public string Name{ get; set; }
-        public long StartTimestamp { get; set; }
-        public long RelativeStartTimestamp { get; set; }
-        public long EndTimestamp { get; set; }
-        public long RelativeEndTimestamp { get; set; }
+        public long? StartTimestamp { get; set; }
+        public long? RelativeStartTimestamp { get; set; }
+        public long? EndTimestamp { get; set; }
+        public long? RelativeEndTimestamp { get; set; }
 
-        public long Upid { get; set; }
-        public long IsMainThread{ get; set; }
+        public long? Upid { get; set; }
+        public long? IsMainThread{ get; set; }
 
         public override string GetSqlQuery()
         {

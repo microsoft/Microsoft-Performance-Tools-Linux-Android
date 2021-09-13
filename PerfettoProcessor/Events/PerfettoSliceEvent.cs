@@ -9,7 +9,8 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoSliceEvent";
 
-        public static string SqlQuery = "select ts, dur, arg_set_id, track_id, name, type, category from slice order by ts";
+        public static string SqlQuery = "select id, ts, dur, arg_set_id, track_id, name, type, category, parent_id from slice order by ts";
+        public long Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public long Duration { get; set; }
@@ -18,6 +19,7 @@ namespace PerfettoProcessor
         public long RelativeTimestamp { get; set; }
         public string Category { get; set; }
         public long TrackId { get; set; }
+        public long? ParentId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -45,6 +47,9 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
+                        case "id":
+                            Id = longVal;
+                            break;
                         case "ts":
                             Timestamp = longVal;
                             break;
@@ -56,6 +61,9 @@ namespace PerfettoProcessor
                             break;
                         case "track_id":
                             TrackId = longVal;
+                            break;
+                        case "parent_id":
+                            ParentId = longVal;
                             break;
                     }
 

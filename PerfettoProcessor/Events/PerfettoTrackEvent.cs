@@ -5,18 +5,15 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
-    public class PerfettoArgEvent : PerfettoSqlEvent
+    public class PerfettoTrackEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoArgEvent";
+        public const string Key = "PerfettoTrackEvent";
 
-        public static string SqlQuery = "select arg_set_id, flat_key, key, int_value, string_value, real_value, value_type from args order by arg_set_id";
-        public long ArgSetId { get; set; }
-        public string Flatkey { get; set; }
-        public string ArgKey { get; set; }
-        public long? IntValue { get; set; }
-        public string StringValue { get; set; }
-        public double? RealValue { get; set; }
-        public string ValueType { get; set; }
+        public static string SqlQuery = "select id, type, name, source_arg_set_id from track";
+        public long Id { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public long? SourceArgSetId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -44,39 +41,29 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "arg_set_id":
-                            ArgSetId = longVal;
+                        case "id":
+                            Id = longVal;
                             break;
-                        case "int_value":
-                            IntValue = longVal;
+                        case "source_arg_set_id":
+                            SourceArgSetId = longVal;
                             break;
                     }
 
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellFloat64:
-                    var floatVal = batch.Float64Cells[counters.FloatCounter++];
-                    if (col == "real_value")
-                    {
-                        RealValue = floatVal;
-                    }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
                     var strVal = stringCells[counters.StringCounter++];
                     switch (col)
                     {
-                        case "flat_key":
-                            Flatkey = strVal;
+                        case "type":
+                            Type = strVal;
                             break;
-                        case "key":
-                            ArgKey = strVal;
-                            break;
-                        case "string_value":
-                            StringValue = strVal;
-                            break;
-                        case "value_type":
-                            ValueType = strVal;
+                        case "name":
+                            Name = strVal;
                             break;
                     }
+
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
                     break;

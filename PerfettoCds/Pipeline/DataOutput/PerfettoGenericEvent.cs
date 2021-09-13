@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
+using PerfettoProcessor;
 using System.Collections.Generic;
 
 namespace PerfettoCds.Pipeline.DataOutput
@@ -34,6 +35,12 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public string Provider { get; }
 
+        public long? ParentId{ get; }
+
+        public int ParentTreeDepthLevel { get; }
+
+        public PerfettoThreadTrackEvent ThreadTrack { get; }
+
         public PerfettoGenericEvent(string eventName, 
             string type, 
             TimestampDelta duration, 
@@ -45,20 +52,26 @@ namespace PerfettoCds.Pipeline.DataOutput
             List<string> argKeys,
             string process,
             string thread,
-            string provider)
+            string provider,
+            PerfettoThreadTrackEvent threadTrack,
+            long? parentId,
+            int parentTreeDepthLevel)
         {
-            this.EventName = eventName;
-            this.Type = type;
-            this.Duration = duration;
-            this.StartTimestamp = startTimestamp;
-            this.EndTimestamp = endTimestamp;
-            this.Category = category;
-            this.ArgSetId = argSetId;
-            this.Values = values;
-            this.ArgKeys = argKeys;
-            this.Process = process;
-            this.Thread = thread;
-            this.Provider = provider;
+            EventName = eventName;
+            Type = type;
+            Duration = duration;
+            StartTimestamp = startTimestamp;
+            EndTimestamp = endTimestamp;
+            Category = category;
+            ArgSetId = argSetId;
+            Values = values;
+            ArgKeys = argKeys;
+            Process = process;
+            Thread = thread;
+            Provider = provider;
+            ThreadTrack = threadTrack;
+            ParentId = parentId;
+            ParentTreeDepthLevel = parentTreeDepthLevel;
         }
     }
 }

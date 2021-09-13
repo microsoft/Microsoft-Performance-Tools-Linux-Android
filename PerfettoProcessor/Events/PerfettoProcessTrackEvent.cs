@@ -14,7 +14,7 @@ namespace PerfettoProcessor
         public long Id { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
-        public long SourceArgSetId { get; set; }
+        public long? SourceArgSetId { get; set; }
         public long Upid { get; set; }
 
         public override string GetSqlQuery()

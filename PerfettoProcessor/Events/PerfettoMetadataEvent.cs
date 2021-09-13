@@ -17,7 +17,7 @@ namespace PerfettoProcessor
         public string Name { get; set; }
         public string KeyType { get; set; }
 
-        public long IntValue { get; set; }
+        public long? IntValue { get; set; }
         public string StrValue { get; set; }
 
 

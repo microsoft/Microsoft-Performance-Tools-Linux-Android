@@ -5,16 +5,12 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
-    public class PerfettoThreadTrackEvent : PerfettoSqlEvent
+    public class PerfettoThreadTrackEvent : PerfettoTrackEvent
     {
-        public const string Key = "PerfettoThreadTrackEvent";
+        public new const string Key = "PerfettoThreadTrackEvent";
 
-        public static string SqlQuery = "select id, type, name, source_arg_set_id, utid from thread_track";
-        public long ArgSetId { get; set; }
-        public long Id { get; set; }
-        public string Type { get; set; }
-        public string Name { get; set; }
-        public long SourceArgSetId { get; set; }
+        public new static string SqlQuery = "select id, type, name, source_arg_set_id, utid from thread_track";
+
         public long Utid { get; set; }
 
         public override string GetSqlQuery()
@@ -43,9 +39,6 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "arg_set_id":
-                            ArgSetId = longVal;
-                            break;
                         case "id":
                             Id = longVal;
                             break;

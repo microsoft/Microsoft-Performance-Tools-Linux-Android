@@ -52,7 +52,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { 
                 Width = 70,
                 AggregationMode = AggregationMode.Max,
-                SortPriority = 0,
+                SortPriority = 1,
                 SortOrder = SortOrder.Descending,
                 CellFormat = TimestampFormatter.FormatMillisecondsGrouped,
             });
@@ -77,6 +77,23 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration ProviderColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{e7d08f97-f52c-4686-bc49-737f7a6a8bbb}"), "Provider", "Provider name of the event"),
             new UIHints { Width = 240 });
+
+        private static readonly ColumnConfiguration TrackNameIdColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{111094F9-BEB4-486F-AD60-3F53CFF702EA}"), "TrackNameId", "Track Name (Id)"),
+            new UIHints { Width = 240 });
+
+        private static readonly ColumnConfiguration ParentIdColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{A77736C3-AC5C-4100-B246-3821A2E73B15}"), "Parent Id", "Parent Id"),
+            new UIHints { Width = 240 });
+
+        private static readonly ColumnConfiguration ParentDepthLevelColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{89572E6E-86D5-4CBA-B0D4-4F9D2147BF50}"), "Parent Depth Level", "Parent Depth Level (0 is at Top of Tree)"),
+            new UIHints
+            {
+                Width = 70,
+                SortPriority = 0,
+                SortOrder = SortOrder.Ascending,
+            });
 
         // Need 2 of these with different sorting
         const string CountColumnGuid = "{99192cbf-5888-4873-a3b3-4faf5beaea15}";
@@ -161,6 +178,21 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.Provider));
             tableGenerator.AddColumn(providerColumn);
 
+            var trackNameIdColumn = new BaseDataColumn<string>(
+                TrackNameIdColumn,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ? (String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString()) : String.Empty));
+            tableGenerator.AddColumn(trackNameIdColumn);
+
+            var parentIdColumn = new BaseDataColumn<long>(
+                ParentIdColumn,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ParentId.HasValue? genericEvent.ParentId.Value : -1));
+            tableGenerator.AddColumn(parentIdColumn);
+
+            var parentDepthLevelColumn = new BaseDataColumn<int>(
+                ParentDepthLevelColumn,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ParentTreeDepthLevel));
+            tableGenerator.AddColumn(parentDepthLevelColumn);
+
             tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
 
             // The provider column is optionally populated depending on whether or not the user specified a ProviderGUID mapping file
@@ -240,8 +272,9 @@ namespace PerfettoCds.Pipeline.Tables
             SetGraphTableConfig(processThreadActivityConfig);
 
             var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadNameColumns.Insert(3, ParentDepthLevelColumn);
             processThreadNameColumns.Remove(EventNameColumn);
-            processThreadNameColumns.Insert(3, EventNameColumn);
+            processThreadNameColumns.Insert(4, EventNameColumn);
             var processThreadNameConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-Name")
             {
                 Columns = processThreadNameColumns,

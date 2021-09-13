@@ -2,18 +2,19 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
 using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
-using PerfettoProcessor;
-using System.Xml;
-using System.Xml.Serialization;
-using System.IO;
 using PerfettoCds.Pipeline.SourceDataCookers;
+using PerfettoProcessor;
 
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
@@ -169,6 +170,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          join process in processData on processTrack?.Upid equals process.Upid into pd2 from process in pd2.DefaultIfEmpty()
                          select new { slice, args, threadTrack, thread, threadProcess, process };
 
+            var longestRelTS = joined.Max(f => f.slice?.RelativeTimestamp);
+            var longestEndTs = longestRelTS.HasValue ? new Timestamp(longestRelTS.Value) : Timestamp.MaxValue;
+
             // Create events out of the joined results
             foreach (var result in joined)
             {
@@ -230,20 +234,37 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     processName = $"{result.process.Name} {result.process.Pid}";
                 }
 
+                int parentTreeDepthLevel = 0;
+                long? currentParentId = result.slice.ParentId;
+                
+                // Walk the parent tree
+                while (currentParentId.HasValue)
+                {
+                    var parentPerfettoSliceEvent = sliceData[(int) currentParentId.Value];
+                    Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Since we relying on index being the Id
+                    currentParentId = parentPerfettoSliceEvent != null ? parentPerfettoSliceEvent.ParentId : null;
+                    parentTreeDepthLevel++;
+                }
+
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
                 (
                    result.slice.Name,
                    result.slice.Type,
                    new TimestampDelta(result.slice.Duration),
                    new Timestamp(result.slice.RelativeTimestamp),
-                   new Timestamp(result.slice.RelativeTimestamp + result.slice.Duration),
+                   result.slice.Duration >= 0 ?             // Duration can be not complete / negative
+                    new Timestamp(result.slice.RelativeTimestamp + result.slice.Duration) :
+                    longestEndTs,
                    result.slice.Category,
                    result.slice.ArgSetId,
                    values,
                    argKeys,
                    processName,
                    threadName,
-                   provider
+                   provider,
+                   result.threadTrack,
+                   result.slice.ParentId,
+                   parentTreeDepthLevel
                 );
                 this.GenericEvents.AddEvent(ev);
             }
