@@ -8,6 +8,7 @@ using PerfettoCds.Pipeline.DataOutput;
 using Microsoft.Performance.SDK;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using Utilities;
+using Utilities.AccessProviders;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -25,29 +26,29 @@ namespace PerfettoCds.Pipeline.Tables
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GenericEventCookerPath }
         );
 
-        private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration ProcessNameColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{b690f27e-7938-4e86-94ef-d048cbc476cc}"), "Process", "Name of the process"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration ThreadNameColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration ThreadNameColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{dd1cf3f6-1cab-4012-bbdf-e99e920c4112}"), "Thread", "Name of the thread"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration EventNameColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration EventNameColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{d3bc5189-c9d1-4c14-9ce2-7bb4dc4d5ee7}"), "Name", "Name of the Perfetto event"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration StartTimestampColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{d458382b-1320-45c6-ba86-885da9dae71d}"), "StartTimestamp", "Start timestamp for the event"),
             new UIHints { Width = 120 });
 
-        private static readonly ColumnConfiguration EndTimestampColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration EndTimestampColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{4642871b-d0d8-4f74-9516-1ae1d7e9fe27}"), "EndTimestamp", "End timestamp for the event"),
             new UIHints { Width = 120 });
 
         // Need 2 of these with different sorting
         const string DurationColumnGuid = "{14f4862d-5851-460d-a04b-62e4b62b6d6c}";
-        private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration DurationColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(DurationColumnGuid), "Duration", "Duration of the event"),
             new UIHints { 
                 Width = 70,
@@ -57,7 +58,7 @@ namespace PerfettoCds.Pipeline.Tables
                 CellFormat = TimestampFormatter.FormatMillisecondsGrouped,
             });
 
-        private static readonly ColumnConfiguration DurationColumnNotSorted = new ColumnConfiguration(
+        private static readonly ColumnConfiguration DurationNotSortedColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(DurationColumnGuid), "Duration", "Duration of the event"),
             new UIHints
             {
@@ -66,27 +67,27 @@ namespace PerfettoCds.Pipeline.Tables
                 CellFormat = TimestampFormatter.FormatMillisecondsGrouped,
             });
 
-        private static readonly ColumnConfiguration CategoryColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration CategoryColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{1aa73a71-1548-44fd-9bcd-854bca78ce2e}"), "Category", "StackID of the event"),
             new UIHints { Width = 70 });
 
-        private static readonly ColumnConfiguration TypeColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration TypeColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{01d2b15f-b0fc-4444-a240-0a96f62c2c50}"), "Type", "Type of the event"),
             new UIHints { Width = 70 });
 
-        private static readonly ColumnConfiguration ProviderColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration ProviderColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{e7d08f97-f52c-4686-bc49-737f7a6a8bbb}"), "Provider", "Provider name of the event"),
             new UIHints { Width = 240 });
 
-        private static readonly ColumnConfiguration TrackNameIdColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration TrackNameIdColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{111094F9-BEB4-486F-AD60-3F53CFF702EA}"), "TrackNameId", "Track Name (Id)"),
             new UIHints { Width = 240 });
 
-        private static readonly ColumnConfiguration ParentIdColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration ParentIdColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{A77736C3-AC5C-4100-B246-3821A2E73B15}"), "Parent Id", "Parent Id"),
             new UIHints { Width = 240 });
 
-        private static readonly ColumnConfiguration ParentDepthLevelColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration ParentDepthLevelColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{89572E6E-86D5-4CBA-B0D4-4F9D2147BF50}"), "Parent Depth Level", "Parent Depth Level (0 is at Top of Tree)"),
             new UIHints
             {
@@ -95,9 +96,16 @@ namespace PerfettoCds.Pipeline.Tables
                 SortOrder = SortOrder.Ascending,
             });
 
+        private static readonly ColumnConfiguration ParentEventNameTreeBranchColConfig = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{A9496811-0330-4DEC-9C47-890C6D2F7BE1}"), "Parent Event Name Path", "Parent Event Name Tree Path"),
+            new UIHints
+            {
+                Width = 210,
+            });
+
         // Need 2 of these with different sorting
         const string CountColumnGuid = "{99192cbf-5888-4873-a3b3-4faf5beaea15}";
-        private static readonly ColumnConfiguration CountColumn = new ColumnConfiguration(
+        private static readonly ColumnConfiguration CountColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(CountColumnGuid), "Count", "Constant column of 1 for summing"),
             new UIHints
             {
@@ -105,7 +113,7 @@ namespace PerfettoCds.Pipeline.Tables
                 AggregationMode = AggregationMode.Sum
             });
 
-        private static readonly ColumnConfiguration CountColumnSorted = new ColumnConfiguration(
+        private static readonly ColumnConfiguration CountSortedColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(CountColumnGuid), "Count", "Constant column of 1 for summing"),
             new UIHints 
             { 
@@ -134,71 +142,73 @@ namespace PerfettoCds.Pipeline.Tables
 
             // Add all the data projections
             var processNameColumn = new BaseDataColumn<string>(
-                ProcessNameColumn,
+                ProcessNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Process));
             tableGenerator.AddColumn(processNameColumn);
 
             var threadNameColumn = new BaseDataColumn<string>(
-                ThreadNameColumn,
+                ThreadNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Thread));
             tableGenerator.AddColumn(threadNameColumn);
 
             var eventNameColumn = new BaseDataColumn<string>(
-                EventNameColumn,
+                EventNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
             var startTimestampColumn = new BaseDataColumn<Timestamp>(
-                StartTimestampColumn,
+                StartTimestampColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.StartTimestamp));
             tableGenerator.AddColumn(startTimestampColumn);
 
             var endTimestampColumn = new BaseDataColumn<Timestamp>(
-                EndTimestampColumn,
+                EndTimestampColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EndTimestamp));
             tableGenerator.AddColumn(endTimestampColumn);
 
             var durationColumn = new BaseDataColumn<TimestampDelta>(
-                DurationColumn,
+                DurationColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Duration));
             tableGenerator.AddColumn(durationColumn);
 
             var categoryColumn = new BaseDataColumn<string>(
-                CategoryColumn,
+                CategoryColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Category));
             tableGenerator.AddColumn(categoryColumn);
 
             var typeColumn = new BaseDataColumn<string>(
-                TypeColumn,
+                TypeColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Type));
             tableGenerator.AddColumn(typeColumn);
 
             var providerColumn = new BaseDataColumn<string>(
-                ProviderColumn,
+                ProviderColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Provider));
             tableGenerator.AddColumn(providerColumn);
 
             var trackNameIdColumn = new BaseDataColumn<string>(
-                TrackNameIdColumn,
+                TrackNameIdColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ? 
                                                                     (!String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString()) 
                                                                     : String.Empty));
             tableGenerator.AddColumn(trackNameIdColumn);
 
             var parentIdColumn = new BaseDataColumn<long>(
-                ParentIdColumn,
+                ParentIdColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.ParentId.HasValue? genericEvent.ParentId.Value : -1));
             tableGenerator.AddColumn(parentIdColumn);
 
             var parentDepthLevelColumn = new BaseDataColumn<int>(
-                ParentDepthLevelColumn,
+                ParentDepthLevelColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.ParentTreeDepthLevel));
             tableGenerator.AddColumn(parentDepthLevelColumn);
 
-            tableGenerator.AddColumn(CountColumn, Projection.Constant<int>(1));
+            tableGenerator.AddHierarchicalColumn(ParentEventNameTreeBranchColConfig, genericEventProjection.Compose((genericEvent) => genericEvent.ParentEventNameTree), new ArrayAccessProvider<string>());
+
+            tableGenerator.AddColumn(CountColConfig, Projection.Constant<int>(1));
 
             // The provider column is optionally populated depending on whether or not the user specified a ProviderGUID mapping file
-            ProviderColumn.DisplayHints.IsVisible = hasProviders;
+            ProviderColConfig.DisplayHints.IsVisible = hasProviders;
 
             List<ColumnConfiguration> fieldColumns = new List<ColumnConfiguration>();
             // Add the field columns, with column names depending on the given event
@@ -232,19 +242,19 @@ namespace PerfettoCds.Pipeline.Tables
 
             List<ColumnConfiguration> defaultColumns = new List<ColumnConfiguration>()
             {
-                ProviderColumn,
-                ProcessNameColumn,
-                ThreadNameColumn,
+                ProviderColConfig,
+                ProcessNameColConfig,
+                ThreadNameColConfig,
                 TableConfiguration.PivotColumn, // Columns before this get pivotted on
-                EventNameColumn,
-                CategoryColumn,
-                TypeColumn,
-                DurationColumn,
+                EventNameColConfig,
+                CategoryColConfig,
+                TypeColConfig,
+                DurationColConfig,
             };
             defaultColumns.AddRange(fieldColumns);
             defaultColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
-            defaultColumns.Add(StartTimestampColumn);
-            defaultColumns.Add(EndTimestampColumn);
+            defaultColumns.Add(StartTimestampColConfig);
+            defaultColumns.Add(EndTimestampColConfig);
 
             var processThreadConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread")
             {
@@ -254,17 +264,17 @@ namespace PerfettoCds.Pipeline.Tables
             SetGraphTableConfig(processThreadConfig);
 
             var processThreadActivityColumns = new List<ColumnConfiguration>(defaultColumns);
-            processThreadActivityColumns.Remove(StartTimestampColumn);
-            processThreadActivityColumns.Insert(8, StartTimestampColumn);
-            processThreadActivityColumns.Remove(EndTimestampColumn);
-            processThreadActivityColumns.Insert(9, EndTimestampColumn);
-            processThreadActivityColumns.Add(CountColumnSorted);
+            processThreadActivityColumns.Remove(StartTimestampColConfig);
+            processThreadActivityColumns.Insert(8, StartTimestampColConfig);
+            processThreadActivityColumns.Remove(EndTimestampColConfig);
+            processThreadActivityColumns.Insert(9, EndTimestampColConfig);
+            processThreadActivityColumns.Add(CountSortedColConfig);
 
             // Different sorting than default
-            processThreadActivityColumns.Remove(DurationColumn);
-            processThreadActivityColumns.Insert(7, DurationColumnNotSorted);
-            DurationColumnNotSorted.DisplayHints.SortPriority = 1;
-            DurationColumnNotSorted.DisplayHints.SortOrder = SortOrder.Descending;
+            processThreadActivityColumns.Remove(DurationColConfig);
+            processThreadActivityColumns.Insert(7, DurationNotSortedColConfig);
+            DurationNotSortedColConfig.DisplayHints.SortPriority = 1;
+            DurationNotSortedColConfig.DisplayHints.SortOrder = SortOrder.Descending;
 
             var processThreadActivityConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread Activity")
             {
@@ -274,9 +284,10 @@ namespace PerfettoCds.Pipeline.Tables
             SetGraphTableConfig(processThreadActivityConfig);
 
             var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
-            processThreadNameColumns.Insert(3, ParentDepthLevelColumn);
-            processThreadNameColumns.Remove(EventNameColumn);
-            processThreadNameColumns.Insert(4, EventNameColumn);
+            processThreadNameColumns.Insert(3, ParentDepthLevelColConfig);
+            processThreadNameColumns.Remove(EventNameColConfig);
+            processThreadNameColumns.Insert(4, EventNameColConfig);
+            processThreadNameColumns.Insert(9, ParentEventNameTreeBranchColConfig);
             var processThreadNameConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-Name")
             {
                 Columns = processThreadNameColumns,
@@ -284,18 +295,30 @@ namespace PerfettoCds.Pipeline.Tables
             };
             SetGraphTableConfig(processThreadNameConfig);
 
+            var processThreadNameTreeColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadNameTreeColumns.Insert(3, ParentEventNameTreeBranchColConfig);
+            processThreadNameTreeColumns.Insert(9, ParentDepthLevelColConfig);
+            processThreadNameTreeColumns.Insert(10, ParentEventNameTreeBranchColConfig);
+            var processThreadParentNameTreeConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-ParentNameTree")
+            {
+                Columns = processThreadNameTreeColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            SetGraphTableConfig(processThreadParentNameTreeConfig);
+
             tableBuilder
                 .AddTableConfiguration(processThreadConfig)
                 .AddTableConfiguration(processThreadActivityConfig)
                 .AddTableConfiguration(processThreadNameConfig)
+                .AddTableConfiguration(processThreadParentNameTreeConfig)
                 .SetDefaultTableConfiguration(processThreadNameConfig);
         }
 
         private static void SetGraphTableConfig(TableConfiguration tableConfig)
         {
-            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
-            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColConfig.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColConfig.Metadata.Guid);
+            tableConfig.AddColumnRole(ColumnRole.Duration, DurationColConfig.Metadata.Guid);
         }
     }
 }

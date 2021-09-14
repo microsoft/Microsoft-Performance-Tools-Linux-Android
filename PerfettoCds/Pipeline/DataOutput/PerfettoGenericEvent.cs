@@ -41,6 +41,8 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public PerfettoThreadTrackEvent ThreadTrack { get; }
 
+        public string[] ParentEventNameTree { get; }
+
         public PerfettoGenericEvent(string eventName, 
             string type, 
             TimestampDelta duration, 
@@ -55,7 +57,8 @@ namespace PerfettoCds.Pipeline.DataOutput
             string provider,
             PerfettoThreadTrackEvent threadTrack,
             long? parentId,
-            int parentTreeDepthLevel)
+            int parentTreeDepthLevel,
+            string[] parentEventNameTree)
         {
             EventName = eventName;
             Type = type;
@@ -72,6 +75,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             ThreadTrack = threadTrack;
             ParentId = parentId;
             ParentTreeDepthLevel = parentTreeDepthLevel;
+            ParentEventNameTree = parentEventNameTree;
         }
     }
 }

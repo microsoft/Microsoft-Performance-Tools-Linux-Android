@@ -50,6 +50,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public static readonly DataCookerPath DataCookerPath = PerfettoPluginConstants.GenericEventCookerPath;
 
         public string Description => "Generic Event composite cooker";
+        const string Root = "[Root]";
 
         public DataCookerPath Path => DataCookerPath;
 
@@ -89,6 +90,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
         // The name of the optional ProviderGuid mapping file
         private const string ProviderMappingXmlFilename = "ProviderMapping.xml";
+
+        // In order to consolidate like paths for common events and thus reduce memory / processing
+        private Dictionary<int, string[]> ParentEventNameTreeBranchDictKeyNotReversed = new Dictionary<int, string[]>();
 
         public PerfettoGenericEventCooker() : base(PerfettoPluginConstants.GenericEventCookerPath)
         {
@@ -236,14 +240,36 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                 int parentTreeDepthLevel = 0;
                 long? currentParentId = result.slice.ParentId;
-                
+                List<string> tmpParentEventNameTreeBranch = new List<string>();
+                tmpParentEventNameTreeBranch.Add(result.slice.Name);
+
                 // Walk the parent tree
                 while (currentParentId.HasValue)
                 {
                     var parentPerfettoSliceEvent = sliceData[(int) currentParentId.Value];
                     // Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Should be guaranteed by slice Id ordering. Since we are relying on index being the Id
-                    currentParentId = parentPerfettoSliceEvent != null ? parentPerfettoSliceEvent.ParentId : null;
+                    
+                    if (parentPerfettoSliceEvent != null)
+                    {
+                        currentParentId = parentPerfettoSliceEvent.ParentId;
+                        tmpParentEventNameTreeBranch.Add(parentPerfettoSliceEvent.Name);
+                    }
+                    else
+                    {
+                        currentParentId =  null;
+                    }
+
                     parentTreeDepthLevel++;
+                }
+                tmpParentEventNameTreeBranch.Add(Root);
+
+                string[] finalParentEventNameTreeBranch;
+                var tmpParentEventNameTreeBranchHashCodeNotReversed = tmpParentEventNameTreeBranch.GetHashCode();
+                if (!ParentEventNameTreeBranchDictKeyNotReversed.TryGetValue(tmpParentEventNameTreeBranchHashCodeNotReversed, out finalParentEventNameTreeBranch))
+                {
+                    tmpParentEventNameTreeBranch.Reverse();
+                    finalParentEventNameTreeBranch = tmpParentEventNameTreeBranch.ToArray();
+                    ParentEventNameTreeBranchDictKeyNotReversed.Add(tmpParentEventNameTreeBranchHashCodeNotReversed, finalParentEventNameTreeBranch);
                 }
 
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
@@ -264,7 +290,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    provider,
                    result.threadTrack,
                    result.slice.ParentId,
-                   parentTreeDepthLevel
+                   parentTreeDepthLevel,
+                   finalParentEventNameTreeBranch
                 );
                 this.GenericEvents.AddEvent(ev);
             }

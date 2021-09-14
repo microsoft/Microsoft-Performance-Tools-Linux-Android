@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using static PerfDataExtensions.Tables.TimeHelper;
+using Utilities.AccessProviders;
 
 namespace PerfDataExtensions.Tables
 {
