@@ -134,11 +134,15 @@ namespace PerfettoUnitTest
             Assert.IsTrue(genericEventData[1].Process == "Renderer 27768");
             Assert.IsTrue(genericEventData[1].ParentId == null);
             Assert.IsTrue(genericEventData[1].ParentTreeDepthLevel == 0);
+            Assert.IsTrue(genericEventData[1].ParentEventNameTree[0] == "[Root]");
+            Assert.IsTrue(genericEventData[1].ParentEventNameTree[1] == "PipelineReporter");
 
             Assert.IsTrue(genericEventData[2].EventName == "BeginImplFrameToSendBeginMainFrame");
             Assert.IsTrue(genericEventData[2].Process == "Renderer 27768");
             Assert.IsTrue(genericEventData[2].ParentId == 1);
             Assert.IsTrue(genericEventData[2].ParentTreeDepthLevel == 1);
+            Assert.IsTrue(genericEventData[2].ParentEventNameTree[1] == "PipelineReporter");
+            Assert.IsTrue(genericEventData[2].ParentEventNameTree[2] == "BeginImplFrameToSendBeginMainFrame");
 
             var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
                 new DataOutputPath(

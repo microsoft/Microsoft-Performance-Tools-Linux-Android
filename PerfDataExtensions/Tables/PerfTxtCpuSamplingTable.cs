@@ -5,7 +5,6 @@ using Microsoft.Diagnostics.Tracing.StackSources;
 using Microsoft.Diagnostics.Tracing.Stacks;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
-using PerfDataExtensions.Tables.AccessProviders;
 using PerfDataExtensions.Tables.Generators;
 using System;
 using System.Collections.Concurrent;
@@ -14,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using static PerfDataExtensions.Tables.TimeHelper;
+using Utilities.AccessProviders;
 
 namespace PerfDataExtensions.Tables
 {

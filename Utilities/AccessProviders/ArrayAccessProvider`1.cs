@@ -3,7 +3,7 @@
 
 using Microsoft.Performance.SDK.Processing;
 
-namespace PerfDataExtensions.Tables.AccessProviders
+namespace Utilities.AccessProviders
 {
     // This is copied from elsewhere and probably needs to be in the SDK
     public struct ArrayAccessProvider<T>
