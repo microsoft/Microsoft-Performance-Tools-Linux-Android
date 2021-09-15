@@ -95,29 +95,26 @@ namespace PerfettoProcessor
         /// </summary>
         /// <param name="shellPath">Full path to trace_processor_shell.exe</param>
         /// <param name="tracePath">Full path to the Perfetto trace file</param>
-        public void OpenTraceProcessor(string shellPath, string tracePath)
+        public void OpenTraceProcessor(string shellPath, string tracePath, DataReceivedEventHandler outputDataReceivedEventHandler, DataReceivedEventHandler errorDataReceivedEventHandler)
         {
-            using (var client = new HttpClient())
-            {
-                // Make sure another instance of trace_processor_shell isn't already running
-                while (!IsPortAvailable(HttpPort) && HttpPort < PortMax)
-                {
-                    HttpPort++;
-                }
-
-                ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"");
-            }
-            if (ShellProcess.HasExited)
-            {
-                throw new Exception("Problem starting trace_processor_shell.exe");
-            }
+            StartTraceProcessor(shellPath, $"-D --http-port {HttpPort} -i \"{tracePath}\"", outputDataReceivedEventHandler, errorDataReceivedEventHandler);
         }
 
         /// <summary>
         /// Initializes trace_processor_shell.exe in HTTP/RPC mode without the trace file
         /// </summary>
         /// <param name="shellPath">Full path to trace_processor_shell.exe</param>
-        public void OpenTraceProcessor(string shellPath)
+        public void OpenTraceProcessor(string shellPath, DataReceivedEventHandler outputDataReceivedEventHandler, DataReceivedEventHandler errorDataReceivedEventHandler)
+        {
+            StartTraceProcessor(shellPath, $"-D --http-port {HttpPort}", outputDataReceivedEventHandler, errorDataReceivedEventHandler);
+        }
+
+        /// <summary>
+        /// Launches trace_processor_shell.exe
+        /// </summary>
+        /// <param name="shellPath">Full path to trace_processor_shell.exe</param>
+        /// <param name="args"></param>
+        private void StartTraceProcessor(string shellPath, string args, DataReceivedEventHandler outputDataReceivedEventHandler, DataReceivedEventHandler errorDataReceivedEventHandler)
         {
             using (var client = new HttpClient())
             {
@@ -126,7 +123,38 @@ namespace PerfettoProcessor
                 {
                     HttpPort++;
                 }
-                ShellProcess = Process.Start(shellPath, $"-D --http-port {HttpPort}");
+
+                var traceProcessorProcessStartInfo = new ProcessStartInfo()
+                {
+                    FileName = shellPath,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                };
+
+                ShellProcess = new Process();
+                ShellProcess.StartInfo = traceProcessorProcessStartInfo;
+
+                if (outputDataReceivedEventHandler != null)
+                {
+                    ShellProcess.OutputDataReceived += outputDataReceivedEventHandler;
+                }
+                if (errorDataReceivedEventHandler != null)
+                {
+                    ShellProcess.ErrorDataReceived += errorDataReceivedEventHandler;
+                }
+
+                ShellProcess.Start();
+
+                if (outputDataReceivedEventHandler != null)
+                {
+                    ShellProcess.BeginOutputReadLine();
+                }
+                if (errorDataReceivedEventHandler != null)
+                {
+                    ShellProcess.BeginErrorReadLine();
+                }
             }
             if (ShellProcess.HasExited)
             {
@@ -317,6 +345,8 @@ namespace PerfettoProcessor
 
         public void CloseTraceConnection()
         {
+            ShellProcess.CancelOutputRead();
+            ShellProcess.CancelErrorRead();
             ShellProcess?.Kill();
         }
     }

@@ -10,6 +10,7 @@ using PerfettoProcessor;
 using PerfettoCds.Pipeline.Events;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace PerfettoCds
 {
@@ -86,8 +87,12 @@ namespace PerfettoCds
                 var shellDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var shellPath = Path.Combine(shellDir, PerfettoPluginConstants.TraceProcessorShellFileName);
 
+                // TraceProcessor seems to incorrectly output via stderr and not stdout (so we won't label stderr as Error)
+                DataReceivedEventHandler outputDataReceivedHandler = (sender, args) => logger.Verbose($"{PerfettoPluginConstants.TraceProcessorShellFileName}: {args.Data}");
+                DataReceivedEventHandler errorDataReceivedHandler  = (sender, args) => logger.Verbose($"{PerfettoPluginConstants.TraceProcessorShellFileName}: {args.Data}");
+
                 // Start the Perfetto trace processor shell with the trace file
-                traceProc.OpenTraceProcessor(shellPath, filePath);
+                traceProc.OpenTraceProcessor(shellPath, filePath, outputDataReceivedHandler, errorDataReceivedHandler);
 
                 // Use this callback to receive events parsed and turn them in events with keys
                 // that get used by data cookers
@@ -188,7 +193,7 @@ namespace PerfettoCds
                     traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
                     var dateTimeQueryFinished = DateTime.UtcNow;
 
-                    logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished} UTC");
+                    logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
 
                     IncreaseProgress(queryProgressIncrease);
 
