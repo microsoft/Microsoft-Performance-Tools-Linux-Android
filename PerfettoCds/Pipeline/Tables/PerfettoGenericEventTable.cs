@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{506777b6-f1a3-437a-b976-bc48190450b6}"),
-            " Perfetto Generic Events",  // Space at the start so it shows up alphabetically first in the table list
+            " Generic Events",  // Space at the start so it shows up alphabetically first in the table list
             "All app/component events in the Perfetto trace",
             "Perfetto - Events",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GenericEventCookerPath }
@@ -256,13 +256,27 @@ namespace PerfettoCds.Pipeline.Tables
             defaultColumns.Add(StartTimestampColConfig);
             defaultColumns.Add(EndTimestampColConfig);
 
-            var processThreadConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread")
+            // Proces-Thread config
+            var processThreadConfig = new TableConfiguration("Process-Thread")
             {
                 Columns = defaultColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadConfig);
 
+            // Process-Thread by StartTime config
+            var processThreadByStartTimeColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadByStartTimeColumns.Remove(EndTimestampColConfig);
+            processThreadByStartTimeColumns.Insert(processThreadByStartTimeColumns.Count - 3, EndTimestampColConfig);
+
+            var processThreadByStartTimeConfig = new TableConfiguration("Process-Thread by Start Time")
+            {
+                Columns = processThreadByStartTimeColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            SetGraphTableConfig(processThreadByStartTimeConfig);
+
+            // Process-Thread Activity config
             var processThreadActivityColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadActivityColumns.Remove(StartTimestampColConfig);
             processThreadActivityColumns.Insert(8, StartTimestampColConfig);
@@ -276,30 +290,48 @@ namespace PerfettoCds.Pipeline.Tables
             DurationNotSortedColConfig.DisplayHints.SortPriority = 1;
             DurationNotSortedColConfig.DisplayHints.SortOrder = SortOrder.Descending;
 
-            var processThreadActivityConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread Activity")
+            var processThreadActivityConfig = new TableConfiguration("Process-Thread Activity")
             {
                 Columns = processThreadActivityColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadActivityConfig);
 
+            // Process-Thread-Name config
             var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadNameColumns.Insert(3, ParentDepthLevelColConfig);
             processThreadNameColumns.Remove(EventNameColConfig);
             processThreadNameColumns.Insert(4, EventNameColConfig);
             processThreadNameColumns.Insert(9, ParentEventNameTreeBranchColConfig);
-            var processThreadNameConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-Name")
+            var processThreadNameConfig = new TableConfiguration("Process-Thread-Name")
             {
                 Columns = processThreadNameColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadNameConfig);
 
+            // Process-Thread-Name by StartTime config
+            var processThreadNameByStartTimeColumns = new List<ColumnConfiguration>(defaultColumns);
+            processThreadNameByStartTimeColumns.Insert(3, ParentDepthLevelColConfig);
+            processThreadNameByStartTimeColumns.Remove(EventNameColConfig);
+            processThreadNameByStartTimeColumns.Insert(4, EventNameColConfig);
+            processThreadNameByStartTimeColumns.Insert(9, ParentEventNameTreeBranchColConfig);
+            processThreadNameByStartTimeColumns.Remove(EndTimestampColConfig);
+            processThreadNameByStartTimeColumns.Insert(processThreadNameByStartTimeColumns.Count - 3, EndTimestampColConfig);
+
+            var processThreadNameByStartTimeConfig = new TableConfiguration("Process-Thread-Name by Start Time")
+            {
+                Columns = processThreadNameByStartTimeColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            SetGraphTableConfig(processThreadNameByStartTimeConfig);
+
+            // Process-Thread-ParentNameTree config
             var processThreadNameTreeColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadNameTreeColumns.Insert(3, ParentEventNameTreeBranchColConfig);
             processThreadNameTreeColumns.Insert(9, ParentDepthLevelColConfig);
             processThreadNameTreeColumns.Insert(10, ParentEventNameTreeBranchColConfig);
-            var processThreadParentNameTreeConfig = new TableConfiguration("Perfetto Trace Events - Process-Thread-ParentNameTree")
+            var processThreadParentNameTreeConfig = new TableConfiguration("Process-Thread-ParentNameTree")
             {
                 Columns = processThreadNameTreeColumns,
                 Layout = TableLayoutStyle.GraphAndTable
@@ -308,9 +340,11 @@ namespace PerfettoCds.Pipeline.Tables
 
             tableBuilder
                 .AddTableConfiguration(processThreadConfig)
-                .AddTableConfiguration(processThreadActivityConfig)
+                .AddTableConfiguration(processThreadByStartTimeConfig)
                 .AddTableConfiguration(processThreadNameConfig)
+                .AddTableConfiguration(processThreadNameByStartTimeConfig)
                 .AddTableConfiguration(processThreadParentNameTreeConfig)
+                .AddTableConfiguration(processThreadActivityConfig)
                 .SetDefaultTableConfiguration(processThreadNameConfig);
         }
 

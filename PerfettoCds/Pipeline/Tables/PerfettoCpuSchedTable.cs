@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.Tables
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{db17169e-afe5-41f6-ba24-511af1d869f9}"),
-            " Perfetto CPU Scheduler Events", // Space at the start so it shows up alphabetically first in the table list
+            " CPU Scheduler Events", // Space at the start so it shows up alphabetically first in the table list
             "Displays CPU scheduling events for processes and threads",
             "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
@@ -103,7 +103,7 @@ namespace PerfettoCds.Pipeline.Tables
             // the scheduler view
             const string swapperIdleFilter = "[Thread]:=\"swapper\"";
 
-            var cpuSchedConfig = new TableConfiguration("Perfetto CPU Scheduling")
+            var cpuSchedConfig = new TableConfiguration("CPU Scheduling")
             {
                 Columns = new[]
                 {
@@ -126,7 +126,7 @@ namespace PerfettoCds.Pipeline.Tables
             cpuSchedConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             cpuSchedConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            var perCpuUsageConfig = new TableConfiguration("Perfetto Utilization by CPU")
+            var perCpuUsageConfig = new TableConfiguration("Utilization by CPU")
             {
                 Columns = new[]
                 {
@@ -150,7 +150,7 @@ namespace PerfettoCds.Pipeline.Tables
             perCpuUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             perCpuUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
-            var perProcessUsageConfig = new TableConfiguration("Perfetto Utilization by Process, Thread")
+            var perProcessUsageConfig = new TableConfiguration("Utilization by Process, Thread")
             {
                 Columns = new[]
                 {

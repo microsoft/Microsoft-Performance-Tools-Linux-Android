@@ -18,7 +18,7 @@ namespace PerfettoCds.Pipeline.Tables
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{80d5ef1d-a24f-472c-83be-707b03239d35}"),
-            "Perfetto Process Memory",
+            "Process Memory",
             "Displays per process memory counts gathered from /proc/<pid>/status",
             "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.ProcessMemoryEventCookerPath }

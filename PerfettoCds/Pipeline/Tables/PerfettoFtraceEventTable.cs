@@ -19,7 +19,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{96beb7a0-5a9e-4713-b1f7-4ee74d27851c}"),
-            "Perfetto Ftrace Events",
+            "Ftrace Events",
             "All Ftrace events in the Perfetto trace",
             "Perfetto - Events",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.FtraceEventCookerPath }
@@ -126,7 +126,7 @@ namespace PerfettoCds.Pipeline.Tables
             cpuColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
             cpuColumns.Add(StartTimestampColumn);
 
-            var cpuConfig = new TableConfiguration("Perfetto Ftrace Events - CPU")
+            var cpuConfig = new TableConfiguration("CPU")
             {
                 Columns = cpuColumns,
                 Layout = TableLayoutStyle.GraphAndTable
@@ -146,7 +146,7 @@ namespace PerfettoCds.Pipeline.Tables
             processThreadColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
             processThreadColumns.Add(StartTimestampColumn);
 
-            var processThreadConfig = new TableConfiguration("Perfetto Ftrace Events - Process-Thread")
+            var processThreadConfig = new TableConfiguration("Process-Thread")
             {
                 Columns = processThreadColumns,
                 Layout = TableLayoutStyle.GraphAndTable

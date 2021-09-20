@@ -20,7 +20,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{1b25fe8d-887c-4de9-850f-284eb4c28ad7}"),
-            "Android Logcat Events",
+            "Logcat Events",
             "All logcat events/messages in the Perfetto trace",
             "Perfetto - Android",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
@@ -79,7 +79,7 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(TagColumn, baseProjection.Compose(x => x.Tag));
             tableGenerator.AddColumn(MessageColumn, baseProjection.Compose(x => x.Message));
 
-            var tableConfig = new TableConfiguration("Perfetto Logcat Events")
+            var tableConfig = new TableConfiguration("Logcat Events")
             {
                 Columns = allColumns,
                 Layout = TableLayoutStyle.GraphAndTable

@@ -18,7 +18,7 @@ namespace PerfettoCds.Pipeline.Tables
     {
         public static TableDescriptor TableDescriptor => new TableDescriptor(
             Guid.Parse("{edbd3ddd-5610-4929-a85f-f9ca6eceb9b2}"),
-            "Perfetto System Memory",
+            "System Memory",
             "Displays system memory counts gathered from /proc/meminfo",
             "Perfetto - System",
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.SystemMemoryEventCookerPath }
