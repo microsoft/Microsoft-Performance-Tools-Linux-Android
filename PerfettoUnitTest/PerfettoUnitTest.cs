@@ -76,7 +76,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData.Count == 15267);
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
-            Assert.IsTrue(cpuSchedEventData[0].ProcessName == null);
+            Assert.IsTrue(cpuSchedEventData[0].ProcessName == string.Empty);
 
             Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
             Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest");
