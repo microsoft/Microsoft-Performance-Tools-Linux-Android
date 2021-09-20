@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
@@ -14,21 +15,21 @@ namespace PerfettoCds.Pipeline.DataOutput
         public TimestampDelta Duration { get; }
         public Timestamp StartTimestamp { get; }
         public Timestamp EndTimestamp { get; }
-        public long Cpu { get; }
+        public int Cpu { get; }
         public string EndState { get; }
-        public long Priority { get; }
+        public int Priority { get; }
 
         public PerfettoCpuSchedEvent(string processName,
             string threadName,
             TimestampDelta duration,
             Timestamp startTimestamp,
             Timestamp endTimestamp,
-            long cpu,
+            int cpu,
             string endState,
-            long priority)
+            int priority)
         {
-            this.ProcessName = processName;
-            this.ThreadName = threadName;
+            this.ProcessName = Common.StringIntern(processName);
+            this.ThreadName = Common.StringIntern(threadName);
             this.Duration = duration;
             this.StartTimestamp = startTimestamp;
             this.EndTimestamp = endTimestamp;

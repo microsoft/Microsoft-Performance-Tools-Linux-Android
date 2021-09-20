@@ -193,7 +193,7 @@ namespace PerfettoCds.Pipeline.Tables
                                                                     : String.Empty));
             tableGenerator.AddColumn(trackNameIdColumn);
 
-            var parentIdColumn = new BaseDataColumn<long>(
+            var parentIdColumn = new BaseDataColumn<int>(
                 ParentIdColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.ParentId.HasValue? genericEvent.ParentId.Value : -1));
             tableGenerator.AddColumn(parentIdColumn);
@@ -217,7 +217,7 @@ namespace PerfettoCds.Pipeline.Tables
                 var colIndex = index;  // This seems unncessary but causes odd runtime behavior if not done this way. Compiler is confused perhaps because w/o this func will index=genericEvent.FieldNames.Count every time. index is passed as ref but colIndex as value into func
                 string fieldName = "Field " + (colIndex + 1);
 
-                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.ArgKeys.Count ? genericEvent.ArgKeys[colIndex] : string.Empty);
+                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.ArgKeys.Length ? genericEvent.ArgKeys[colIndex] : string.Empty);
 
                 // generate a column configuration
                 var fieldColumnConfiguration = new ColumnConfiguration(
@@ -235,7 +235,7 @@ namespace PerfettoCds.Pipeline.Tables
                 // Add this column to the column order
                 fieldColumns.Add(fieldColumnConfiguration);
 
-                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Values.Count ? genericEvent.Values[colIndex] : string.Empty);
+                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Values.Length ? genericEvent.Values[colIndex] : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }

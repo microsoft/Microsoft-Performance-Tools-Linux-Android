@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
+using PerfettoProcessor;
 using System.IO;
 using System.Linq;
 

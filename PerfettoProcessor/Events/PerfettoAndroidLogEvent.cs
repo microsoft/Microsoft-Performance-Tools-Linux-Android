@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using Perfetto.Protos;
+using Utilities;
 
 namespace PerfettoProcessor
 {
@@ -9,14 +10,14 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoAndroidLogEvent";
 
-        public static string SqlQuery = "select ts, prio, tag, msg, utid from android_logs";
+        public const string SqlQuery = "select ts, prio, tag, msg, utid from android_logs";
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
-        public long Priority { get; set; }
+        public int Priority { get; set; }
         public string PriorityString { get; set; }
         public string Tag { get; set; }
         public string  Message { get; set; }
-        public long Utid { get; set; }
+        public int Utid { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -48,20 +49,20 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = longVal;
+                            Utid = (int)longVal;
                             break;
                         case "ts":
                             Timestamp = longVal;
                             break;
                         case "prio":
-                            Priority = longVal;
+                            Priority = (int)longVal;
                             if (Priority >= 0 && Priority < PriorityToString.Length)
                             {
                                 PriorityString = PriorityToString[longVal];
                             }
                             else
                             {
-                                PriorityString = longVal.ToString();
+                                PriorityString = Common.StringIntern(longVal.ToString());
                             }
                             break;
                     }
@@ -70,7 +71,7 @@ namespace PerfettoProcessor
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellFloat64:
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
-                    var strVal = stringCells[counters.StringCounter++];
+                    var strVal = Common.StringIntern(stringCells[counters.StringCounter++]);
                     switch (col)
                     {
                         case "tag":

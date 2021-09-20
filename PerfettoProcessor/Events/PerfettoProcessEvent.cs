@@ -9,7 +9,7 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoProcessEvent";
 
-        public static string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
+        public const string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
         public long Upid { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }

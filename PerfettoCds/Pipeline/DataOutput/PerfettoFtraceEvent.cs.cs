@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
 using System.Collections.Generic;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
@@ -13,29 +14,29 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp StartTimestamp { get; }
         public string ProcessName { get; }
         public string ThreadName { get; }
-        public long Cpu { get; }
+        public int Cpu { get; }
         // Name of the ftrace event
         public string Name { get; }
 
         // From Args table. Variable number per event
-        public List<string> Values { get; }
-        public List<string> ArgKeys { get; }
+        public string[] Values { get; }
+        public string[] ArgKeys { get; }
 
         public PerfettoFtraceEvent(Timestamp startTimestamp,
             string processName,
             string threadName,
-            long cpu,
+            int cpu,
             string name,
             List<string> values,
             List<string> argKeys)
         {
             this.StartTimestamp = startTimestamp;
-            this.ProcessName = processName;
-            this.ThreadName = threadName;
+            this.ProcessName = Common.StringIntern(processName);
+            this.ThreadName = Common.StringIntern(threadName);
             this.Cpu = cpu;
-            this.Name = name;
-            this.Values = values;
-            this.ArgKeys = argKeys;
+            this.Name = Common.StringIntern(name);
+            this.Values = values.ToArray();
+            this.ArgKeys = argKeys.ToArray();
         }
     }
 }

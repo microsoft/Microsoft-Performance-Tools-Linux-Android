@@ -10,9 +10,9 @@ namespace PerfettoProcessor
         public const string Key = "PerfettoCpuCounterTrackEvent";
 
         public static string SqlQuery = "select name, id, cpu from cpu_counter_track";
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public long Cpu { get; set; }
+        public int Cpu { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -41,10 +41,10 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "id":
-                            Id = longVal;
+                            Id = (int)longVal;
                             break;
                         case "cpu":
-                            Cpu = longVal;
+                            Cpu = (int)longVal;
                             break;
                     }
                     break;

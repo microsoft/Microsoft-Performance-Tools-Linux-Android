@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using Perfetto.Protos;
+using Utilities;
 
 namespace PerfettoProcessor
 {
@@ -9,8 +10,8 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoArgEvent";
 
-        public static string SqlQuery = "select arg_set_id, flat_key, key, int_value, string_value, real_value, value_type from args order by arg_set_id";
-        public long ArgSetId { get; set; }
+        public const string SqlQuery = "select arg_set_id, flat_key, key, int_value, string_value, real_value, value_type from args order by arg_set_id";
+        public int ArgSetId { get; set; }
         public string Flatkey { get; set; }
         public string ArgKey { get; set; }
         public long? IntValue { get; set; }
@@ -45,7 +46,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "arg_set_id":
-                            ArgSetId = longVal;
+                            ArgSetId = (int)longVal;
                             break;
                         case "int_value":
                             IntValue = longVal;
@@ -61,7 +62,7 @@ namespace PerfettoProcessor
                     }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
-                    var strVal = stringCells[counters.StringCounter++];
+                    var strVal = Common.StringIntern(stringCells[counters.StringCounter++]);
                     switch (col)
                     {
                         case "flat_key":

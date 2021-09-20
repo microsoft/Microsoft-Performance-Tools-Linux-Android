@@ -3,6 +3,7 @@
 using Microsoft.Performance.SDK;
 using PerfettoProcessor;
 using System.Collections.Generic;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
@@ -20,12 +21,9 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp EndTimestamp { get; }
         public string Category { get; }
 
-        // Key between slice and args table
-        public long ArgSetId { get; }
-
         // From Args table. The debug annotations for an event. Variable number per event
-        public List<string> Values { get; }
-        public List<string> ArgKeys { get; }
+        public string[] Values { get; }
+        public string[] ArgKeys { get; }
 
         // From Process table
         public string Process { get; }
@@ -35,7 +33,7 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public string Provider { get; }
 
-        public long? ParentId{ get; }
+        public int? ParentId{ get; }
 
         public int ParentTreeDepthLevel { get; }
 
@@ -49,29 +47,27 @@ namespace PerfettoCds.Pipeline.DataOutput
             Timestamp startTimestamp, 
             Timestamp endTimestamp, 
             string category, 
-            long argSetId, 
             List<string> values,
             List<string> argKeys,
             string process,
             string thread,
             string provider,
             PerfettoThreadTrackEvent threadTrack,
-            long? parentId,
+            int? parentId,
             int parentTreeDepthLevel,
             string[] parentEventNameTree)
         {
-            EventName = eventName;
-            Type = type;
+            EventName = Common.StringIntern(eventName);
+            Type = Common.StringIntern(type);
             Duration = duration;
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
-            Category = category;
-            ArgSetId = argSetId;
-            Values = values;
-            ArgKeys = argKeys;
-            Process = process;
-            Thread = thread;
-            Provider = provider;
+            Category =  Common.StringIntern(category);
+            Values = values.ToArray();
+            ArgKeys = argKeys.ToArray();
+            Process = Common.StringIntern(process);
+            Thread = Common.StringIntern(thread);
+            Provider = Common.StringIntern(provider);
             ThreadTrack = threadTrack;
             ParentId = parentId;
             ParentTreeDepthLevel = parentTreeDepthLevel;

@@ -57,16 +57,6 @@ namespace PerfettoCds.Pipeline.Tables
             var events = tableData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents)));
 
-            // Start construction of the column order. Pivot on process and thread
-            List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>() 
-            {
-                CpuColumn,
-                TableConfiguration.PivotColumn, // Columns before this get pivotted
-                ProcessNameColumn,
-                ThreadNameColumn,
-                NameColumn,
-            };
-
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var eventProjection = new EventProjection<PerfettoFtraceEvent>(events);
 
@@ -85,7 +75,7 @@ namespace PerfettoCds.Pipeline.Tables
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.StartTimestamp));
             tableGenerator.AddColumn(startTimestampColumn);
 
-            var cpuColumn = new BaseDataColumn<long>(
+            var cpuColumn = new BaseDataColumn<int>(
                 CpuColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.Cpu));
             tableGenerator.AddColumn(cpuColumn);
@@ -95,13 +85,15 @@ namespace PerfettoCds.Pipeline.Tables
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.Name));
             tableGenerator.AddColumn(nameColumn);
 
+            List<ColumnConfiguration> fieldColumns = new List<ColumnConfiguration>();
+
             // Add the field columns, with column names depending on the given event
             for (int index = 0; index < maxFieldCount; index++)
             {
                 var colIndex = index;  // This seems unncessary but causes odd runtime behavior if not done this way. Compiler is confused perhaps because w/o this func will index=event.FieldNames.Count every time. index is passed as ref but colIndex as value into func
                 string fieldName = "Field " + (colIndex + 1);
 
-                var eventFieldNameProjection = eventProjection.Compose((ftraceEvent) => colIndex < ftraceEvent.ArgKeys.Count ? ftraceEvent.ArgKeys[colIndex] : string.Empty);
+                var eventFieldNameProjection = eventProjection.Compose((ftraceEvent) => colIndex < ftraceEvent.ArgKeys.Length ? ftraceEvent.ArgKeys[colIndex] : string.Empty);
 
                 // generate a column configuration
                 var fieldColumnConfiguration = new ColumnConfiguration(
@@ -114,25 +106,57 @@ namespace PerfettoCds.Pipeline.Tables
                         });
 
                 // Add this column to the column order
-                allColumns.Add(fieldColumnConfiguration);
+                fieldColumns.Add(fieldColumnConfiguration);
 
-                var eventFieldAsStringProjection = eventProjection.Compose((ftraceEvent) => colIndex < ftraceEvent.Values.Count ? ftraceEvent.Values[colIndex] : string.Empty);
+                var eventFieldAsStringProjection = eventProjection.Compose((ftraceEvent) => colIndex < ftraceEvent.Values.Length ? ftraceEvent.Values[colIndex] : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, eventFieldAsStringProjection);
             }
 
-            // Finish the column order with the timestamp columned being graphed
-            allColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
-            allColumns.Add(StartTimestampColumn);
-
-            var tableConfig = new TableConfiguration("Perfetto Ftrace Events")
+            // Start construction of the column order. Pivot on CPU
+            List<ColumnConfiguration> cpuColumns = new List<ColumnConfiguration>()
             {
-                Columns = allColumns,
+                CpuColumn,
+                TableConfiguration.PivotColumn, // Columns before this get pivotted
+                ProcessNameColumn,
+                ThreadNameColumn,
+                NameColumn,
+            };
+            cpuColumns.AddRange(fieldColumns);
+            cpuColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
+            cpuColumns.Add(StartTimestampColumn);
+
+            var cpuConfig = new TableConfiguration("Perfetto Ftrace Events - CPU")
+            {
+                Columns = cpuColumns,
                 Layout = TableLayoutStyle.GraphAndTable
             };
-            tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            cpuConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
 
-            tableBuilder.AddTableConfiguration(tableConfig).SetDefaultTableConfiguration(tableConfig);
+            // Start construction of the column order. Pivot on process and thread
+            List<ColumnConfiguration> processThreadColumns = new List<ColumnConfiguration>()
+            {
+                ProcessNameColumn,
+                ThreadNameColumn,
+                NameColumn,
+                TableConfiguration.PivotColumn, // Columns before this get pivotted
+                CpuColumn,
+            };
+            processThreadColumns.AddRange(fieldColumns);
+            processThreadColumns.Add(TableConfiguration.GraphColumn); // Columns after this get graphed
+            processThreadColumns.Add(StartTimestampColumn);
+
+            var processThreadConfig = new TableConfiguration("Perfetto Ftrace Events - Process-Thread")
+            {
+                Columns = processThreadColumns,
+                Layout = TableLayoutStyle.GraphAndTable
+            };
+            processThreadConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+
+            tableBuilder
+                .AddTableConfiguration(cpuConfig)
+                .AddTableConfiguration(processThreadConfig)
+                .SetDefaultTableConfiguration(processThreadConfig);
         }
     }
 }

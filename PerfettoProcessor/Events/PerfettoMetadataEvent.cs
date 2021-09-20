@@ -13,7 +13,7 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoMetadataEvent";
 
-        public static string SqlQuery = "select name, key_type, int_value, str_value from metadata";
+        public const string SqlQuery = "select name, key_type, int_value, str_value from metadata";
         public string Name { get; set; }
         public string KeyType { get; set; }
 
