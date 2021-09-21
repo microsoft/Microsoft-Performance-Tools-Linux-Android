@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK;
 using System.Collections.Generic;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.DataOutput
 {
@@ -25,11 +26,11 @@ namespace PerfettoCds.Pipeline.DataOutput
             string message)
         {
             this.StartTimestamp = startTimestamp;
-            this.ProcessName = processName;
-            this.ThreadName = threadName;
-            this.Priority = priority;
-            this.Tag = tag;
-            this.Message = message;
+            this.ProcessName = Common.StringIntern(processName);
+            this.ThreadName = Common.StringIntern(threadName);
+            this.Priority = Common.StringIntern(priority);
+            this.Tag = Common.StringIntern(tag);
+            this.Message = Common.StringIntern(message);
         }
     }
 }

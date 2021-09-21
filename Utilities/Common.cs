@@ -51,5 +51,10 @@ namespace Utilities
             Guid guid = new Guid(a, b, c, hash[8], hash[9], hash[10], hash[11], hash[12], hash[13], hash[14], hash[15]);
             return guid;
         }
+
+        public static string StringIntern(string str)
+        {
+            return str != null ? string.Intern(str) : string.Empty;
+        }
     }
 }

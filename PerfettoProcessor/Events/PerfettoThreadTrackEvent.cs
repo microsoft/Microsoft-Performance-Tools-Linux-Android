@@ -9,7 +9,7 @@ namespace PerfettoProcessor
     {
         public new const string Key = "PerfettoThreadTrackEvent";
 
-        public new static string SqlQuery = "select id, type, name, source_arg_set_id, utid from thread_track";
+        public new const string SqlQuery = "select id, type, name, source_arg_set_id, utid from thread_track";
 
         public long Utid { get; set; }
 

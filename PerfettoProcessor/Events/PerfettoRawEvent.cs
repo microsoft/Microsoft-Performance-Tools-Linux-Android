@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using Perfetto.Protos;
+using Utilities;
 
 namespace PerfettoProcessor
 {
@@ -9,15 +10,13 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoRawEvent";
 
-        public static string SqlQuery = "select type, ts, name, cpu, utid, arg_set_id from raw";
-        public string Type { get; set; }
+        public const string SqlQuery = "select ts, name, cpu, utid, arg_set_id from raw";
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
         public string Name { get; set; }
-        public long Cpu { get; set; }
-        public long Utid { get; set; }
-        public long ArgSetId { get; set; }
-
+        public int Cpu { get; set; }
+        public int Utid { get; set; }
+        public int ArgSetId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -46,16 +45,16 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = longVal;
+                            Utid = (int)longVal;
                             break;
                         case "ts":
                             Timestamp = longVal;
                             break;
                         case "cpu":
-                            Cpu = longVal;
+                            Cpu = (int)longVal;
                             break;
                         case "arg_set_id":
-                            ArgSetId = longVal;
+                            ArgSetId = (int)longVal;
                             break;
                     }
 
@@ -63,12 +62,9 @@ namespace PerfettoProcessor
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellFloat64:
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
-                    var strVal = stringCells[counters.StringCounter++];
+                    var strVal = Common.StringIntern(stringCells[counters.StringCounter++]);
                     switch (col)
                     {
-                        case "type":
-                            Type = strVal;
-                            break;
                         case "name":
                             Name = strVal;
                             break;

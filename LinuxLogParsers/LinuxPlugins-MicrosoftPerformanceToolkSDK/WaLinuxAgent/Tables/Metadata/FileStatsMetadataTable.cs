@@ -31,7 +31,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
     public static class FileStatsMetadataTable
     {
         public static readonly TableDescriptor TableDescriptor = new TableDescriptor(
-            Guid.Parse("{40AF86E5-0DF8-47B1-9A01-1D6C3529B75B}"),
+            Guid.Parse("{10a8a80a-27a3-42b8-8cde-3a374080e01e}"),
             "File Stats",
             "Statistics for text files",
             isMetadataTable: true,

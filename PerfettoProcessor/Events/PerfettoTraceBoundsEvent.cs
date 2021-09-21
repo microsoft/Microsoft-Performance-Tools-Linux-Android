@@ -13,7 +13,7 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoTraceBoundsEvent";
 
-        public static string SqlQuery = "select start_ts, end_ts from trace_bounds";
+        public const string SqlQuery = "select start_ts, end_ts from trace_bounds";
         public long StartTimestamp { get; set; }
         public long RelativeStartTimestamp { get; set; }
 

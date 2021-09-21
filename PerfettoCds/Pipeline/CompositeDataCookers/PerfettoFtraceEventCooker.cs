@@ -10,6 +10,7 @@ using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
+using Utilities;
 
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
@@ -78,23 +79,23 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 // Each event has multiple of these arguments. They get stored in lists
                 foreach (var arg in result.args)
                 {
-                    argKeys.Add(arg.ArgKey);
+                    argKeys.Add(Common.StringIntern(arg.ArgKey));
                     switch (arg.ValueType)
                     {
                         case "json":
                         case "string":
-                            values.Add(arg.StringValue);
+                            values.Add(Common.StringIntern(arg.StringValue));
                             break;
                         case "bool":
                         case "int":
-                            values.Add(arg.IntValue.ToString());
+                            values.Add(Common.StringIntern(arg.IntValue.ToString()));
                             break;
                         case "uint":
                         case "pointer":
-                            values.Add(((uint)arg.IntValue).ToString());
+                            values.Add(Common.StringIntern(((uint)arg.IntValue).ToString()));
                             break;
                         case "real":
-                            values.Add(arg.RealValue.ToString());
+                            values.Add(Common.StringIntern(arg.RealValue.ToString()));
                             break;
                         default:
                             throw new Exception("Unexpected Perfetto value type");

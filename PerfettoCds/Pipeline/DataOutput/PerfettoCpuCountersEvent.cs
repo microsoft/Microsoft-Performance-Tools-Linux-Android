@@ -8,7 +8,7 @@ namespace PerfettoCds.Pipeline.DataOutput
     public readonly struct PerfettoCpuCountersEvent
     {
         // The specific CPU core
-        public long CpuNum { get; }
+        public int CpuNum { get; }
         public Timestamp StartTimestamp { get; }
         public TimestampDelta Duration { get; }
 
@@ -36,7 +36,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// <summary>
         /// For populating the current counter values
         /// </summary>
-        public PerfettoCpuCountersEvent(long cpuNum, Timestamp startTimestamp, TimestampDelta duration,
+        public PerfettoCpuCountersEvent(int cpuNum, Timestamp startTimestamp, TimestampDelta duration,
             double userNs,
             double userNiceNs,
             double systemModeNs,
@@ -70,7 +70,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// <summary>
         /// When we have a previous event to compare to, we can calculate the percent change
         /// </summary>
-        public PerfettoCpuCountersEvent(long cpuNum, Timestamp startTimestamp, TimestampDelta duration,
+        public PerfettoCpuCountersEvent(int cpuNum, Timestamp startTimestamp, TimestampDelta duration,
             double userNs,
             double userNiceNs,
             double systemModeNs,

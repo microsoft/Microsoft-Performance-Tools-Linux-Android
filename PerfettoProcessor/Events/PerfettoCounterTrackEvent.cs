@@ -9,7 +9,7 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoCounterTrackEvent";
 
-        public static string SqlQuery = "select id, name from counter_track";
+        public const string SqlQuery = "select id, name from counter_track";
         public long Id { get; set; }
         public string Name { get; set; }
 

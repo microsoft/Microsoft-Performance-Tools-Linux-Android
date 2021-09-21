@@ -1,6 +1,7 @@
 ﻿using Perfetto.Protos;
 using System;
 using System.Text;
+using Utilities;
 
 namespace PerfettoProcessor
 {
@@ -8,16 +9,16 @@ namespace PerfettoProcessor
     {
         public const string Key = "PerfettoSchedSliceEvent";
 
-        public static string SqlQuery = "select utid, ts, dur, cpu, end_state, priority from sched_slice";
+        public const string SqlQuery = "select utid, ts, dur, cpu, end_state, priority from sched_slice";
 
-        public long Utid { get; set; }
+        public int Utid { get; set; }
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
         public long Duration { get; set; }
-        public long Cpu { get; set; }
+        public int Cpu { get; set; }
         public string EndStateCode { get; set; }
         public string EndStateStr { get; set; }
-        public long Priority { get; set; }
+        public int Priority { get; set; }
 
         public override string GetEventKey()
         {
@@ -94,7 +95,7 @@ namespace PerfettoProcessor
                         break;
                 }
             }
-            EndStateStr = sb.ToString();
+            EndStateStr = Common.StringIntern(sb.ToString());
         }
 
         public override void ProcessCell(string colName, QueryResult.Types.CellsBatch.Types.CellType cellType, QueryResult.Types.CellsBatch batch, string[] stringCells, CellCounters counters)
@@ -110,7 +111,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = longVal;
+                            Utid = (int)longVal;
                             break;
                         case "ts":
                             Timestamp = longVal;
@@ -119,10 +120,10 @@ namespace PerfettoProcessor
                             Duration = longVal;
                             break;
                         case "cpu":
-                            Cpu = longVal;
+                            Cpu = (int)longVal;
                             break;
                         case "priority":
-                            Priority = longVal;
+                            Priority = (int)longVal;
                             break;
                     }
 

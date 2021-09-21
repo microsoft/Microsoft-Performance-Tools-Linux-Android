@@ -20,7 +20,7 @@ namespace PerfettoProcessor
         // Boottime is counting from an arbitrary time in the past (at bootup?). This time aligns with the timestamps that most events return
         public const string BOOTTIME = "BOOTTIME";
 
-        public static string SqlQuery = "select ts, clock_id, clock_name, clock_value, snapshot_id from clock_snapshot order by snapshot_id ASC";
+        public const string SqlQuery = "select ts, clock_id, clock_name, clock_value, snapshot_id from clock_snapshot order by snapshot_id ASC";
         public long Timestamp { get; set; }
         public long ClockId { get; set; }
         public string ClockName { get; set; }
