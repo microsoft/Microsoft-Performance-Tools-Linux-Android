@@ -15,7 +15,7 @@ namespace CloudInitMPTAddin.Tables.Metadata
     public sealed class FileStatsMetadataTable
     {
         public static readonly TableDescriptor TableDescriptor = new TableDescriptor(
-            Guid.Parse("{40AF86E5-0DF8-47B1-9A01-1D6C3529B75B}"),
+            Guid.Parse("{806a2599-97a2-4ff7-9ed8-9ac891edeef6}"),
             "File Stats",
             "Statistics for text files",
             isMetadataTable: true,

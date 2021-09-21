@@ -267,7 +267,7 @@ namespace PerfettoCds.Pipeline.Tables
             // Process-Thread by StartTime config
             var processThreadByStartTimeColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadByStartTimeColumns.Remove(EndTimestampColConfig);
-            processThreadByStartTimeColumns.Insert(processThreadByStartTimeColumns.Count - 3, EndTimestampColConfig);
+            processThreadByStartTimeColumns.Insert(processThreadByStartTimeColumns.Count - 2, EndTimestampColConfig);
 
             var processThreadByStartTimeConfig = new TableConfiguration("Process-Thread by Start Time")
             {
@@ -317,7 +317,7 @@ namespace PerfettoCds.Pipeline.Tables
             processThreadNameByStartTimeColumns.Insert(4, EventNameColConfig);
             processThreadNameByStartTimeColumns.Insert(9, ParentEventNameTreeBranchColConfig);
             processThreadNameByStartTimeColumns.Remove(EndTimestampColConfig);
-            processThreadNameByStartTimeColumns.Insert(processThreadNameByStartTimeColumns.Count - 3, EndTimestampColConfig);
+            processThreadNameByStartTimeColumns.Insert(processThreadNameByStartTimeColumns.Count - 2, EndTimestampColConfig);
 
             var processThreadNameByStartTimeConfig = new TableConfiguration("Process-Thread-Name by Start Time")
             {
