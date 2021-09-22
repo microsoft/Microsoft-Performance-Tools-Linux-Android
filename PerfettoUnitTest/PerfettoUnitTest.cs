@@ -66,28 +66,28 @@ namespace PerfettoUnitTest
                     nameof(PerfettoGenericEventCooker.GenericEvents)));
             Assert.IsTrue(genericEventData.Count == 1);
             Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
-            Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest 20855");
-            Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest 20855");
+            Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest (20855)");
+            Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest (20855)");
 
             var cpuSchedEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuSchedEventCookerPath,
                     nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents)));
             Assert.IsTrue(cpuSchedEventData.Count == 15267);
-            Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9");
+            Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9 (834)");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
             Assert.IsTrue(cpuSchedEventData[0].ProcessName == string.Empty);
 
             Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
-            Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest");
-            Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest");
+            Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest (20855)");
+            Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest (20855)");
 
             var ftraceEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.FtraceEventCookerPath,
                     nameof(PerfettoFtraceEventCooker.FtraceEvents)));
             Assert.IsTrue(ftraceEventData.Count == 35877);
-            Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper");
+            Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper (0)");
             Assert.IsTrue(ftraceEventData[1].Cpu == 3);
 
             var cpuFreqEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
@@ -132,14 +132,14 @@ namespace PerfettoUnitTest
                     nameof(PerfettoGenericEventCooker.GenericEvents)));
             Assert.IsTrue(genericEventData.Count == 147906);
             Assert.IsTrue(genericEventData[1].EventName == "PipelineReporter");
-            Assert.IsTrue(genericEventData[1].Process == "Renderer 27768");
+            Assert.IsTrue(genericEventData[1].Process == "Renderer (27768)");
             Assert.IsTrue(genericEventData[1].ParentId == null);
             Assert.IsTrue(genericEventData[1].ParentTreeDepthLevel == 0);
             Assert.IsTrue(genericEventData[1].ParentEventNameTree[0] == "[Root]");
             Assert.IsTrue(genericEventData[1].ParentEventNameTree[1] == "PipelineReporter");
 
             Assert.IsTrue(genericEventData[2].EventName == "BeginImplFrameToSendBeginMainFrame");
-            Assert.IsTrue(genericEventData[2].Process == "Renderer 27768");
+            Assert.IsTrue(genericEventData[2].Process == "Renderer (27768)");
             Assert.IsTrue(genericEventData[2].ParentId == 1);
             Assert.IsTrue(genericEventData[2].ParentTreeDepthLevel == 1);
             Assert.IsTrue(genericEventData[2].ParentEventNameTree[1] == "PipelineReporter");

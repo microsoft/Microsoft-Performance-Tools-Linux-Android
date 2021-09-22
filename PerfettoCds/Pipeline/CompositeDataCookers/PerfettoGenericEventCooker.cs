@@ -227,16 +227,19 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                 string processName = string.Empty;
                 string threadName = string.Empty;
+                if (result.thread != null)
+                {
+                    threadName = $"{result.thread.Name} ({result.thread.Tid})";
+                }
 
                 // An event can have a thread+process or just a process
                 if (result.threadProcess != null)
                 {
-                    processName = $"{result.threadProcess.Name} {result.threadProcess.Pid}";
-                    threadName = $"{result.thread.Name} {result.thread.Tid}";
+                    processName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
                 }
-                if (result.process != null)
+                else if (result.process != null)
                 {
-                    processName = $"{result.process.Name} {result.process.Pid}";
+                    processName = $"{result.process.Name} ({result.process.Pid})";
                 }
 
                 int parentTreeDepthLevel = 0;
