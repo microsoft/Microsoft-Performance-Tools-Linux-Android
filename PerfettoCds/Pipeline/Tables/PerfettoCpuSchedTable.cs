@@ -101,7 +101,7 @@ namespace PerfettoCds.Pipeline.Tables
 
             // We want to exclude the idle thread ('swapper' on Android/Linux) from the display because it messes up CPU usage and clutters
             // the scheduler view
-            const string swapperIdleFilter = "[Thread]:=\"swapper\"";
+            const string swapperIdleFilter = "[Thread]:=\"swapper (0)\"";
 
             var cpuSchedConfig = new TableConfiguration("CPU Scheduling")
             {
