@@ -30,8 +30,9 @@ namespace CtfPlayback.FieldValues
         /// Constructor
         /// </summary>
         /// <param name="metadataCustomization">Extensibility points</param>
+        /// <param name="metadata">The active metadata relevant to this timestamp</param>
         /// <param name="integerValue">integer representation of the timestamp</param>
-        public CtfTimestamp(ICtfMetadataCustomization metadataCustomization, CtfIntegerValue integerValue)
+        public CtfTimestamp(ICtfMetadataCustomization metadataCustomization, ICtfMetadata metadata, CtfIntegerValue integerValue)
         {
             this.BaseIntegerValue = integerValue;
 
@@ -44,9 +45,9 @@ namespace CtfPlayback.FieldValues
                     throw new CtfPlaybackException($"Unable to parse integer map value as a clock: {integerValue.MapValue}");
                 }
 
-                if (metadataCustomization.Metadata.Clocks?.Count == 1)
+                if (metadata.Clocks?.Count == 1)
                 {
-                    clockName = metadataCustomization.Metadata.Clocks[0].Name;
+                    clockName = metadata.Clocks[0].Name;
                 }
                 else
                 {
@@ -55,7 +56,7 @@ namespace CtfPlayback.FieldValues
                 }
             }
 
-            if (!metadataCustomization.Metadata.ClocksByName.TryGetValue(clockName, out var clockDescriptor))
+            if (!metadata.ClocksByName.TryGetValue(clockName, out var clockDescriptor))
             {
                 throw new CtfPlaybackException($"Unable to retrieve clock descriptor for timestamp value: {integerValue.MapValue}");
             }
@@ -77,10 +78,11 @@ namespace CtfPlayback.FieldValues
         /// Constructor
         /// </summary>
         /// <param name="metadataCustomization">Extensibility points</param>
+        /// <param name="metadata">The active metadata relevant to this timestamp</param>
         /// <param name="integerValue">Integer representation of the timestamp</param>
         /// <param name="timestampValue">Timestamp value in units specified by the ClockDescriptor</param>
-        public CtfTimestamp(ICtfMetadataCustomization metadataCustomization, CtfIntegerValue integerValue, long timestampValue)
-            : this(metadataCustomization, integerValue)
+        public CtfTimestamp(ICtfMetadataCustomization metadataCustomization, ICtfMetadata metadata, CtfIntegerValue integerValue, long timestampValue)
+            : this(metadataCustomization, metadata, integerValue)
         {
             if (timestampValue < 0)
             {
