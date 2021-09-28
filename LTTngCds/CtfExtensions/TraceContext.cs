@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using CtfPlayback.Metadata.Interfaces;
+
 namespace LTTngCds.CtfExtensions
 {
     internal class TraceContext
     {
-        internal TraceContext(LTTngMetadata metadata)
+        internal TraceContext(ICtfMetadata metadata)
         {
             if (metadata.EnvironmentDescriptor.Properties.TryGetValue("hostname", out string hostName))
             {

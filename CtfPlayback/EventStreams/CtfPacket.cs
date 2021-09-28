@@ -73,7 +73,7 @@ namespace CtfPlayback.EventStreams
             this.PacketTimestampsAreValid = false;
 
             if (this.packetReader.PlaybackCustomization.GetTimestampsFromPacketContext(
-                this, out var startValue, out var endValue))
+                this, this.Metadata, out var startValue, out var endValue))
             {
                 this.Start = startValue;
                 this.End = endValue;
@@ -92,7 +92,7 @@ namespace CtfPlayback.EventStreams
                 return false;
             }
 
-            var nextEvent = new CtfEvent(this.packetReader, this);
+            var nextEvent = new CtfEvent(this.packetReader, this.Metadata, this);
             nextEvent.ReadEventMetadata();
 
             this.CurrentEvent = nextEvent;

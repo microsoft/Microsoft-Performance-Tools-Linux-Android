@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using CtfPlayback;
 using CtfPlayback.EventStreams.Interfaces;
 using CtfPlayback.FieldValues;
@@ -45,6 +46,7 @@ namespace LTTngCds.CtfExtensions
 
         public bool GetTimestampsFromPacketContext(
             ICtfPacket ctfPacket, 
+            ICtfMetadata metadata,
             out CtfTimestamp start, 
             out CtfTimestamp end)
         {
@@ -76,8 +78,8 @@ namespace LTTngCds.CtfExtensions
                 return false;
             }
 
-            start = new CtfTimestamp(this.MetadataCustomization, startFieldInteger);
-            end = new CtfTimestamp(this.MetadataCustomization, endFieldInteger);
+            start = new CtfTimestamp(this.MetadataCustomization, metadata, startFieldInteger);
+            end = new CtfTimestamp(this.MetadataCustomization, metadata, endFieldInteger);
             return true;
         }
 
@@ -86,7 +88,7 @@ namespace LTTngCds.CtfExtensions
             this.eventCallbacks.Add(eventCallback);
         }
 
-        public virtual CtfTimestamp GetTimestampFromEventHeader(ICtfEvent ctfEvent, CtfTimestamp previousTimestamp)
+        public virtual CtfTimestamp GetTimestampFromEventHeader(ICtfEvent ctfEvent, ICtfMetadata metadata, CtfTimestamp previousTimestamp)
         {
             var variantStruct = GetStreamEventHeaderStructure(ctfEvent);
             Debug.Assert(variantStruct != null);
@@ -107,7 +109,7 @@ namespace LTTngCds.CtfExtensions
                 // todo:I think we need to do something else for this case, especially if the integer size is < 64
                 // not sure what yet. maybe base it on the clock's offset?
 
-                return new CtfTimestamp(this.MetadataCustomization, timestampInteger);
+                return new CtfTimestamp(this.MetadataCustomization, metadata, timestampInteger);
             }
 
             // Timestamps aren't actually absolute values. To quote from CTF spec 1.8.2 section 8:
@@ -139,10 +141,10 @@ namespace LTTngCds.CtfExtensions
                     Debug.Assert(newTimestamp > previous);
                 }
 
-                return new CtfTimestamp(this.MetadataCustomization, timestampInteger, newTimestamp);
+                return new CtfTimestamp(this.MetadataCustomization, metadata, timestampInteger, newTimestamp);
             }
 
-            return new CtfTimestamp(this.MetadataCustomization, timestampInteger);
+            return new CtfTimestamp(this.MetadataCustomization, metadata, timestampInteger);
         }
 
         /// <inheritdoc />
@@ -218,12 +220,23 @@ namespace LTTngCds.CtfExtensions
         }
 
         /// <inheritdoc />
-        public ICtfEventDescriptor GetEventDescriptor(
-            ICtfEvent ctfEvent)
+        public ICtfEventDescriptor GetEventDescriptor(ICtfEvent ctfEvent, ICtfMetadata metadata)
         {
             uint id = this.GetEventId(ctfEvent);
 
-            if (!this.metadataCustomization.LTTngMetadata.EventByEventId.TryGetValue(id, out var eventDescriptor))
+            ICtfEventDescriptor eventDescriptor;
+            if (metadata is LTTngMetadata typedMetadata)
+            {
+                // optimization if we got our own typed metadata back
+                // we check for success below
+                typedMetadata.EventByEventId.TryGetValue(id, out eventDescriptor);
+            }
+            else
+            {
+                eventDescriptor = metadata.Events.FirstOrDefault(x => x.Id == id);
+            }
+
+            if (eventDescriptor == null)
             {
                 throw new LTTngPlaybackException($"Unable to find event descriptor for event id={id}.");
             }
@@ -231,7 +244,7 @@ namespace LTTngCds.CtfExtensions
             return eventDescriptor;
         }
 
-        public void ProcessEvent(ICtfEvent ctfEvent, ICtfPacket eventPacket, ICtfTraceInput traceInput, ICtfInputStream ctfEventStream)
+        public void ProcessEvent(ICtfEvent ctfEvent, ICtfPacket eventPacket, ICtfTraceInput traceInput, ICtfInputStream ctfEventStream, ICtfMetadata metadata)
         {
             var eventDescriptor = ctfEvent.EventDescriptor as EventDescriptor;
             Debug.Assert(eventDescriptor != null);
@@ -255,7 +268,7 @@ namespace LTTngCds.CtfExtensions
 
             if (!this.traceContexts.TryGetValue(traceInput, out var traceContext))
             {
-                traceContext = new TraceContext(this.metadataCustomization.LTTngMetadata);
+                traceContext = new TraceContext(metadata);
                 this.traceContexts.Add(traceInput, traceContext);
             }
             

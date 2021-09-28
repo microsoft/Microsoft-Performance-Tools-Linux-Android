@@ -14,11 +14,13 @@ namespace CtfPlayback.EventStreams
     {
         private readonly PacketReader packetReader;
         private readonly ICtfPacket owningPacket;
+        private readonly ICtfMetadata metadata;
 
-        public CtfEvent(PacketReader packetReader, ICtfPacket owningPacket)
+        public CtfEvent(PacketReader packetReader, ICtfMetadata metadata, ICtfPacket owningPacket)
         {
             this.packetReader = packetReader;
             this.owningPacket = owningPacket;
+            this.metadata = metadata;
         }
 
         public ulong ByteOffsetWithinPacket { get; private set; }
@@ -49,7 +51,7 @@ namespace CtfPlayback.EventStreams
 
             this.ReadStreamEventContext();
 
-            this.Timestamp = this.packetReader.PlaybackCustomization.GetTimestampFromEventHeader(this, this.owningPacket.CurrentEvent?.Timestamp);
+            this.Timestamp = this.packetReader.PlaybackCustomization.GetTimestampFromEventHeader(this, this.metadata, this.owningPacket.CurrentEvent?.Timestamp);
 
             this.DiscardedEvents = this.owningPacket.StreamPacketContext.ReadFieldAsUInt32("events_discarded");
 
@@ -79,7 +81,7 @@ namespace CtfPlayback.EventStreams
 
         public void Read()
         {
-            this.EventDescriptor = this.packetReader.PlaybackCustomization.GetEventDescriptor(this);
+            this.EventDescriptor = this.packetReader.PlaybackCustomization.GetEventDescriptor(this, this.metadata);
             if (this.EventDescriptor == null)
             {
                 throw new CtfPlaybackException("Missing event descriptor for event.");
