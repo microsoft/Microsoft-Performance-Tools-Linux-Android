@@ -319,6 +319,21 @@ namespace PerfettoProcessor
                                 case PerfettoProcessTrackEvent.Key:
                                     ev = new PerfettoProcessTrackEvent();
                                     break;
+                                case PerfettoPerfSampleEvent.Key:
+                                    ev = new PerfettoPerfSampleEvent();
+                                    break;
+                                case PerfettoStackProfileCallSiteEvent.Key:
+                                    ev = new PerfettoStackProfileCallSiteEvent();
+                                    break;
+                                case PerfettoStackProfileFrameEvent.Key:
+                                    ev = new PerfettoStackProfileFrameEvent();
+                                    break;
+                                case PerfettoStackProfileMappingEvent.Key:
+                                    ev = new PerfettoStackProfileMappingEvent();
+                                    break;
+                                case PerfettoStackProfileSymbolEvent.Key:
+                                    ev = new PerfettoStackProfileSymbolEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }

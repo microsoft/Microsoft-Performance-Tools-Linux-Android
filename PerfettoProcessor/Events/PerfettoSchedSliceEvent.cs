@@ -15,7 +15,7 @@ namespace PerfettoProcessor
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
         public long Duration { get; set; }
-        public int Cpu { get; set; }
+        public uint Cpu { get; set; }
         public string EndStateCode { get; set; }
         public string EndStateStr { get; set; }
         public int Priority { get; set; }
@@ -120,7 +120,7 @@ namespace PerfettoProcessor
                             Duration = longVal;
                             break;
                         case "cpu":
-                            Cpu = (int)longVal;
+                            Cpu = (uint)longVal;
                             break;
                         case "priority":
                             Priority = (int)longVal;

@@ -6,20 +6,33 @@ using Utilities;
 
 namespace PerfettoProcessor
 {
-    /// <summary>
-    /// https://perfetto.dev/docs/analysis/sql-tables#raw
-    /// </summary>
-    public class PerfettoRawEvent : PerfettoSqlEvent
+    // https://perfetto.dev/docs/analysis/sql-tables#stack_profile_frame
+    public class PerfettoStackProfileFrameEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoRawEvent";
+        public const string Key = "PerfettoStackProfileFrame";
 
-        public const string SqlQuery = "select ts, name, cpu, utid, arg_set_id from raw";
-        public long Timestamp { get; set; }
-        public long RelativeTimestamp { get; set; }
+        public const string SqlQuery = "select id, type, name, mapping, rel_pc, symbol_set_id, deobfuscated_name from stack_profile_frame order by id";
+        public int Id { get; set; }
+        public string Type { get; set; }
+        /// <summary>
+        /// name of the function this location is in.
+        /// </summary>
         public string Name { get; set; }
-        public uint Cpu { get; set; }
-        public uint Utid { get; set; }
-        public uint ArgSetId { get; set; }
+        /// <summary>
+        /// the mapping (library / binary) this location is in.
+        /// </summary>
+        public int Mapping { get; set; }
+        /// <summary>
+        /// the program counter relative to the start of the mapping.
+        /// </summary>
+        public long RelPc { get; set; }
+        /// <summary>
+        /// if the profile was offline symbolized, the offlinesymbol information of this frame
+        /// Joinable with stack_profile_symbol.symbol_set_id
+        /// </summary>
+        public uint? SymbolSetId { get; set; }
+        public string DeobfuscatedName { get; set; }
+
 
         public override string GetSqlQuery()
         {
@@ -47,17 +60,17 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "utid":
-                            Utid = (uint)longVal;
+                        case "id":
+                            Id = (int)longVal;
                             break;
-                        case "ts":
-                            Timestamp = longVal;
+                        case "mapping":
+                            Mapping = (int)longVal;
                             break;
-                        case "cpu":
-                            Cpu = (uint)longVal;
+                        case "rel_pc":
+                            RelPc = longVal;
                             break;
-                        case "arg_set_id":
-                            ArgSetId = (uint)longVal;
+                        case "symbol_set_id":
+                            SymbolSetId = (uint)longVal;
                             break;
                     }
 
@@ -70,6 +83,12 @@ namespace PerfettoProcessor
                     {
                         case "name":
                             Name = strVal;
+                            break;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "deobfuscated_name":
+                            DeobfuscatedName = strVal;
                             break;
                     }
                     break;

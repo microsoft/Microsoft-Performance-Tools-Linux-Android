@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
+using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
 using System.IO;
 using System.Linq;
@@ -42,6 +43,11 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ProcessCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.PerfSampleCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileCallSiteCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileFrameCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileMappingCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileSymbolCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
@@ -49,6 +55,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuFrequencyEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
 
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
@@ -97,6 +104,29 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuFreqEventData.Count == 11855);
             Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
             Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
+        }
+
+        [TestMethod]
+        public void TestAndroid12Trace()
+        {
+            // TODO - Get a smaller trace
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\Android12_cpu_sampling.pftrace");
+
+            var perfSampleData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPerfSampleEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.PerfSampleCookerPath,
+                    nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
+            Assert.IsTrue(perfSampleData.Count >= 1);
+
+            var cpuSamplingData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSamplingEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.CpuSamplingEventCookerPath,
+                    nameof(PerfettoCpuSamplingEventCooker.CpuSamplingEvents)));
+            Assert.IsTrue(cpuSamplingData.Count >= 1);
+
+            //Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
+            //Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest (20855)");
+            //Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest (20855)");
         }
 
         [TestMethod]

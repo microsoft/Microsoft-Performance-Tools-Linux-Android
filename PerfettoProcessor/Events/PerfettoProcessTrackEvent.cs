@@ -5,16 +5,19 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#process_track
+    /// </summary>
     public class PerfettoProcessTrackEvent : PerfettoSqlEvent
     {
         public const string Key = "PerfettoProcessTrackEvent";
 
         public const string SqlQuery = "select id, type, name, source_arg_set_id, upid from process_track";
-        public long ArgSetId { get; set; }
+        public uint ArgSetId { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
-        public long? SourceArgSetId { get; set; }
+        public uint? SourceArgSetId { get; set; }
         public long Upid { get; set; }
 
         public override string GetSqlQuery()
@@ -44,7 +47,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "arg_set_id":
-                            ArgSetId = longVal;
+                            ArgSetId = (uint)longVal;
                             break;
                         case "id":
                             Id = longVal;
@@ -53,7 +56,7 @@ namespace PerfettoProcessor
                             Upid = longVal;
                             break;
                         case "source_arg_set_id":
-                            SourceArgSetId = longVal;
+                            SourceArgSetId = (uint)longVal;
                             break;
                     }
 

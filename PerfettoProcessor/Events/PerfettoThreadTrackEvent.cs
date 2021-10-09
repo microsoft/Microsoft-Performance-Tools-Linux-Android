@@ -5,6 +5,9 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#thread_track
+    /// </summary>
     public class PerfettoThreadTrackEvent : PerfettoTrackEvent
     {
         public new const string Key = "PerfettoThreadTrackEvent";
@@ -46,7 +49,7 @@ namespace PerfettoProcessor
                             Utid = longVal;
                             break;
                         case "source_arg_set_id":
-                            SourceArgSetId = longVal;
+                            SourceArgSetId = (uint) longVal;
                             break;
                     }
 

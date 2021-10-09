@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public TimestampDelta Duration { get; }
         public Timestamp StartTimestamp { get; }
         public Timestamp EndTimestamp { get; }
-        public int Cpu { get; }
+        public uint Cpu { get; }
         public string EndState { get; }
         public int Priority { get; }
 
@@ -24,7 +24,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             TimestampDelta duration,
             Timestamp startTimestamp,
             Timestamp endTimestamp,
-            int cpu,
+            uint cpu,
             string endState,
             int priority)
         {

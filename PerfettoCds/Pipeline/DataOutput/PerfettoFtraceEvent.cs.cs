@@ -14,7 +14,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public Timestamp StartTimestamp { get; }
         public string ProcessName { get; }
         public string ThreadName { get; }
-        public int Cpu { get; }
+        public uint Cpu { get; }
         // Name of the ftrace event
         public string Name { get; }
 
@@ -25,7 +25,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public PerfettoFtraceEvent(Timestamp startTimestamp,
             string processName,
             string threadName,
-            int cpu,
+            uint cpu,
             string name,
             List<string> values,
             List<string> argKeys)

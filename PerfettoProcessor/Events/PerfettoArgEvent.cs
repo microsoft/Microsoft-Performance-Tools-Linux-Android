@@ -6,12 +6,15 @@ using Utilities;
 
 namespace PerfettoProcessor
 {
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#args
+    /// </summary>
     public class PerfettoArgEvent : PerfettoSqlEvent
     {
         public const string Key = "PerfettoArgEvent";
 
         public const string SqlQuery = "select arg_set_id, flat_key, key, int_value, string_value, real_value, value_type from args order by arg_set_id";
-        public int ArgSetId { get; set; }
+        public uint ArgSetId { get; set; }
         public string Flatkey { get; set; }
         public string ArgKey { get; set; }
         public long? IntValue { get; set; }
@@ -46,7 +49,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "arg_set_id":
-                            ArgSetId = (int)longVal;
+                            ArgSetId = (uint)longVal;
                             break;
                         case "int_value":
                             IntValue = longVal;
