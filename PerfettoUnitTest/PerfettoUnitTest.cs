@@ -118,19 +118,35 @@ namespace PerfettoUnitTest
         public void TestAndroid12Trace()
         {
             // TODO - Get a smaller trace
-            LoadTrace(@"..\..\..\..\TestData\Perfetto\Android12_cpu_sampling.pftrace");
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\perfetto_trace_cpu_sampling_not_scoped.pftrace");
 
             var perfSampleData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPerfSampleEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.PerfSampleCookerPath,
                     nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
-           Assert.IsTrue(perfSampleData.Count >= 1);
+            Assert.IsTrue(perfSampleData.Count >= 1);
+            Assert.IsTrue(perfSampleData.Count == 684);
+            Assert.IsTrue(perfSampleData[0].Cpu == 2);
+            Assert.IsTrue(perfSampleData[0].CallsiteId == 32);
+            Assert.IsTrue(perfSampleData[0].Utid == 3);
+            Assert.IsTrue(perfSampleData[0].CpuMode == "kernel");
+            Assert.IsTrue(perfSampleData[0].Type == "perf_sample");
+            Assert.IsTrue(perfSampleData[0].Timestamp == 3958539411500);
+            Assert.IsTrue(perfSampleData[0].RelativeTimestamp == 30446232358);
 
             var cpuSamplingData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSamplingEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.CpuSamplingEventCookerPath,
                     nameof(PerfettoCpuSamplingEventCooker.CpuSamplingEvents)));
             Assert.IsTrue(cpuSamplingData.Count >= 1);
+            Assert.IsTrue(cpuSamplingData.Count == 684);
+            Assert.IsTrue(cpuSamplingData[0].Cpu == 2);
+            Assert.IsTrue(cpuSamplingData[0].CpuMode == "kernel");
+            Assert.IsTrue(cpuSamplingData[0].ProcessName == "/system/bin/traced_probes (446)");
+            Assert.IsTrue(cpuSamplingData[0].ThreadName == "traced_probes (446)");
+            Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
+            Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
+            Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
 
             //Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
             //Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest (20855)");

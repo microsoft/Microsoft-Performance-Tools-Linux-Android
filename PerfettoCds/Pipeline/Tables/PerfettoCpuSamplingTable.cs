@@ -55,19 +55,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 300 });
 
         // In Perfetto, callstacks are often scoped/filtered.
-        // TODO - We will have to determine how to detect this at a later date and only calc % if it can be done accurately
-        //private static readonly ColumnConfiguration PercentCpuUsageColumn = new ColumnConfiguration(
-        //    new ColumnMetadata(new Guid("{E26884C9-8856-4AC9-9EDC-F75DB0050714}"), "% CPU Usage") { IsPercent = true },
-        //    new UIHints
-        //    {
-        //        IsVisible = true,
-        //        Width = 100,
-        //        TextAlignment = TextAlignment.Right,
-        //        CellFormat = ColumnFormats.PercentFormat,
-        //        AggregationMode = AggregationMode.Sum,
-        //        SortOrder = SortOrder.Descending,
-        //        SortPriority = 0,
-        //    });
+        // TODO - We will have to determine how to detect this at a later date and only calc %  CPU Usage if it can be done accurately
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
@@ -89,22 +77,6 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddHierarchicalColumn(CallStackColumn, baseProjection.Compose(x => x.CallStack), new ArrayAccessProvider<string>());
             tableGenerator.AddColumn(TimestampColumn, startProjection);
 
-            // Create projections that are used for calculating CPU usage%
-            //var startProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(startProjection);
-            //var endProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(endProjection);
-
-            //IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
-            //        endProjectionClippedToViewport,
-            //        startProjectionClippedToViewport,
-            //        new ReduceTimeSinceLastDiff());
-
-            //var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
-            //tableGenerator.AddColumn(PercentCpuUsageColumn, percentCpuUsageColumn);
-
-            // We want to exclude the idle thread ('swapper' on Android/Linux) from the display because it messes up CPU usage and clutters
-            // the scheduler view
-            // const string swapperIdleFilter = "[Thread]:=\"swapper (0)\"";
-
             var processStackConfig = new TableConfiguration("By Process, Stack")
             {
                 Columns = new[]
@@ -121,32 +93,8 @@ namespace PerfettoCds.Pipeline.Tables
                     TimestampColumn,
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
-                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
-                // InitialFilterQuery = swapperIdleFilter
             };
             processStackConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
-
-            //var perCpuUsageConfig = new TableConfiguration("Utilization by CPU")
-            //{
-            //    Columns = new[]
-            //    {
-            //        CpuColumn,
-            //        TableConfiguration.PivotColumn, // Columns before this get pivotted on
-            //        ProcessNameColumn,
-            //        ThreadNameColumn,
-            //        DurationColumn,
-            //        TimestampColumn,
-            //        EndTimestampColumn,
-            //        UnwindErrorColumn,
-            //        CallStackColumn,
-            //        TableConfiguration.GraphColumn, // Columns after this get graphed
-            //        PercentCpuUsageColumn
-            //    },
-            //    Layout = TableLayoutStyle.GraphAndTable,
-            //    InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
-            //    InitialFilterQuery = swapperIdleFilter
-            //};
-            //perCpuUsageConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
 
             var processThreadStackConfig = new TableConfiguration("By Process, Thread, Stack")
             {
@@ -164,26 +112,13 @@ namespace PerfettoCds.Pipeline.Tables
                     TimestampColumn,
                 },
                 Layout = TableLayoutStyle.GraphAndTable,
-                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
-                //InitialFilterQuery = swapperIdleFilter
             };
             processThreadStackConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
 
             tableBuilder
                 .AddTableConfiguration(processStackConfig)
-                //.AddTableConfiguration(perCpuUsageConfig)
                 .AddTableConfiguration(processThreadStackConfig)
                 .SetDefaultTableConfiguration(processStackConfig);
         }
-
-        struct ReduceTimeSinceLastDiff
-            : IFunc<int, Timestamp, Timestamp, TimestampDelta>
-        {
-            public TimestampDelta Invoke(int value, Timestamp timeSinceLast1, Timestamp timeSinceLast2)
-            {
-                return timeSinceLast1 - timeSinceLast2;
-            }
-        }
-
     }
 }

@@ -1,8 +1,6 @@
-﻿using Microsoft.Performance.SDK.Processing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Utilities;
 
 namespace PerfettoProcessor
@@ -16,18 +14,18 @@ namespace PerfettoProcessor
 
     public class StackWalk
     {
-        public StackWalk(ProcessedEventData<PerfettoStackProfileCallSiteEvent> stackProfileCallSiteEvents, 
-                         ProcessedEventData<PerfettoStackProfileFrameEvent> stackProfileFrameEvents, 
-                         ProcessedEventData<PerfettoStackProfileMappingEvent> stackProfileMappingEvents)
+        public StackWalk(IReadOnlyList<PerfettoStackProfileCallSiteEvent> stackProfileCallSiteEvents,
+                         IReadOnlyList<PerfettoStackProfileFrameEvent> stackProfileFrameEvents,
+                         IReadOnlyList<PerfettoStackProfileMappingEvent> stackProfileMappingEvents)
         {
             StackProfileCallSiteEvents = stackProfileCallSiteEvents;
             StackProfileFrameEvents = stackProfileFrameEvents;
             StackProfileMappingEvents = stackProfileMappingEvents;
         }
 
-        public ProcessedEventData<PerfettoStackProfileCallSiteEvent> StackProfileCallSiteEvents { get; }
-        public ProcessedEventData<PerfettoStackProfileFrameEvent> StackProfileFrameEvents { get; }
-        public ProcessedEventData<PerfettoStackProfileMappingEvent> StackProfileMappingEvents { get; }
+        public IReadOnlyList<PerfettoStackProfileCallSiteEvent> StackProfileCallSiteEvents { get; }
+        public IReadOnlyList<PerfettoStackProfileFrameEvent> StackProfileFrameEvents { get; }
+        public IReadOnlyList<PerfettoStackProfileMappingEvent> StackProfileMappingEvents { get; }
 
         /// <summary>
         /// 
