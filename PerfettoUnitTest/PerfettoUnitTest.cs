@@ -124,7 +124,7 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.PerfSampleCookerPath,
                     nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
-            Assert.IsTrue(perfSampleData.Count >= 1);
+           Assert.IsTrue(perfSampleData.Count >= 1);
 
             var cpuSamplingData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSamplingEvent>>(
                 new DataOutputPath(

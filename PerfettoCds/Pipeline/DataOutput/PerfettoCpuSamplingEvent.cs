@@ -46,8 +46,8 @@ namespace PerfettoCds.Pipeline.DataOutput
             CpuMode = cpuMode;
             UnwindError = unwindError;
             CallStack = callStack;
-            Module = Common.StringIntern(module);
-            Function = Common.StringIntern(function);
+            Module = module;
+            Function = function;
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
@@ -55,25 +56,29 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var stackProfileCallSiteData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileCallSiteEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileCallSiteCookerPath, nameof(PerfettoStackProfileCallSiteCooker.StackProfileCallSiteEvents)));
             var stackProfileFrameData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileFrameEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileFrameCookerPath, nameof(PerfettoStackProfileFrameCooker.StackProfileFrameEvents)));
             var stackProfileMappingData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileMappingEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileMappingCookerPath, nameof(PerfettoStackProfileMappingCooker.StackProfileMappingEvents)));
-            var stackProfileSymbolData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileSymbolEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileSymbolCookerPath, nameof(PerfettoStackProfileSymbolCooker.StackProfileSymbolEvents)));
+
+            // stackProfileSymbolData doesn't seem to have data now in the traces we have seen
+            //var stackProfileSymbolData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileSymbolEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileSymbolCookerPath, nameof(PerfettoStackProfileSymbolCooker.StackProfileSymbolEvents)));
 
             // We need to join a bunch of tables to get the cpu samples with stack and module information
             var joined = from perfSample in perfSampleData
                          join thread in threadData on perfSample.Utid equals thread.Id
                          join threadProcess in processData on thread.Upid equals threadProcess.Upid 
                            into pd from threadProcess in pd.DefaultIfEmpty()  // left outer
-                         join stackProfileCallSite in stackProfileCallSiteData on perfSample.CallsiteId equals stackProfileCallSite.Id 
-                           into sp from stackProfileCallSite in sp.DefaultIfEmpty() // left outer
-                         // TODO - Join with stackProfileSymbolData once we figure out how to do it correctly. Doesn't seem to have data now
-                         select new { perfSample, thread, threadProcess, stackProfileCallSite};
+                         select new { perfSample, thread, threadProcess}; // stackProfileCallSite
 
-            // TODO - Instead of join with too much data, we will have use this data to walk the stack and generate a callstack with module!function
-            //join stackProfileFrame in stackProfileFrameData on stackProfileCallSite.FrameId equals stackProfileFrame.Id
-            //join stackProfileMapping in stackProfileMappingData on stackProfileFrame.Mapping equals stackProfileMapping.Id
+            var stackWalker = new StackWalk(stackProfileCallSiteData, stackProfileFrameData, stackProfileMappingData);
 
             // Create events out of the joined results
             foreach (var result in joined)
             {
+                // Walk the stack
+                StackWalkResult stackWalkResult = null;
+                if (result.perfSample.CallsiteId.HasValue)
+                {
+                    stackWalkResult = stackWalker.WalkStack(result.perfSample.CallsiteId.Value);
+                }
+
                 // An event can have a thread+process or just a process
                 string processName = string.Empty;
                 string threadName = $"{result.thread.Name} ({result.thread.Tid})";
@@ -81,10 +86,6 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 {
                     processName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
                 }
-
-            //string[] callStack,
-            //string module,
-            //string function
 
                 var ev = new PerfettoCpuSamplingEvent
                 (
@@ -94,9 +95,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     result.perfSample.Cpu,
                     result.perfSample.CpuMode,
                     result.perfSample.UnwindError,
-                    null,
-                    null,
-                    null
+                    stackWalkResult?.Stack,
+                    stackWalkResult?.Module,
+                    stackWalkResult?.Function
                 );
                 this.CpuSamplingEvents.AddEvent(ev);
             }
