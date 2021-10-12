@@ -147,10 +147,6 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
             Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
             Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
-
-            //Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
-            //Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest (20855)");
-            //Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest (20855)");
         }
 
         [TestMethod]

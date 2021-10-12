@@ -15,7 +15,7 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a CPU scheduling event
+    /// Pulls data from multiple individual SQL tables and joins them to create a CPU sampling event
     /// </summary>
     public sealed class PerfettoCpuSamplingEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {
@@ -50,7 +50,6 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Gather the data from all the SQL tables
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
-            //var schedSliceData = requiredData.QueryOutput<ProcessedEventData<PerfettoSchedSliceEvent>>(new DataOutputPath(PerfettoPluginConstants.SchedSliceCookerPath, nameof(PerfettoSchedSliceCooker.SchedSliceEvents)));
 
             var perfSampleData = requiredData.QueryOutput<ProcessedEventData<PerfettoPerfSampleEvent>>(new DataOutputPath(PerfettoPluginConstants.PerfSampleCookerPath, nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
             var stackProfileCallSiteData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileCallSiteEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileCallSiteCookerPath, nameof(PerfettoStackProfileCallSiteCooker.StackProfileCallSiteEvents)));
