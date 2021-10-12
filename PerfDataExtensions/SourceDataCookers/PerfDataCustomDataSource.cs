@@ -21,7 +21,7 @@ namespace PerfDataCustomDataSource
     //  e) Be decorated with at least one of the derivatives of the DataSourceAttribute attribute
     //
 
-    [CustomDataSource(
+    [ProcessingSource(
         "{EA48A279-2B4E-43A0-AC86-030113A23064}",   // The GUID must be unique for your Custom Data Source. You can use Visual Studio's Tools -> Create Guid… tool to create a new GUID
         "Linux Perf Txt Data",                               // The Custom Data Source MUST have a name
         @"Linux perf.data.txt parser")]            // The Custom Data Source MUST have a description
@@ -38,13 +38,13 @@ namespace PerfDataCustomDataSource
     //
 
     public class PerfDataCustomDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
             };

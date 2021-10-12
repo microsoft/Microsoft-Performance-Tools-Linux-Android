@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
+using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,15 @@ namespace PerfettoUnitTest
                 Assert.IsTrue(perfettoDataPath.Exists);
 
                 // Start the SDK engine
-                var runtime = Engine.Create();
+                var runtime = Engine.Create(
+                    new EngineCreateInfo()
+                    {
+                        LoggerFactory = new System.Func<System.Type, ILogger>((type) =>
+                        { 
+                            return new ConsoleLogger(type); 
+                        }),
+                    });
+
                 runtime.AddFile(perfettoDataPath.FullName);
 
                 // Enable the source data cookers
@@ -42,6 +51,11 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ProcessCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.PerfSampleCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileCallSiteCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileFrameCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileMappingCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.StackProfileSymbolCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
@@ -49,6 +63,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuFrequencyEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
 
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
@@ -97,6 +112,41 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuFreqEventData.Count == 11855);
             Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
             Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
+        }
+
+        [TestMethod]
+        public void TestAndroid12Trace()
+        {
+            // TODO - Get a smaller trace
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\perfetto_trace_cpu_sampling_not_scoped.pftrace");
+
+            var perfSampleData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPerfSampleEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.PerfSampleCookerPath,
+                    nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
+            Assert.IsTrue(perfSampleData.Count >= 1);
+            Assert.IsTrue(perfSampleData.Count == 684);
+            Assert.IsTrue(perfSampleData[0].Cpu == 2);
+            Assert.IsTrue(perfSampleData[0].CallsiteId == 32);
+            Assert.IsTrue(perfSampleData[0].Utid == 3);
+            Assert.IsTrue(perfSampleData[0].CpuMode == "kernel");
+            Assert.IsTrue(perfSampleData[0].Type == "perf_sample");
+            Assert.IsTrue(perfSampleData[0].Timestamp == 3958539411500);
+            Assert.IsTrue(perfSampleData[0].RelativeTimestamp == 30446232358);
+
+            var cpuSamplingData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSamplingEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.CpuSamplingEventCookerPath,
+                    nameof(PerfettoCpuSamplingEventCooker.CpuSamplingEvents)));
+            Assert.IsTrue(cpuSamplingData.Count >= 1);
+            Assert.IsTrue(cpuSamplingData.Count == 684);
+            Assert.IsTrue(cpuSamplingData[0].Cpu == 2);
+            Assert.IsTrue(cpuSamplingData[0].CpuMode == "kernel");
+            Assert.IsTrue(cpuSamplingData[0].ProcessName == "/system/bin/traced_probes (446)");
+            Assert.IsTrue(cpuSamplingData[0].ThreadName == "traced_probes (446)");
+            Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
+            Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
+            Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
         }
 
         [TestMethod]

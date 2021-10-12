@@ -47,9 +47,9 @@ namespace LTTngDriver
             Console.WriteLine($"ExtensionDirectory:{parsed.ExtensionDirectory}");
 
             var runtime = Engine.Create(
-                new EngineCreateInfo
+                new EngineCreateInfo(new string[] { parsed.ExtensionDirectory })
                 {
-                    ExtensionDirectory = parsed.ExtensionDirectory,
+
                 });
 
             Debug.Assert(parsed.CtfInput != null);

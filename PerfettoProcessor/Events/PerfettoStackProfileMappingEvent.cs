@@ -6,20 +6,35 @@ using Utilities;
 
 namespace PerfettoProcessor
 {
-    /// <summary>
-    /// https://perfetto.dev/docs/analysis/sql-tables#raw
-    /// </summary>
-    public class PerfettoRawEvent : PerfettoSqlEvent
+    // https://perfetto.dev/docs/analysis/sql-tables#stack_profile_mapping
+    public class PerfettoStackProfileMappingEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoRawEvent";
+        public const string Key = "PerfettoStackProfileMappingEvent";
 
-        public const string SqlQuery = "select ts, name, cpu, utid, arg_set_id from raw";
-        public long Timestamp { get; set; }
-        public long RelativeTimestamp { get; set; }
+        public const string SqlQuery = "select id, type, build_id, start, end, name, exact_offset, start_offset, load_bias from stack_profile_mapping order by id";
+        public int Id { get; set; }
+        public string Type { get; set; }
+        /// <summary>
+        /// hex-encoded Build ID of the binary / library.
+        /// </summary>
+        public string BuildId { get; set; }
+        /// <summary>
+        /// start of the mapping in the process' address space.
+        /// </summary>
+        public long Start { get; set; }
+        /// <summary>
+        /// end of the mapping in the process' address space.
+        /// </summary>
+        public long End { get; set; }
+        /// <summary>
+        /// filename of the binary / library
+        /// Joinable with profiler_smaps.path
+        /// </summary>
         public string Name { get; set; }
-        public uint Cpu { get; set; }
-        public uint Utid { get; set; }
-        public uint ArgSetId { get; set; }
+
+        public long ExactOffset { get; set; }
+        public long StartOffset { get; set; }
+        public long LoadBias { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -47,17 +62,23 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "utid":
-                            Utid = (uint)longVal;
+                        case "id":
+                            Id = (int)longVal;
                             break;
-                        case "ts":
-                            Timestamp = longVal;
+                        case "start":
+                            Start = longVal;
                             break;
-                        case "cpu":
-                            Cpu = (uint)longVal;
+                        case "end":
+                            End = longVal;
                             break;
-                        case "arg_set_id":
-                            ArgSetId = (uint)longVal;
+                        case "exact_offset":
+                            ExactOffset = longVal;
+                            break;
+                        case "start_offset":
+                            StartOffset = longVal;
+                            break;
+                        case "load_bias":
+                            LoadBias = longVal;
                             break;
                     }
 
@@ -70,6 +91,12 @@ namespace PerfettoProcessor
                     {
                         case "name":
                             Name = strVal;
+                            break;
+                        case "type":
+                            Type = strVal;
+                            break;
+                        case "build_id":
+                            BuildId = strVal;
                             break;
                     }
                     break;

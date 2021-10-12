@@ -75,7 +75,7 @@ namespace PerfettoCds.Pipeline.Tables
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.StartTimestamp));
             tableGenerator.AddColumn(startTimestampColumn);
 
-            var cpuColumn = new BaseDataColumn<int>(
+            var cpuColumn = new BaseDataColumn<uint>(
                 CpuColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.Cpu));
             tableGenerator.AddColumn(cpuColumn);

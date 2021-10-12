@@ -6,20 +6,27 @@ using Utilities;
 
 namespace PerfettoProcessor
 {
-    /// <summary>
-    /// https://perfetto.dev/docs/analysis/sql-tables#raw
-    /// </summary>
-    public class PerfettoRawEvent : PerfettoSqlEvent
+    // https://perfetto.dev/docs/analysis/sql-tables#stack_profile_callsite
+    public class PerfettoStackProfileCallSiteEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoRawEvent";
+        public const string Key = "PerfettoStackProfileCallSite";
 
-        public const string SqlQuery = "select ts, name, cpu, utid, arg_set_id from raw";
-        public long Timestamp { get; set; }
-        public long RelativeTimestamp { get; set; }
-        public string Name { get; set; }
-        public uint Cpu { get; set; }
-        public uint Utid { get; set; }
-        public uint ArgSetId { get; set; }
+        public const string SqlQuery = "select id, type, depth, parent_id, frame_id from stack_profile_callsite order by id";
+        public int Id { get; set; }
+        public string Type { get; set; }
+        /// <summary>
+        /// distance from the bottom-most frame of the callstack.
+        /// </summary>
+        public uint Depth { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? ParentId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int FrameId { get; set; }
+
 
         public override string GetSqlQuery()
         {
@@ -47,17 +54,17 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "utid":
-                            Utid = (uint)longVal;
+                        case "id":
+                            Id = (int)longVal;
                             break;
-                        case "ts":
-                            Timestamp = longVal;
+                        case "depth":
+                            Depth = (uint)longVal;
                             break;
-                        case "cpu":
-                            Cpu = (uint)longVal;
+                        case "parent_id":
+                            ParentId = (int)longVal;
                             break;
-                        case "arg_set_id":
-                            ArgSetId = (uint)longVal;
+                        case "frame_id":
+                            FrameId = (int)longVal;
                             break;
                     }
 
@@ -68,8 +75,8 @@ namespace PerfettoProcessor
                     var strVal = Common.StringIntern(stringCells[counters.StringCounter++]);
                     switch (col)
                     {
-                        case "name":
-                            Name = strVal;
+                        case "type":
+                            Type = strVal;
                             break;
                     }
                     break;
