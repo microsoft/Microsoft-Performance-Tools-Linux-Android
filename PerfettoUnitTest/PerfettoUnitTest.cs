@@ -28,7 +28,15 @@ namespace PerfettoUnitTest
                 Assert.IsTrue(perfettoDataPath.Exists);
 
                 // Start the SDK engine
-                var runtime = Engine.Create();
+                var runtime = Engine.Create(
+                    new EngineCreateInfo()
+                    {
+                        LoggerFactory = new System.Func<System.Type, ILogger>((type) =>
+                        { 
+                            return new ConsoleLogger(type); 
+                        }),
+                    });
+
                 runtime.AddFile(perfettoDataPath.FullName);
 
                 // Enable the source data cookers

@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.11-preview-g61bc0d83f6" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.24" />
   </ItemGroup>
 
   <ItemGroup>

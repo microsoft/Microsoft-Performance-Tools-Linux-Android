@@ -10,14 +10,14 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace LTTngCds
 {
-    [CustomDataSource(
+    [ProcessingSource(
         "{98608154-6231-4F25-903A-5E440574AB45}",
         "LTTng",
         "Processes LTTng CTF data")]
     [FileDataSource("ctf", "ctf")]
     [DirectoryDataSource("LTTng CTF Folder")]
     public class LTTngDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
@@ -34,9 +34,9 @@ namespace LTTngCds
             return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,

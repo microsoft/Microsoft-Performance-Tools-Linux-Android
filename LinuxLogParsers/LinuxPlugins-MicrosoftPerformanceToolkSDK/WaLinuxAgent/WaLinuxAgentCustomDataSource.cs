@@ -23,7 +23,7 @@ namespace WaLinuxAgentMPTAddin
     //  e) Be decorated with at least one of the derivatives of the DataSourceAttribute attribute
     //
 
-    [CustomDataSource(
+    [ProcessingSource(
         "{a9ac39bc-2d07-4a01-b9b5-13a02611f5f2}",     // The GUID must be unique for your Custom Data Source. You can use Visual Studio's Tools -> Create Guid… tool to create a new GUID
         "WaLinuxAgent",                               // The Custom Data Source MUST have a name
         @"WaLinuxAgent log parser")]                  // The Custom Data Source MUST have a description

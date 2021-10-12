@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace PerfettoCds
 {
-    [CustomDataSource("9fc8515e-9206-4690-b14a-3e7b54745c5f", "PerfettoTraceDataSource", "Processes Perfetto trace files")]
+    [ProcessingSource("9fc8515e-9206-4690-b14a-3e7b54745c5f", "PerfettoTraceDataSource", "Processes Perfetto trace files")]
     [FileDataSource(".perfetto-trace", "Perfetto trace files")]
-    public sealed class PerfettoDataSource : CustomDataSourceBase
+    public sealed class PerfettoDataSource : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
@@ -26,9 +26,9 @@ namespace PerfettoCds
                                             this.MetadataTables);
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,
@@ -70,9 +70,9 @@ namespace PerfettoCds
         }
     }
 
-    [CustomDataSource("99e4223a-6211-4ce7-a0da-917a893797f2", "PftraceDataSource", "Processes .pftrace Perfetto trace files")]
+    [ProcessingSource("99e4223a-6211-4ce7-a0da-917a893797f2", "PftraceDataSource", "Processes .pftrace Perfetto trace files")]
     [FileDataSource(".pftrace", "Perfetto trace files")]
-    public sealed class PfDataSource : CustomDataSourceBase
+    public sealed class PfDataSource : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
@@ -88,9 +88,9 @@ namespace PerfettoCds
                                             this.MetadataTables);
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,
