@@ -9,6 +9,7 @@
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
         <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +39,12 @@
             <PackageCopyToOutput>true</PackageCopyToOutput>
             <Visible>false</Visible>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="..\LICENSE.txt">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
     <Target Name="CopyRulesToTarget" AfterTargets="Build">
