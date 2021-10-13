@@ -21,6 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             "System Memory",
             "Displays system memory counts gathered from /proc/meminfo",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.SystemMemoryEventCookerPath }
         );
 
@@ -65,7 +66,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     MemoryValueColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);

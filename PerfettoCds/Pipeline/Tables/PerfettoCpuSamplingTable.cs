@@ -19,6 +19,7 @@ namespace PerfettoCds.Pipeline.Tables
             "CPU Sampling Events",
             "Displays CPU sampling events for processes and threads",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSamplingEventCookerPath }
         );
 
@@ -92,7 +93,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     TimestampColumn,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
             processStackConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
 
@@ -111,7 +111,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     TimestampColumn,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
             processThreadStackConfig.AddColumnRole(ColumnRole.StartTime, TimestampColumn.Metadata.Guid);
 

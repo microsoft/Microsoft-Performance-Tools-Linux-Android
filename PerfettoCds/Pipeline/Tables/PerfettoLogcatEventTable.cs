@@ -23,6 +23,7 @@ namespace PerfettoCds.Pipeline.Tables
             "Logcat Events",
             "All logcat events/messages in the Perfetto trace",
             "Perfetto - Android",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.LogcatEventCookerPath }
         );
 
@@ -82,7 +83,6 @@ namespace PerfettoCds.Pipeline.Tables
             var tableConfig = new TableConfiguration("Logcat Events")
             {
                 Columns = allColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
 

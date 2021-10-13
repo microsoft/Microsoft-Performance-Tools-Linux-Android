@@ -21,6 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             "CPU Frequency Scaling",
             "Displays CPU frequency scaling events and idle states for CPUs. Idle CPUs show a frequency of 0.",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuFrequencyEventCookerPath }
         );
 
@@ -85,7 +86,6 @@ namespace PerfettoCds.Pipeline.Tables
             var tableConfig = new TableConfiguration("CPU Frequency")
             {
                 Columns = allColumns,
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);

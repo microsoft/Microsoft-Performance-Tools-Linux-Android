@@ -21,6 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             "Process Memory",
             "Displays per process memory counts gathered from /proc/<pid>/status",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.ProcessMemoryEventCookerPath }
         );
 
@@ -100,7 +101,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     VirtColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             virtConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -126,7 +126,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     SwapColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             swapConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -152,7 +151,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     LockedColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             lockedConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -178,7 +176,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     RssColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             rssConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -204,7 +201,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     RssHwmColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             rssHwmConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -230,7 +226,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     RssFileColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             rssFileConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -256,7 +251,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     RssShMemColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             rssShMemConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -282,7 +276,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     RssAnonColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             rssAnonConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);

@@ -21,6 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             "GPU Counters",
             "Displays various GPU counters for this trace",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GpuCountersEventCookerPath }
         );
 
@@ -65,7 +66,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     ValueColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
 
