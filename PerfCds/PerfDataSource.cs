@@ -10,14 +10,14 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace PerfCds
 {
-    [CustomDataSource(
+    [ProcessingSource(
         "{ac09eb0c-c867-454d-8ce8-0f66c5353b85}",
         "Perf",
         "Processes Perf CTF data")]
     [FileDataSource("ctf", "ctf")]
     [DirectoryDataSource("Perf CTF Folder")]
     public class PerfDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
@@ -34,9 +34,9 @@ namespace PerfCds
             return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,

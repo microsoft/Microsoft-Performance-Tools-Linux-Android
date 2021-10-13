@@ -6,6 +6,9 @@ using Utilities;
 
 namespace PerfettoProcessor
 {
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#slice
+    /// </summary>
     public class PerfettoSliceEvent : PerfettoSqlEvent
     {
         public const string Key = "PerfettoSliceEvent";
@@ -14,8 +17,17 @@ namespace PerfettoProcessor
         public int Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        /// <summary>
+        /// duration of the slice (in nanoseconds)
+        /// </summary>
         public long Duration { get; set; }
-        public int ArgSetId { get; set; }
+        /// <summary>
+        /// Joinable with args.arg_set_id
+        /// </summary>
+        public uint ArgSetId { get; set; }
+        /// <summary>
+        /// timestamp of the start of the slice (in nanoseconds)
+        /// </summary>
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
         public string Category { get; set; }
@@ -58,7 +70,7 @@ namespace PerfettoProcessor
                             Duration = longVal;
                             break;
                         case "arg_set_id":
-                            ArgSetId = (int)longVal;
+                            ArgSetId = (uint)longVal;
                             break;
                         case "track_id":
                             TrackId = (int)longVal;

@@ -13,12 +13,12 @@
         <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.17.3">
-            <GeneratePathProperty>true</GeneratePathProperty>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.11-preview-g61bc0d83f6" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.18.1">
+      <GeneratePathProperty>true</GeneratePathProperty>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.24" />
+  </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />

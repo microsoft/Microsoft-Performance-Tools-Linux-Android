@@ -8,14 +8,14 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace DmesgIsoMPTAddin
 {
-    [CustomDataSource(
+    [ProcessingSource(
     "{D1440EE2-DD94-4141-953A-82131BA3C91D}",
     "DmesgIsoLog",
     "A data source to parse dmesg.iso.log file")]
     [FileDataSource(
     "log",
     "Log files")]
-    public class DmesgIsoDataSource : CustomDataSourceBase
+    public class DmesgIsoDataSource : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 

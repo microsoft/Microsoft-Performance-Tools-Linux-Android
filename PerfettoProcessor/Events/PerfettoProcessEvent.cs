@@ -5,6 +5,9 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#process
+    /// </summary>
     public class PerfettoProcessEvent : PerfettoSqlEvent
     {
         public const string Key = "PerfettoProcessEvent";
@@ -23,7 +26,7 @@ namespace PerfettoProcessor
         public long? Uid { get; set; }
         public long? AndroidAppId { get; set; }
         public string CmdLine { get; set; }
-        public long ArgSetId { get; set; }
+        public uint ArgSetId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -70,7 +73,7 @@ namespace PerfettoProcessor
                             AndroidAppId = longVal;
                             break;
                         case "arg_set_id":
-                            ArgSetId = longVal;
+                            ArgSetId = (uint)longVal;
                             break;
                         case "start_ts":
                             StartTimestamp = longVal;

@@ -22,7 +22,7 @@ namespace CloudInitMPTAddin
     //  e) Be decorated with at least one of the derivatives of the DataSourceAttribute attribute
     //
 
-    [CustomDataSource(
+    [ProcessingSource(
         "{a7752cda-d80f-49f6-8022-2129ab041cd2}",   // The GUID must be unique for your Custom Data Source. You can use Visual Studio's Tools -> Create Guid… tool to create a new GUID
         "Cloud-Init",                               // The Custom Data Source MUST have a name
         @"Linux Cloud-Init log parser")]            // The Custom Data Source MUST have a description
@@ -39,7 +39,7 @@ namespace CloudInitMPTAddin
     //
 
     public class CloudInitCustomDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
