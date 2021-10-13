@@ -6,8 +6,8 @@
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
     <Product>Performance ToolKit</Product>
-    <Description>Contains the CTF playback library.</Description>
-    <PackageId>Microsoft.Performance.Toolkit.Plugins.CtfPlayback</PackageId>
+    <Description>Contains the LTTng CTF playback library.</Description>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.LTTngCtfPlayback</PackageId>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
     <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>

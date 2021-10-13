@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>WaLinuxAgentPlugin</AssemblyName>
-    <RootNamespace>WaLinuxAgentPlugin</RootNamespace>
+    <AssemblyName>WaLinuxAgent</AssemblyName>
+    <RootNamespace>WaLinuxAgent</RootNamespace>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
     <Product>Performance ToolKit</Product>
     <Description>Contains the WaLinux Agent log parser datasource plugin.</Description>
-    <PackageId>Microsoft.Performance.Toolkit.Plugins.WaLinuxAgentPlugin</PackageId>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.WaLinuxAgent</PackageId>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
     <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>

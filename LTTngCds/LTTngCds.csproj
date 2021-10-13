@@ -8,7 +8,7 @@
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
     <Product>Performance ToolKit</Product>
-    <Description>Contains the LTTNG CTF datasource plugin.</Description>
+    <Description>Contains the LTTng CTF datasource plugin.</Description>
     <PackageId>Microsoft.Performance.Toolkit.Plugins.LTTngPlugin</PackageId>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>

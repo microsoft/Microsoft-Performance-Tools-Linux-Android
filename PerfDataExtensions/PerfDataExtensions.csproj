@@ -9,7 +9,7 @@
     <Company>Microsoft Corp.</Company>
     <Product>Performance ToolKit</Product>
     <Description>Contains the Linux Perf Text Data datasource plugin.</Description>
-    <PackageId>Microsoft.Performance.Toolkit.Plugins.PerfDataExtensionsPlugin</PackageId>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.PerfDataExtensions</PackageId>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
     <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
