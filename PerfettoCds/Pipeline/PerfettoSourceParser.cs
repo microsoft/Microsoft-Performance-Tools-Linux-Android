@@ -168,6 +168,7 @@ namespace PerfettoCds
                     new PerfettoAndroidLogEvent(),
                     new PerfettoRawEvent(),
                     new PerfettoCpuCounterTrackEvent(),
+                    new PerfettoGpuCounterTrackEvent(),
                     new PerfettoCounterEvent(),
                     new PerfettoProcessCounterTrackEvent(),
                     new PerfettoCounterTrackEvent(),
