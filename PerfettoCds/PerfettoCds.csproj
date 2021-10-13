@@ -2,13 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Microsoft</Authors>
         <Company>Microsoft Corp.</Company>
-        <PackageId>WPA.Plugins.Perfetto7</PackageId>
+        <PackageId>Microsoft.Performance.Toolkit.Plugins.Perfetto</PackageId>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-        <Product>WPA Plugins</Product>
         <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
         <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
     </PropertyGroup>
