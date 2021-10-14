@@ -264,6 +264,7 @@ namespace PerfettoCds.Pipeline.Tables
                 .AddTableConfiguration(cpuSchedConfig)
                 .AddTableConfiguration(perCpuUsageConfig)
                 .AddTableConfiguration(perProcessUsageConfig)
+                .AddTableConfiguration(cpuWakeConfig)
                 .SetDefaultTableConfiguration(perCpuUsageConfig);
         }
 
