@@ -14,7 +14,7 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and hjoins them to create a GPU counter event.
+    /// Pulls data from multiple individual SQL tables and joins them to create a GPU counter event.
     /// </summary>
     public sealed class PerfettoGpuCountersEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
     {

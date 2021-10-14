@@ -13,6 +13,10 @@ namespace PerfettoProcessor
         public const string SqlQuery = "select name, id from gpu_counter_track";
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Unit { get; set; }
+        public string Description { get; set; }
+        public uint GpuId { get; set; }
+        public uint? SourceArgSetId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -43,6 +47,12 @@ namespace PerfettoProcessor
                         case "id":
                             Id = (int)longVal;
                             break;
+                        case "source_arg_set_id":
+                            SourceArgSetId = (uint)longVal;
+                            break;
+                        case "gpu_id":
+                            GpuId = (uint)longVal;
+                            break;
                     }
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellFloat64:
@@ -53,6 +63,12 @@ namespace PerfettoProcessor
                     {
                         case "name":
                             Name = strVal;
+                            break;
+                        case "unit":
+                            Unit = strVal;
+                            break;
+                        case "description":
+                            Description = strVal;
                             break;
                     }
                     break;

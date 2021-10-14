@@ -72,7 +72,8 @@ namespace PerfettoCds.Pipeline.Tables
             tableConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             tableConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
 
-            tableBuilder.AddTableConfiguration(tableConfig)
+            tableBuilder
+                .AddTableConfiguration(tableConfig)
                 .SetDefaultTableConfiguration(tableConfig);
         }
     }

@@ -8,10 +8,16 @@ namespace PerfettoCds.Pipeline.DataOutput
 {
     public readonly struct PerfettoGpuCountersEvent
     {
-        // Name (type) of GPU counter
+        /// <summary>
+        /// Name (type) of GPU counter
+        /// </summary>
         public string Name { get; }
-        // Actual value of this counter at this point in time
+
+        /// <summary>
+        /// Actual value of this counter at this point in time
+        /// </summary>
         public double Value { get; }
+
         public Timestamp StartTimestamp { get; }
         public TimestampDelta Duration { get; }
 
