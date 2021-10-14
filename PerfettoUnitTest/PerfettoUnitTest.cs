@@ -49,6 +49,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuCounterTrackCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.GpuCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ProcessCounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.PerfSampleCookerPath);
@@ -59,6 +60,7 @@ namespace PerfettoUnitTest
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.GpuCountersEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSchedEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
@@ -169,6 +171,19 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processMemoryEventData.Count == 10811);
             Assert.IsTrue(processMemoryEventData[0].RssFile == 2822144);
             Assert.IsTrue(processMemoryEventData[1].ProcessName == "/system/bin/init 1");
+        }
+
+        [TestMethod]
+        public void TestAndroidGpuTrace()
+        {
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\androidGpu.pftrace");
+
+            var gpuEvents = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoGpuCountersEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.GpuCountersEventCookerPath, nameof(PerfettoGpuCountersEventCooker.GpuCountersEvents)));
+
+            Assert.IsTrue(gpuEvents.Count == 11564);
+            Assert.IsTrue(gpuEvents[0].Value == 0.26908825347823023);
+            Assert.IsTrue(gpuEvents[1].StartTimestamp.ToNanoseconds == 1104948);
         }
 
         [TestMethod]
