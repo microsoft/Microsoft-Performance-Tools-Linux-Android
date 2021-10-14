@@ -319,6 +319,9 @@ namespace PerfettoProcessor
                                 case PerfettoProcessTrackEvent.Key:
                                     ev = new PerfettoProcessTrackEvent();
                                     break;
+                                case PerfettoInstantEvent.Key:
+                                    ev = new PerfettoInstantEvent();
+                                    break;
                                 default:
                                     throw new Exception("Invalid event type");
                             }

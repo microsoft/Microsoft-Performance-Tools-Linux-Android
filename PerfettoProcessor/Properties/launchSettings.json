@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PerfettoProcessor": {
+      "commandName": "Executable",
+      "executablePath": "D:\\tools\\wpa\\wpa.exe",
+      "commandLineArgs": "-i \"D:\\git\\Microsoft-Performance-Tools-Linux-Android\\TestData\\Perfetto\\test_trace.perfetto-trace\" -addSearchDir D:\\git\\Microsoft-Performance-Tools-Linux-Android\\PerfettoProcessor\\bin\\Debug\\netstandard2.1"
+    }
+  }
+}
