@@ -51,7 +51,19 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration PriorityColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{73984a25-99b1-43a9-8412-c57b55de5518}"), "Priority", "Priority of the event"),
+            new ColumnMetadata(new Guid("{73984a25-99b1-43a9-8412-c57b55de5518}"), "Priority", "Priority of the thread"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration PreviousCpuColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{6F23E91A-299E-48E5-9F48-485144D9A50B}"), "PreviousCpu", "CPU where the thread ran at previous scheduling event"),
+            new UIHints { Width = 70, SortOrder = SortOrder.Ascending });
+
+        private static readonly ColumnConfiguration PreviousEndStateColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{FB21B315-8AF9-475E-8792-7835B21AB193}"), "PreviousEndState", "Ending state of the previous scheduling event of this thread"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration PreviousPriorityColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{0B2806ED-14EE-4753-A31E-D408CEA95E1A}"), "PreviousPriority", "Priority of the thread at previous scheduling event of this thread"),
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration WakeEventFoundColumn = new ColumnConfiguration(
@@ -76,6 +88,10 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration WakeTimestampColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{51D27617-7734-42A8-921C-E83A585F77E0}"), "WakeTimestamp", "Timestamp when thread was woken"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration WaitDurationColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{F0B3CD76-0FB7-45C6-9791-DEDB351CFF11}"), "WaitDuration", "Duration between previous slice end timestamp and woken timestamp"),
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration SchedulingLatencyColumn = new ColumnConfiguration(
@@ -124,9 +140,13 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(WakerThreadNameColumn, baseProjection.Compose(x => x.WakeEvent?.WakerThreadName ?? String.Empty));
             tableGenerator.AddColumn(WakerTidColumn, baseProjection.Compose(x => x.WakeEvent?.WakerTid ?? -1));
             tableGenerator.AddColumn(WakerPriorityColumn, baseProjection.Compose(x => x.WakeEvent?.Priority ?? -1));
-            tableGenerator.AddColumn(WakerCpuColumn, baseProjection.Compose(x => x.WakeEvent != null ? (int)x.WakeEvent.Value.Cpu : -1));
+            tableGenerator.AddColumn(WakerCpuColumn, baseProjection.Compose(x => x.WakeEvent != null ? (int)x.WakeEvent.Cpu : -1));
             tableGenerator.AddColumn(WakeTimestampColumn, baseProjection.Compose(x => x.WakeEvent?.Timestamp ?? Timestamp.MinValue));
-            tableGenerator.AddColumn(SchedulingLatencyColumn, baseProjection.Compose(x => x.StartTimestamp - (x.WakeEvent?.Timestamp ?? x.StartTimestamp)));
+            tableGenerator.AddColumn(SchedulingLatencyColumn, baseProjection.Compose(x => x.SchedulingLatency));
+            tableGenerator.AddColumn(WaitDurationColumn, baseProjection.Compose(x => x.WaitDuration));
+            tableGenerator.AddColumn(PreviousEndStateColumn, baseProjection.Compose(x => x.PreviousSchedulingEvent?.EndState ?? String.Empty));
+            tableGenerator.AddColumn(PreviousPriorityColumn, baseProjection.Compose(x => x.PreviousSchedulingEvent?.Priority ?? -1));
+            tableGenerator.AddColumn(PreviousCpuColumn, baseProjection.Compose(x => x.PreviousSchedulingEvent != null ? (int)x.PreviousSchedulingEvent.Cpu : -1));
 
             // Create projections that are used for calculating CPU usage%
             var startProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(startProjection);
@@ -161,6 +181,7 @@ namespace PerfettoCds.Pipeline.Tables
                     WakerTidColumn,
                     WakerCpuColumn,
                     WakeTimestampColumn,
+                    WaitDurationColumn,
                     SchedulingLatencyColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     StartTimestampColumn,
@@ -177,6 +198,7 @@ namespace PerfettoCds.Pipeline.Tables
             {
                 Columns = new[]
                 {
+                    WakeEventFoundColumn,
                     WakerProcessNameColumn,
                     WakerThreadNameColumn,
                     WakerTidColumn,
@@ -190,8 +212,11 @@ namespace PerfettoCds.Pipeline.Tables
                     EndTimestampColumn,
                     EndStateColumn,
                     PriorityColumn,
-                    WakeEventFoundColumn,
+                    PreviousEndStateColumn,
+                    PreviousPriorityColumn,
+                    PreviousCpuColumn,
                     WakerCpuColumn,
+                    WaitDurationColumn,
                     SchedulingLatencyColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     WakeTimestampColumn
@@ -223,6 +248,7 @@ namespace PerfettoCds.Pipeline.Tables
                     WakerTidColumn,
                     WakerCpuColumn,
                     WakeTimestampColumn,
+                    WaitDurationColumn,
                     SchedulingLatencyColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     PercentCpuUsageColumn
