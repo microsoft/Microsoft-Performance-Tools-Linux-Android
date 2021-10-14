@@ -26,6 +26,7 @@ namespace PerfettoCds
         public const string RawCookerId = nameof(PerfettoRawCooker);
         public const string CounterCookerId = nameof(PerfettoCounterCooker);
         public const string CpuCounterTrackCookerId = nameof(PerfettoCpuCounterTrackCooker);
+        public const string GpuCounterTrackCookerId = nameof(PerfettoGpuCounterTrackCooker);
         public const string ProcessCounterTrackCookerId = nameof(PerfettoProcessCounterTrackCooker);
         public const string CounterTrackCookerId = nameof(PerfettoCounterTrackCooker);
         public const string ProcessTrackCookerId = nameof(PerfettoProcessTrackCooker);
@@ -42,6 +43,7 @@ namespace PerfettoCds
         public const string FtraceEventCookerId = nameof(PerfettoFtraceEventCooker);
         public const string CpuFrequencyEventCookerId = nameof(PerfettoCpuFrequencyEventCooker);
         public const string CpuCountersEventCookerId = nameof(PerfettoCpuCountersEventCooker);
+        public const string GpuCountersEventCookerId = nameof(PerfettoGpuCountersEventCooker);
         public const string ProcessMemoryEventCookerId = nameof(PerfettoProcessMemoryEventCooker);
         public const string SystemMemoryEventCookerId = nameof(PerfettoSystemMemoryEventCooker);
         public const string CpuSamplingEventCookerId = nameof(PerfettoCpuSamplingEventCooker);
@@ -57,6 +59,7 @@ namespace PerfettoCds
         public const string RawEvent = PerfettoRawEvent.Key;
         public const string CounterEvent = PerfettoCounterEvent.Key;
         public const string CpuCounterTrackEvent = PerfettoCpuCounterTrackEvent.Key;
+        public const string GpuCounterTrackEvent = PerfettoGpuCounterTrackEvent.Key;
         public const string ProcessCounterTrackEvent = PerfettoProcessCounterTrackEvent.Key;
         public const string CounterTrackEvent = PerfettoCounterTrackEvent.Key;
         public const string ProcessTrackEvent = PerfettoProcessTrackEvent.Key;
@@ -73,67 +76,71 @@ namespace PerfettoCds
         public const string FtraceEvent = nameof(PerfettoFtraceEvent);
         public const string CpuFrequencyEvent = nameof(PerfettoCpuFrequencyEvent);
         public const string CpuCountersEvent = nameof(PerfettoCpuCountersEvent);
+        public const string GpuCountersEvent = nameof(PerfettoGpuCountersEvent);
         public const string ProcessMemoryEvent = nameof(PerfettoProcessMemoryEvent);
         public const string SystemMemoryEvent = nameof(PerfettoSystemMemoryEvent);
         public const string CpuSamplingEvent = nameof(PerfettoCpuSamplingEvent);
 
         // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SliceCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SliceCookerId);
         public static readonly DataCookerPath ArgCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ArgCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ArgCookerId);
         public static readonly DataCookerPath ThreadTrackCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadTrackCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadTrackCookerId);
         public static readonly DataCookerPath ThreadCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadCookerId);
         public static readonly DataCookerPath ProcessCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCookerId);
         public static readonly DataCookerPath SchedSliceCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SchedSliceCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SchedSliceCookerId);
         public static readonly DataCookerPath AndroidLogCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.AndroidLogCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.AndroidLogCookerId);
         public static readonly DataCookerPath RawCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.RawCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.RawCookerId);
         public static readonly DataCookerPath CounterCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterCookerId);
         public static readonly DataCookerPath CpuCounterTrackCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CpuCounterTrackCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CpuCounterTrackCookerId);
+        public static readonly DataCookerPath GpuCounterTrackCookerPath =
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.GpuCounterTrackCookerId);
         public static readonly DataCookerPath ProcessCounterTrackCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCounterTrackCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCounterTrackCookerId);
         public static readonly DataCookerPath CounterTrackCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterTrackCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.CounterTrackCookerId);
         public static readonly DataCookerPath ProcessTrackCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessTrackCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessTrackCookerId);
         public static readonly DataCookerPath PerfSampleCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.PerfSampleCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.PerfSampleCookerId);
         public static readonly DataCookerPath StackProfileCallSiteCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileCallSiteCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileCallSiteCookerId);
         public static readonly DataCookerPath StackProfileFrameCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileFrameCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileFrameCookerId);
         public static readonly DataCookerPath StackProfileMappingCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileMappingCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileMappingCookerId);
         public static readonly DataCookerPath StackProfileSymbolCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileSymbolCookerId);
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileSymbolCookerId);
 
         // Paths for composite cookers
         public static readonly DataCookerPath GenericEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.GenericEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.GenericEventCookerId);
         public static readonly DataCookerPath CpuSchedEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.CpuSchedEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.CpuSchedEventCookerId);
         public static readonly DataCookerPath LogcatEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.LogcatEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.LogcatEventCookerId);
         public static readonly DataCookerPath FtraceEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.FtraceEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.FtraceEventCookerId);
         public static readonly DataCookerPath CpuFrequencyEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.CpuFrequencyEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.CpuFrequencyEventCookerId);
         public static readonly DataCookerPath CpuCountersEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.CpuCountersEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.CpuCountersEventCookerId);
+        public static readonly DataCookerPath GpuCountersEventCookerPath =
+            DataCookerPath.ForComposite(PerfettoPluginConstants.GpuCountersEventCookerId);
         public static readonly DataCookerPath ProcessMemoryEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.ProcessMemoryEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.ProcessMemoryEventCookerId);
         public static readonly DataCookerPath SystemMemoryEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.SystemMemoryEventCookerId);
+            DataCookerPath.ForComposite(PerfettoPluginConstants.SystemMemoryEventCookerId);
         public static readonly DataCookerPath CpuSamplingEventCookerPath =
-            new DataCookerPath(PerfettoPluginConstants.CpuSamplingEventCookerId);
-
+            DataCookerPath.ForComposite(PerfettoPluginConstants.CpuSamplingEventCookerId);
     }
 }

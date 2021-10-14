@@ -18,6 +18,7 @@ namespace PerfettoCds.Pipeline.Tables
             " CPU Scheduler Events", // Space at the start so it shows up alphabetically first in the table list
             "Displays CPU scheduling events for processes and threads",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuSchedEventCookerPath }
         );
 
@@ -165,7 +166,6 @@ namespace PerfettoCds.Pipeline.Tables
                     StartTimestampColumn,
                     EndTimestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
@@ -227,7 +227,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     PercentCpuUsageColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
@@ -251,7 +250,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     PercentCpuUsageColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };

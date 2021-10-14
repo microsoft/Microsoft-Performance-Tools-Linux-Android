@@ -301,6 +301,9 @@ namespace PerfettoProcessor
                                 case PerfettoCpuCounterTrackEvent.Key:
                                     ev = new PerfettoCpuCounterTrackEvent();
                                     break;
+                                case PerfettoGpuCounterTrackEvent.Key:
+                                    ev = new PerfettoGpuCounterTrackEvent();
+                                    break;
                                 case PerfettoClockSnapshotEvent.Key:
                                     ev = new PerfettoClockSnapshotEvent();
                                     break;

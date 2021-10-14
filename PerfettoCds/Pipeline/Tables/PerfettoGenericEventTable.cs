@@ -23,6 +23,7 @@ namespace PerfettoCds.Pipeline.Tables
             " Generic Events",  // Space at the start so it shows up alphabetically first in the table list
             "All app/component events in the Perfetto trace",
             "Perfetto - Events",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.GenericEventCookerPath }
         );
 
@@ -260,7 +261,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadConfig = new TableConfiguration("Process-Thread")
             {
                 Columns = defaultColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadConfig);
 
@@ -272,7 +272,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadByStartTimeConfig = new TableConfiguration("Process-Thread by Start Time")
             {
                 Columns = processThreadByStartTimeColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadByStartTimeConfig);
 
@@ -293,7 +292,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadActivityConfig = new TableConfiguration("Process-Thread Activity")
             {
                 Columns = processThreadActivityColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadActivityConfig);
 
@@ -306,7 +304,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadNameConfig = new TableConfiguration("Process-Thread-Name")
             {
                 Columns = processThreadNameColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadNameConfig);
 
@@ -322,7 +319,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadNameByStartTimeConfig = new TableConfiguration("Process-Thread-Name by Start Time")
             {
                 Columns = processThreadNameByStartTimeColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadNameByStartTimeConfig);
 
@@ -334,7 +330,6 @@ namespace PerfettoCds.Pipeline.Tables
             var processThreadParentNameTreeConfig = new TableConfiguration("Process-Thread-ParentNameTree")
             {
                 Columns = processThreadNameTreeColumns,
-                Layout = TableLayoutStyle.GraphAndTable
             };
             SetGraphTableConfig(processThreadParentNameTreeConfig);
 

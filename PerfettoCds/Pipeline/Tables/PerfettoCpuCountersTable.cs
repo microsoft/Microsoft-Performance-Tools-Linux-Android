@@ -21,6 +21,7 @@ namespace PerfettoCds.Pipeline.Tables
             "CPU Counters (coarse)",
             "Displays coarse CPU usage based on /proc/stat counters",
             "Perfetto - System",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> { PerfettoPluginConstants.CpuCountersEventCookerPath }
         );
 
@@ -142,7 +143,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     TotalCpuUsagePercentColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             cpuUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
@@ -169,7 +169,6 @@ namespace PerfettoCds.Pipeline.Tables
                     IrqPercentColumn,
                     SoftIrqPercentColumn,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Line
             };
             allCountersConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
