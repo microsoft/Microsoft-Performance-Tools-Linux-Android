@@ -8,7 +8,7 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// <summary>
     /// A CPU wake event that displays which process and threads were woken on which CPUs at specific times.
     /// </summary>
-    public readonly struct PerfettoCpuWakeEvent
+    public class PerfettoCpuWakeEvent
     {
         public string WokenProcessName { get; }
         public long? WokenPid { get; }

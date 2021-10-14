@@ -87,12 +87,6 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 Timestamp startTimestamp = new Timestamp(result.schedSlice.RelativeTimestamp);
                 Timestamp endTimestamp = new Timestamp(result.schedSlice.RelativeTimestamp + result.schedSlice.Duration);
 
-                PerfettoCpuWakeEvent? wakeEvent = null;
-                if (wokenTidToWakeEventsMap.TryGetValue(tid, out List<PerfettoCpuWakeEvent> wakeEvents))
-                {
-                    wakeEvent = GetWakeEvent(wakeEvents, startTimestamp);
-                }
-
                 PerfettoCpuSchedEvent ev = new PerfettoCpuSchedEvent
                 (
                     processName,
@@ -103,14 +97,45 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     endTimestamp,
                     result.schedSlice.Cpu,
                     result.schedSlice.EndStateStr,
-                    result.schedSlice.Priority,
-                    wakeEvent
+                    result.schedSlice.Priority
                 );
 
                 this.CpuSchedEvents.AddEvent(ev);
             }
 
             this.CpuSchedEvents.FinalizeData();
+
+            // Add previous scheduling event info.
+            // This needs to be done after FinalizeData call to make sure enumeration and indexing is available.
+            var tidToSwitchEventsMap = this.CpuSchedEvents
+                .Where(s => s != null)
+                .GroupBy(s => s.Tid)
+                .ToDictionary(sg => sg.Key, sg => sg.OrderBy(s => s.StartTimestamp).ToList());
+
+            foreach (var tid in tidToSwitchEventsMap.Keys)
+            {
+                var cpuSchedEventsForCurrentThread = tidToSwitchEventsMap[tid];
+
+                for (int i = 1; i < cpuSchedEventsForCurrentThread.Count; i++)
+                {
+                    cpuSchedEventsForCurrentThread[i].AddPreviousCpuSchedulingEvent(cpuSchedEventsForCurrentThread[i-1]);
+                }
+            }
+
+            // Add wake event info if required.
+            foreach (var schedEvent in this.CpuSchedEvents)
+            {
+                // If event was already runnable then there will be no corresponding wake event.
+                if (schedEvent.PreviousSchedulingEvent?.EndState == "Runnable")
+                {
+                    continue;
+                }
+
+                if (wokenTidToWakeEventsMap.TryGetValue(schedEvent.Tid, out List<PerfettoCpuWakeEvent> wakeEvents))
+                {
+                    schedEvent.AddWakeEvent(GetWakeEvent(wakeEvents, schedEvent.StartTimestamp));
+                }
+            }
         }
 
         void PopulateCpuWakeEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessEvent> processData)
@@ -165,7 +190,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         /// <param name="cpuWakeEvents">Timestamp sorted wake events for the woken thread.</param>
         /// <param name="time">Scheduling timestamp of the thread</param>
         /// <returns>CPU wake event if exists else null</returns>
-        PerfettoCpuWakeEvent? GetWakeEvent(IList<PerfettoCpuWakeEvent> cpuWakeEvents, Timestamp time)
+        PerfettoCpuWakeEvent GetWakeEvent(IList<PerfettoCpuWakeEvent> cpuWakeEvents, Timestamp time)
         {
             int min = 0;
             int max = cpuWakeEvents.Count;

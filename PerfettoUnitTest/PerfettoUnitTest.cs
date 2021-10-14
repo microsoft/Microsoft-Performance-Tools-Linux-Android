@@ -92,17 +92,28 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9 (834)");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
             Assert.IsTrue(cpuSchedEventData[0].ProcessName == string.Empty);
-
             Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
             Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest (20855)");
             Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest (20855)");
+
+            // Wake event validation
+            Assert.IsTrue(cpuSchedEventData[0].WakeEvent.WokenTid == cpuSchedEventData[0].Tid);
+            Assert.IsTrue(cpuSchedEventData[1].WakeEvent.WakerTid == 834);
+            Assert.IsTrue(cpuSchedEventData[1].WakeEvent.WakerThreadName == "kworker/u17:9");
+            Assert.IsTrue(cpuSchedEventData[9581].WakeEvent.WokenTid == cpuSchedEventData[9581].Tid);
+            Assert.IsTrue(cpuSchedEventData[9581].WakeEvent.WakerTid == 19701);
+            Assert.IsTrue(cpuSchedEventData[9581].WakeEvent.WakerThreadName == "kworker/u16:13");
+
+            // Previous scheduling event validation
+            Assert.IsTrue(cpuSchedEventData[9581].PreviousSchedulingEvent.EndState == "Task Dead");
+            Assert.IsTrue(cpuSchedEventData[9581].PreviousSchedulingEvent.Tid == cpuSchedEventData[9581].Tid);
 
             var ftraceEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.FtraceEventCookerPath,
                     nameof(PerfettoFtraceEventCooker.FtraceEvents)));
             Assert.IsTrue(ftraceEventData.Count == 35877);
-            Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper (0)");
+            Assert.IsTrue(ftraceEventData[0].ThreadFormattedName == "swapper (0)");
             Assert.IsTrue(ftraceEventData[1].Cpu == 3);
 
             var cpuFreqEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
