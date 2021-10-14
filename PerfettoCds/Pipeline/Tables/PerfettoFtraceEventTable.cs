@@ -62,12 +62,12 @@ namespace PerfettoCds.Pipeline.Tables
 
             var processNameColumn = new BaseDataColumn<string>(
                 ProcessNameColumn,
-                eventProjection.Compose((ftraceEvent) => ftraceEvent.ProcessName));
+                eventProjection.Compose((ftraceEvent) => ftraceEvent.ProcessFormattedName));
             tableGenerator.AddColumn(processNameColumn);
 
             var threadNameColumn = new BaseDataColumn<string>(
                 ThreadNameColumn,
-                eventProjection.Compose((ftraceEvent) => ftraceEvent.ThreadName));
+                eventProjection.Compose((ftraceEvent) => ftraceEvent.ThreadFormattedName));
             tableGenerator.AddColumn(threadNameColumn);
 
             var startTimestampColumn = new BaseDataColumn<Timestamp>(
