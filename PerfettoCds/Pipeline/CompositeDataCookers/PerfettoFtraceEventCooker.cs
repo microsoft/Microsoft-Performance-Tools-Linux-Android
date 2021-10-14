@@ -103,18 +103,20 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 }
 
                 // An event can have a thread+process or just a process
-                string processName = string.Empty;
-                string threadName = $"{result.thread.Name} ({result.thread.Tid})";
+                string processFormattedName = string.Empty;
+                string threadFormattedName = $"{result.thread.Name} ({result.thread.Tid})";
                 if (result.threadProcess != null)
                 {
-                    processName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
+                    processFormattedName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
                 }
 
                 PerfettoFtraceEvent ev = new PerfettoFtraceEvent
                 (
                     new Timestamp(result.raw.RelativeTimestamp),
-                    processName,
-                    threadName,
+                    processFormattedName,
+                    threadFormattedName,
+                    result.thread.Name,
+                    result.thread.Tid,
                     result.raw.Cpu,
                     result.raw.Name,
                     values, 

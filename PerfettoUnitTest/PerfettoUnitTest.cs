@@ -102,7 +102,7 @@ namespace PerfettoUnitTest
                     PerfettoPluginConstants.FtraceEventCookerPath,
                     nameof(PerfettoFtraceEventCooker.FtraceEvents)));
             Assert.IsTrue(ftraceEventData.Count == 35877);
-            Assert.IsTrue(ftraceEventData[0].ThreadName == "swapper (0)");
+            Assert.IsTrue(ftraceEventData[0].ThreadFormattedName == "swapper (0)");
             Assert.IsTrue(ftraceEventData[1].Cpu == 3);
 
             var cpuFreqEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
