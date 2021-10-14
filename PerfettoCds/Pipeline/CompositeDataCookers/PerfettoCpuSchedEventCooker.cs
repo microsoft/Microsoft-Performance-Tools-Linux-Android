@@ -50,7 +50,6 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Gather the data from all the SQL tables
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
             var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
-            //var instantData = requiredData.QueryOutput<ProcessedEventData<PerfettoInstantEvent>>(new DataOutputPath(PerfettoPluginConstants.InstantCookerPath, nameof(PerfettoInstantCooker.Instants)));
             PopulateCpuSchedulingEvents(requiredData, threadData, processData);
         }
 
@@ -117,7 +116,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         void PopulateCpuWakeEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessEvent> processData)
         {
             var schedWakeData = requiredData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents)))
-                .Where(f => f.Name == "sched_wakeup").ToList();
+                .Where(f => f.Name == "sched_wakeup");
 
             Dictionary<long, PerfettoThreadEvent> tidToThreadMap = threadData.ToDictionary(t => t.Tid);
             Dictionary<long, PerfettoProcessEvent> upidToProcessMap = processData.ToDictionary(p => p.Upid);

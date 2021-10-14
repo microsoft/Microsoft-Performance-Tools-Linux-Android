@@ -155,8 +155,10 @@ namespace PerfettoCds.Pipeline.Tables
                     EndStateColumn,
                     PriorityColumn,
                     WakeEventFoundColumn,
+                    WakerProcessNameColumn,
                     WakerThreadNameColumn,
                     WakerTidColumn,
+                    WakerCpuColumn,
                     WakeTimestampColumn,
                     SchedulingLatencyColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
@@ -171,6 +173,37 @@ namespace PerfettoCds.Pipeline.Tables
             cpuSchedConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             cpuSchedConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
 
+            var cpuWakeConfig = new TableConfiguration("CPU Scheduling, Wake Events")
+            {
+                Columns = new[]
+                {
+                    WakerProcessNameColumn,
+                    WakerThreadNameColumn,
+                    WakerTidColumn,
+                    TableConfiguration.PivotColumn, // Columns before this get pivotted on
+                    ProcessNameColumn,
+                    ThreadNameColumn,
+                    CpuColumn,
+                    WakeTimestampColumn,
+                    DurationColumn,
+                    StartTimestampColumn,
+                    EndTimestampColumn,
+                    EndStateColumn,
+                    PriorityColumn,
+                    WakeEventFoundColumn,
+                    WakerCpuColumn,
+                    SchedulingLatencyColumn,
+                    TableConfiguration.GraphColumn, // Columns after this get graphed
+                    WakeTimestampColumn
+                },
+                Layout = TableLayoutStyle.GraphAndTable,
+                InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
+                InitialFilterQuery = swapperIdleFilter
+            };
+            cpuWakeConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
+            cpuWakeConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
+            cpuWakeConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);
+
             var perCpuUsageConfig = new TableConfiguration("Utilization by CPU")
             {
                 Columns = new[]
@@ -184,6 +217,13 @@ namespace PerfettoCds.Pipeline.Tables
                     EndTimestampColumn,
                     EndStateColumn,
                     PriorityColumn,
+                    WakeEventFoundColumn,
+                    WakerProcessNameColumn,
+                    WakerThreadNameColumn,
+                    WakerTidColumn,
+                    WakerCpuColumn,
+                    WakeTimestampColumn,
+                    SchedulingLatencyColumn,
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     PercentCpuUsageColumn
                 },
@@ -215,6 +255,7 @@ namespace PerfettoCds.Pipeline.Tables
                 InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };
+
             perProcessUsageConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumn.Metadata.Guid);
             perProcessUsageConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn.Metadata.Guid);
             perProcessUsageConfig.AddColumnRole(ColumnRole.Duration, DurationColumn.Metadata.Guid);

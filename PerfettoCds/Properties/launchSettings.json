@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PerfettoCds": {
+      "commandName": "Executable",
+      "executablePath": "D:\\tools\\wpa\\wpa.exe",
+      "commandLineArgs": "-addSearchDir D:\\git\\Microsoft-Performance-Tools-Linux-Android\\PerfettoCds\\bin\\Debug\\netstandard2.1 -i \"D:\\git\\Microsoft-Performance-Tools-Linux-Android\\TestData\\Perfetto\\test_trace.perfetto-trace\""
+    }
+  }
+}
