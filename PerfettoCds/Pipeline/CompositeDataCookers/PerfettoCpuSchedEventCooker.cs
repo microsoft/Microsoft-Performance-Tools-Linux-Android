@@ -143,8 +143,12 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var schedWakeData = requiredData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents)))
                 .Where(f => f.Name == "sched_wakeup");
 
-            Dictionary<long, PerfettoThreadEvent> tidToThreadMap = threadData.ToDictionary(t => t.Tid);
-            Dictionary<long, PerfettoProcessEvent> upidToProcessMap = processData.ToDictionary(p => p.Upid);
+            Dictionary<long, PerfettoThreadEvent> tidToThreadMap = threadData
+                .ToLookup(t => t.Tid)
+                .ToDictionary(tg => tg.Key, tg => tg.Last());
+            Dictionary<long, PerfettoProcessEvent> upidToProcessMap = processData
+                .ToLookup(p => p.Upid)
+                .ToDictionary(pg => pg.Key, pg => pg.Last());
 
             // Create events out of the joined results
             foreach (var wake in schedWakeData)
