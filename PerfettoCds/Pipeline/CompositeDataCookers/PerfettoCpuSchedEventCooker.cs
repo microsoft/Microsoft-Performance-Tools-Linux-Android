@@ -125,7 +125,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Add wake event info if required.
             foreach (var schedEvent in this.CpuSchedEvents)
             {
-                // If event was already runnable then there will be no corresponding wake event.
+                // If the thread state was already runnable then there will be no corresponding wake event.
                 if (schedEvent.PreviousSchedulingEvent?.EndState == "Runnable")
                 {
                     continue;

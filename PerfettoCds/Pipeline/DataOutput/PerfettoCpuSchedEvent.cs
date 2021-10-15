@@ -58,7 +58,7 @@ namespace PerfettoCds.Pipeline.DataOutput
                     }
                     else if (this.PreviousSchedulingEvent?.EndState == "Runnable")
                     {
-                        // Thread was 'Running' and hence was ready to run. Scheduling latency because of non-availability of CPU.
+                        // Thread was already 'Runnable' and hence was ready to run. Scheduling latency because of non-availability of CPU.
                         this.schedulingLatency = this.StartTimestamp - this.PreviousSchedulingEvent.EndTimestamp;
                     }
                     else
