@@ -18,7 +18,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{A752AFA9-B30E-44ED-B5BA-348C55A63157}"),
             "DiagnosticMessages",
             "Diagnostic Messages",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration messageColumn =
             new ColumnConfiguration(
@@ -47,7 +48,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     timestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, timestampColumn);

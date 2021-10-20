@@ -19,7 +19,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{91A234C3-3A3C-4230-85DA-76DE1C8E86BA}"),
             "Execution Events",
             "Context Switches History",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration cpuColumn =
             new ColumnConfiguration(
@@ -171,7 +172,6 @@ namespace LTTngDataExtensions.Tables
                     switchInTimeColumn,
                     switchOutTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -204,7 +204,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     percentCpuUsagePreset,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -237,7 +236,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     percentCpuUsagePreset,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };

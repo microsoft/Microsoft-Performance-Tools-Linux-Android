@@ -21,7 +21,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{B18A134C-0B62-4C02-B729-6579C8223AB3}"),
             "Disk",
             "Disk Activity",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration deviceIdColumn =
             new ColumnConfiguration(
@@ -183,7 +184,6 @@ namespace LTTngDataExtensions.Tables
                     issueTimeColumn,
                     completeTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             var ioTimesByDevFileConfig = new TableConfiguration("IOTime by Device, FilePath")
@@ -208,7 +208,6 @@ namespace LTTngDataExtensions.Tables
                     ioTimeAvgColumn,
                     ioTimeMaxColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             iosByDeviceThCmdConfig.AddColumnRole(ColumnRole.StartTime, insertTimeColumn);

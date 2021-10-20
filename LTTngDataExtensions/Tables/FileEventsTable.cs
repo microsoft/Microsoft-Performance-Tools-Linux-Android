@@ -20,7 +20,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{A636196C-2FD9-453D-B315-2FC07AD06A26}"),
             "FileEvents",
             "File Events",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration fileEventNameColumn =
             new ColumnConfiguration(
@@ -92,7 +93,6 @@ namespace LTTngDataExtensions.Tables
                     fileEventStartTimeColumn,
                     fileEventEndTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, fileEventStartTimeColumn);

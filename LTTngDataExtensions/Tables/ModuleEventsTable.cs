@@ -18,7 +18,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{2CA2F865-5863-47F3-A4A4-6F8FDABE8F9F}"),
             "Module Events",
             "Module Events",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration eventTypeColumn =
             new ColumnConfiguration(
@@ -83,7 +84,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     timestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             defaultConfig.AddColumnRole(ColumnRole.StartTime, timestampColumn);

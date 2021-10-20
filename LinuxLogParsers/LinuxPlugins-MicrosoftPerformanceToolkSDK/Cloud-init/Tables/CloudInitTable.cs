@@ -17,6 +17,7 @@ namespace CloudInitMPTAddin.Tables
             "Cloud-Init",
             "Cloud-Init Log",
             category: "Linux",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> {
                 DataCookerPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
             });
@@ -91,7 +92,6 @@ namespace CloudInitMPTAddin.Tables
                     EventTimestampColumn,
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, EventTimestampColumn);

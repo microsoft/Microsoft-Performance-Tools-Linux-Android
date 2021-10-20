@@ -221,7 +221,6 @@ namespace PerfettoCds.Pipeline.Tables
                     TableConfiguration.GraphColumn, // Columns after this get graphed
                     WakeTimestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false, // This means we're not keeping what the filter matches
                 InitialFilterQuery = swapperIdleFilter
             };

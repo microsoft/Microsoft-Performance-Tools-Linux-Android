@@ -17,6 +17,7 @@ namespace DmesgIsoMPTAddin.Tables
             "rawDmesgLogInfo",
             "Dmesg Raw Log",
             category: "Linux",
+            defaultLayout: TableLayoutStyle.Table,
             requiredDataCookers: new List<DataCookerPath> {
                 DataCookerPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
             });
@@ -61,7 +62,6 @@ namespace DmesgIsoMPTAddin.Tables
                     TableConfiguration.GraphColumn,
                     LogTimestampColumn
                 },
-                Layout = TableLayoutStyle.Table,
             };
 
             columnsConfig.AddColumnRole(ColumnRole.StartTime, LogTimestampColumn);

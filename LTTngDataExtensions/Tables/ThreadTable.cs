@@ -18,7 +18,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{D42D0B5A-59CD-4294-8BF6-384CA7281984}"),
             "Threads",
             "Threads History",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration threadIdColumn =
             new ColumnConfiguration(
@@ -123,7 +124,6 @@ namespace LTTngDataExtensions.Tables
                     threadStartTimeColumn,
                     threadExitTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, threadStartTimeColumn);

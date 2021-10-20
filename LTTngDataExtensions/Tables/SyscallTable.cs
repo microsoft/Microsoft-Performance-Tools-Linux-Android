@@ -19,7 +19,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{52A9B61F-DEB5-4F3D-A5E8-210ABC0022C0}"),
             "Syscalls",
             "Syscalls History",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration syscallNameColumn =
             new ColumnConfiguration(
@@ -96,7 +97,6 @@ namespace LTTngDataExtensions.Tables
                     syscallStartTimeColumn,
                     syscallEndTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             defaultConfig.AddColumnRole(ColumnRole.StartTime, syscallStartTimeColumn);
