@@ -18,7 +18,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Module
         : LTTngBaseSourceCooker
     {
         public const string Identifier = "ModuleDataCooker";
-        public const string CookerPath = LTTngConstants.SourceId + "/" + Identifier;
 
         private DiscardedEventsTracker discardedEventsTracker = new DiscardedEventsTracker();
         private ExecutingThreadTracker threadTracker = new ExecutingThreadTracker();

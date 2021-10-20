@@ -13,11 +13,12 @@ using PerfDataExtensions.Tables.Generators;
 using System.Linq;
 using static PerfDataExtensions.Tables.TimeHelper;
 using Utilities.AccessProviders;
+using PerfCds.CookerData;
 
 namespace PerfDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(PerfCpuClockDataCooker.CookerPath)]
+    [RequiresSourceCooker(PerfConstants.SourceId, PerfCpuClockDataCooker.Identifier)]
     public class CpuSamplingTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -132,7 +133,7 @@ namespace PerfDataExtensions.Tables
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
-            var pathIdentifier = DataOutputPath.Create(PerfCpuClockDataCooker.CookerPath + "/CpuClockEvents");
+            var pathIdentifier = DataOutputPath.ForSource(PerfConstants.SourceId, PerfCpuClockDataCooker.Identifier, nameof(PerfCpuClockDataCooker.CpuClockEvents));
 
             var cpuClocks = tableData.QueryOutput<IReadOnlyList<ICpuClockEvent>>(pathIdentifier);
             if (cpuClocks.Count == 0)

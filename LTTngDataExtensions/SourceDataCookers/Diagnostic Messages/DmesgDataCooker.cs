@@ -16,7 +16,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages
         : LTTngBaseSourceCooker
     {
         public const string Identifier = "DmesgDataCooker";
-        public const string CookerPath = LTTngConstants.SourceId + "/" + Identifier;
 
         public LTTngDmesgDataCooker()
             : base(Identifier)

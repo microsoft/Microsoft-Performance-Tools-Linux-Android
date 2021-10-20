@@ -28,7 +28,7 @@ namespace WaLinuxAgentMPTAddin.Tables
             "waagent Log",
             category: "Linux",
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -59,7 +59,7 @@ namespace WaLinuxAgentMPTAddin.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             WaLinuxAgentLogParsedResult parsedResult = tableData.QueryOutput<WaLinuxAgentLogParsedResult>(
-               DataOutputPath.Create(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, "ParsedResult"));
+               DataOutputPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, nameof(WaLinuxAgentDataCooker.ParsedResult)));
             var logEntries = parsedResult.LogEntries;
 
             var baseProjection = Projection.Index(logEntries);

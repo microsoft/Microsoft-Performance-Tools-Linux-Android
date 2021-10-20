@@ -19,7 +19,7 @@ namespace LTTngDataExtensions.SourceDataCookers
         protected static readonly ReadOnlyHashSet<string> EmptyDataKeys = new ReadOnlyHashSet<string>(emptyDataKeys);
 
         protected LTTngBaseSourceCooker(string cookerId)
-            : this(new DataCookerPath(LTTngConstants.SourceId, cookerId))
+            : this(DataCookerPath.ForSource(LTTngConstants.SourceId, cookerId))
         {
         }
 

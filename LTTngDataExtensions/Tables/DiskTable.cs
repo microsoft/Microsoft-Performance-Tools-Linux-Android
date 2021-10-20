@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.DataOutputTypes;
 using LTTngDataExtensions.SourceDataCookers.Disk;
 using Microsoft.Performance.SDK;
@@ -12,7 +13,7 @@ using Microsoft.Performance.SDK.Processing;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngDiskDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier)]
     ///[PrebuiltConfigurationsFilePath("Resources\\DiskActivityPrebuiltConfiguration.json")]
     public static class DiskTable
     {
@@ -20,7 +21,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{B18A134C-0B62-4C02-B729-6579C8223AB3}"),
             "Disk",
             "Disk Activity",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration deviceIdColumn =
             new ColumnConfiguration(
@@ -155,7 +157,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var diskEvents = tableData.QueryOutput<IReadOnlyList<IDiskActivity>>(
-                DataOutputPath.Create(LTTngDiskDataCooker.CookerPath + '/' + nameof(LTTngDiskDataCooker.DiskActivity)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier, nameof(LTTngDiskDataCooker.DiskActivity)));
             if (diskEvents.Count == 0)
             {
                 return;
@@ -182,7 +184,6 @@ namespace LTTngDataExtensions.Tables
                     issueTimeColumn,
                     completeTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             var ioTimesByDevFileConfig = new TableConfiguration("IOTime by Device, FilePath")
@@ -207,7 +208,6 @@ namespace LTTngDataExtensions.Tables
                     ioTimeAvgColumn,
                     ioTimeMaxColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             iosByDeviceThCmdConfig.AddColumnRole(ColumnRole.StartTime, insertTimeColumn);

@@ -32,7 +32,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Disk
         }
 
         public const string Identifier = "DiskDataCooker";
-        public const string CookerPath = LTTngConstants.SourceId + "/" + Identifier;
 
         private static class DiskDataKeys
         {

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -10,14 +11,15 @@ using Microsoft.Performance.SDK.Processing;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngDmesgDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngDmesgDataCooker.Identifier)]
     public class DiagnosticMessageTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{A752AFA9-B30E-44ED-B5BA-348C55A63157}"),
             "DiagnosticMessages",
             "Diagnostic Messages",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration messageColumn =
             new ColumnConfiguration(
@@ -31,7 +33,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var messages = tableData.QueryOutput<IReadOnlyList<IDiagnosticMessage>>(
-                DataOutputPath.Create(LTTngDmesgDataCooker.CookerPath + "/DiagnosticMessages"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDmesgDataCooker.Identifier, nameof(LTTngDmesgDataCooker.DiagnosticMessages)));
             if (messages.Count == 0)
             {
                 return;
@@ -46,7 +48,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     timestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, timestampColumn);

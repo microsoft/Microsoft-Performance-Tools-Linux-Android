@@ -18,7 +18,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Syscall
         : LTTngBaseSourceCooker
     {
         public const string Identifier = "SyscallDataCooker";
-        public const string CookerPath = LTTngConstants.SourceId + "/" + Identifier;
 
         public static string UknownSyscallExit = "compat_syscall_exit_unknown";
 

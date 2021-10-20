@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Module;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -10,14 +11,15 @@ using Microsoft.Performance.SDK.Processing;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngModuleDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngModuleDataCooker.Identifier)]
     public class ModuleEventsTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{2CA2F865-5863-47F3-A4A4-6F8FDABE8F9F}"),
             "Module Events",
             "Module Events",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration eventTypeColumn =
             new ColumnConfiguration(
@@ -61,7 +63,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var moduleEvents = tableData.QueryOutput<IReadOnlyList<IModuleEvent>>(
-                DataOutputPath.Create(LTTngModuleDataCooker.CookerPath + '/' + nameof(LTTngModuleDataCooker.ModuleEvents)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngModuleDataCooker.Identifier, nameof(LTTngModuleDataCooker.ModuleEvents)));
             if (moduleEvents.Count == 0)
             {
                 return;
@@ -82,7 +84,6 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     timestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             defaultConfig.AddColumnRole(ColumnRole.StartTime, timestampColumn);

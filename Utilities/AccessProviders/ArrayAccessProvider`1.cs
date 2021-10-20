@@ -5,7 +5,7 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace Utilities.AccessProviders
 {
-    // This is copied from elsewhere and probably needs to be in the SDK
+    // This is copied from elsewhere + bugfix and probably needs to be in the SDK
     public struct ArrayAccessProvider<T>
         : ICollectionAccessProvider<T[], T>
     {
@@ -13,6 +13,11 @@ namespace Utilities.AccessProviders
 
         public T GetValue(T[] collection, int index)
         {
+            if (collection == null)
+            {
+                return default(T);
+            }
+
             if (index < collection.Length)
             {
                 T value = collection[index];

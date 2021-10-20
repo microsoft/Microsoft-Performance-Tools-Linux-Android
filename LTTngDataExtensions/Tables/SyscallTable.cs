@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -11,14 +12,15 @@ namespace LTTngDataExtensions.Tables
 {
     [Table]
     [PrebuiltConfigurationsFilePath("Resources\\SyscallTablePrebuiltConfigurations.json")]
-    [RequiresCooker(LTTngSyscallDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngSyscallDataCooker.Identifier)]
     public class SyscallTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{52A9B61F-DEB5-4F3D-A5E8-210ABC0022C0}"),
             "Syscalls",
             "Syscalls History",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration syscallNameColumn =
             new ColumnConfiguration(
@@ -72,7 +74,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var syscalls = tableData.QueryOutput<IReadOnlyList<ISyscall>>(
-                DataOutputPath.Create(LTTngSyscallDataCooker.CookerPath+'/'+nameof(LTTngSyscallDataCooker.Syscalls)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngSyscallDataCooker.Identifier, nameof(LTTngSyscallDataCooker.Syscalls)));
             if (syscalls.Count == 0)
             {
                 return;
@@ -95,7 +97,6 @@ namespace LTTngDataExtensions.Tables
                     syscallStartTimeColumn,
                     syscallEndTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             defaultConfig.AddColumnRole(ColumnRole.StartTime, syscallStartTimeColumn);

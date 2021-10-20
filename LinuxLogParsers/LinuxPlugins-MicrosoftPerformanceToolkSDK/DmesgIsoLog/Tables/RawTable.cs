@@ -17,8 +17,9 @@ namespace DmesgIsoMPTAddin.Tables
             "rawDmesgLogInfo",
             "Dmesg Raw Log",
             category: "Linux",
+            defaultLayout: TableLayoutStyle.Table,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -40,7 +41,7 @@ namespace DmesgIsoMPTAddin.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             DmesgIsoLogParsedResult parsedResult = tableData.QueryOutput<DmesgIsoLogParsedResult>(
-               DataOutputPath.Create(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, "ParsedResult"));
+               DataOutputPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, nameof(DmesgIsoDataCooker.ParsedResult)));
             var logEntries = parsedResult.LogEntries;
 
             var baseProjection = Projection.Index(logEntries);
@@ -61,7 +62,6 @@ namespace DmesgIsoMPTAddin.Tables
                     TableConfiguration.GraphColumn,
                     LogTimestampColumn
                 },
-                Layout = TableLayoutStyle.Table,
             };
 
             columnsConfig.AddColumnRole(ColumnRole.StartTime, LogTimestampColumn);
