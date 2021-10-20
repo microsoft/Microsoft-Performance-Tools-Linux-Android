@@ -36,7 +36,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
             "Statistics for text files",
             isMetadataTable: true,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -54,7 +54,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             WaLinuxAgentLogParsedResult parsedResult = tableData.QueryOutput<WaLinuxAgentLogParsedResult>(
-                DataOutputPath.Create(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, "ParsedResult"));
+                DataOutputPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, nameof(WaLinuxAgentDataCooker.ParsedResult)));
             var fileNames = parsedResult.FileToMetadata.Keys.ToArray();
             var fileNameProjection = Projection.Index(fileNames.AsReadOnly());
 

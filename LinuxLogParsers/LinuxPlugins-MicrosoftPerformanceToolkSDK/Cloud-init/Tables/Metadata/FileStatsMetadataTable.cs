@@ -20,7 +20,7 @@ namespace CloudInitMPTAddin.Tables.Metadata
             "Statistics for text files",
             isMetadataTable: true,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -38,7 +38,7 @@ namespace CloudInitMPTAddin.Tables.Metadata
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             CloudInitLogParsedResult parsedResult = tableData.QueryOutput<CloudInitLogParsedResult>(
-                DataOutputPath.Create(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, "ParsedResult"));
+                DataOutputPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, nameof(CloudInitDataCooker.ParsedResult)));
             var fileNames = parsedResult.FileToMetadata.Keys.ToArray();
             var fileNameProjection = Projection.Index(fileNames.AsReadOnly());
 

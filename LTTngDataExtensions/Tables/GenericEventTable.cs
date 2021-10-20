@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -11,7 +13,7 @@ using Utilities;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker("LTTng/GenericEvents")]
+    [RequiresSourceCooker(LTTngConstants.SourceId ,LTTngGenericEventDataCooker.Identifier)]
     [PrebuiltConfigurationsFilePath("Resources\\GenericEventTablePrebuiltConfigurations.json")]
     public class GenericEventTable
     {
@@ -73,10 +75,10 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             int maximumFieldCount = tableData.QueryOutput<int>(
-                DataOutputPath.Create("LTTng/GenericEvents/MaximumEventFieldCount"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngGenericEventDataCooker.Identifier, nameof(LTTngGenericEventDataCooker.MaximumEventFieldCount)));
 
             var events = tableData.QueryOutput<ProcessedEventData<LTTngGenericEvent>>(
-                DataOutputPath.Create("LTTng/GenericEvents/Events"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngGenericEventDataCooker.Identifier, nameof(LTTngGenericEventDataCooker.Events)));
 
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
 

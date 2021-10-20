@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.SDK;
+using LTTngCds.CookerData;
 
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngThreadDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier)]
     public class ExecutionEvent
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -141,7 +142,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var threads = tableData.QueryOutput<IReadOnlyList<IExecutionEvent>>(
-                DataOutputPath.Create(LTTngThreadDataCooker.CookerPath + "/ExecutionEvents"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier, nameof(LTTngThreadDataCooker.ExecutionEvents)));
             if (threads.Count == 0)
             {
                 return;

@@ -8,11 +8,12 @@ using LTTngDataExtensions.SourceDataCookers.Disk;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
+using LTTngCds.CookerData;
 
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngDiskDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier)]
     public class FileEventsTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -69,7 +70,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var fileEvents = tableData.QueryOutput<IReadOnlyList<IFileEvent>>(
-                DataOutputPath.Create(LTTngDiskDataCooker.CookerPath + '/' + nameof(LTTngDiskDataCooker.FileEvents)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier, nameof(LTTngDiskDataCooker.FileEvents)));
             if (fileEvents.Count == 0)
             {
                 return;

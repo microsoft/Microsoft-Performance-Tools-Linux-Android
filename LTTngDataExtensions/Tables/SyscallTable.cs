@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -11,7 +12,7 @@ namespace LTTngDataExtensions.Tables
 {
     [Table]
     [PrebuiltConfigurationsFilePath("Resources\\SyscallTablePrebuiltConfigurations.json")]
-    [RequiresCooker(LTTngSyscallDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngSyscallDataCooker.Identifier)]
     public class SyscallTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -72,7 +73,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var syscalls = tableData.QueryOutput<IReadOnlyList<ISyscall>>(
-                DataOutputPath.Create(LTTngSyscallDataCooker.CookerPath+'/'+nameof(LTTngSyscallDataCooker.Syscalls)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngSyscallDataCooker.Identifier, nameof(LTTngSyscallDataCooker.Syscalls)));
             if (syscalls.Count == 0)
             {
                 return;

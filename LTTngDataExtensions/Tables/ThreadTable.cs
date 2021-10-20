@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using LTTngCds.CookerData;
 
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngThreadDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier)]
     public class ThreadTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -97,7 +98,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var threads = tableData.QueryOutput<IReadOnlyList<IThread>>(
-                DataOutputPath.Create(LTTngThreadDataCooker.CookerPath + "/Threads"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier, nameof(LTTngThreadDataCooker.Threads)));
             if (threads.Count == 0)
             {
                 return;

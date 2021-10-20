@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Module;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -10,7 +11,7 @@ using Microsoft.Performance.SDK.Processing;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngModuleDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngModuleDataCooker.Identifier)]
     public class ModuleEventsTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -61,7 +62,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var moduleEvents = tableData.QueryOutput<IReadOnlyList<IModuleEvent>>(
-                DataOutputPath.Create(LTTngModuleDataCooker.CookerPath + '/' + nameof(LTTngModuleDataCooker.ModuleEvents)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngModuleDataCooker.Identifier, nameof(LTTngModuleDataCooker.ModuleEvents)));
             if (moduleEvents.Count == 0)
             {
                 return;

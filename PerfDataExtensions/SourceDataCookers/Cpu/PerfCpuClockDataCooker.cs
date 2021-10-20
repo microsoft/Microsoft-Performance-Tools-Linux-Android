@@ -20,7 +20,6 @@ namespace PerfDataExtensions.SourceDataCookers.Cpu
             : PerfBaseSourceCooker
     {
         public const string Identifier = "CpuClockDataCooker";
-        public const string CookerPath = PerfConstants.SourceId + "/" + Identifier;
 
         public PerfCpuClockDataCooker()
             : base(Identifier)

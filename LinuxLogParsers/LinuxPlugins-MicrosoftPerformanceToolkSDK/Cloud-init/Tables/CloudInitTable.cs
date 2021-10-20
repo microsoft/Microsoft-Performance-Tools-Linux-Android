@@ -18,7 +18,7 @@ namespace CloudInitMPTAddin.Tables
             "Cloud-Init Log",
             category: "Linux",
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
             });
 
         //
@@ -64,7 +64,7 @@ namespace CloudInitMPTAddin.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             CloudInitLogParsedResult parsedResult = tableData.QueryOutput<CloudInitLogParsedResult>(
-               DataOutputPath.Create(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, "ParsedResult"));
+               DataOutputPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, nameof(CloudInitDataCooker.ParsedResult)));
             var logEntries = parsedResult.LogEntries;
 
             var baseProjection = Projection.Index(logEntries);

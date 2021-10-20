@@ -8,11 +8,13 @@ using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Utilities;
+using PerfDataExtensions.SourceDataCookers;
+using PerfCds.CookerData;
 
 namespace PerfDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker("Perf/GenericEvents")]
+    [RequiresSourceCooker(PerfConstants.SourceId, PerfGenericEventDataCooker.Identifier)]
     [PrebuiltConfigurationsFilePath("Resources\\GenericEventTablePrebuiltConfigurations.json")]
     public class GenericEventTable
     {
@@ -66,10 +68,10 @@ namespace PerfDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             int maximumFieldCount = tableData.QueryOutput<int>(
-                DataOutputPath.Create("Perf/GenericEvents/MaximumEventFieldCount"));
+                DataOutputPath.ForSource(PerfConstants.SourceId, PerfGenericEventDataCooker.Identifier, nameof(PerfGenericEventDataCooker.MaximumEventFieldCount)));
 
             var events = tableData.QueryOutput<ProcessedEventData<PerfGenericEvent>>(
-                DataOutputPath.Create("Perf/GenericEvents/Events"));
+                DataOutputPath.ForSource(PerfConstants.SourceId, PerfGenericEventDataCooker.Identifier, nameof(PerfGenericEventDataCooker.Events)));
 
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
 

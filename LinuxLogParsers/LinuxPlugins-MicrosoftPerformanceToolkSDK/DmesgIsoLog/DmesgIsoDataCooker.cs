@@ -29,8 +29,6 @@ namespace DmesgIsoMPTAddin
 
         public SourceDataCookerOptions Options => SourceDataCookerOptions.None;
 
-        public string DataCookerId => Path.CookerPath;
-
         public string Description => "Parsed information of Dmesg log.";
 
         public string SourceParserId => Path.SourceParserId;
@@ -50,7 +48,7 @@ namespace DmesgIsoMPTAddin
         private List<LogEntry> logEntries;
         private LogContext context;
 
-        public DmesgIsoDataCooker() : this(new DataCookerPath(SourceParserIds.DmesgIsoLog, CookerId))
+        public DmesgIsoDataCooker() : this(DataCookerPath.ForSource(SourceParserIds.DmesgIsoLog, CookerId))
         {
         }
 
