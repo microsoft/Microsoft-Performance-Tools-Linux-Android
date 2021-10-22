@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Antlr4.Runtime\Antlr4.Runtime.dotnet.csproj" />
     <ProjectReference Include="..\CtfPlayback\CtfPlayback.csproj" />
     <ProjectReference Include="..\LTTngCds\LTTngCds.csproj" />
     <ProjectReference Include="..\LTTngDataExtensions\LTTngDataExtensions.csproj" />
