@@ -39,7 +39,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" GeneratePathProperty="true"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Make sure these get copied to output -->
+    <None Include="$(PkgAntlr4_Runtime_Standard)\lib\netstandard2.0\Antlr4.Runtime.Standard.dll;$(PkgAntlr4_Runtime_Standard)\lib\netstandard2.0\Antlr4.Runtime.Standard.xml;" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
