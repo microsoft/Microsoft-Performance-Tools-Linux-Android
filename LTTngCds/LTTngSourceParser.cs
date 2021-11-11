@@ -1,11 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Compression;
-using System.Threading;
 using CtfPlayback;
 using CtfPlayback.Inputs;
 using LTTngCds.CookerData;
@@ -15,12 +10,17 @@ using LTTngCds.CtfExtensions.ZipArchiveInput;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Compression;
+using System.Threading;
 using ILogger = Microsoft.Performance.SDK.Processing.ILogger;
 
 namespace LTTngCds
 {
     internal sealed class LTTngSourceParser
-        : SourceParserBase<LTTngEvent, LTTngContext, string>,
+        : SourceParser<LTTngEvent, LTTngContext, string>,
           IDisposable
     {
         private ICtfInput ctfInput;
@@ -61,7 +61,7 @@ namespace LTTngCds
 
         public Timestamp LastEventTimestamp { get; private set; }
 
-        public DateTime FirstEventWallClock { get; private set;}
+        public DateTime FirstEventWallClock { get; private set; }
 
         public ulong ProcessingTimeInMilliseconds { get; private set; }
 
@@ -70,8 +70,8 @@ namespace LTTngCds
         internal Dictionary<string, TraceStatsData> TraceStats = new Dictionary<string, TraceStatsData>(StringComparer.Ordinal);
 
         public override void ProcessSource(
-            ISourceDataProcessor<LTTngEvent, LTTngContext, string> dataProcessor, 
-            ILogger logger, 
+            ISourceDataProcessor<LTTngEvent, LTTngContext, string> dataProcessor,
+            ILogger logger,
             IProgress<int> progress,
             CancellationToken cancellationToken)
         {
@@ -111,10 +111,10 @@ namespace LTTngCds
                 lttngCustomization.RegisterEventCallback(EventCallback);
 
                 var playback = new CtfPlayback.CtfPlayback(lttngCustomization, cancellationToken);
-                playback.Playback(this.ctfInput, new CtfPlaybackOptions {ReadAhead = true}, progressReport);
+                playback.Playback(this.ctfInput, new CtfPlaybackOptions { ReadAhead = true }, progressReport);
 
                 sw.Stop();
-                this.ProcessingTimeInMilliseconds = (ulong) sw.ElapsedMilliseconds;
+                this.ProcessingTimeInMilliseconds = (ulong)sw.ElapsedMilliseconds;
             }
 
             {

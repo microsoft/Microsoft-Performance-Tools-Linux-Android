@@ -2,13 +2,10 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -30,7 +27,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 210, });
         private static readonly ColumnConfiguration MemoryValueColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{3ada3dda-2893-4366-b1a7-a5fe8344e17b}"), "MemoryValue(kb)", "Memory value"),
-            new UIHints { Width = 210,  AggregationMode = AggregationMode.Max});
+            new UIHints { Width = 210, AggregationMode = AggregationMode.Max });
 
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{6a9f870f-103c-461c-b909-9b098fe3695f}"), "StartTimestamp", "Start timestamp for the memory event"),
@@ -39,6 +36,12 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{bade2ff2-0a7c-4358-a736-058163739ae4}"), "Duration", "Start timestamp for the memory sample"),
             new UIHints { Width = 120 });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoSystemMemoryEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.SystemMemoryEventCookerPath, nameof(PerfettoSystemMemoryEventCooker.SystemMemoryEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

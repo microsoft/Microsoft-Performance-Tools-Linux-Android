@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
     /// <summary>
     /// Cooks the data from the Thread table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoThreadCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoThreadCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the thread Perfetto SQL table";
 

@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using Microsoft.Performance.SDK;
+using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Performance.SDK;
-using Microsoft.Performance.SDK.Processing;
 
 namespace PerfCds
 {
@@ -30,7 +30,7 @@ namespace PerfCds
             {
                 return Directory.GetFiles(dataSource.Uri.LocalPath, "metadata", SearchOption.AllDirectories).Any();
             }
-            
+
             return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
@@ -88,9 +88,7 @@ namespace PerfCds
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
     }
 }

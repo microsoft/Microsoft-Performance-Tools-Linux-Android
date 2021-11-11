@@ -2,13 +2,10 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -100,6 +97,12 @@ namespace PerfettoCds.Pipeline.Tables
             {
                 Width = 60,
             });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoCpuCountersEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.CpuCountersEventCookerPath, nameof(PerfettoCpuCountersEventCooker.CpuCountersEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

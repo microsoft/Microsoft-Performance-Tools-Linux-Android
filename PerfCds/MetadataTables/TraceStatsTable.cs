@@ -1,11 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 
 namespace PerfCds.MetadataTables
 {
@@ -32,7 +31,7 @@ namespace PerfCds.MetadataTables
             new ColumnMetadata(new Guid("{5e441122-b8f0-42c4-9ca7-41c5fe29d5eb}"), "Total Payload Size"),
             new UIHints { Width = 80, TextAlignment = TextAlignment.Left, });
 
-        internal static void BuildMetadataTable(ITableBuilder tableBuilder, PerfSourceParser sourceParser, ISerializer serializer)
+        internal static void BuildMetadataTable(ITableBuilder tableBuilder, PerfSourceParser sourceParser, ITableConfigurationsSerializer serializer)
         {
             ITableBuilderWithRowCount table = tableBuilder.SetRowCount(sourceParser.TraceStats.Count);
 
@@ -44,23 +43,23 @@ namespace PerfCds.MetadataTables
             var payloadBitCountProjection = traceStatsProjection.Compose(traceStats => (double)traceStats.PayloadBitCount / 8);
 
             table.AddColumn(
-                new BaseDataColumn<string>(
+                new DataColumn<string>(
                     EventNameConfiguration,
                     eventNameProjection));
 
             table.AddColumn(
-                new BaseDataColumn<ulong>(
+                new DataColumn<ulong>(
                     CountConfiguration,
                     eventCountProjection));
 
             table.AddColumn(
-                new BaseDataColumn<double>(
+                new DataColumn<double>(
                     TotalPayloadSizeConfiguration,
                     payloadBitCountProjection));
 
             var configurations = TableConfigurations.GetPrebuiltTableConfigurations(
-                typeof(TraceStatsTable), 
-                TableDescriptor.Guid, 
+                typeof(TraceStatsTable),
+                TableDescriptor.Guid,
                 serializer);
 
             foreach (var configuration in configurations)

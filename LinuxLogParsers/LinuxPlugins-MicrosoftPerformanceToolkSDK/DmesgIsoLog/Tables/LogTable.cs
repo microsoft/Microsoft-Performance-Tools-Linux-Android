@@ -1,12 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LinuxLogParser;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using System;
+using System.Collections.Generic;
 
 namespace DmesgIsoMPTAddin.Tables
 {
@@ -64,7 +63,7 @@ namespace DmesgIsoMPTAddin.Tables
             var topicProjection = baseProjection.Compose(x => x.topic);
             var timestampProjection = baseProjection.Compose(x => x.timestamp);
             var metadataProjection = baseProjection.Compose(x => x.metadata);
-            var messageProjection = baseProjection.Compose(x => x.message); 
+            var messageProjection = baseProjection.Compose(x => x.message);
 
             var config = new TableConfiguration("Default")
             {
@@ -80,7 +79,6 @@ namespace DmesgIsoMPTAddin.Tables
                     TableConfiguration.GraphColumn,
                     TimestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, TimestampColumn);

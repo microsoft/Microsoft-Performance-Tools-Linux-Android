@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
     /// <summary>
     /// Cooks the data from the Slice table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoSliceCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoSliceCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the slice Perfetto SQL table";
 

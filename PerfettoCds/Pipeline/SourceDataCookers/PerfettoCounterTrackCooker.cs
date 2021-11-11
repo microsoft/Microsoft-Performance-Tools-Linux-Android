@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
     /// <summary>
     /// Cooks the data from the CounterTrack table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoCounterTrackCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoCounterTrackCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the counter_track Perfetto SQL table";
 

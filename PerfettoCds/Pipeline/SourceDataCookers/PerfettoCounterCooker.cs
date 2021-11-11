@@ -5,17 +5,17 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
 using Microsoft.Performance.SDK.Extensibility.DataCooking.SourceDataCooking;
 using Microsoft.Performance.SDK.Processing;
-using System.Collections.Generic;
-using System.Threading;
 using PerfettoCds.Pipeline.Events;
 using PerfettoProcessor;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace PerfettoCds.Pipeline.SourceDataCookers
 {
     /// <summary>
     /// Cooks the data from the Counter table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoCounterCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoCounterCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the counter Perfetto SQL table";
 

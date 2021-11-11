@@ -8,7 +8,6 @@ using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
 using System.IO;
-using System.Linq;
 
 namespace PerfettoUnitTest
 {
@@ -27,17 +26,18 @@ namespace PerfettoUnitTest
                 var perfettoDataPath = new FileInfo(traceFilename);
                 Assert.IsTrue(perfettoDataPath.Exists);
 
+                var dataSources = DataSourceSet.Create();
+                dataSources.AddDataSource(new FileDataSource(perfettoDataPath.FullName));
+
                 // Start the SDK engine
                 var runtime = Engine.Create(
-                    new EngineCreateInfo()
+                    new EngineCreateInfo(dataSources.AsReadOnly())
                     {
                         LoggerFactory = new System.Func<System.Type, ILogger>((type) =>
-                        { 
-                            return new ConsoleLogger(type); 
+                        {
+                            return new ConsoleLogger(type);
                         }),
                     });
-
-                runtime.AddFile(perfettoDataPath.FullName);
 
                 // Enable the source data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.SliceCookerPath);

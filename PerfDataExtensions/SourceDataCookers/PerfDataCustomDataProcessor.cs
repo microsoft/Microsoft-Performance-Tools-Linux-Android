@@ -1,24 +1,22 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Performance.SDK;
+using Microsoft.Diagnostics.Tracing.Stacks;
+using Microsoft.Diagnostics.Tracing.StackSources;
 using Microsoft.Performance.SDK.Processing;
 using PerfDataExtensions.Tables;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Diagnostics.Tracing.Stacks;
-using Microsoft.Diagnostics.Tracing.StackSources;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Globalization;
 
-namespace PerfDataCustomDataSource
+namespace PerfDataProcessingSource
 {
     public sealed class PerfDataCustomDataProcessor
-        : CustomDataProcessorBase
+        : CustomDataProcessor
     {
         private readonly string[] filePaths;
         private IReadOnlyDictionary<string, ParallelLinuxPerfScriptStackSource> fileContent;
@@ -28,10 +26,8 @@ namespace PerfDataCustomDataSource
            string[] filePaths,
            ProcessorOptions options,
            IApplicationEnvironment applicationEnvironment,
-           IProcessorEnvironment processorEnvironment,
-           IReadOnlyDictionary<TableDescriptor, Action<ITableBuilder, IDataExtensionRetrieval>> allTablesMapping,
-           IEnumerable<TableDescriptor> metadataTables)
-            : base(options, applicationEnvironment, processorEnvironment, allTablesMapping, metadataTables)
+           IProcessorEnvironment processorEnvironment)
+            : base(options, applicationEnvironment, processorEnvironment)
         {
             //
             // Assign the files array to a readonly backing field.
@@ -45,7 +41,7 @@ namespace PerfDataCustomDataSource
             // The DataSourceInfo is used to tell analzyer the time range of the data(if applicable) and any other relevant data for rendering / synchronizing.
 
             return this.dataSourceInfo;
-            
+
         }
 
         protected override Task ProcessAsyncCore(
@@ -86,7 +82,7 @@ namespace PerfDataCustomDataSource
                 var lastSample = stackSource.GetLinuxPerfScriptSampleByIndex((StackSourceSampleIndex)stackSource.SampleIndexLimit - 1);
 
                 contentDictionary[path] = stackSource;
-                this.dataSourceInfo = new DataSourceInfo(0, (long) lastSample.TimeRelativeMSec * 1000000, traceStartTime);
+                this.dataSourceInfo = new DataSourceInfo(0, (long)lastSample.TimeRelativeMSec * 1000000, traceStartTime);
 
             }
 
@@ -97,7 +93,6 @@ namespace PerfDataCustomDataSource
 
         protected override void BuildTableCore(
             TableDescriptor tableDescriptor,
-            Action<ITableBuilder, IDataExtensionRetrieval> createTable,
             ITableBuilder tableBuilder)
         {
             //

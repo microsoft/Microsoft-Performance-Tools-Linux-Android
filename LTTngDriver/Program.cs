@@ -1,6 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
+using Microsoft.Performance.Toolkit.Engine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +14,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using LTTngDataExtensions.DataOutputTypes;
-using LTTngDataExtensions.SourceDataCookers;
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
-using Microsoft.Performance.Toolkit.Engine;
 
 namespace LTTngDriver
 {
@@ -46,19 +46,23 @@ namespace LTTngDriver
 
             Console.WriteLine($"ExtensionDirectory:{parsed.ExtensionDirectory}");
 
+            var dataSources = DataSourceSet.Create();
+
+            Debug.Assert(parsed.CtfInput != null);
+            Debug.Assert(parsed.CtfInput.Count > 0);
+
+            foreach (var ctf in parsed.CtfInput.Distinct())
+            {
+                Console.WriteLine($"CTF Path:{ctf}");
+                dataSources.AddDataSource(new FileDataSource(ctf));
+            }
+
             var runtime = Engine.Create(
-                new EngineCreateInfo(new string[] { parsed.ExtensionDirectory })
+                new EngineCreateInfo(dataSources.AsReadOnly())
                 {
 
                 });
 
-            Debug.Assert(parsed.CtfInput != null);
-            Debug.Assert(parsed.CtfInput.Count > 0);
-            foreach (var ctf in parsed.CtfInput.Distinct())
-            {
-                Console.WriteLine($"CTF Path:{ctf}");
-                runtime.AddFile(ctf);
-            }
 
             var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
             var cookerName = lttngGenericEventDataCooker.Path;

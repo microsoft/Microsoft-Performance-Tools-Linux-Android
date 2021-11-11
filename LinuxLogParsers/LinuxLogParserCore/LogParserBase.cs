@@ -6,8 +6,8 @@ using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 
 namespace LinuxLogParserCore
 {
-    public abstract class LogParserBase<TLogEntry, TKey>: SourceParserBase<TLogEntry, LogContext, TKey>
-        where TLogEntry: IKeyedDataType<TKey>
+    public abstract class LogParserBase<TLogEntry, TKey> : SourceParser<TLogEntry, LogContext, TKey>
+        where TLogEntry : IKeyedDataType<TKey>
     {
         public LogParserBase(string[] filePaths)
         {

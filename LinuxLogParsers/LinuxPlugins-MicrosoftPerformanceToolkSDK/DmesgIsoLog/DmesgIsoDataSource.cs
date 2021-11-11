@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-using System.Linq;
 using LinuxLogParser.DmesgIsoLog;
 using Microsoft.Performance.SDK.Processing;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DmesgIsoMPTAddin
 {
@@ -28,9 +28,7 @@ namespace DmesgIsoMPTAddin
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
 
         protected override bool IsDataSourceSupportedCore(IDataSource dataSource)

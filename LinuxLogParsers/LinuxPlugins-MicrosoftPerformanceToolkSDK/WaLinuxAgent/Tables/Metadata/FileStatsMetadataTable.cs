@@ -19,7 +19,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
     //
 
     //
-    // In order for the CustomDataSourceBase to understand your metadata table, 
+    // In order for the ProcessingSource to understand your metadata table, 
     // add a MetadataTable attribute which denotes this table as metadata.
     //
 

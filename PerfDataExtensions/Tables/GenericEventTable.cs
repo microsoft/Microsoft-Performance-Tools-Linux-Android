@@ -77,22 +77,22 @@ namespace PerfDataExtensions.Tables
 
             var genericEventProjection = new EventProjection<PerfGenericEvent>(events);
 
-            var eventNameColumn = new BaseDataColumn<string>(
+            var eventNameColumn = new DataColumn<string>(
                 eventNameColumnConfig, 
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
-            var eventIdColumn = new BaseDataColumn<uint>(
+            var eventIdColumn = new DataColumn<uint>(
                 eventIdColumnConfig, 
                 genericEventProjection.Compose((genericEvent) => genericEvent.Id));
             tableGenerator.AddColumn(eventIdColumn);
 
-            var cpuIdColumn = new BaseDataColumn<uint>(
+            var cpuIdColumn = new DataColumn<uint>(
                 cpuIdColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.CpuId));
             tableGenerator.AddColumn(cpuIdColumn);
 
-            var eventTimestampColumn = new BaseDataColumn<Timestamp>(
+            var eventTimestampColumn = new DataColumn<Timestamp>(
                 eventTimestampColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Timestamp));
             tableGenerator.AddColumn(eventTimestampColumn);

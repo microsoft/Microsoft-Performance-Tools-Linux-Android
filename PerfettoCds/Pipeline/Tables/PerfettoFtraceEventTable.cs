@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
+using System.Linq;
 using Utilities;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -33,7 +34,7 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{8027964f-4c41-4309-ada1-b9a40d685b24}"), "ProcessName", "Name of the process that logged the event"),
             new UIHints { Width = 210 });
-        
+
         private static readonly ColumnConfiguration ThreadNameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{276ab2ad-722c-4a1b-8d9f-dc7b562d3a5c}"), "ThreadName", "Name of the thread that logged the event"),
             new UIHints { Width = 210 });
@@ -46,6 +47,11 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{ea581f83-b632-4b5b-9a89-844994f497ca}"), "Name", "Name of the Ftrace event"),
             new UIHints { Width = 120 });
 
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
@@ -61,27 +67,27 @@ namespace PerfettoCds.Pipeline.Tables
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
             var eventProjection = new EventProjection<PerfettoFtraceEvent>(events);
 
-            var processNameColumn = new BaseDataColumn<string>(
+            var processNameColumn = new DataColumn<string>(
                 ProcessNameColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.ProcessFormattedName));
             tableGenerator.AddColumn(processNameColumn);
 
-            var threadNameColumn = new BaseDataColumn<string>(
+            var threadNameColumn = new DataColumn<string>(
                 ThreadNameColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.ThreadFormattedName));
             tableGenerator.AddColumn(threadNameColumn);
 
-            var startTimestampColumn = new BaseDataColumn<Timestamp>(
+            var startTimestampColumn = new DataColumn<Timestamp>(
                 StartTimestampColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.StartTimestamp));
             tableGenerator.AddColumn(startTimestampColumn);
 
-            var cpuColumn = new BaseDataColumn<uint>(
+            var cpuColumn = new DataColumn<uint>(
                 CpuColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.Cpu));
             tableGenerator.AddColumn(cpuColumn);
 
-            var nameColumn = new BaseDataColumn<string>(
+            var nameColumn = new DataColumn<string>(
                 NameColumn,
                 eventProjection.Compose((ftraceEvent) => ftraceEvent.Name));
             tableGenerator.AddColumn(nameColumn);

@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
     /// <summary>
     /// Cooks the data from the stack_profile_mapping table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoStackProfileMappingCooker : BaseSourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoStackProfileMappingCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
         public override string Description => "Processes events from the stack_profile_mapping Perfetto SQL table";
 

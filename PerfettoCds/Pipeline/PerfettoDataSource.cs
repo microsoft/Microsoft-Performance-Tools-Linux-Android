@@ -21,9 +21,7 @@ namespace PerfettoCds
             return new PerfettoDataProcessor(parser,
                                             options,
                                             this.applicationEnvironment,
-                                            processorEnvironment,
-                                            this.AllTables,
-                                            this.MetadataTables);
+                                            processorEnvironment);
         }
 
         public override ProcessingSourceInfo GetAboutInfo()
@@ -83,9 +81,7 @@ namespace PerfettoCds
             return new PerfettoDataProcessor(parser,
                                             options,
                                             this.applicationEnvironment,
-                                            processorEnvironment,
-                                            this.AllTables,
-                                            this.MetadataTables);
+                                            processorEnvironment);
         }
 
         public override ProcessingSourceInfo GetAboutInfo()

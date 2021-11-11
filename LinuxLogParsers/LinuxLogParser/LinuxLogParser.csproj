@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.24" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.7-rc1-g0a52dbd662" />
   </ItemGroup>
 
   <ItemGroup>

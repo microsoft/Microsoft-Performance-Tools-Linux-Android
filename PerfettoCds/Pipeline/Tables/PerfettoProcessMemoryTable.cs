@@ -2,13 +2,10 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -59,6 +56,12 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration VirtColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{83d575ba-2c24-46f7-901e-57241f72b918}"), "Virtual(kb)", "Peak virtual memory size"),
             new UIHints { Width = 120, AggregationMode = AggregationMode.Max });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoProcessMemoryEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.ProcessMemoryEventCookerPath, nameof(PerfettoProcessMemoryEventCooker.ProcessMemoryEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

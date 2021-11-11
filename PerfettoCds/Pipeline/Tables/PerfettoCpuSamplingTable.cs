@@ -2,11 +2,11 @@
 // Licensed under the MIT License.
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
+using System.Linq;
 using Utilities.AccessProviders;
 
 namespace PerfettoCds.Pipeline.Tables
@@ -57,6 +57,12 @@ namespace PerfettoCds.Pipeline.Tables
 
         // In Perfetto, callstacks are often scoped/filtered.
         // TODO - We will have to determine how to detect this at a later date and only calc %  CPU Usage if it can be done accurately
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoCpuSamplingEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.CpuSamplingEventCookerPath, nameof(PerfettoCpuSamplingEventCooker.CpuSamplingEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

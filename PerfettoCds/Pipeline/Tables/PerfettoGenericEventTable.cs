@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 using System;
 using System.Collections.Generic;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
+using System.Linq;
 using Utilities;
 using Utilities.AccessProviders;
 
@@ -51,7 +52,8 @@ namespace PerfettoCds.Pipeline.Tables
         const string DurationColumnGuid = "{14f4862d-5851-460d-a04b-62e4b62b6d6c}";
         private static readonly ColumnConfiguration DurationColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(DurationColumnGuid), "Duration", "Duration of the event"),
-            new UIHints { 
+            new UIHints
+            {
                 Width = 70,
                 AggregationMode = AggregationMode.Max,
                 SortPriority = 1,
@@ -116,13 +118,20 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration CountSortedColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid(CountColumnGuid), "Count", "Constant column of 1 for summing"),
-            new UIHints 
-            { 
-                Width = 80, 
+            new UIHints
+            {
+                Width = 80,
                 AggregationMode = AggregationMode.Sum,
                 SortPriority = 0,
                 SortOrder = SortOrder.Descending,
             });
+
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoGenericEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.GenericEventCookerPath, nameof(PerfettoGenericEventCooker.GenericEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
@@ -142,64 +151,64 @@ namespace PerfettoCds.Pipeline.Tables
             var genericEventProjection = new EventProjection<PerfettoGenericEvent>(events);
 
             // Add all the data projections
-            var processNameColumn = new BaseDataColumn<string>(
+            var processNameColumn = new DataColumn<string>(
                 ProcessNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Process));
             tableGenerator.AddColumn(processNameColumn);
 
-            var threadNameColumn = new BaseDataColumn<string>(
+            var threadNameColumn = new DataColumn<string>(
                 ThreadNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Thread));
             tableGenerator.AddColumn(threadNameColumn);
 
-            var eventNameColumn = new BaseDataColumn<string>(
+            var eventNameColumn = new DataColumn<string>(
                 EventNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
-            var startTimestampColumn = new BaseDataColumn<Timestamp>(
+            var startTimestampColumn = new DataColumn<Timestamp>(
                 StartTimestampColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.StartTimestamp));
             tableGenerator.AddColumn(startTimestampColumn);
 
-            var endTimestampColumn = new BaseDataColumn<Timestamp>(
+            var endTimestampColumn = new DataColumn<Timestamp>(
                 EndTimestampColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EndTimestamp));
             tableGenerator.AddColumn(endTimestampColumn);
 
-            var durationColumn = new BaseDataColumn<TimestampDelta>(
+            var durationColumn = new DataColumn<TimestampDelta>(
                 DurationColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Duration));
             tableGenerator.AddColumn(durationColumn);
 
-            var categoryColumn = new BaseDataColumn<string>(
+            var categoryColumn = new DataColumn<string>(
                 CategoryColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Category));
             tableGenerator.AddColumn(categoryColumn);
 
-            var typeColumn = new BaseDataColumn<string>(
+            var typeColumn = new DataColumn<string>(
                 TypeColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Type));
             tableGenerator.AddColumn(typeColumn);
 
-            var providerColumn = new BaseDataColumn<string>(
+            var providerColumn = new DataColumn<string>(
                 ProviderColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Provider));
             tableGenerator.AddColumn(providerColumn);
 
-            var trackNameIdColumn = new BaseDataColumn<string>(
+            var trackNameIdColumn = new DataColumn<string>(
                 TrackNameIdColConfig,
-                genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ? 
-                                                                    (!String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString()) 
+                genericEventProjection.Compose((genericEvent) => genericEvent.ThreadTrack != null ?
+                                                                    (!String.IsNullOrWhiteSpace(genericEvent.ThreadTrack.Name) ? $"{genericEvent.ThreadTrack.Name} ({genericEvent.ThreadTrack.Id})" : genericEvent.ThreadTrack.Id.ToString())
                                                                     : String.Empty));
             tableGenerator.AddColumn(trackNameIdColumn);
 
-            var parentIdColumn = new BaseDataColumn<int>(
+            var parentIdColumn = new DataColumn<int>(
                 ParentIdColConfig,
-                genericEventProjection.Compose((genericEvent) => genericEvent.ParentId.HasValue? genericEvent.ParentId.Value : -1));
+                genericEventProjection.Compose((genericEvent) => genericEvent.ParentId.HasValue ? genericEvent.ParentId.Value : -1));
             tableGenerator.AddColumn(parentIdColumn);
 
-            var parentDepthLevelColumn = new BaseDataColumn<int>(
+            var parentDepthLevelColumn = new DataColumn<int>(
                 ParentDepthLevelColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.ParentTreeDepthLevel));
             tableGenerator.AddColumn(parentDepthLevelColumn);
@@ -225,7 +234,7 @@ namespace PerfettoCds.Pipeline.Tables
                     new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName)
                     {
                         IsDynamic = true
-                    }, 
+                    },
                     new UIHints
                     {
                         IsVisible = true,

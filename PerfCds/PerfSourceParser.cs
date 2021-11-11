@@ -20,7 +20,7 @@ using ILogger = Microsoft.Performance.SDK.Processing.ILogger;
 namespace PerfCds
 {
     internal sealed class PerfSourceParser
-        : SourceParserBase<PerfEvent, PerfContext, string>,
+        : SourceParser<PerfEvent, PerfContext, string>,
           IDisposable
     {
         private ICtfInput ctfInput;

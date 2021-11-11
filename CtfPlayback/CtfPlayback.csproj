@@ -39,7 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" GeneratePathProperty="true"/>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.7-rc1-g0a52dbd662" />
+    <PackageReference Include="Microsoft.Performance.SDK.Runtime" Version="1.0.7-rc1-g0a52dbd662" />
+    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="1.0.7-rc1-g0a52dbd662" />
   </ItemGroup>
 
   <ItemGroup>
