@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -40,6 +37,12 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{8f132c9d-af37-47d7-851f-97d2e8a6934d}"), "Duration", "Start timestamp for the GPU event"),
             new UIHints { Width = 120 });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoGpuCountersEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.GpuCountersEventCookerPath, nameof(PerfettoGpuCountersEventCooker.GpuCountersEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

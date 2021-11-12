@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
-using PerfettoCds.Pipeline.CompositeDataCookers;
 using System.Linq;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -31,8 +28,8 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration CpuFrequencyColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{cb753d1a-2c97-414a-9985-06509b6f8ba3}"), "CpuFrequency(Hz)", "Current frequency for this CPU. When idle, displays 0"),
-            new UIHints 
-            { 
+            new UIHints
+            {
                 Width = 210,
                 AggregationMode = AggregationMode.Max,
             });
@@ -52,6 +49,12 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration IsIdleColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{628be4e5-1c34-4e6b-8a7b-d08f055ec179}"), "IsIdle", "Whether or not this CPU is idle"),
             new UIHints { Width = 120 });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.CpuFrequencyEventCookerPath, nameof(PerfettoCpuFrequencyEventCooker.CpuFrequencyEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

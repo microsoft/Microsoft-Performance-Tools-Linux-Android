@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using LinuxLogParser.CloudInitLog;
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LinuxLogParser.CloudInitLog;
+using Microsoft.Performance.SDK.Processing;
 
 namespace CloudInitMPTAddin
 {
@@ -17,8 +17,8 @@ namespace CloudInitMPTAddin
     // In order for a CDS to be recognized, it MUST satisfy the following:
     //  a) Be a public type
     //  b) Have a public parameterless constructor
-    //  c) Implement the ICustomDataSource interface
-    //  d) Be decorated with the CustomDataSourceAttribute attribute
+    //  c) Implement the IProcessingSource interface
+    //  d) Be decorated with the ProcessingSourceAttribute attribute
     //  e) Be decorated with at least one of the derivatives of the DataSourceAttribute attribute
     //
 
@@ -34,11 +34,11 @@ namespace CloudInitMPTAddin
     // There are two methods to creating a Custom Data Source that is recognized by the SDK:
     //    1. Using the helper abstract base classes
     //    2. Implementing the raw interfaces
-    // This sample demonstrates method 1 where the CustomDataSourceBase abstract class
-    // helps provide a public parameterless constructor and implement the ICustomDataSource interface
+    // This sample demonstrates method 1 where the ProcessingSource abstract class
+    // helps provide a public parameterless constructor and implement the IProcessingSource interface
     //
 
-    public class CloudInitCustomDataSource
+    public class CloudInitProcessingSource
         : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
@@ -71,9 +71,7 @@ namespace CloudInitMPTAddin
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
     }
 }

@@ -13,7 +13,7 @@ using Utilities;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresSourceCooker(LTTngConstants.SourceId ,LTTngGenericEventDataCooker.Identifier)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngGenericEventDataCooker.Identifier)]
     [PrebuiltConfigurationsFilePath("Resources\\GenericEventTablePrebuiltConfigurations.json")]
     public class GenericEventTable
     {
@@ -84,27 +84,27 @@ namespace LTTngDataExtensions.Tables
 
             var genericEventProjection = new EventProjection<LTTngGenericEvent>(events);
 
-            var eventNameColumn = new BaseDataColumn<string>(
-                eventNameColumnConfig, 
+            var eventNameColumn = new DataColumn<string>(
+                eventNameColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
-            var eventIdColumn = new BaseDataColumn<uint>(
-                eventIdColumnConfig, 
+            var eventIdColumn = new DataColumn<uint>(
+                eventIdColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Id));
             tableGenerator.AddColumn(eventIdColumn);
 
-            var cpuIdColumn = new BaseDataColumn<uint>(
+            var cpuIdColumn = new DataColumn<uint>(
                 cpuIdColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.CpuId));
             tableGenerator.AddColumn(cpuIdColumn);
 
-            var discardedEventsColumn = new BaseDataColumn<uint>(
+            var discardedEventsColumn = new DataColumn<uint>(
                 discardedEventsColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.DiscardedEvents));
             tableGenerator.AddColumn(discardedEventsColumn);
 
-            var eventTimestampColumn = new BaseDataColumn<Timestamp>(
+            var eventTimestampColumn = new DataColumn<Timestamp>(
                 eventTimestampColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Timestamp));
             tableGenerator.AddColumn(eventTimestampColumn);
@@ -119,15 +119,15 @@ namespace LTTngDataExtensions.Tables
 
                 var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.FieldNames.Count ? genericEvent.FieldNames[colIndex] : string.Empty);
 
-            // generate a column configuration
-            var fieldColumnConfiguration = new ColumnConfiguration(
-                    new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName),
-                    new UIHints
-                    {
-                        IsVisible = true,
-                        Width = 80,
-                        TextAlignment = TextAlignment.Left,
-                    });
+                // generate a column configuration
+                var fieldColumnConfiguration = new ColumnConfiguration(
+                        new ColumnMetadata(Common.GenerateGuidFromName(fieldName), fieldName, genericEventFieldNameProjection, fieldName),
+                        new UIHints
+                        {
+                            IsVisible = true,
+                            Width = 80,
+                            TextAlignment = TextAlignment.Left,
+                        });
 
                 var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.FieldNames.Count ? genericEvent.FieldValues[colIndex] : string.Empty);
 

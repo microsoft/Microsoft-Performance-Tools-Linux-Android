@@ -1,18 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
-using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PerfDataExtensions.Tables;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading;
 using UnitTestCommon;
 
 namespace PerfUnitTest
@@ -34,25 +31,31 @@ namespace PerfUnitTest
 
             // Env
             var appEnv = new Mock<IApplicationEnvironment>();
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ITableConfigurationsSerializer>();
             appEnv.Setup(ae => ae.Serializer).Returns(serializer.Object);
             var processorEnv = new Mock<IProcessorEnvironment>();
 
             // DataSource and Processor
-            var perfDataCustomDataSource = new PerfDataCustomDataSource.PerfDataCustomDataSource();
-            perfDataCustomDataSource.SetApplicationEnvironment(appEnv.Object);
+            var perfDataProcessingSource = new PerfDataProcessingSource.PerfDataProcessingSource();
+            perfDataProcessingSource.SetApplicationEnvironment(appEnv.Object);
 
-            var perfDataCustomDataSourceProcessor = perfDataCustomDataSource.CreateProcessor(datasource.Object, processorEnv.Object, ProcessorOptions.Default);
-            var perfDataCustomDataSourceProcessorTask = perfDataCustomDataSourceProcessor.ProcessAsync(new Progress(), new CancellationToken());
-            perfDataCustomDataSourceProcessorTask.GetAwaiter().GetResult();
-            Assert.IsTrue(perfDataCustomDataSourceProcessorTask.IsCompleted && !perfDataCustomDataSourceProcessorTask.IsFaulted);
 
-            var dataSourceInfo = perfDataCustomDataSourceProcessor.GetDataSourceInfo();
+            var perfDataProcessor = perfDataProcessingSource.CreateProcessor(datasource.Object, processorEnv.Object, ProcessorOptions.Default);
+
+            // Enable table
+            var enableSuccess = perfDataProcessor.TryEnableTable(PerfTxtCpuSamplingTable.TableDescriptor);
+            Assert.IsTrue(enableSuccess);
+
+            var perfDataProcessorTask = perfDataProcessor.ProcessAsync(new Progress(), new CancellationToken());
+            perfDataProcessorTask.GetAwaiter().GetResult();
+            Assert.IsTrue(perfDataProcessorTask.IsCompleted && !perfDataProcessorTask.IsFaulted);
+
+            var dataSourceInfo = perfDataProcessor.GetDataSourceInfo();
             Assert.IsTrue(dataSourceInfo.FirstEventTimestampNanoseconds >= 0 && dataSourceInfo.EndTimestampNanoseconds >= 0);
 
             // Build table
             var tableBuilder = new TableBuilder();
-            perfDataCustomDataSourceProcessor.BuildTable(PerfTxtCpuSamplingTable.TableDescriptor, tableBuilder);
+            perfDataProcessor.BuildTable(PerfTxtCpuSamplingTable.TableDescriptor, tableBuilder);
             var tbr = tableBuilder.TableBuilderWithRowCount;
 
             TableBuilderTests.TestRowTypesMatchColTypes(tbr, 0);
@@ -63,7 +66,7 @@ namespace PerfUnitTest
             Assert.IsTrue(sampleNumber == 2);
 
             // Timestamp
-            var ts = (Timestamp) tbr.Columns.ElementAt(1).Project(rowNumber);
+            var ts = (Timestamp)tbr.Columns.ElementAt(1).Project(rowNumber);
             Assert.IsTrue(ts == new Timestamp(27000));
 
             // IP
@@ -71,7 +74,7 @@ namespace PerfUnitTest
             Assert.IsTrue(ip == "is_prime");
 
             // IPModule
-            var ipModule = (string) tbr.Columns.ElementAt(3).Project(rowNumber);
+            var ipModule = (string)tbr.Columns.ElementAt(3).Project(rowNumber);
             Assert.IsTrue(ipModule == "stress-ng");
 
             // Process
@@ -83,7 +86,7 @@ namespace PerfUnitTest
             Assert.IsTrue(cpu == 4);
 
             // Callstack
-            var callstack = (string[]) tbr.Columns.ElementAt(14).Project(rowNumber);
+            var callstack = (string[])tbr.Columns.ElementAt(14).Project(rowNumber);
             Assert.IsTrue(callstack[0] == "stress-ng!is_prime");
         }
     }

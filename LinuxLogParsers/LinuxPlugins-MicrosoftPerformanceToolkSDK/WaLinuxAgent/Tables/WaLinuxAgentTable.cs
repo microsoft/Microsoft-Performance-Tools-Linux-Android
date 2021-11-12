@@ -6,12 +6,11 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace WaLinuxAgentMPTAddin.Tables
 {
     //
-    // Add a Table attribute in order for the CustomDataSourceBase to understand your table.
+    // Add a Table attribute in order for the ProcessingSource to understand your table.
     // 
 
     [Table]
@@ -92,7 +91,6 @@ namespace WaLinuxAgentMPTAddin.Tables
                     EventTimestampColumn,
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, EventTimestampColumn);

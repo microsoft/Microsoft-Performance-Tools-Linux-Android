@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using LinuxLogParser.WaLinuxAgentLog;
-using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,8 @@ namespace WaLinuxAgentMPTAddin
     // In order for a CDS to be recognized, it MUST satisfy the following:
     //  a) Be a public type
     //  b) Have a public parameterless constructor
-    //  c) Implement the ICustomDataSource interface
-    //  d) Be decorated with the CustomDataSourceAttribute attribute
+    //  c) Implement the IProcessingSource interface
+    //  d) Be decorated with the ProcessingSourceAttribute attribute
     //  e) Be decorated with at least one of the derivatives of the DataSourceAttribute attribute
     //
 
@@ -35,24 +34,13 @@ namespace WaLinuxAgentMPTAddin
     // There are two methods to creating a Custom Data Source that is recognized by the SDK:
     //    1. Using the helper abstract base classes
     //    2. Implementing the raw interfaces
-    // This sample demonstrates method 1 where the CustomDataSourceBase abstract class
-    // helps provide a public parameterless constructor and implement the ICustomDataSource interface
+    // This sample demonstrates method 1 where the ProcessingSource abstract class
+    // helps provide a public parameterless constructor and implement the IProcessingSource interface
     //
 
-    public class WaLinuxAgentCustomDataSource
-        : CustomDataSourceBase
+    public class WaLinuxAgentProcessingSource
+        : ProcessingSource
     {
-        private IApplicationEnvironment applicationEnvironment;
-
-        protected override void SetApplicationEnvironmentCore(IApplicationEnvironment applicationEnvironment)
-        {
-            //
-            // Saves the given application environment into this instance
-            //
-
-            this.applicationEnvironment = applicationEnvironment;
-        }
-
         protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
             return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals("waagent.log", Path.GetFileName(dataSource.Uri.LocalPath));
@@ -69,10 +57,8 @@ namespace WaLinuxAgentMPTAddin
             return new WaLinuxAgentCustomDataProcessor(
                 sourceParser,
                 options,
-                this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                this.ApplicationEnvironment,
+                processorEnvironment);
         }
     }
 }

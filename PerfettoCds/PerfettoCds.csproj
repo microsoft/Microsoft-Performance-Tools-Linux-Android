@@ -18,7 +18,7 @@
     <PackageReference Include="Google.Protobuf" Version="3.18.1">
       <GeneratePathProperty>true</GeneratePathProperty>
     </PackageReference>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.109.24" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.9-rc1" />
   </ItemGroup>
 
   <ItemGroup>

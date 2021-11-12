@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK;
@@ -35,7 +34,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public ProcessedEventData<PerfettoGpuCountersEvent> GpuCountersEvents { get; }
 
         public PerfettoGpuCountersEventCooker() : base(PerfettoPluginConstants.GpuCountersEventCookerPath)
-        { 
+        {
             this.GpuCountersEvents =
                 new ProcessedEventData<PerfettoGpuCountersEvent>();
         }
@@ -59,7 +58,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             {
                 string name = nameGroup.Key;
 
-                for(int i = 0; i < nameGroup.Count(); i++)
+                for (int i = 0; i < nameGroup.Count(); i++)
                 {
                     var ele = nameGroup.ElementAt(i);
                     double val = ele.counter.FloatValue;
@@ -74,9 +73,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                     PerfettoGpuCountersEvent ev = new PerfettoGpuCountersEvent
                     (
-                       name, 
-                       val, 
-                       new Timestamp(ts), 
+                       name,
+                       val,
+                       new Timestamp(ts),
                        new TimestampDelta(nextTs - ts)
                     );
                     this.GpuCountersEvents.AddEvent(ev);

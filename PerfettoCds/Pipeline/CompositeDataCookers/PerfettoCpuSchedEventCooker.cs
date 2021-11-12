@@ -118,7 +118,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                 for (int i = 1; i < cpuSchedEventsForCurrentThread.Count; i++)
                 {
-                    cpuSchedEventsForCurrentThread[i].AddPreviousCpuSchedulingEvent(cpuSchedEventsForCurrentThread[i-1]);
+                    cpuSchedEventsForCurrentThread[i].AddPreviousCpuSchedulingEvent(cpuSchedEventsForCurrentThread[i - 1]);
                 }
             }
 

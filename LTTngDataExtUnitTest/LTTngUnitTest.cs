@@ -4,20 +4,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LTTngDataExtensions.SourceDataCookers;
+using System.IO.Compression;
+using System.Linq;
 using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers;
+using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
+using LTTngDataExtensions.SourceDataCookers.Disk;
+using LTTngDataExtensions.SourceDataCookers.Module;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
 using LTTngDataExtensions.SourceDataCookers.Thread;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UnitTestCommon;
-using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
-using LTTngDataExtensions.SourceDataCookers.Module;
-using LTTngDataExtensions.SourceDataCookers.Disk;
-using System.IO.Compression;
-using System.Linq;
 
 namespace LTTngDataExtUnitTest
 {
@@ -48,9 +47,7 @@ namespace LTTngDataExtUnitTest
                     Assert.IsTrue(lttngDataPath.Exists);
 
                     // Approach #1 - Engine - Doesn't test tables UI but tests processing
-                    var runtime = Engine.Create();
-
-                    runtime.AddFile(lttngDataPath.FullName);
+                    var runtime = Engine.Create(new FileDataSource(lttngDataPath.FullName));
 
                     // Enable our various types of data
                     var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
@@ -96,17 +93,28 @@ namespace LTTngDataExtUnitTest
 
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            ZipFile.ExtractToDirectory(lttngData[0], tempDirectory);
+            using (var zipFile = ZipFile.OpenRead(lttngData[0]))
+            {
+                zipFile.ExtractToDirectory(tempDirectory);
+            }
 
-            // Approach #1 - Engine - Doesn't test tables UI but tests processing
-            var runtime = Engine.Create();
+            using (var dataSourceSet = DataSourceSet.Create())
+            {
+                var ds = new DirectoryDataSource(tempDirectory);
+                dataSourceSet.AddDataSource(ds);
 
-            var ds = new DirectoryDataSource(tempDirectory);
-            runtime.AddDataSource(ds);
+                // Approach #1 - Engine - Doesn't test tables UI but tests processing
+                using (var runtime = Engine.Create(new EngineCreateInfo(dataSourceSet.AsReadOnly())))
+                {
+                    //
+                    // We do not assert that any cookers are enabled since we did not explicitly enable cookers here
+                    //
 
-            Assert.IsTrue(ds.IsDirectory());
-            Assert.IsTrue(runtime.SourceDataCookers.Count() >= 1);
-            Assert.IsTrue(runtime.AvailableTables.Count() >= 1);
+                    Assert.IsTrue(ds.IsDirectory());
+                    Assert.IsTrue(runtime.AvailableTables.Count() >= 1);
+                }
+            }
+
 
             Directory.Delete(tempDirectory, true);
         }

@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
-using PerfettoCds.Pipeline.DataOutput;
-using Microsoft.Performance.SDK;
+using System.Linq;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -34,7 +32,7 @@ namespace PerfettoCds.Pipeline.Tables
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{c149eeb0-8f9d-41b1-9513-728bea20535d}"), "ProcessName", "Name of the process that logged the event"),
             new UIHints { Width = 210 });
-        
+
         private static readonly ColumnConfiguration ThreadNameColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{8b0c4b2a-675e-40d2-9c34-164f6a4751f7}"), "ThreadName", "Name of the thread that logged the event"),
             new UIHints { Width = 210 });
@@ -51,6 +49,11 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{28a51601-ccdc-4a9a-b484-1e85dad75ea5}"), "Message", "Logcat message"),
             new UIHints { Width = 300 });
 
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.LogcatEventCookerPath, nameof(PerfettoLogcatEventCooker.LogcatEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
@@ -59,7 +62,7 @@ namespace PerfettoCds.Pipeline.Tables
                 new DataOutputPath(PerfettoPluginConstants.LogcatEventCookerPath, nameof(PerfettoLogcatEventCooker.LogcatEvents)));
 
             // Start construction of the column order. Pivot on process and thread
-            List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>() 
+            List<ColumnConfiguration> allColumns = new List<ColumnConfiguration>()
             {
                 ProcessNameColumn,
                 ThreadNameColumn,

@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
-using PerfettoCds.Pipeline.DataOutput;
+using System.Linq;
 using Microsoft.Performance.SDK;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.CompositeDataCookers;
+using PerfettoCds.Pipeline.DataOutput;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -115,6 +116,12 @@ namespace PerfettoCds.Pipeline.Tables
                 SortPriority = 0,
             });
 
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.CpuSchedEventCookerPath, nameof(PerfettoCpuSchedEventCooker.CpuSchedEvents))).Any();
+        }
+
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             // Get data from the cooker
@@ -149,15 +156,15 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(PreviousCpuColumn, baseProjection.Compose(x => x.PreviousSchedulingEvent != null ? (int)x.PreviousSchedulingEvent.Cpu : -1));
 
             // Create projections that are used for calculating CPU usage%
-            var startProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(startProjection);
-            var endProjectionClippedToViewport = Projection.ClipTimeToViewport.Create(endProjection);
+            var startProjectionClippedToViewport = Projection.ClipTimeToVisibleDomain.Create(startProjection);
+            var endProjectionClippedToViewport = Projection.ClipTimeToVisibleDomain.Create(endProjection);
 
             IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
                     endProjectionClippedToViewport,
                     startProjectionClippedToViewport,
                     new ReduceTimeSinceLastDiff());
 
-            var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
+            var percentCpuUsageColumn = Projection.VisibleDomainRelativePercent.Create(cpuUsageInViewportColumn);
             tableGenerator.AddColumn(PercentCpuUsageColumn, percentCpuUsageColumn);
 
             // We want to exclude the idle thread ('swapper' on Android/Linux) from the display because it messes up CPU usage and clutters

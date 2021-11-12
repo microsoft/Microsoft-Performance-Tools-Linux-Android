@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK;
@@ -37,7 +36,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public ProcessedEventData<PerfettoProcessMemoryEvent> ProcessMemoryEvents { get; }
 
         public PerfettoProcessMemoryEventCooker() : base(PerfettoPluginConstants.ProcessMemoryEventCookerPath)
-        { 
+        {
             this.ProcessMemoryEvents =
                 new ProcessedEventData<PerfettoProcessMemoryEvent>();
         }

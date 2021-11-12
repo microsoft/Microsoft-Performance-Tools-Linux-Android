@@ -46,19 +46,23 @@ namespace LTTngDriver
 
             Console.WriteLine($"ExtensionDirectory:{parsed.ExtensionDirectory}");
 
+            var dataSources = DataSourceSet.Create();
+
+            Debug.Assert(parsed.CtfInput != null);
+            Debug.Assert(parsed.CtfInput.Count > 0);
+
+            foreach (var ctf in parsed.CtfInput.Distinct())
+            {
+                Console.WriteLine($"CTF Path:{ctf}");
+                dataSources.AddDataSource(new FileDataSource(ctf));
+            }
+
             var runtime = Engine.Create(
-                new EngineCreateInfo(new string[] { parsed.ExtensionDirectory })
+                new EngineCreateInfo(dataSources.AsReadOnly())
                 {
 
                 });
 
-            Debug.Assert(parsed.CtfInput != null);
-            Debug.Assert(parsed.CtfInput.Count > 0);
-            foreach (var ctf in parsed.CtfInput.Distinct())
-            {
-                Console.WriteLine($"CTF Path:{ctf}");
-                runtime.AddFile(ctf);
-            }
 
             var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
             var cookerName = lttngGenericEventDataCooker.Path;

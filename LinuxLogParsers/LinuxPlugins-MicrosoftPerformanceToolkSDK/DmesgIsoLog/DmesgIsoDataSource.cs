@@ -28,9 +28,7 @@ namespace DmesgIsoMPTAddin
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
 
         protected override bool IsDataSourceSupportedCore(IDataSource dataSource)

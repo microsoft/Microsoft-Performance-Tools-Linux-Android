@@ -20,7 +20,7 @@ using ILogger = Microsoft.Performance.SDK.Processing.ILogger;
 namespace LTTngCds
 {
     internal sealed class LTTngSourceParser
-        : SourceParserBase<LTTngEvent, LTTngContext, string>,
+        : SourceParser<LTTngEvent, LTTngContext, string>,
           IDisposable
     {
         private ICtfInput ctfInput;
@@ -61,7 +61,7 @@ namespace LTTngCds
 
         public Timestamp LastEventTimestamp { get; private set; }
 
-        public DateTime FirstEventWallClock { get; private set;}
+        public DateTime FirstEventWallClock { get; private set; }
 
         public ulong ProcessingTimeInMilliseconds { get; private set; }
 
@@ -70,8 +70,8 @@ namespace LTTngCds
         internal Dictionary<string, TraceStatsData> TraceStats = new Dictionary<string, TraceStatsData>(StringComparer.Ordinal);
 
         public override void ProcessSource(
-            ISourceDataProcessor<LTTngEvent, LTTngContext, string> dataProcessor, 
-            ILogger logger, 
+            ISourceDataProcessor<LTTngEvent, LTTngContext, string> dataProcessor,
+            ILogger logger,
             IProgress<int> progress,
             CancellationToken cancellationToken)
         {
@@ -111,10 +111,10 @@ namespace LTTngCds
                 lttngCustomization.RegisterEventCallback(EventCallback);
 
                 var playback = new CtfPlayback.CtfPlayback(lttngCustomization, cancellationToken);
-                playback.Playback(this.ctfInput, new CtfPlaybackOptions {ReadAhead = true}, progressReport);
+                playback.Playback(this.ctfInput, new CtfPlaybackOptions { ReadAhead = true }, progressReport);
 
                 sw.Stop();
-                this.ProcessingTimeInMilliseconds = (ulong) sw.ElapsedMilliseconds;
+                this.ProcessingTimeInMilliseconds = (ulong)sw.ElapsedMilliseconds;
             }
 
             {

@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK;
@@ -43,7 +42,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         private const long BackToNotIdleCode = 4294967295;
 
         public PerfettoCpuFrequencyEventCooker() : base(PerfettoPluginConstants.CpuFrequencyEventCookerPath)
-        { 
+        {
             this.CpuFrequencyEvents =
                 new ProcessedEventData<PerfettoCpuFrequencyEvent>();
         }
@@ -73,11 +72,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // 'cpuidle' events with a value of 4294967295 indicate the CPU moving back to non-idle at the last specified frequency
 
             // Create events out of the joined results
-            foreach (var cpuGroup in joined.GroupBy(x=>x.cpuCounterTrack.Cpu))
+            foreach (var cpuGroup in joined.GroupBy(x => x.cpuCounterTrack.Cpu))
             {
                 double lastFreq = 0;
 
-                for(int i = 0; i < cpuGroup.Count(); i++)
+                for (int i = 0; i < cpuGroup.Count(); i++)
                 {
                     var result = cpuGroup.ElementAt(i);
 
@@ -106,7 +105,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                         // is needed for WPA line graphs
                         nextTs = cpuGroup.ElementAt(i + 1).counter.Timestamp;
                     }
-                    
+
                     PerfettoCpuFrequencyEvent ev = new PerfettoCpuFrequencyEvent
                     (
                         frequency,
