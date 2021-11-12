@@ -47,42 +47,40 @@ namespace LTTngDataExtUnitTest
                     Assert.IsTrue(lttngDataPath.Exists);
 
                     // Approach #1 - Engine - Doesn't test tables UI but tests processing
-                    using (var runtime = Engine.Create(new FileDataSource(lttngDataPath.FullName)))
-                    {
+                    var runtime = Engine.Create(new FileDataSource(lttngDataPath.FullName));
 
-                        // Enable our various types of data
-                        var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
-                        LTTngGenericEventDataCookerPath = lttngGenericEventDataCooker.Path;
-                        runtime.EnableCooker(LTTngGenericEventDataCookerPath);
+                    // Enable our various types of data
+                    var lttngGenericEventDataCooker = new LTTngGenericEventDataCooker();
+                    LTTngGenericEventDataCookerPath = lttngGenericEventDataCooker.Path;
+                    runtime.EnableCooker(LTTngGenericEventDataCookerPath);
 
-                        var lttngSyscallDataCooker = new LTTngSyscallDataCooker();
-                        LTTngSyscallDataCookerPath = lttngSyscallDataCooker.Path;
-                        runtime.EnableCooker(LTTngSyscallDataCookerPath);
+                    var lttngSyscallDataCooker = new LTTngSyscallDataCooker();
+                    LTTngSyscallDataCookerPath = lttngSyscallDataCooker.Path;
+                    runtime.EnableCooker(LTTngSyscallDataCookerPath);
 
-                        var lttngThreadDataCooker = new LTTngThreadDataCooker();
-                        LTTngThreadDataCookerPath = lttngThreadDataCooker.Path;
-                        runtime.EnableCooker(LTTngThreadDataCookerPath);
+                    var lttngThreadDataCooker = new LTTngThreadDataCooker();
+                    LTTngThreadDataCookerPath = lttngThreadDataCooker.Path;
+                    runtime.EnableCooker(LTTngThreadDataCookerPath);
 
-                        var lttngDmesgDataCooker = new LTTngDmesgDataCooker();
-                        LTTngDmesgDataCookerPath = lttngDmesgDataCooker.Path;
-                        runtime.EnableCooker(LTTngDmesgDataCookerPath);
+                    var lttngDmesgDataCooker = new LTTngDmesgDataCooker();
+                    LTTngDmesgDataCookerPath = lttngDmesgDataCooker.Path;
+                    runtime.EnableCooker(LTTngDmesgDataCookerPath);
 
-                        var lttngModuleDataCooker = new LTTngModuleDataCooker();
-                        LTTngModuleDataCookerPath = lttngModuleDataCooker.Path;
-                        runtime.EnableCooker(LTTngModuleDataCookerPath);
+                    var lttngModuleDataCooker = new LTTngModuleDataCooker();
+                    LTTngModuleDataCookerPath = lttngModuleDataCooker.Path;
+                    runtime.EnableCooker(LTTngModuleDataCookerPath);
 
-                        var lttngDiskDataCooker = new LTTngDiskDataCooker();
-                        LTTngDiskDataCookerPath = lttngDiskDataCooker.Path;
-                        runtime.EnableCooker(LTTngDiskDataCookerPath);
+                    var lttngDiskDataCooker = new LTTngDiskDataCooker();
+                    LTTngDiskDataCookerPath = lttngDiskDataCooker.Path;
+                    runtime.EnableCooker(LTTngDiskDataCookerPath);
 
-                        //
-                        // Process our data.
-                        //
+                    //
+                    // Process our data.
+                    //
 
-                        RuntimeExecutionResults = runtime.Process();
+                    RuntimeExecutionResults = runtime.Process();
 
-                        IsTraceProcessed = true;
-                    }
+                    IsTraceProcessed = true;
                 }
             }
         }
@@ -95,16 +93,28 @@ namespace LTTngDataExtUnitTest
 
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            ZipFile.ExtractToDirectory(lttngData[0], tempDirectory);
-
-            var ds = new DirectoryDataSource(tempDirectory);
-            // Approach #1 - Engine - Doesn't test tables UI but tests processing
-            using (var runtime = Engine.Create(ds))
+            using (var zipFile = ZipFile.OpenRead(lttngData[0]))
             {
-                Assert.IsTrue(ds.IsDirectory());
-                Assert.IsTrue(runtime.EnabledCookers.Where(cooker => cooker.DataCookerType == DataCookerType.SourceDataCooker).Count() >= 1);
-                Assert.IsTrue(runtime.AvailableTables.Count() >= 1);
+                zipFile.ExtractToDirectory(tempDirectory);
             }
+
+            using (var dataSourceSet = DataSourceSet.Create())
+            {
+                var ds = new DirectoryDataSource(tempDirectory);
+                dataSourceSet.AddDataSource(ds);
+
+                // Approach #1 - Engine - Doesn't test tables UI but tests processing
+                using (var runtime = Engine.Create(new EngineCreateInfo(dataSourceSet.AsReadOnly())))
+                {
+                    //
+                    // We do not assert that any cookers are enabled since we did not explicitly enable cookers here
+                    //
+
+                    Assert.IsTrue(ds.IsDirectory());
+                    Assert.IsTrue(runtime.AvailableTables.Count() >= 1);
+                }
+            }
+
 
             Directory.Delete(tempDirectory, true);
         }
