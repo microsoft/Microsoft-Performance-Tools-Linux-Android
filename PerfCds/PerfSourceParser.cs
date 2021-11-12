@@ -8,13 +8,13 @@ using System.IO.Compression;
 using System.Threading;
 using CtfPlayback;
 using CtfPlayback.Inputs;
+using Microsoft.Performance.SDK;
+using Microsoft.Performance.SDK.Extensibility.SourceParsing;
+using Microsoft.Performance.SDK.Processing;
 using PerfCds.CookerData;
 using PerfCds.CtfExtensions;
 using PerfCds.CtfExtensions.FolderInput;
 using PerfCds.CtfExtensions.ZipArchiveInput;
-using Microsoft.Performance.SDK;
-using Microsoft.Performance.SDK.Extensibility.SourceParsing;
-using Microsoft.Performance.SDK.Processing;
 using ILogger = Microsoft.Performance.SDK.Processing.ILogger;
 
 namespace PerfCds
@@ -61,7 +61,7 @@ namespace PerfCds
 
         public Timestamp LastEventTimestamp { get; private set; }
 
-        public DateTime FirstEventWallClock { get; private set;}
+        public DateTime FirstEventWallClock { get; private set; }
 
         public ulong ProcessingTimeInMilliseconds { get; private set; }
 
@@ -70,8 +70,8 @@ namespace PerfCds
         internal Dictionary<string, TraceStatsData> TraceStats = new Dictionary<string, TraceStatsData>(StringComparer.Ordinal);
 
         public override void ProcessSource(
-            ISourceDataProcessor<PerfEvent, PerfContext, string> dataProcessor, 
-            ILogger logger, 
+            ISourceDataProcessor<PerfEvent, PerfContext, string> dataProcessor,
+            ILogger logger,
             IProgress<int> progress,
             CancellationToken cancellationToken)
         {
@@ -108,10 +108,10 @@ namespace PerfCds
                 perfCustomization.RegisterEventCallback(EventCallback);
 
                 var playback = new CtfPlayback.CtfPlayback(perfCustomization, cancellationToken);
-                playback.Playback(this.ctfInput, new CtfPlaybackOptions {ReadAhead = true}, progressReport);
+                playback.Playback(this.ctfInput, new CtfPlaybackOptions { ReadAhead = true }, progressReport);
 
                 sw.Stop();
-                this.ProcessingTimeInMilliseconds = (ulong) sw.ElapsedMilliseconds;
+                this.ProcessingTimeInMilliseconds = (ulong)sw.ElapsedMilliseconds;
             }
 
             {

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
@@ -62,9 +60,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // We need to join a bunch of tables to get the cpu samples with stack and module information
             var joined = from perfSample in perfSampleData
                          join thread in threadData on perfSample.Utid equals thread.Id
-                         join threadProcess in processData on thread.Upid equals threadProcess.Upid 
-                           into pd from threadProcess in pd.DefaultIfEmpty()  // left outer
-                         select new { perfSample, thread, threadProcess}; // stackProfileCallSite
+                         join threadProcess in processData on thread.Upid equals threadProcess.Upid
+                           into pd
+                         from threadProcess in pd.DefaultIfEmpty()  // left outer
+                         select new { perfSample, thread, threadProcess }; // stackProfileCallSite
 
             var stackWalker = new StackWalk(stackProfileCallSiteData, stackProfileFrameData, stackProfileMappingData);
 

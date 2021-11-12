@@ -2,9 +2,6 @@
 // Licensed under the MIT License.
 
 using Microsoft.Performance.SDK;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PerfDataExtensions.Tables
 {

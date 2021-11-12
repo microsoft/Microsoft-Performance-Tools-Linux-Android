@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -8,8 +10,6 @@ using PerfCds.CookerData;
 using PerfDataExtensions.DataOutputTypes;
 using PerfDataExtensions.SourceDataCookers.Cpu;
 using PerfDataExtensions.Tables.Generators;
-using System;
-using System.Collections.Generic;
 using Utilities.AccessProviders;
 using static PerfDataExtensions.Tables.TimeHelper;
 

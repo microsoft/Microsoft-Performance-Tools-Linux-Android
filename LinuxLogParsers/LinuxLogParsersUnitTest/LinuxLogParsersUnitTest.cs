@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.IO;
 using CloudInitMPTAddin;
 using DmesgIsoMPTAddin;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 using WaLinuxAgentMPTAddin;
 
 namespace LinuxLogParsersUnitTest

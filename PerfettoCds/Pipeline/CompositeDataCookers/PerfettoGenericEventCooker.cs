@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,7 +25,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
     {
         [XmlAttribute("Id")]
         public string Provider { get; set; }
-        [XmlAttribute("Name")] 
+        [XmlAttribute("Name")]
         public string Guid { get; set; }
     }
 
@@ -134,7 +133,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                         }
                         else
                         {
-                            foreach(var provider in result.EventProviders)
+                            foreach (var provider in result.EventProviders)
                             {
                                 this.ProviderGuidMapping.Add(new Guid(provider.Guid), provider.Provider);
                             }
@@ -168,11 +167,16 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // ProcessTrack gives us events that only have a process and not a thread
             var joined = from slice in sliceData
                          join arg in argData on slice.ArgSetId equals arg.ArgSetId into args
-                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd from threadTrack in ttd.DefaultIfEmpty()
-                         join thread in threadData on threadTrack?.Utid equals thread.Utid into td from thread in td.DefaultIfEmpty()
-                         join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd from threadProcess in pd.DefaultIfEmpty()
-                         join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd from processTrack in ptd.DefaultIfEmpty()
-                         join process in processData on processTrack?.Upid equals process.Upid into pd2 from process in pd2.DefaultIfEmpty()
+                         join threadTrack in threadTrackData on slice.TrackId equals threadTrack.Id into ttd
+                         from threadTrack in ttd.DefaultIfEmpty()
+                         join thread in threadData on threadTrack?.Utid equals thread.Utid into td
+                         from thread in td.DefaultIfEmpty()
+                         join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd
+                         from threadProcess in pd.DefaultIfEmpty()
+                         join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd
+                         from processTrack in ptd.DefaultIfEmpty()
+                         join process in processData on processTrack?.Upid equals process.Upid into pd2
+                         from process in pd2.DefaultIfEmpty()
                          select new { slice, args, threadTrack, thread, threadProcess, process };
 
             var longestRelTS = joined.Max(f => f.slice?.RelativeTimestamp);
@@ -250,9 +254,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 // Walk the parent tree
                 while (currentParentId.HasValue)
                 {
-                    var parentPerfettoSliceEvent = sliceData[(int) currentParentId.Value];
+                    var parentPerfettoSliceEvent = sliceData[(int)currentParentId.Value];
                     // Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Should be guaranteed by slice Id ordering. Since we are relying on index being the Id
-                    
+
                     if (parentPerfettoSliceEvent != null)
                     {
                         currentParentId = parentPerfettoSliceEvent.ParentId;
@@ -260,7 +264,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     }
                     else
                     {
-                        currentParentId =  null;
+                        currentParentId = null;
                     }
 
                     parentTreeDepthLevel++;

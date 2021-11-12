@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using LinuxLogParser.DmesgIsoLog;
-using Microsoft.Performance.SDK.Processing;
 using System.Collections.Generic;
 using System.Linq;
+using LinuxLogParser.DmesgIsoLog;
+using Microsoft.Performance.SDK.Processing;
 
 namespace DmesgIsoMPTAddin
 {

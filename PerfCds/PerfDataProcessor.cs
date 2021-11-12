@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
 using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
 using PerfCds.CookerData;
 using PerfCds.MetadataTables;
-using System;
 
 namespace PerfCds
 {

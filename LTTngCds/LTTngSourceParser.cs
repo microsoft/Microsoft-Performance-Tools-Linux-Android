@@ -1,6 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Compression;
+using System.Threading;
 using CtfPlayback;
 using CtfPlayback.Inputs;
 using LTTngCds.CookerData;
@@ -10,11 +15,6 @@ using LTTngCds.CtfExtensions.ZipArchiveInput;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Compression;
-using System.Threading;
 using ILogger = Microsoft.Performance.SDK.Processing.ILogger;
 
 namespace LTTngCds

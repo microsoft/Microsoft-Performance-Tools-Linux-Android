@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
@@ -7,7 +8,6 @@ using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
-using System.IO;
 
 namespace PerfettoUnitTest
 {

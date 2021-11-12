@@ -64,7 +64,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Thread and process info is contained in their respective tables
             var joined = from raw in rawData
                          join thread in threadData on raw.Utid equals thread.Utid
-                         join threadProcess in processData on thread.Upid equals threadProcess.Upid into pd from threadProcess in pd.DefaultIfEmpty()
+                         join threadProcess in processData on thread.Upid equals threadProcess.Upid into pd
+                         from threadProcess in pd.DefaultIfEmpty()
                          join arg in argsData on raw.ArgSetId equals arg.ArgSetId into args
                          select new { raw, args, thread, threadProcess };
 
@@ -119,7 +120,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     result.thread.Tid,
                     result.raw.Cpu,
                     result.raw.Name,
-                    values, 
+                    values,
                     argKeys
                 );
                 this.FtraceEvents.AddEvent(ev);

@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.DataCooking;
@@ -7,8 +9,6 @@ using Microsoft.Performance.SDK.Extensibility.DataCooking.SourceDataCooking;
 using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.Events;
 using PerfettoProcessor;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace PerfettoCds.Pipeline.SourceDataCookers
 {

@@ -3,13 +3,13 @@
 
 using System;
 using CtfPlayback.FieldValues;
-using PerfDataExtensions.DataOutputTypes;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
-using Utilities;
-using PerfDataExtensions.SourceDataCookers;
 using PerfCds.CookerData;
+using PerfDataExtensions.DataOutputTypes;
+using PerfDataExtensions.SourceDataCookers;
+using Utilities;
 
 namespace PerfDataExtensions.Tables
 {
@@ -78,12 +78,12 @@ namespace PerfDataExtensions.Tables
             var genericEventProjection = new EventProjection<PerfGenericEvent>(events);
 
             var eventNameColumn = new DataColumn<string>(
-                eventNameColumnConfig, 
+                eventNameColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.EventName));
             tableGenerator.AddColumn(eventNameColumn);
 
             var eventIdColumn = new DataColumn<uint>(
-                eventIdColumnConfig, 
+                eventIdColumnConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Id));
             tableGenerator.AddColumn(eventIdColumn);
 

@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK;
@@ -76,7 +75,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         };
 
         public PerfettoSystemMemoryEventCooker() : base(PerfettoPluginConstants.SystemMemoryEventCookerPath)
-        { 
+        {
             this.SystemMemoryEvents =
                 new ProcessedEventData<PerfettoSystemMemoryEvent>();
         }
@@ -102,7 +101,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             {
                 string memoryType = memoryGroup.Key;
 
-                for(int i = 0; i < memoryGroup.Count(); i++)
+                for (int i = 0; i < memoryGroup.Count(); i++)
                 {
                     var thing = memoryGroup.ElementAt(i);
                     double val = thing.counter.FloatValue;
@@ -117,7 +116,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                     PerfettoSystemMemoryEvent ev = new PerfettoSystemMemoryEvent
                     (
-                        val, 
+                        val,
                         memoryType,
                         new Timestamp(ts),
                         new TimestampDelta(nextTs - ts)

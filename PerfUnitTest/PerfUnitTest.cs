@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PerfDataExtensions.Tables;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using UnitTestCommon;
 
 namespace PerfUnitTest

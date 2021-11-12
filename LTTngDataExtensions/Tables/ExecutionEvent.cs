@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Thread;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
-using System;
-using System.Collections.Generic;
 
 namespace LTTngDataExtensions.Tables
 {
@@ -176,10 +176,8 @@ namespace LTTngDataExtensions.Tables
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            //timelineByCPUTableConfig.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            //timelineByCPUTableConfig.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var utilByProcessCmdTable = new TableConfiguration("Utilization by Process Id, Thread Id, Cmd")
@@ -208,10 +206,8 @@ namespace LTTngDataExtensions.Tables
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            //utilByProcessCmdTable.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            //utilByProcessCmdTable.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var utilByCpuTable = new TableConfiguration("Utilization by CPU")
@@ -240,10 +236,8 @@ namespace LTTngDataExtensions.Tables
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            //utilByCpuTable.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            //utilByCpuTable.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var table = tableBuilder.AddTableConfiguration(timelineByCPUTableConfig)

@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
 using LTTngCds.CookerData;
 using LTTngCds.MetadataTables;
 using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
-using System;
 
 namespace LTTngCds
 {

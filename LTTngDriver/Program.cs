@@ -1,11 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using LTTngDataExtensions.DataOutputTypes;
-using LTTngDataExtensions.SourceDataCookers;
-using Microsoft.Performance.SDK.Extensibility;
-using Microsoft.Performance.SDK.Processing;
-using Microsoft.Performance.Toolkit.Engine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +9,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LTTngDataExtensions.DataOutputTypes;
+using LTTngDataExtensions.SourceDataCookers;
+using Microsoft.Performance.SDK.Extensibility;
+using Microsoft.Performance.SDK.Processing;
+using Microsoft.Performance.Toolkit.Engine;
 
 namespace LTTngDriver
 {

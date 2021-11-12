@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Diagnostics.Tracing.Stacks;
-using Microsoft.Diagnostics.Tracing.StackSources;
-using Microsoft.Performance.SDK;
-using Microsoft.Performance.SDK.Processing;
-using PerfDataExtensions.Tables.Generators;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.Diagnostics.Tracing.Stacks;
+using Microsoft.Diagnostics.Tracing.StackSources;
+using Microsoft.Performance.SDK;
+using Microsoft.Performance.SDK.Processing;
+using PerfDataExtensions.Tables.Generators;
 using Utilities.AccessProviders;
 using static PerfDataExtensions.Tables.TimeHelper;
 

@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Performance.SDK.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Performance.SDK.Processing;
 
 namespace LTTngCds.MetadataTables
 {
