@@ -9,7 +9,7 @@
 > Tracing supported: 
 - [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
 - [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock)
-- [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks)
+- [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Sampling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks, GPU Counters)
 
 > Logs supported: 
 - [Dmesg](https://en.wikipedia.org/wiki/Dmesg)
@@ -45,7 +45,7 @@ If you want to see a demo or get more in-depth info on using these tools check o
 The tools can be run in several modes:
 
 - **Cross-platform with .NET Core** (Any OS that .NET Core supports)
-  - Used as a library to process traces / logs programatically
+  - Used as a library to process traces / logs programatically in a .NET Core language like C#
     - Examples: 
     - [LTTng 1](LTTngDriver/Program.cs), [LTTng 2](LTTngDataExtUnitTest/LTTngUnitTest.cs)
     - [Perf](PerfUnitTest/PerfUnitTest.cs)
@@ -65,7 +65,7 @@ The tools can be run in several modes:
       ```dos
         wpa.exe -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-1.2\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
      ```
-  - OR with Env Variable to pick file from UI (Env variable not currently working in current ADK version)
+  - OR with Env Variable to pick file from UI
        ```dos
         SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-1.2\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins
         wpa.exe
@@ -96,10 +96,10 @@ The tools can be run in several modes:
 # How to load the logs in the UI
 
 - LTTng - If you just need to open only a LTTng trace by itself in folder format
-  - WPA -> Open -> Folder (Select CTF folder)
+  - WPA -> Open -> Folder -> (Select CTF folder)
     - Note: Requires >= 1.2 release AND WPA >= 10.6.20.1 (via WPA Help -> About)
 - Perfetto
-  - WPA -> Open -> Folder (Select Perfetto trace file)
+  - WPA -> Open -> (Select Perfetto trace file)
     - Note: The Perfetto plugin explicitly supports the _.perfetto-trace_ and _.pftrace_ file types, but it does support more (e.g. Protobuf, Chrome JSON). You just need to rename to one of the stated supported types
 - Unified (LTTng, Perfetto, or other multiple different logs files together)
   - Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
