@@ -36,6 +36,8 @@ If you want to see a demo or get more in-depth info on using these tools check o
 # Download
 - **For plugins Download** see [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases)
 
+- **NuGet Pkgs** see [PerformanceToolkitPlugins](https://www.nuget.org/profiles/PerformanceToolkitPlugins)
+
 - **(Windows Only GUI - Install)** Using the WPA GUI to load these tools as plugins
   - Download the latest Store [Windows Performance Analyzer (Preview)](https://www.microsoft.com/en-us/p/windows-performance-analyzer-preview/9n58qrw40dfw)
 
@@ -61,25 +63,25 @@ The tools can be run in several modes:
     - -LinuxPerfToolsPluginFolder path may need to be specified if not auto-found correctly
   - In Command Prompt with -addsearchdir and -i trace file:
       ```dos
-        wpa.exe -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-0.9\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
+        wpa.exe -addsearchdir %HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-1.2\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins -i c:\PATH\TO\lttng-kernel-trace.ctf
      ```
   - OR with Env Variable to pick file from UI (Env variable not currently working in current ADK version)
        ```dos
-        SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-0.9\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins
+        SET WPA_ADDITIONAL_SEARCH_DIRECTORIES=%HOMEDRIVE%%HOMEPATH%\Downloads\Microsoft-Performance-Tools-Linux-Android-1.2\Microsoft-Performance-Tools-Linux-Android\MicrosoftPerfToolkitAddins
         wpa.exe
       ```
   - Optional Troubleshooting - Verify that this WPA version supports plugins
     - In Command Prompt - Example:
         ```dos
         wpa.exe /?
-        "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22000.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpa.exe" /?
+        "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22504.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpa.exe" /?
         ```
     - Verify that these 2 command line WPA options are supported:
       - OPTIONS: **-addsearchdir PATH**. Adds a directory path to the plugin search path. ....
       - ENVIRONMENT VARIABLES: **WPA_ADDITIONAL_SEARCH_DIRECTORIES** - A semicolon (;) delimited list of additional directories to search for plugins. Equivalent to the -addsearchdir option.
 - **(Windows) Command-line dumping to a text format** based on the WPA UI (say CSV) (wpaexporter.exe)
     ```dos
-    "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22000.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpaexporter.exe" -addsearchdir PLUGIN_FOLDER -i traceFile
+    "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22504.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpaexporter.exe" -addsearchdir PLUGIN_FOLDER -i traceFile
     ```
 
 # How to capture a trace or logs
@@ -95,7 +97,7 @@ The tools can be run in several modes:
 
 - LTTng - If you just need to open only a LTTng trace by itself in folder format
   - WPA -> Open -> Folder (Select CTF folder)
-    - Note: Requires >= 0.9 release AND WPA >= 10.6.20.1
+    - Note: Requires >= 1.2 release AND WPA >= 10.6.20.1 (via WPA Help -> About)
 - Perfetto
   - WPA -> Open -> Folder (Select Perfetto trace file)
     - Note: The Perfetto plugin explicitly supports the _.perfetto-trace_ and _.pftrace_ file types, but it does support more (e.g. Protobuf, Chrome JSON). You just need to rename to one of the stated supported types
