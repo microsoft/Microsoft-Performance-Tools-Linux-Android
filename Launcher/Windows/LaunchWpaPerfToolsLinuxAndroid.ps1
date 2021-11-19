@@ -18,6 +18,9 @@ Param(
     $LinuxPerfToolsPluginFolder
     )
 
+$MinStoreWPAVersion = New-Object -TypeName System.Version -ArgumentList "10.0.22500.0"
+$WPAPreviewStoreLink = "https://www.microsoft.com/en-us/p/windows-performance-analyzer-preview/9n58qrw40dfw"
+
 Write-Host "Please see https://aka.ms/linuxperftools for help" 
 
 if (-not $LinuxPerfToolsPluginFolder -or -not (Test-Path -Path $LinuxPerfToolsPluginFolder -ErrorAction Ignore | Out-Null))
@@ -42,15 +45,35 @@ if ($LinuxPerfToolsPluginFolder -and -not (Test-Path -Path $localLinuxPerfWpaAdd
     Exit
 }
 
-$wpaProcess = "wpa.exe"
-
-if (-not (Test-Path -Path $wpaProcess))
+$wpaPreviewStorePkg = Get-AppPackage -Name Microsoft.WindowsPerformanceAnalyzerPreview
+if (-not $wpaPreviewStorePkg -or $wpaPreviewStorePkg.Status -ne "Ok")
 {
-    Write-Host "Please download the latest Store Windows Performance Analyzer (Preview)"
-    Start-Process "https://www.microsoft.com/en-us/p/windows-performance-analyzer-preview/9n58qrw40dfw"
+    Write-Error -Category NotInstalled -Message "REQUIRED PREREQUISITE Store Windows Performance Analyzer (Preview) is not installed. Please install it from the Store. Launching $WPAPreviewStoreLink"
+    Start-Process "$WPAPreviewStoreLink"
     Pause
     Exit
 }
+
+$v = New-Object -TypeName System.Version -ArgumentList $wpaPreviewStorePkg.Version
+# Is MinStoreWPAVersion same, later, or earlier than current WPA version?
+$WpaVersionComparison = $MinStoreWPAVersion.CompareTo($v);
+switch ($WpaVersionComparison )
+{
+    # MinStoreWPAVersion the same as current WPA
+    0 { break }
+    # MinStoreWPAVersion later than current WPA
+    1 
+    {
+        Write-Error -Category NotInstalled  -Message "Current WPA version is $v. Need minimum of WPA $MinStoreWPAVersion. Redirecting to Store WPA so that you can update...";
+        Start-Process "$WPAPreviewStoreLink"
+        Pause
+        Exit
+    }
+    # MinStoreWPAVersion earlier than current WPA. That's ok
+    -1 { break }
+}
+
+$wpaProcess = "$env:LOCALAPPDATA\Microsoft\WindowsApps\wpa.exe"
 
 $startInfo = New-Object System.Diagnostics.ProcessStartInfo
 $startInfo.FileName = $wpaProcess
@@ -73,8 +96,6 @@ if ($InputFile)
 else
 {
     $startInfo.Arguments = "-addsearchdir `"$localLinuxPerfWpaAddins`""
-    Pause
-    Exit
 }
 
 Write-Host "Launching" $wpaProcess $startInfo.Arguments
