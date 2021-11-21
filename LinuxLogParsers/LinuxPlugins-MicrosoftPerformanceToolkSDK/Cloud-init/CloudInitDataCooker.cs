@@ -29,8 +29,6 @@ namespace CloudInitMPTAddin
 
         public SourceDataCookerOptions Options => SourceDataCookerOptions.None;
 
-        public string DataCookerId => Path.CookerPath;
-
         public string Description => "Parsed information of CloudInit log.";
 
         public string SourceParserId => Path.SourceParserId;
@@ -50,7 +48,7 @@ namespace CloudInitMPTAddin
         private List<LogEntry> logEntries;
         private LogContext context;
 
-        public CloudInitDataCooker() : this(new DataCookerPath(SourceParserIds.CloudInitLog, CookerId))
+        public CloudInitDataCooker() : this(DataCookerPath.ForSource(SourceParserIds.CloudInitLog, CookerId))
         {
         }
 

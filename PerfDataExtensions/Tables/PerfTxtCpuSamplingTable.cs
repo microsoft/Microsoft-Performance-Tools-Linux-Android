@@ -1,24 +1,23 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Diagnostics.Tracing.StackSources;
-using Microsoft.Diagnostics.Tracing.Stacks;
-using Microsoft.Performance.SDK;
-using Microsoft.Performance.SDK.Processing;
-using PerfDataExtensions.Tables.AccessProviders;
-using PerfDataExtensions.Tables.Generators;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Microsoft.Diagnostics.Tracing.Stacks;
+using Microsoft.Diagnostics.Tracing.StackSources;
+using Microsoft.Performance.SDK;
+using Microsoft.Performance.SDK.Processing;
+using PerfDataExtensions.Tables.Generators;
+using Utilities.AccessProviders;
 using static PerfDataExtensions.Tables.TimeHelper;
 
 namespace PerfDataExtensions.Tables
 {
     //
-    // Add a Table attribute in order for the CustomDataSourceBase to understand your table.
+    // Add a Table attribute in order for the ProcessingSource to understand your table.
     // 
 
     [Table]              // A category is optional. It useful for grouping different types of tables
@@ -185,15 +184,15 @@ namespace PerfDataExtensions.Tables
 
             // For calculating cpu %
             var timeStampStartProjection = baseProjection.Compose(s => s.SampleIndex == StackSourceSampleIndex.Invalid ? Timestamp.Zero : new Timestamp(Convert.ToInt64(s.TimeRelativeMSec * 1000000)) - new TimestampDelta(Convert.ToInt64(sampleWeights[(int)s.SampleIndex] * 1000000)));
-            IProjection<int, Timestamp> viewportClippedStartTimeProj = Projection.ClipTimeToViewport.Create(timeStampStartProjection);
-            IProjection<int, Timestamp> viewportClippedEndTimeProj = Projection.ClipTimeToViewport.Create(timeStampProjection);
+            IProjection<int, Timestamp> viewportClippedStartTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampStartProjection);
+            IProjection<int, Timestamp> viewportClippedEndTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampProjection);
 
             IProjection<int, TimestampDelta> clippedWeightProj = Projection.Select(
                 viewportClippedEndTimeProj,
                 viewportClippedStartTimeProj,
                 new ReduceTimeSinceLastDiff());
 
-            IProjection<int, double> weightPercentProj = Projection.ViewportRelativePercent.Create(clippedWeightProj);
+            IProjection<int, double> weightPercentProj = Projection.VisibleDomainRelativePercent.Create(clippedWeightProj);
 
             IProjection<int, int> countProj = SequentialGenerator.Create(
                 firstPerfDataTxtLogParsed.SampleIndexLimit,
@@ -231,7 +230,6 @@ namespace PerfDataExtensions.Tables
                     weightPctColumn
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -259,7 +257,6 @@ namespace PerfDataExtensions.Tables
                     weightPctColumn
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -287,7 +284,6 @@ namespace PerfDataExtensions.Tables
                     weightPctColumn
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -315,7 +311,6 @@ namespace PerfDataExtensions.Tables
                     weightPctColumn
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
@@ -343,7 +338,6 @@ namespace PerfDataExtensions.Tables
                     weightPctColumn
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 ChartType = ChartType.Flame,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
@@ -514,7 +508,7 @@ namespace PerfDataExtensions.Tables
             var sampleWeights = new Dictionary<int, double>();
 
             const int MaxCpus = 256;
-            var lastPerCpuSampleWeight = new Tuple<int,double>[MaxCpus]; // Per CPU - Last sample #, TimeRelativeMSec
+            var lastPerCpuSampleWeight = new Tuple<int, double>[MaxCpus]; // Per CPU - Last sample #, TimeRelativeMSec
 
             for (var i = 0; i < stackSource.SampleIndexLimit; i++)
             {

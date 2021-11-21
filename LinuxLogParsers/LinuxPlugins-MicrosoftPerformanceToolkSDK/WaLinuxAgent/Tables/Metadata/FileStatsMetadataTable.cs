@@ -19,7 +19,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
     //
 
     //
-    // In order for the CustomDataSourceBase to understand your metadata table, 
+    // In order for the ProcessingSource to understand your metadata table, 
     // add a MetadataTable attribute which denotes this table as metadata.
     //
 
@@ -31,12 +31,12 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
     public static class FileStatsMetadataTable
     {
         public static readonly TableDescriptor TableDescriptor = new TableDescriptor(
-            Guid.Parse("{40AF86E5-0DF8-47B1-9A01-1D6C3529B75B}"),
+            Guid.Parse("{10a8a80a-27a3-42b8-8cde-3a374080e01e}"),
             "File Stats",
             "Statistics for text files",
             isMetadataTable: true,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -54,7 +54,7 @@ namespace WaLinuxAgentMPTAddin.Tables.Metadata
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             WaLinuxAgentLogParsedResult parsedResult = tableData.QueryOutput<WaLinuxAgentLogParsedResult>(
-                DataOutputPath.Create(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, "ParsedResult"));
+                DataOutputPath.ForSource(SourceParserIds.WaLinuxAgentLog, WaLinuxAgentDataCooker.CookerId, nameof(WaLinuxAgentDataCooker.ParsedResult)));
             var fileNames = parsedResult.FileToMetadata.Keys.ToArray();
             var fileNameProjection = Projection.Index(fileNames.AsReadOnly());
 

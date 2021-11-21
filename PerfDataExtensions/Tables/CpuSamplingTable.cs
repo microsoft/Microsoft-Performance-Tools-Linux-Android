@@ -1,23 +1,22 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using PerfDataExtensions.SourceDataCookers.Cpu;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfCds.CookerData;
 using PerfDataExtensions.DataOutputTypes;
+using PerfDataExtensions.SourceDataCookers.Cpu;
 using PerfDataExtensions.Tables.Generators;
-using System.Linq;
-using PerfDataExtensions.Tables.AccessProviders;
+using Utilities.AccessProviders;
 using static PerfDataExtensions.Tables.TimeHelper;
 
 namespace PerfDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(PerfCpuClockDataCooker.CookerPath)]
+    [RequiresSourceCooker(PerfConstants.SourceId, PerfCpuClockDataCooker.Identifier)]
     public class CpuSamplingTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
@@ -31,7 +30,7 @@ namespace PerfDataExtensions.Tables
         private static readonly ColumnConfiguration cpuColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{882508D5-606D-4796-96A7-CF254ABD1385}"), "CPU"),
-                new UIHints { Width = 80});
+                new UIHints { Width = 80 });
 
         private static readonly ColumnConfiguration ipColumn =
             new ColumnConfiguration(
@@ -91,7 +90,8 @@ namespace PerfDataExtensions.Tables
         private static readonly ColumnConfiguration weightPctColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{653AB235-4D63-4CC8-906B-238284ED9390}"), "Weight %"),
-                new UIHints {
+                new UIHints
+                {
                     Width = 80,
                     AggregationMode = AggregationMode.Sum,
                     SortPriority = 0,
@@ -122,7 +122,8 @@ namespace PerfDataExtensions.Tables
         private static readonly ColumnConfiguration countColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{7618F209-B4B5-47E2-A572-19CE89668CE8}"), "Count"),
-                new UIHints {
+                new UIHints
+                {
                     Width = 80,
                     AggregationMode = AggregationMode.Sum,
                     SortPriority = 1,
@@ -132,7 +133,7 @@ namespace PerfDataExtensions.Tables
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
-            var pathIdentifier = DataOutputPath.Create(PerfCpuClockDataCooker.CookerPath + "/CpuClockEvents");
+            var pathIdentifier = DataOutputPath.ForSource(PerfConstants.SourceId, PerfCpuClockDataCooker.Identifier, nameof(PerfCpuClockDataCooker.CpuClockEvents));
 
             var cpuClocks = tableData.QueryOutput<IReadOnlyList<ICpuClockEvent>>(pathIdentifier);
             if (cpuClocks.Count == 0)
@@ -159,7 +160,6 @@ namespace PerfDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     weightPctColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.EndTime, timeStampColumn);
@@ -184,19 +184,19 @@ namespace PerfDataExtensions.Tables
             table.AddColumn(timeStampColumn, timeStampProjection);
 
             var oneMsSample = new TimestampDelta(1000000); // 1ms for now until we can figure out weight better
-            var oneNs = new TimestampDelta(1); 
-            var weightProj = Projection.Constant(oneMsSample); 
+            var oneNs = new TimestampDelta(1);
+            var weightProj = Projection.Constant(oneMsSample);
 
             var timeStampStartProjection = Projection.CreateUsingFuncAdaptor((i) => cpuClocks[i].Timestamp - oneNs); // We will say sample lasted 1ns
-            IProjection<int, Timestamp> viewportClippedStartTimeProj = Projection.ClipTimeToViewport.Create(timeStampStartProjection);
-            IProjection<int, Timestamp> viewportClippedEndTimeProj = Projection.ClipTimeToViewport.Create(timeStampProjection);
+            IProjection<int, Timestamp> viewportClippedStartTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampStartProjection);
+            IProjection<int, Timestamp> viewportClippedEndTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampProjection);
 
             IProjection<int, TimestampDelta> clippedWeightProj = Projection.Select(
                 viewportClippedEndTimeProj,
                 viewportClippedStartTimeProj,
                 new ReduceTimeSinceLastDiff());
 
-            IProjection<int, double> weightPercentProj = Projection.ViewportRelativePercent.Create(clippedWeightProj);
+            IProjection<int, double> weightPercentProj = Projection.VisibleDomainRelativePercent.Create(clippedWeightProj);
 
             IProjection<int, int> countProj = SequentialGenerator.Create(
                 cpuClocks.Count,
@@ -208,7 +208,7 @@ namespace PerfDataExtensions.Tables
             table.AddColumn(weightPctColumn, weightPercentProj);
             table.AddColumn(startTimeCol, timeStampStartProjection);
             table.AddColumn(viewportClippedStartTimeCol, viewportClippedStartTimeProj);
-            table.AddColumn(viewportClippedEndTimeCol,viewportClippedEndTimeProj);
+            table.AddColumn(viewportClippedEndTimeCol, viewportClippedEndTimeProj);
             table.AddColumn(clippedWeightCol, clippedWeightProj);
         }
 

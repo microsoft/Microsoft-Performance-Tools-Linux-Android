@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.9-rc1" />
+    <PackageReference Include="Microsoft.Performance.SDK.Runtime" Version="1.0.9-rc1" />
+    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="1.0.9-rc1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
+    <PackageReference Include="coverlet.collector" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerfettoCds\PerfettoCds.csproj" />
+    <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
+  </ItemGroup>
+
+  <Target Name="DownloadTraceProcessorShell">
+    <!-- Download the trace_processor.exe from Perfetto's GitHub release and copy it to the output directory-->
+    <DownloadFile SourceUrl="https://github.com/google/perfetto/releases/download/v18.0/windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Unzip SourceFiles="$(TargetDir)\windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(TargetDir)\windows-amd64\trace_processor_shell.exe" DestinationFolder="$(TargetDir)" />
+    <RemoveDir Directories="$(TargetDir)\windows-amd64" />
+    <Delete Files="$(TargetDir)\windows-amd64.zip" />
+  </Target>
+
+  <Target Name="CopyRulesToTarget" AfterTargets="Build">
+    <!-- Download trace_processor_shell to the output directory if it doesn't exist -->
+    <CallTarget Condition="!Exists('$(TargetDir)\trace_processor_shell.exe')" Targets="DownloadTraceProcessorShell" />
+  </Target>
+</Project>

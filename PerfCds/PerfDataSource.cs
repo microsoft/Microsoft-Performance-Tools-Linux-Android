@@ -10,29 +10,33 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace PerfCds
 {
-    [CustomDataSource(
+    [ProcessingSource(
         "{ac09eb0c-c867-454d-8ce8-0f66c5353b85}",
         "Perf",
         "Processes Perf CTF data")]
     [FileDataSource("ctf", "ctf")]
+    [DirectoryDataSource("Perf CTF Folder")]
     public class PerfDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
         /// <inheritdoc />
         public override IEnumerable<Option> CommandLineOptions => Enumerable.Empty<Option>();
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                ".ctf",
-                Path.GetExtension(path));
+            if (dataSource.IsDirectory())
+            {
+                return Directory.GetFiles(dataSource.Uri.LocalPath, "metadata", SearchOption.AllDirectories).Any();
+            }
+
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,
@@ -68,7 +72,7 @@ namespace PerfCds
 
             var sourceParser = new PerfSourceParser();
 
-            string sourcePath = dataSources.First().GetUri().LocalPath;
+            string sourcePath = dataSources.First().Uri.LocalPath;
             if (Directory.Exists(sourcePath))
             {
                 // handle open directory
@@ -84,9 +88,7 @@ namespace PerfCds
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
     }
 }

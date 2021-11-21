@@ -363,8 +363,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         });
 
         public const string Identifier = "ThreadDataCooker";
-        public const string CookerPath = LTTngConstants.SourceId + "/" + Identifier;
-        public static readonly DataCookerPath DataCookerPath = new DataCookerPath(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier);
+        public static readonly DataCookerPath DataCookerPath = DataCookerPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier);
 
         public LTTngThreadDataCooker()
             : base(Identifier)

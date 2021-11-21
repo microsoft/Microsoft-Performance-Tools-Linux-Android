@@ -323,7 +323,7 @@ namespace CtfPlayback
 
             // progress by entire bytes, we should be byte aligned at this point
             Debug.Assert(this.bitsConsumedInCurrentByte == 0);
-            while (bitsToProgress > 8)
+            while (bitsToProgress >= 8)
             {
                 if (this.bufferByteIndex + 1 >= this.bufferByteCount)
                 {

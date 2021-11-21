@@ -3,18 +3,35 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+	<Version>1.2</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft Corp.</Company>
+    <Product>Performance ToolKit</Product>
+    <Description>Contains the LTTNG Driver tool.</Description>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.LTTngDriver</PackageId>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
-    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="0.108.2" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.9-rc1" />
+    <PackageReference Include="Microsoft.Performance.Toolkit.Engine" Version="1.0.9-rc1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Antlr4.Runtime\Antlr4.Runtime.dotnet.csproj" />
     <ProjectReference Include="..\CtfPlayback\CtfPlayback.csproj" />
     <ProjectReference Include="..\LTTngCds\LTTngCds.csproj" />
     <ProjectReference Include="..\LTTngDataExtensions\LTTngDataExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

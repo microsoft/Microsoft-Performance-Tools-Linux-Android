@@ -91,7 +91,8 @@ namespace CtfPlayback
                     streamPlayback.CurrentEvent, 
                     streamPlayback.CurrentPacket, 
                     this.streamToTrace[streamPlayback], 
-                    streamPlayback.EventStream);
+                    streamPlayback.EventStream,
+                    streamPlayback.Metadata);
 
                 this.eventCount++;
 

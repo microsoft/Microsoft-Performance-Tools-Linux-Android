@@ -30,11 +30,13 @@ namespace CtfPlayback
         /// Allows for customized parsing of a packet to determine its start and end timestamps.
         /// </summary>
         /// <param name="ctfPacket"></param>
+        /// <param name="metadata"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
         bool GetTimestampsFromPacketContext(
             ICtfPacket ctfPacket,
+            ICtfMetadata metadata,
             out CtfTimestamp start,
             out CtfTimestamp end);
 
@@ -42,7 +44,7 @@ namespace CtfPlayback
         /// Allows for customized parsing of an event header data to determine a timestamp
         ///  for the event.
         /// </summary>
-        CtfTimestamp GetTimestampFromEventHeader(ICtfEvent ctfEvent, CtfTimestamp previousTimestamp);
+        CtfTimestamp GetTimestampFromEventHeader(ICtfEvent ctfEvent, ICtfMetadata metadata, CtfTimestamp previousTimestamp);
 
         /// <summary>
         /// Used to retrieve the total number of bits in a packet.
@@ -62,8 +64,9 @@ namespace CtfPlayback
         /// Reads the event at the current location from packetReader 
         /// </summary>
         /// <param name="ctfEvent">Event with its context and header filled in</param>
+        /// <param name="metadata">The metadata for the event</param>
         /// <returns></returns>
-        ICtfEventDescriptor GetEventDescriptor(ICtfEvent ctfEvent);
+        ICtfEventDescriptor GetEventDescriptor(ICtfEvent ctfEvent, ICtfMetadata metadata);
 
         /// <summary>
         /// Called during trace playback for the current event.
@@ -72,6 +75,7 @@ namespace CtfPlayback
         /// <param name="eventPacket">Packet which contains the event</param>
         /// <param name="ctfTraceInput">Trace which contains the event</param>
         /// <param name="ctfEventStream">Stream which contains the event</param>
-        void ProcessEvent(ICtfEvent ctfEvent, ICtfPacket eventPacket, ICtfTraceInput ctfTraceInput, ICtfInputStream ctfEventStream);
+        /// <param name="metadata">The metadata for the event</param>
+        void ProcessEvent(ICtfEvent ctfEvent, ICtfPacket eventPacket, ICtfTraceInput ctfTraceInput, ICtfInputStream ctfEventStream, ICtfMetadata metadata);
     }
 }

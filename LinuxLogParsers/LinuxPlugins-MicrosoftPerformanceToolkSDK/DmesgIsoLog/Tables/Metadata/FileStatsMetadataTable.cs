@@ -20,7 +20,7 @@ namespace DmesgIsoMPTAddin.Tables.Metadata
             "Statistics for dmesg.iso.log files",
             isMetadataTable: true,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -34,7 +34,7 @@ namespace DmesgIsoMPTAddin.Tables.Metadata
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             DmesgIsoLogParsedResult parsedResult = tableData.QueryOutput<DmesgIsoLogParsedResult>(
-                DataOutputPath.Create(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, "ParsedResult"));
+                DataOutputPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, nameof(DmesgIsoDataCooker.ParsedResult)));
             var fileNames = parsedResult.FileToMetadata.Keys.ToArray();
             var fileNameProjection = Projection.Index(fileNames.AsReadOnly());
 

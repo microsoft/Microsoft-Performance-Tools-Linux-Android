@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
 using Microsoft.Diagnostics.Tracing.StackSources;
 using Microsoft.Performance.SDK.Processing;
-using System;
-using System.Collections.Generic;
 
 namespace PerfDataExtensions.Tables
 {

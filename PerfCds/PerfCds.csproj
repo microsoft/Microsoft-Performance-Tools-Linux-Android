@@ -2,12 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+	<Version>1.2</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft Corp.</Company>
+    <Product>Performance ToolKit</Product>
+    <Description>Contains the Perf CTF datasource plugin.</Description>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.PerfCtf</PackageId>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="MetadataTables\TraceStatsPrebuiltConfiguration.json" />
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -15,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="0.108.2" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.9-rc1" />
   </ItemGroup>
 
   <ItemGroup>

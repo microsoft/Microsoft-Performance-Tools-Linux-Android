@@ -2,33 +2,28 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
-using PerfCds.CookerData;
-using PerfCds.MetadataTables;
-using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Extensibility.SourceParsing;
 using Microsoft.Performance.SDK.Processing;
+using PerfCds.CookerData;
+using PerfCds.MetadataTables;
 
 namespace PerfCds
 {
     internal sealed class PerfDataProcessor
-        : CustomDataProcessorBaseWithSourceParser<PerfEvent, PerfContext, string>,
+        : CustomDataProcessorWithSourceParser<PerfEvent, PerfContext, string>,
           IDisposable
     {
         public PerfDataProcessor(
-            ISourceParser<PerfEvent, PerfContext, string> sourceParser, 
-            ProcessorOptions options, 
-            IApplicationEnvironment applicationEnvironment, 
-            IProcessorEnvironment processorEnvironment,
-            IReadOnlyDictionary<TableDescriptor, Action<ITableBuilder, IDataExtensionRetrieval>> allTablesMapping, 
-            IEnumerable<TableDescriptor> metadataTables) 
-            : base(sourceParser, options, applicationEnvironment, processorEnvironment, allTablesMapping, metadataTables)
+            ISourceParser<PerfEvent, PerfContext, string> sourceParser,
+            ProcessorOptions options,
+            IApplicationEnvironment applicationEnvironment,
+            IProcessorEnvironment processorEnvironment)
+            : base(sourceParser, options, applicationEnvironment, processorEnvironment)
         {
         }
 
         protected override void BuildTableCore(
-            TableDescriptor tableDescriptor, 
-            Action<ITableBuilder, IDataExtensionRetrieval> createTable, 
+            TableDescriptor tableDescriptor,
             ITableBuilder tableBuilder)
         {
             if (tableDescriptor.IsMetadataTable)
@@ -38,14 +33,14 @@ namespace PerfCds
         }
 
         private void BuildMetadataTable(
-            TableDescriptor tableDescriptor, 
+            TableDescriptor tableDescriptor,
             ITableBuilder tableBuilder)
         {
             if (tableDescriptor.Guid == TraceStatsTable.TableDescriptor.Guid)
             {
                 TraceStatsTable.BuildMetadataTable(
-                    tableBuilder, 
-                    this.SourceParser as PerfSourceParser, 
+                    tableBuilder,
+                    this.SourceParser as PerfSourceParser,
                     this.ApplicationEnvironment.Serializer);
             }
         }

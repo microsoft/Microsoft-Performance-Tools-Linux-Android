@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LinuxLogParser;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
@@ -19,7 +18,7 @@ namespace DmesgIsoMPTAddin.Tables
             "Dmesg Parsed Log",
             category: "Linux",
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId)
             });
 
         private static readonly ColumnConfiguration FileNameColumn = new ColumnConfiguration(
@@ -53,7 +52,7 @@ namespace DmesgIsoMPTAddin.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             DmesgIsoLogParsedResult parsedResult = tableData.QueryOutput<DmesgIsoLogParsedResult>(
-               DataOutputPath.Create(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, "ParsedResult"));
+               DataOutputPath.ForSource(SourceParserIds.DmesgIsoLog, DmesgIsoDataCooker.CookerId, nameof(DmesgIsoDataCooker.ParsedResult)));
             var logEntries = parsedResult.LogEntries;
 
             var baseProjection = Projection.Index(logEntries);
@@ -64,7 +63,7 @@ namespace DmesgIsoMPTAddin.Tables
             var topicProjection = baseProjection.Compose(x => x.topic);
             var timestampProjection = baseProjection.Compose(x => x.timestamp);
             var metadataProjection = baseProjection.Compose(x => x.metadata);
-            var messageProjection = baseProjection.Compose(x => x.message); 
+            var messageProjection = baseProjection.Compose(x => x.message);
 
             var config = new TableConfiguration("Default")
             {
@@ -80,7 +79,6 @@ namespace DmesgIsoMPTAddin.Tables
                     TableConfiguration.GraphColumn,
                     TimestampColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, TimestampColumn);

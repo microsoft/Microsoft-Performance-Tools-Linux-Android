@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+	  <Version>1.2</Version>
+      <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+      <Authors>Microsoft</Authors>
+      <Company>Microsoft Corp.</Company>
+      <Product>Performance ToolKit</Product>
+      <Description>Contains library for processing Perfetto traces.</Description>
+      <PackageId>Microsoft.Performance.Toolkit.Plugins.PerfettoProcessor</PackageId>
+      <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+      <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
+      <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
+      <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.18.1">
+      <GeneratePathProperty>true</GeneratePathProperty>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

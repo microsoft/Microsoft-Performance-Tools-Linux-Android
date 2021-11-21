@@ -1,24 +1,26 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using LTTngDataExtensions.SourceDataCookers.Thread;
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
+using LTTngDataExtensions.SourceDataCookers.Thread;
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
-using Microsoft.Performance.SDK;
 
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngThreadDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier)]
     public class ExecutionEvent
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{91A234C3-3A3C-4230-85DA-76DE1C8E86BA}"),
             "Execution Events",
             "Context Switches History",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration cpuColumn =
             new ColumnConfiguration(
@@ -141,7 +143,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var threads = tableData.QueryOutput<IReadOnlyList<IExecutionEvent>>(
-                DataOutputPath.Create(LTTngThreadDataCooker.CookerPath + "/ExecutionEvents"));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier, nameof(LTTngThreadDataCooker.ExecutionEvents)));
             if (threads.Count == 0)
             {
                 return;
@@ -170,15 +172,12 @@ namespace LTTngDataExtensions.Tables
                     switchInTimeColumn,
                     switchOutTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            timelineByCPUTableConfig.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            timelineByCPUTableConfig.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             timelineByCPUTableConfig.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var utilByProcessCmdTable = new TableConfiguration("Utilization by Process Id, Thread Id, Cmd")
@@ -203,15 +202,12 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     percentCpuUsagePreset,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            utilByProcessCmdTable.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            utilByProcessCmdTable.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             utilByProcessCmdTable.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var utilByCpuTable = new TableConfiguration("Utilization by CPU")
@@ -236,15 +232,12 @@ namespace LTTngDataExtensions.Tables
                     TableConfiguration.GraphColumn,
                     percentCpuUsagePreset,
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
                 InitialFilterShouldKeep = false,
                 InitialFilterQuery = filterIdleSamplesQuery,
             };
 
-            utilByCpuTable.AddColumnRole(ColumnRole.EndThreadId, nextTidColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.StartTime, switchInTimeColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
-            utilByCpuTable.AddColumnRole(ColumnRole.WaitEndTime, switchInTimeColumn);
             utilByCpuTable.AddColumnRole(ColumnRole.Duration, switchedInTimeColumn);
 
             var table = tableBuilder.AddTableConfiguration(timelineByCPUTableConfig)
@@ -276,17 +269,17 @@ namespace LTTngDataExtensions.Tables
 
 
             // Time the thread switching in switches out
-            var viewportClippedSwitchOutTimeForNextOnCpuColumn = Projection.ClipTimeToViewport.Create(switchOutTime);
+            var viewportClippedSwitchOutTimeForNextOnCpuColumn = Projection.ClipTimeToVisibleDomain.Create(switchOutTime);
 
             // Switch in time is the thread switching in, which is the switch out time of the thread switching out on the CPU
-            var viewportClippedSwitchOutTimeForPreviousOnCpuColumn = Projection.ClipTimeToViewport.Create(switchInTime);
+            var viewportClippedSwitchOutTimeForPreviousOnCpuColumn = Projection.ClipTimeToVisibleDomain.Create(switchInTime);
 
             IProjection<int, TimestampDelta> cpuUsageInViewportColumn = Projection.Select(
                     viewportClippedSwitchOutTimeForNextOnCpuColumn,
                     viewportClippedSwitchOutTimeForPreviousOnCpuColumn,
                     new ReduceTimeSinceLastDiff());
 
-            var percentCpuUsageColumn = Projection.ViewportRelativePercent.Create(cpuUsageInViewportColumn);
+            var percentCpuUsageColumn = Projection.VisibleDomainRelativePercent.Create(cpuUsageInViewportColumn);
 
             var cpuUsageColumn = Projection.Select(switchOutTime, switchInTime, new ReduceTimeSinceLastDiff());
 

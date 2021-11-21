@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LTTngCds.CookerData;
 using LTTngDataExtensions.DataOutputTypes;
 using LTTngDataExtensions.SourceDataCookers.Disk;
 using Microsoft.Performance.SDK;
@@ -12,7 +13,7 @@ using Microsoft.Performance.SDK.Processing;
 namespace LTTngDataExtensions.Tables
 {
     [Table]
-    [RequiresCooker(LTTngDiskDataCooker.CookerPath)]
+    [RequiresSourceCooker(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier)]
     ///[PrebuiltConfigurationsFilePath("Resources\\DiskActivityPrebuiltConfiguration.json")]
     public static class DiskTable
     {
@@ -20,7 +21,8 @@ namespace LTTngDataExtensions.Tables
             Guid.Parse("{B18A134C-0B62-4C02-B729-6579C8223AB3}"),
             "Disk",
             "Disk Activity",
-            "Linux LTTng");
+            "Linux LTTng",
+            defaultLayout: TableLayoutStyle.GraphAndTable);
 
         private static readonly ColumnConfiguration deviceIdColumn =
             new ColumnConfiguration(
@@ -45,7 +47,8 @@ namespace LTTngDataExtensions.Tables
         private static readonly ColumnConfiguration ioTimeAvgColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{985C8096-6A60-4A59-8BEF-17335C7896F5}"), "IO Time"),
-                new UIHints {
+                new UIHints
+                {
                     Width = 120,
                     IsVisible = true,
                     AggregationMode = AggregationMode.Average,
@@ -120,12 +123,12 @@ namespace LTTngDataExtensions.Tables
         private static readonly ColumnConfiguration sizeColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{BDE426C2-1CFD-425B-8AD6-37378DAFFC06}"), "Size"),
-                new UIHints{ Width = 80, IsVisible = true, AggregationMode = AggregationMode.Sum, CellFormat = "B" });
+                new UIHints { Width = 80, IsVisible = true, AggregationMode = AggregationMode.Sum, CellFormat = "B" });
 
         private static readonly ColumnConfiguration diskOffsetColumn =
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{C39E3639-31A5-42E0-86D5-9CDAF4E57CEA}"), "Disk Offset"),
-                new UIHints{ Width = 80, IsVisible = true, CellFormat = "B" });
+                new UIHints { Width = 80, IsVisible = true, CellFormat = "B" });
 
         private static readonly ColumnConfiguration countColumn =
             new ColumnConfiguration(
@@ -155,7 +158,7 @@ namespace LTTngDataExtensions.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             var diskEvents = tableData.QueryOutput<IReadOnlyList<IDiskActivity>>(
-                DataOutputPath.Create(LTTngDiskDataCooker.CookerPath + '/' + nameof(LTTngDiskDataCooker.DiskActivity)));
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier, nameof(LTTngDiskDataCooker.DiskActivity)));
             if (diskEvents.Count == 0)
             {
                 return;
@@ -182,7 +185,6 @@ namespace LTTngDataExtensions.Tables
                     issueTimeColumn,
                     completeTimeColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             var ioTimesByDevFileConfig = new TableConfiguration("IOTime by Device, FilePath")
@@ -207,7 +209,6 @@ namespace LTTngDataExtensions.Tables
                     ioTimeAvgColumn,
                     ioTimeMaxColumn
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             iosByDeviceThCmdConfig.AddColumnRole(ColumnRole.StartTime, insertTimeColumn);
@@ -226,7 +227,7 @@ namespace LTTngDataExtensions.Tables
 
             var ioStartTimeProjection = diskActivities.Compose(da => da.InsertTime ?? defaultTime);
             var ioEndTimeProjection = diskActivities.Compose(da => da.CompleteTime ?? defaultTime);
-            var validIoTimeProjection = 
+            var validIoTimeProjection =
                 diskActivities.Compose(da => da.InsertTime.HasValue && da.CompleteTime.HasValue);
 
             table.AddColumn(deviceIdColumn, diskActivities.Compose(da => da.DeviceId));
@@ -261,10 +262,10 @@ namespace LTTngDataExtensions.Tables
 
             {
                 IProjection<int, Timestamp> viewportClippedStartTimeColumn =
-                    Projection.ClipTimeToViewport.Create(ioStartTimeProjection);
+                    Projection.ClipTimeToVisibleDomain.Create(ioStartTimeProjection);
 
                 IProjection<int, Timestamp> viewportClippedEndTimeColumn =
-                    Projection.ClipTimeToViewport.Create(ioEndTimeProjection);
+                    Projection.ClipTimeToVisibleDomain.Create(ioEndTimeProjection);
 
                 // Timestamp delta for the given disk activity during the viewport time range.
                 IProjection<int, TimestampDelta> clippedTimeDeltaColumn = Projection.Select(
@@ -275,10 +276,10 @@ namespace LTTngDataExtensions.Tables
                 table.AddColumn(clippedTimestampDeltaColumnConfiguration, clippedTimeDeltaColumn);
 
                 // Percent of time consumed by the timestamp delta in the current viewport.
-               /* IProjection<int, double> ioTimeWeightPercentColumn =
-                    Projection.ClipTimeToViewport.CreatePercent(clippedTimeDeltaColumn);*/
+                /* IProjection<int, double> ioTimeWeightPercentColumn =
+                     Projection.ClipTimeToVisibleDomain.CreatePercent(clippedTimeDeltaColumn);*/
 
-               /// table.AddColumn(weightedIOTimeColumn, ioTimeWeightPercentColumn);
+                /// table.AddColumn(weightedIOTimeColumn, ioTimeWeightPercentColumn);
             }
 
             table.AddColumn(sizeColumn, new DiskActivitySizeProjection(diskActivities));
@@ -292,7 +293,7 @@ namespace LTTngDataExtensions.Tables
             table.AddColumn(countColumn_IOSize8kb, diskActivities.Compose(da => da.Size.HasValue && da.Size.Value.Bytes > 0 ? Math.Ceiling((float)da.Size.Value.Bytes / (8 * 1024)) : 1));
 
             // IOCount when IOSize is 256KB (such as in Azure XStore throttling)
-            table.AddColumn(countColumn_IOSize256kb, diskActivities.Compose(da => da.Size.HasValue && da.Size.Value.Bytes > 0 ? Math.Ceiling((float)da.Size.Value.Bytes / (256 * 1024)) : 1));  
+            table.AddColumn(countColumn_IOSize256kb, diskActivities.Compose(da => da.Size.HasValue && da.Size.Value.Bytes > 0 ? Math.Ceiling((float)da.Size.Value.Bytes / (256 * 1024)) : 1));
         }
 
         private struct DiskActivitySizeProjection

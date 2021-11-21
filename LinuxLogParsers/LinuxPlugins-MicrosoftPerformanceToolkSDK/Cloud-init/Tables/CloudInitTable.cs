@@ -17,8 +17,9 @@ namespace CloudInitMPTAddin.Tables
             "Cloud-Init",
             "Cloud-Init Log",
             category: "Linux",
+            defaultLayout: TableLayoutStyle.GraphAndTable,
             requiredDataCookers: new List<DataCookerPath> {
-                new DataCookerPath(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
+                DataCookerPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId)
             });
 
         //
@@ -64,7 +65,7 @@ namespace CloudInitMPTAddin.Tables
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
             CloudInitLogParsedResult parsedResult = tableData.QueryOutput<CloudInitLogParsedResult>(
-               DataOutputPath.Create(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, "ParsedResult"));
+               DataOutputPath.ForSource(SourceParserIds.CloudInitLog, CloudInitDataCooker.CookerId, nameof(CloudInitDataCooker.ParsedResult)));
             var logEntries = parsedResult.LogEntries;
 
             var baseProjection = Projection.Index(logEntries);
@@ -91,7 +92,6 @@ namespace CloudInitMPTAddin.Tables
                     EventTimestampColumn,
 
                 },
-                Layout = TableLayoutStyle.GraphAndTable,
             };
 
             config.AddColumnRole(ColumnRole.StartTime, EventTimestampColumn);

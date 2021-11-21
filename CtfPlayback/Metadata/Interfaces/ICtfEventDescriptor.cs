@@ -11,6 +11,11 @@ namespace CtfPlayback.Metadata.Interfaces
     public interface ICtfEventDescriptor
     {
         /// <summary>
+        /// The id of the event
+        /// </summary>
+        public uint Id { get; }
+
+        /// <summary>
         /// Event context type
         /// </summary>
         ICtfTypeDescriptor Context { get; }

@@ -10,29 +10,33 @@ using Microsoft.Performance.SDK.Processing;
 
 namespace LTTngCds
 {
-    [CustomDataSource(
+    [ProcessingSource(
         "{98608154-6231-4F25-903A-5E440574AB45}",
         "LTTng",
         "Processes LTTng CTF data")]
     [FileDataSource("ctf", "ctf")]
+    [DirectoryDataSource("LTTng CTF Folder")]
     public class LTTngDataSource
-        : CustomDataSourceBase
+        : ProcessingSource
     {
         private IApplicationEnvironment applicationEnvironment;
 
         /// <inheritdoc />
         public override IEnumerable<Option> CommandLineOptions => Enumerable.Empty<Option>();
 
-        protected override bool IsFileSupportedCore(string path)
+        protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(
-                ".ctf",
-                Path.GetExtension(path));
+            if (dataSource.IsDirectory())
+            {
+                return Directory.GetFiles(dataSource.Uri.LocalPath, "metadata", SearchOption.AllDirectories).Any();
+            }
+
+            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals(".ctf", Path.GetExtension(dataSource.Uri.LocalPath));
         }
 
-        public override CustomDataSourceInfo GetAboutInfo()
+        public override ProcessingSourceInfo GetAboutInfo()
         {
-            return new CustomDataSourceInfo()
+            return new ProcessingSourceInfo()
             {
                 ProjectInfo = new ProjectInfo() { Uri = "https://aka.ms/linuxperftools" },
                 CopyrightNotice = "Copyright (C) " + DateTime.UtcNow.Year,
@@ -68,8 +72,9 @@ namespace LTTngCds
 
             var sourceParser = new LTTngSourceParser();
 
-            string sourcePath = dataSources.First().GetUri().LocalPath;
-            if (Directory.Exists(sourcePath))
+            var firstDataSource = dataSources.First();
+            string sourcePath = firstDataSource.Uri.LocalPath;
+            if (firstDataSource.IsDirectory() && Directory.Exists(sourcePath))
             {
                 // handle open directory
                 sourceParser.SetFolderInput(sourcePath);
@@ -84,9 +89,7 @@ namespace LTTngCds
                 sourceParser,
                 options,
                 this.applicationEnvironment,
-                processorEnvironment,
-                this.AllTables,
-                this.MetadataTables);
+                processorEnvironment);
         }
     }
 }

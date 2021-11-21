@@ -40,7 +40,7 @@ jobs:
       displayName: DotNetCore restore
       inputs:
         command: 'restore'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux.sln'
+        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
         verbosityRestore: $(Debug.NuGetVerbosityRestore)
         includeNugetOrg: true
 
@@ -59,6 +59,7 @@ jobs:
           LTTngDriver\LTTngDriver.csproj
           PerfCds\PerfCds.csproj
           PerfDataExtensions\PerfDataExtensions.csproj
+          PerfettoCds\PerfettoCds.csproj
           PerfUnitTest\PerfUnitTest.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
@@ -72,7 +73,7 @@ jobs:
       displayName: DotNetCore test
       inputs:
         command: 'test'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux.sln'
+        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
     
     - task: CopyFiles@2
       displayName: Copy PerfDataExtensions Build to Output Artifacts
@@ -94,6 +95,13 @@ jobs:
         SourceFolder: 'LTTngDriver/bin/$(BuildConfiguration)/netcoreapp3.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/LTTngDriver'
+
+    - task: CopyFiles@2
+      displayName: Copy Perfetto Build to Output Artifacts
+      inputs:
+        SourceFolder: 'PerfettoCds/bin/$(BuildConfiguration)/netstandard2.1'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Perfetto'
         
     - task: CopyFiles@2
       displayName: Copy Cloud-init Build to Output Artifacts

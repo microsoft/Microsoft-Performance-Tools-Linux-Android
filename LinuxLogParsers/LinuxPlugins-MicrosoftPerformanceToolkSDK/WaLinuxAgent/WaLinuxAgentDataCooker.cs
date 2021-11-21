@@ -29,8 +29,6 @@ namespace WaLinuxAgentMPTAddin
 
         public SourceDataCookerOptions Options => SourceDataCookerOptions.None;
 
-        public string DataCookerId => Path.CookerPath;
-
         public string Description => "Parsed information of WaLinuxAgent log.";
 
         public string SourceParserId => Path.SourceParserId;
@@ -50,7 +48,7 @@ namespace WaLinuxAgentMPTAddin
         private List<LogEntry> logEntries;
         private LogContext context;
 
-        public WaLinuxAgentDataCooker() : this(new DataCookerPath(SourceParserIds.WaLinuxAgentLog, CookerId))
+        public WaLinuxAgentDataCooker() : this(DataCookerPath.ForSource(SourceParserIds.WaLinuxAgentLog, CookerId))
         {
         }
 

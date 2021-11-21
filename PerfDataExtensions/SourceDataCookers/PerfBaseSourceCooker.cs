@@ -19,7 +19,7 @@ namespace PerfDataExtensions.SourceDataCookers
         protected static readonly ReadOnlyHashSet<string> EmptyDataKeys = new ReadOnlyHashSet<string>(emptyDataKeys);
 
         protected PerfBaseSourceCooker(string cookerId)
-            : this(new DataCookerPath(PerfConstants.SourceId, cookerId))
+            : this(DataCookerPath.ForSource(PerfConstants.SourceId, cookerId))
         {
         }
 
