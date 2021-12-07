@@ -50,7 +50,6 @@ jobs:
         command: 'build'
         arguments: '--configuration Release --verbosity normal'
         projects:  |
-          Antlr4.Runtime\Antlr4.Runtime.dotnet.csproj
           CtfPlayback\CtfPlayback.csproj
           CtfUnitTest\CtfUnitTest.csproj
           LTTngCds\LTTngCds.csproj
