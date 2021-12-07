@@ -12,6 +12,37 @@ namespace LTTngDataExtensions.DataOutputTypes
 {
     public class EventKind
     {
+        private class Key
+        {
+            private string domain;
+            private uint id;
+
+            public Key(string domain, uint id)
+            {
+                this.domain = domain ?? string.Empty;
+                this.id = id;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is Key key)
+                {
+                    return domain.Equals(key.domain) && id.Equals(key.id);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public override int GetHashCode()
+            {
+                int h1 = domain.GetHashCode();
+                int h2 = id.GetHashCode();
+                return ((h1 << 5) + h1) ^ h2;
+            }
+        }
+
         public string Domain { get; }
         public uint Id { get; }
         public string EventName { get; }
@@ -28,17 +59,17 @@ namespace LTTngDataExtensions.DataOutputTypes
             }
         }
 
-        private static readonly Dictionary<Tuple<string, uint>, EventKind> RegisteredKinds = new Dictionary<Tuple<string, uint>, EventKind>();
+        private static readonly Dictionary<Key, EventKind> RegisteredKinds = new Dictionary<Key, EventKind>();
 
         public static bool TryGetRegisteredKind(string domain, uint id, out EventKind kind)
         {
-            return RegisteredKinds.TryGetValue(new Tuple<string, uint>(domain, id), out kind);
+            return RegisteredKinds.TryGetValue(new Key(domain, id), out kind);
         }
 
         public static EventKind RegisterKind(string domain, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
             EventKind kind = new EventKind(domain, id, name, fields);
-            RegisteredKinds.Add(new Tuple<string, uint>(domain, id), kind);
+            RegisteredKinds.Add(new Key(domain, id), kind);
             return kind;
         }
     }
