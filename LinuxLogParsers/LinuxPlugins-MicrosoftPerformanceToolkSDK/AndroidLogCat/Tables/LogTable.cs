@@ -10,7 +10,7 @@ using Microsoft.Performance.SDK.Processing;
 namespace AndroidLogcatMPTAddin.Tables
 {
     [Table]
-    public static class ParsedTable
+    public static class LogTable
     {
         public static readonly TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{C2035282-4E3F-4436-821B-46C98D383A56}"),

@@ -10,11 +10,13 @@ namespace AndroidLogcatMPTAddin
     public class AndroidLogcatParsedResult
     {
         public List<LogEntry> LogEntries { get; }
+        public List<DurationLogEntry> DurationLogEntries;
         public IReadOnlyDictionary<string, FileMetadata> FileToMetadata { get; }
 
-        public AndroidLogcatParsedResult(List<LogEntry> logEntries, Dictionary<string, FileMetadata> fileToMetadata)
+        public AndroidLogcatParsedResult(List<LogEntry> logEntries, List<DurationLogEntry> durationLogEntries, Dictionary<string, FileMetadata> fileToMetadata)
         {
             LogEntries = logEntries;
+            DurationLogEntries = durationLogEntries;
             FileToMetadata = fileToMetadata;
         }
     }

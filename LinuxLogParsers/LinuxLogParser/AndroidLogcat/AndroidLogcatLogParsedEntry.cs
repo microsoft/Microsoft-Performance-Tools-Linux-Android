@@ -51,4 +51,38 @@ namespace LinuxLogParser.AndroidLogcat
         {
         }
     }
+
+    public class DurationLogEntry : AndroidLogcatLogParsedEntry
+    {
+        public Timestamp StartTimestamp;
+        public Timestamp EndTimestamp;
+        public TimestampDelta Duration;
+        public string FilePath;
+        public ulong LineNumber;
+        public uint PID;
+        public uint TID;
+        public string Priority;
+        public string Tag;
+        public string Message;
+        public string Name;
+
+        public DurationLogEntry() : base(LogParsedDataKey.GeneralLog)
+        {
+        }
+
+        public DurationLogEntry(LogEntry logEntry, Timestamp startTimestamp, TimestampDelta duration, string name) : base(LogParsedDataKey.GeneralLog)
+        {
+            StartTimestamp = startTimestamp;
+            EndTimestamp = logEntry.Timestamp;
+            Duration = duration;
+            FilePath = logEntry.FilePath;
+            LineNumber = logEntry.LineNumber;
+            PID = logEntry.PID;
+            TID = logEntry.TID;
+            Priority = logEntry.Priority;
+            Tag = logEntry.Tag;
+            Message = logEntry.Message;
+            Name = name;
+        }
+    }
 }

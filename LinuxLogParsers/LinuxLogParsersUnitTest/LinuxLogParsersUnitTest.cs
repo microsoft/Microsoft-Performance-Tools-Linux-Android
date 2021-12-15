@@ -38,7 +38,7 @@ namespace LinuxLogParsersUnitTest
                     cooker,
                     nameof(DmesgIsoDataCooker.ParsedResult)));
 
-            Assert.IsTrue(eventData.LogEntries.Count >= 0);
+            Assert.IsTrue(eventData.LogEntries.Count == 1867);
         }
 
         [TestMethod]
@@ -83,10 +83,10 @@ namespace LinuxLogParsersUnitTest
                     cooker,
                     nameof(AndroidLogcatDataCooker.ParsedResult)));
 
-            Assert.IsTrue(eventData.LogEntries.Count >= 0);
+            Assert.IsTrue(eventData.LogEntries.Count > 0);
             Assert.IsTrue(eventData.LogEntries.Count == 6061);
             var noTimestampOrNotParsed = eventData.LogEntries.Where(f => f.Timestamp.ToNanoseconds < 0);
-            Assert.IsTrue(noTimestampOrNotParsed.Count() == 5); // There is 6 entries with no timestamp e.g "--------- beginning of "
+            Assert.IsTrue(noTimestampOrNotParsed.Count() == 5); // There is 5 entries with no timestamp e.g "--------- beginning of "
 
             //eventData.LogEntries[1].Timestamp == // Check abs time if/when SDK supports it
             Assert.IsTrue(eventData.LogEntries[1].LineNumber == 3);
@@ -105,6 +105,23 @@ namespace LinuxLogParsersUnitTest
             Assert.IsTrue(eventData.LogEntries[6].Priority == "I");
             Assert.IsTrue(eventData.LogEntries[6].Tag == "Command line");
             Assert.IsTrue(!String.IsNullOrWhiteSpace(eventData.LogEntries[6].Message));
+
+            Assert.IsTrue(eventData.DurationLogEntries.Count > 0);
+            // Service 'exec 1 (/system/bin/linkerconfig --target /linkerconfig/bootstrap)' (pid 4) exited with status 0 waiting took 0.015000 seconds
+            Assert.IsTrue(eventData.DurationLogEntries[0].Name == "exec 1 (/system/bin/linkerconfig --target /linkerconfig/bootstrap)");
+            Assert.IsTrue(eventData.DurationLogEntries[0].Duration.ToMilliseconds == 15);
+
+            // Service 'apexd-bootstrap' (pid 6) exited with status 0 waiting took 0.053000 seconds
+            Assert.IsTrue(eventData.DurationLogEntries[1].Name == "apexd-bootstrap");
+            Assert.IsTrue(eventData.DurationLogEntries[1].Duration.ToMilliseconds == 53);
+            Assert.IsTrue((eventData.DurationLogEntries[1].EndTimestamp - eventData.DurationLogEntries[1].StartTimestamp).ToMilliseconds == 53);
+
+            Assert.IsTrue(eventData.DurationLogEntries.Count == 1011);
+
+            // MakeWindowManagerServiceReady took to complete: 3ms
+            Assert.IsTrue(eventData.DurationLogEntries[443].Name == "MakeWindowManagerServiceReady");
+            Assert.IsTrue(eventData.DurationLogEntries[443].Duration.ToMilliseconds == 3);
+            Assert.IsTrue((eventData.DurationLogEntries[443].EndTimestamp - eventData.DurationLogEntries[443].StartTimestamp).ToMilliseconds == 3);
         }
 
         [TestMethod]
@@ -126,7 +143,7 @@ namespace LinuxLogParsersUnitTest
                     cooker,
                     nameof(CloudInitDataCooker.ParsedResult)));
 
-            Assert.IsTrue(eventData.LogEntries.Count >= 0);
+            Assert.IsTrue(eventData.LogEntries.Count == 937);
         }
 
         [TestMethod]
@@ -148,7 +165,7 @@ namespace LinuxLogParsersUnitTest
                     cooker,
                     nameof(WaLinuxAgentDataCooker.ParsedResult)));
 
-            Assert.IsTrue(eventData.LogEntries.Count >= 0);
+            Assert.IsTrue(eventData.LogEntries.Count == 773); // Should be 795 - bug?
         }
     }
 }

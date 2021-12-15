@@ -46,6 +46,7 @@ namespace AndroidLogcatMPTAddin
         public AndroidLogcatParsedResult ParsedResult { get; private set; }
 
         private List<LogEntry> logEntries;
+        private List<DurationLogEntry> durationLogEntries;
         private LogContext context;
 
         public AndroidLogcatDataCooker() : this(DataCookerPath.ForSource(SourceParserIds.AndroidLogcatLog, CookerId))
@@ -60,6 +61,7 @@ namespace AndroidLogcatMPTAddin
         public void BeginDataCooking(ICookedDataRetrieval dependencyRetrieval, CancellationToken cancellationToken)
         {
             logEntries = new List<LogEntry>();
+            durationLogEntries = new List<DurationLogEntry>();
         }
 
         public DataProcessingResult CookDataElement(AndroidLogcatLogParsedEntry data, LogContext context,
@@ -72,6 +74,11 @@ namespace AndroidLogcatMPTAddin
                 logEntries.Add(logEntry);
                 this.context = context;
             }
+            else if (data is DurationLogEntry durationLogEntry)
+            {
+                durationLogEntries.Add(durationLogEntry);
+                this.context = context;
+            }
             else
             {
                 result = DataProcessingResult.Ignored;
@@ -82,7 +89,7 @@ namespace AndroidLogcatMPTAddin
 
         public void EndDataCooking(CancellationToken cancellationToken)
         {
-            ParsedResult = new AndroidLogcatParsedResult(logEntries, context.FileToMetadata);
+            ParsedResult = new AndroidLogcatParsedResult(logEntries, durationLogEntries, context.FileToMetadata);
         }
     }
 }

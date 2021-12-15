@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -27,6 +28,9 @@ namespace LinuxLogParser.AndroidLogcat
         ///  Example: "12-13 10:32:24.869    26    26 I Checkpoint: cp_prepareCheckpoint called"
         public static Regex AndroidLogCatRegex = new Regex(@"^(.{18})\s+(\d+)\s+(\d+)\s+(\S) (.+?)\s?: (.*)$");
 
+        const int SECONDS_TO_NS = 1000000000;
+        const int MS_TO_NS = 1000000;
+
         public AndroidLogcatLogParser(string[] filePaths) : base(filePaths)
         {
         }
@@ -37,18 +41,32 @@ namespace LinuxLogParser.AndroidLogcat
         {
             var contentDictionary = new Dictionary<string, IReadOnlyList<LogEntry>>();
             Timestamp oldestTimestamp = new Timestamp(long.MaxValue);
-            Timestamp newestTImestamp = new Timestamp(long.MinValue);
+            Timestamp newestTimestamp = new Timestamp(long.MinValue);
             long startNanoSeconds = 0;
             DateTime fileStartTime = default;
             var dateTimeCultureInfo = new CultureInfo("en-US");
+            var oneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
+            double? utcOffsetInHours = null;
 
             foreach (var path in FilePaths)
             {
                 ulong currentLineNumber = 1;
                 var file = new System.IO.StreamReader(path);
                 string line = string.Empty;
-                var entriesList = new List<LogEntry>();
-                LogEntry lastEntry = null;
+                var logEntries = new List<LogEntry>();
+                var durationLogEntries = new List<DurationLogEntry>();
+                LogEntry logEntry = null;
+
+                var rootFolder = Path.GetDirectoryName(path);
+                var utcOffsetFilePath = Path.Combine(rootFolder, "utcoffset.txt");
+                if (File.Exists(utcOffsetFilePath))
+                {
+                    var utcOffSetStr = File.ReadAllText(utcOffsetFilePath);
+                    if (double.TryParse(utcOffSetStr, out double utcOffsetTmp))
+                    {
+                        utcOffsetInHours = utcOffsetTmp;
+                    }
+                }
 
                 while ((line = file.ReadLine()) != null)
                 {
@@ -74,47 +92,139 @@ namespace LinuxLogParser.AndroidLogcat
                             fileStartTime = parsedTime;
                             startNanoSeconds = oldestTimestamp.ToNanoseconds;
                         }
-                        if (timeStamp > newestTImestamp)
+                        if (timeStamp > newestTimestamp)
                         {
-                            newestTImestamp = timeStamp;
+                            newestTimestamp = timeStamp;
                         }
 
-                        lastEntry = new LogEntry
+                        logEntry = new LogEntry
                         {
-                            Timestamp = new Timestamp(timeStamp.ToNanoseconds - startNanoSeconds),
+                            Timestamp = new Timestamp(timeStamp.ToNanoseconds), // We can't subtract startNanoSeconds here because logs are not necessarily time ordered
                             FilePath = path,
                             LineNumber = currentLineNumber,
                             PID = uint.Parse(androidLogCatMatch.Groups[2].Value),
                             TID = uint.Parse(androidLogCatMatch.Groups[3].Value),
-                            Priority = androidLogCatMatch.Groups[4].Value,
-                            Tag = androidLogCatMatch.Groups[5].Value.Trim(),
+                            Priority = Utilities.Common.StringIntern(androidLogCatMatch.Groups[4].Value),
+                            Tag = Utilities.Common.StringIntern(androidLogCatMatch.Groups[5].Value.Trim()),
                             Message = androidLogCatMatch.Groups[6].Value,
                         };
 
-                        entriesList.Add(lastEntry);
+                        // Specialized Duration parsing
+                        DurationLogEntry durationLogEntry = null;
+                        if (logEntry.Tag == "init" && logEntry.Message.Contains("took"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            var firstSingleQuoteIdx = logEntry.Message.IndexOf('\'');
+                            var secondSingleQuoteIdx = logEntry.Message.IndexOf('\'', firstSingleQuoteIdx+1);
+                            var name = logEntry.Message.Substring(firstSingleQuoteIdx+1, secondSingleQuoteIdx - firstSingleQuoteIdx - 1);
+                            // Command 'write /dev/cpuctl/cpu.rt_period_us 1000000' action=init (/system/etc/init/hw/init.rc:271) took 0ms and failed: ....
+                            if (logEntry.Message.Contains("0ms"))
+                            {
+                                durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - oneNanoSecondTimestampDelta, oneNanoSecondTimestampDelta, name);
+                            }
+                            // Service 'boringssl_self_test32_vendor' (pid 18) exited with status 0 waiting took 0.022000 seconds
+
+                            if (messageSplit[^3] == "took" && messageSplit[^1] == "seconds")
+                            {
+                                if (double.TryParse(messageSplit[^2], out double durationSeconds))
+                                {
+                                    var duration = new TimestampDelta((long)(durationSeconds * SECONDS_TO_NS));
+                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                }
+                            }
+                            // Command 'mount_all /fstab.${ro.hardware}' action=fs (/vendor/etc/init/init.windows_x86_64.rc:14) took 1054ms and succeeded
+                            else if(messageSplit[^4] == "took" && messageSplit[^1] == "succeeded")
+                            {
+                                if (int.TryParse(messageSplit[^3].Replace("ms", String.Empty), out int durationMs))
+                                {
+                                    var duration = new TimestampDelta(durationMs * MS_TO_NS);
+                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                }
+                            }
+                            // Service 'disable_lro' (pid 39) exited with status 0 oneshot service took 0.006000 seconds in background
+                            else if (messageSplit[^5] == "took" && messageSplit[^1] == "background")
+                            {
+                                if (double.TryParse(messageSplit[^4], out double durationSeconds))
+                                {
+                                    var duration = new TimestampDelta((long)(durationSeconds * SECONDS_TO_NS));
+                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                }
+                            }
+                            // Command 'rm /data/user/0' action=post-fs-data (/system/etc/init/hw/init.rc:706) took 1ms and failed: unlink() failed: Is a directory
+                            else
+                            {
+                                var tookIndex = Array.IndexOf(messageSplit, "took");
+                                var afterTook = messageSplit[tookIndex + 1];
+                                if (afterTook.Contains("ms"))
+                                {
+                                    if (int.TryParse(afterTook.Replace("ms", String.Empty), out int durationMs))
+                                    {
+                                        var duration = new TimestampDelta(durationMs * MS_TO_NS);
+                                        durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                    }
+                                }
+                            }
+                        }
+                        // Zygote32Timing: PostZygoteInitGC took to complete: 61ms
+                        else if (logEntry.Tag.Contains("Timing") && logEntry.Message.Contains("took to complete"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            var name = messageSplit[0];
+                            if (int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                            {
+                                if (durationMs == 0)
+                                {
+                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - oneNanoSecondTimestampDelta, oneNanoSecondTimestampDelta, name);
+                                }
+                                else
+                                {
+                                    var duration = new TimestampDelta(durationMs * MS_TO_NS);
+                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                }
+                            }
+                        }
+
+                        if (durationLogEntry != null)
+                        {
+                            durationLogEntries.Add(durationLogEntry);
+                            dataProcessor.ProcessDataElement(durationLogEntry, Context, cancellationToken);
+                        }
                     }
                     else
                     {
-                        lastEntry = new LogEntry
+                        logEntry = new LogEntry
                         {
                             Timestamp = Timestamp.MinValue,
                             FilePath = path,
                             LineNumber = currentLineNumber,
                             Message = line,
-                        };
-
-                        entriesList.Add(lastEntry);
+                        };    
                     }
 
-                    if (lastEntry != null)
+                    if (logEntry != null)
                     {
-                        dataProcessor.ProcessDataElement(lastEntry, Context, cancellationToken);
+                        logEntries.Add(logEntry);
+                        dataProcessor.ProcessDataElement(logEntry, Context, cancellationToken);
                     }
 
                     currentLineNumber++;
                 }
 
-                contentDictionary[path] = entriesList.AsReadOnly();
+                // Now adjust to start of trace
+                foreach (var le in logEntries)
+                {
+                    if (le.Timestamp != Timestamp.MinValue)
+                    {
+                        le.Timestamp = Timestamp.FromNanoseconds(le.Timestamp.ToNanoseconds - startNanoSeconds);
+                    }
+                }
+                foreach (var durationLogEntry in durationLogEntries)
+                {
+                    durationLogEntry.StartTimestamp = Timestamp.FromNanoseconds(durationLogEntry.StartTimestamp.ToNanoseconds - startNanoSeconds);
+                    durationLogEntry.EndTimestamp = Timestamp.FromNanoseconds(durationLogEntry.EndTimestamp.ToNanoseconds - startNanoSeconds);
+                }
+
+                contentDictionary[path] = logEntries.AsReadOnly();
 
                 file.Close();
 
@@ -122,8 +232,18 @@ namespace LinuxLogParser.AndroidLogcat
                 Context.UpdateFileMetadata(path, new FileMetadata(currentLineNumber));
             }
 
-            var offsetEndTimestamp = new Timestamp(newestTImestamp.ToNanoseconds - startNanoSeconds);
-            dataSourceInfo = new DataSourceInfo(0, offsetEndTimestamp.ToNanoseconds, DateTime.FromFileTimeUtc(fileStartTime.ToFileTime()));
+            var offsetEndTimestamp = new Timestamp(newestTimestamp.ToNanoseconds - startNanoSeconds);
+
+            if (utcOffsetInHours.HasValue)
+            {
+                // Log is in local time (not UTC) but we can use utcOffset.txt hint file to modify
+                var fileStartTimeUtc = fileStartTime.Subtract(new TimeSpan(0, (int) (utcOffsetInHours.Value * 60), 0));
+                dataSourceInfo = new DataSourceInfo(0, offsetEndTimestamp.ToNanoseconds, DateTime.FromFileTimeUtc(fileStartTimeUtc.ToFileTimeUtc()));
+            }
+            else
+            {
+                dataSourceInfo = new DataSourceInfo(0, offsetEndTimestamp.ToNanoseconds, DateTime.FromFileTimeUtc(fileStartTime.ToFileTime())); // Treat as current locale local time (default)
+            }
         }
     }
 }
