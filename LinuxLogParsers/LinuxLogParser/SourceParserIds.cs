@@ -8,5 +8,6 @@ namespace LinuxLogParser
         public const string CloudInitLog = "CloudInitLog";
         public const string WaLinuxAgentLog = "WaLinuxAgentLog";
         public const string DmesgIsoLog = "DmesgIsoLog";
+        public const string AndroidLogcatLog = "AndroidLogcatLog";
     }
 }

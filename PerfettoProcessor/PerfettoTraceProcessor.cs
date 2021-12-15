@@ -66,8 +66,10 @@ namespace PerfettoProcessor
         {
             try
             {
-                TraceProcessorRpc rpc = new TraceProcessorRpc();
-                rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
+                TraceProcessorRpc rpc = new TraceProcessorRpc
+                {
+                    Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus
+                };
 
                 // Send the request
                 var rpcResult = SendRpcRequest(rpc);
@@ -133,8 +135,10 @@ namespace PerfettoProcessor
                     CreateNoWindow = true,
                 };
 
-                ShellProcess = new Process();
-                ShellProcess.StartInfo = traceProcessorProcessStartInfo;
+                ShellProcess = new Process
+                {
+                    StartInfo = traceProcessorProcessStartInfo
+                };
 
                 if (outputDataReceivedEventHandler != null)
                 {
@@ -175,8 +179,10 @@ namespace PerfettoProcessor
 
             try
             {
-                TraceProcessorRpc rpc = new TraceProcessorRpc();
-                rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus;
+                TraceProcessorRpc rpc = new TraceProcessorRpc
+                {
+                    Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmGetStatus
+                };
 
                 // Send the request
                 var rpcResult = SendRpcRequest(rpc);
@@ -223,9 +229,11 @@ namespace PerfettoProcessor
                 }
             }
 
-            TraceProcessorRpc rpc = new TraceProcessorRpc();
-            rpc.Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmQueryStreaming;
-            rpc.QueryArgs = new QueryArgs();
+            TraceProcessorRpc rpc = new TraceProcessorRpc
+            {
+                Request = TraceProcessorRpc.Types.TraceProcessorMethod.TpmQueryStreaming,
+                QueryArgs = new QueryArgs()
+            };
             rpc.QueryArgs.SqlQuery = sqlQuery;
             var rpcResult = SendRpcRequest(rpc);
 
@@ -269,77 +277,32 @@ namespace PerfettoProcessor
                     {
                         if (ev == null)
                         {
-                            switch (eventKey)
+                            ev = eventKey switch
                             {
-                                case PerfettoSliceEvent.Key:
-                                    ev = new PerfettoSliceEvent();
-                                    break;
-                                case PerfettoArgEvent.Key:
-                                    ev = new PerfettoArgEvent();
-                                    break;
-                                case PerfettoThreadTrackEvent.Key:
-                                    ev = new PerfettoThreadTrackEvent();
-                                    break;
-                                case PerfettoThreadEvent.Key:
-                                    ev = new PerfettoThreadEvent();
-                                    break;
-                                case PerfettoProcessEvent.Key:
-                                    ev = new PerfettoProcessEvent();
-                                    break;
-                                case PerfettoSchedSliceEvent.Key:
-                                    ev = new PerfettoSchedSliceEvent();
-                                    break;
-                                case PerfettoAndroidLogEvent.Key:
-                                    ev = new PerfettoAndroidLogEvent();
-                                    break;
-                                case PerfettoRawEvent.Key:
-                                    ev = new PerfettoRawEvent();
-                                    break;
-                                case PerfettoCounterEvent.Key:
-                                    ev = new PerfettoCounterEvent();
-                                    break;
-                                case PerfettoCpuCounterTrackEvent.Key:
-                                    ev = new PerfettoCpuCounterTrackEvent();
-                                    break;
-                                case PerfettoGpuCounterTrackEvent.Key:
-                                    ev = new PerfettoGpuCounterTrackEvent();
-                                    break;
-                                case PerfettoClockSnapshotEvent.Key:
-                                    ev = new PerfettoClockSnapshotEvent();
-                                    break;
-                                case PerfettoTraceBoundsEvent.Key:
-                                    ev = new PerfettoTraceBoundsEvent();
-                                    break;
-                                case PerfettoMetadataEvent.Key:
-                                    ev = new PerfettoMetadataEvent();
-                                    break;
-                                case PerfettoProcessCounterTrackEvent.Key:
-                                    ev = new PerfettoProcessCounterTrackEvent();
-                                    break;
-                                case PerfettoCounterTrackEvent.Key:
-                                    ev = new PerfettoCounterTrackEvent();
-                                    break;
-                                case PerfettoProcessTrackEvent.Key:
-                                    ev = new PerfettoProcessTrackEvent();
-                                    break;
-                                case PerfettoPerfSampleEvent.Key:
-                                    ev = new PerfettoPerfSampleEvent();
-                                    break;
-                                case PerfettoStackProfileCallSiteEvent.Key:
-                                    ev = new PerfettoStackProfileCallSiteEvent();
-                                    break;
-                                case PerfettoStackProfileFrameEvent.Key:
-                                    ev = new PerfettoStackProfileFrameEvent();
-                                    break;
-                                case PerfettoStackProfileMappingEvent.Key:
-                                    ev = new PerfettoStackProfileMappingEvent();
-                                    break;
-                                case PerfettoStackProfileSymbolEvent.Key:
-                                    ev = new PerfettoStackProfileSymbolEvent();
-                                    break;
-                                default:
-                                    throw new Exception("Invalid event type");
-                            }
+                                PerfettoSliceEvent.Key => new PerfettoSliceEvent(),
+                                PerfettoArgEvent.Key => new PerfettoArgEvent(),
+                                PerfettoThreadTrackEvent.Key => new PerfettoThreadTrackEvent(),
+                                PerfettoThreadEvent.Key => new PerfettoThreadEvent(),
+                                PerfettoProcessEvent.Key => new PerfettoProcessEvent(),
+                                PerfettoSchedSliceEvent.Key => new PerfettoSchedSliceEvent(),
+                                PerfettoAndroidLogEvent.Key => new PerfettoAndroidLogEvent(),
+                                PerfettoRawEvent.Key => new PerfettoRawEvent(),
+                                PerfettoCounterEvent.Key => new PerfettoCounterEvent(),
+                                PerfettoCpuCounterTrackEvent.Key => new PerfettoCpuCounterTrackEvent(),
+                                PerfettoGpuCounterTrackEvent.Key => new PerfettoGpuCounterTrackEvent(),
+                                PerfettoClockSnapshotEvent.Key => new PerfettoClockSnapshotEvent(),
+                                PerfettoTraceBoundsEvent.Key => new PerfettoTraceBoundsEvent(),
+                                PerfettoMetadataEvent.Key => new PerfettoMetadataEvent(),
+                                PerfettoProcessCounterTrackEvent.Key => new PerfettoProcessCounterTrackEvent(),
+                                PerfettoCounterTrackEvent.Key => new PerfettoCounterTrackEvent(),
+                                PerfettoProcessTrackEvent.Key => new PerfettoProcessTrackEvent(),
+                                PerfettoPerfSampleEvent.Key => new PerfettoPerfSampleEvent(),
+                                PerfettoStackProfileCallSiteEvent.Key => new PerfettoStackProfileCallSiteEvent(),
+                                PerfettoStackProfileFrameEvent.Key => new PerfettoStackProfileFrameEvent(),
+                                PerfettoStackProfileMappingEvent.Key => new PerfettoStackProfileMappingEvent(),
+                                PerfettoStackProfileSymbolEvent.Key => new PerfettoStackProfileSymbolEvent(),
+                                _ => throw new Exception("Invalid event type"),
+                            };
                         }
 
                         var colIndex = cellCount % numColumns;

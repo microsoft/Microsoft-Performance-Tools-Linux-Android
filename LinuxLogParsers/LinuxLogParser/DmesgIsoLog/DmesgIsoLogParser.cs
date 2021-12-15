@@ -58,8 +58,8 @@ namespace LinuxLogParser.DmesgIsoLog
             Timestamp oldestTimestamp = new Timestamp(long.MaxValue);
             Timestamp newestTImestamp = new Timestamp(long.MinValue);
             long startNanoSeconds = 0;
-            DateTime fileStartTime = default(DateTime);
-            DateTime parsedTime = default(DateTime);
+            DateTime fileStartTime = default;
+            DateTime parsedTime = default;
             var dateTimeCultureInfo = new CultureInfo("en-US");
 
             foreach (var path in FilePaths)
@@ -73,17 +73,19 @@ namespace LinuxLogParser.DmesgIsoLog
                 while ((line = file.ReadLine()) != null)
                 {
                     //First, we check if the line is a new log entry by trying to parse its timestamp
-                    if (line.Length >= 31 && DateTime.TryParseExact(line.Substring(0, 31), "yyyy-MM-ddTHH:mm:ss,ffffffK", dateTimeCultureInfo, DateTimeStyles.None, out parsedTime))
+                    if (line.Length >= 31 && DateTime.TryParseExact(line[..31], "yyyy-MM-ddTHH:mm:ss,ffffffK", dateTimeCultureInfo, DateTimeStyles.None, out parsedTime))
                     {
                         if (lastEntry != null)
                         {
                             dataProcessor.ProcessDataElement(lastEntry, Context, cancellationToken);
                         }
 
-                        lastEntry = new LogEntry();
-                        lastEntry.filePath = path;
-                        lastEntry.lineNumber = currentLineNumber;
-                        lastEntry.rawLog = line.Substring(32);
+                        lastEntry = new LogEntry
+                        {
+                            filePath = path,
+                            lineNumber = currentLineNumber,
+                            rawLog = line[32..]
+                        };
 
                         lineContent = lastEntry.rawLog.Split(':');
 
@@ -108,7 +110,7 @@ namespace LinuxLogParser.DmesgIsoLog
                             // Character ':' occurs multiple times in the message, and at least once in the beginning
                             // We proceed to try to infer entity, metadata and topic
                             firstSlice = lineContent[0].Split(' ');
-                            var lastSubstring = firstSlice[firstSlice.Length - 1];
+                            var lastSubstring = firstSlice[^1];
                             int contentIndex = 2;
                             if (firstSlice.Length > 1 && this.IsNumberFormat(lastSubstring) && this.IsNumberFormat(lineContent[1]))
                             {
@@ -127,7 +129,7 @@ namespace LinuxLogParser.DmesgIsoLog
 
                                 lastEntry.metadata = builder.ToString();
 
-                                lastEntry.entity = lineContent[0].Substring(0, lineContent[0].Length - lastSubstring.Length - 1);
+                                lastEntry.entity = lineContent[0][..(lineContent[0].Length - lastSubstring.Length - 1)];
 
                                 if ((contentIndex < lineContent.Length - 1) && !IsPCIinfo(lineContent[contentIndex]))
                                 {

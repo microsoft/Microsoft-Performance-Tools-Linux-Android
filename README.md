@@ -15,6 +15,7 @@
 - [Dmesg](https://en.wikipedia.org/wiki/Dmesg)
 - [Cloud-Init](https://cloud-init.io/)
 - [WaLinuxAgent](https://github.com/Azure/WALinuxAgent)
+- [AndroidLogcat](https://developer.android.com/studio/command-line/logcat)
 
 **Optional** WPA GUI:
 ![WpaLinux](Images/WpaLinux.JPG)

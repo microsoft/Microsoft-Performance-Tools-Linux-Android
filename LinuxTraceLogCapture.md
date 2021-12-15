@@ -16,6 +16,8 @@ Logs:
   - LogLevel can be turned more verbose in custom image
   - /etc/waagent.conf
   - Logs.Verbose=y
+- [AndroidLogcat](https://developer.android.com/studio/command-line/logcat)
+  - Default format should be supported
 
 # LTTng
 [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
