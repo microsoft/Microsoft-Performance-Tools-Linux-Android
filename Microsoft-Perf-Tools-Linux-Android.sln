@@ -68,6 +68,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AndroidLogcat", "LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj", "{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +156,10 @@ Global
 		{0BA62F1B-1456-48FD-B2DE-C9FE1CB94B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA62F1B-1456-48FD-B2DE-C9FE1CB94B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA62F1B-1456-48FD-B2DE-C9FE1CB94B8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +172,7 @@ Global
 		{75AF82A4-AF0E-425F-8CF5-62F4F54380B9} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{F910A8EA-9B0F-4BDA-87D4-0765EE973421} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 		{DB7FCF02-C949-4545-B58C-F514E85AB1FA} = {6A9515FC-D4B2-4221-8E74-78E7AFF0E421}
+		{9FD0BECC-AC5E-46A8-9749-46CD82BA89DE} = {9B2D4167-1CC7-4D8B-A01C-E9919E809A0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E96603EA-8E1D-4AA9-A474-D267A116C316}

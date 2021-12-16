@@ -63,6 +63,7 @@ jobs:
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
           LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
+          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj
           LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
           
         includesymbols: true
@@ -122,6 +123,13 @@ jobs:
         SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/$(BuildConfiguration)/netstandard2.1'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/WaLinuxAgent'
+
+    - task: CopyFiles@2
+      displayName: Copy AndroidLogCat Build to Output Artifacts
+      inputs:
+        SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/AndroidLogCat/bin/$(BuildConfiguration)/netstandard2.1'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/AndroidLogCat'
         
     - task: CopyFiles@2
       displayName: Copy Launcher

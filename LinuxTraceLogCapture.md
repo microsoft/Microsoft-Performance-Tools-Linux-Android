@@ -16,6 +16,13 @@ Logs:
   - LogLevel can be turned more verbose in custom image
   - /etc/waagent.conf
   - Logs.Verbose=y
+- [AndroidLogcat](https://developer.android.com/studio/command-line/logcat)
+  - Default log format should be supported
+  - Durations are supported/parsed if the logging includes init timing or *Timing logs such as SystemServerTiming
+  - Logs are logged in local time zone and default assumed to be loaded in same time zone as captured
+  - To provide a hint on the timezone if in a different zone
+    - Place a "utcoffset.txt" file in the same folder as the trace. Place the UTC+Offset in the file as a double in hours. 
+    - E.g For India Standard Time (IST) offset is UTC+5.5 so place "5.5" in the file. If logs are in UTC place 0 in the file
 
 # LTTng
 [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
@@ -61,7 +68,7 @@ $ sudo lttng create my-kernel-session --output=lttng-kernel-trace
 ### Add the desired events to be recorded:
 ```bash
 $ sudo lttng enable-event --kernel block_rq_complete,block_rq_insert,block_rq_issue,printk_console,sched_wak*,sched_switch,sched_process_fork,sched_process_exit,sched_process_exec,lttng_statedump*
-$ sudo lttng enable-event --kernel --syscall –-all
+$ sudo lttng enable-event --kernel --syscall ï¿½-all
 ```
 
 ### Add context fields to the channel:

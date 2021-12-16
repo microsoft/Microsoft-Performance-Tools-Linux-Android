@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\UnitTestCommon\UnitTestCommon.csproj" />
+    <ProjectReference Include="..\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj" />
     <ProjectReference Include="..\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj" />
     <ProjectReference Include="..\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj" />
     <ProjectReference Include="..\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj" />
