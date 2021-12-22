@@ -195,6 +195,49 @@ namespace LinuxLogParser.AndroidLogcat
                                 durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "OpenGLRenderer Jank Perf");
                             }
                         }
+                        else if (logEntry.Tag == "Zygote" && logEntry.Message.EndsWith("ms."))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (int.TryParse(messageSplit[^1].Replace("ms.", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                            }
+                        }
+                        // Android 12
+                        else if (logEntry.Tag == "ServiceManager" && logEntry.Message.Contains("successful after waiting"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 3 && int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[3].Replace("'", String.Empty));
+                            }
+                        }
+                        else if (logEntry.Tag == "PackageManager" && logEntry.Message.StartsWith("Finished scanning"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 6 && int.TryParse(messageSplit[5], out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[2] + messageSplit[3]);
+                            }
+                        }
+                        else if (logEntry.Tag == "dex2oat32" && logEntry.Message.StartsWith("dex2oat took"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit[2].EndsWith("ms"))
+                            {
+                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("ms", String.Empty), out double durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                                }
+                            }
+                            else
+                            {
+                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("s", String.Empty), out double durationS))
+                                {
+                                    durationLogEntry = LogEntryFromDurationS(durationS, logEntry, logEntry.Tag);
+                                }
+                            }
+                        }
 
                         if (durationLogEntry != null)
                         {
@@ -267,6 +310,11 @@ namespace LinuxLogParser.AndroidLogcat
         private DurationLogEntry LogEntryFromDurationMs(int durationMs, LogEntry logEntry, string name)
         {
             return LogEntryFromDurationNs(durationMs * MS_TO_NS, logEntry, name);
+        }
+
+        private DurationLogEntry LogEntryFromDurationMs(double durationMs, LogEntry logEntry, string name)
+        {
+            return LogEntryFromDurationNs((long) (durationMs * MS_TO_NS), logEntry, name);
         }
 
         private DurationLogEntry LogEntryFromDurationNs(long durationNs, LogEntry logEntry, string name)
