@@ -18,7 +18,14 @@ Logs:
   - Logs.Verbose=y
 - [AndroidLogcat](https://developer.android.com/studio/command-line/logcat)
   - Default log format should be supported
-  - Durations are supported/parsed if the logging includes init timing or *Timing logs such as SystemServerTiming
+  - Basic durations are supported/parsed on production builds / logs.
+    - E.g. "SurfaceFlinger: Boot is finished (9550 ms)"
+  - Enhanced durations are supported/parsed, if the logging includes init timing or *Timing logs such as SystemServerTiming. Perf durations are available in-development with [userdebug builds](https://source.android.com/setup/develop/new-device#userdebug-guidelines). 
+      - E.g "SystemServerTimingAsync: InitThreadPoolExec:prepareAppData took to complete: 149ms"
+  - Logcat can optionally log the year but defaults to not. If the year is not provided the year is assumed to be the current year on the analysis machine.
+    - If this is incorrect, for example trace was captured in 2021, but analyzed in 2022 then the year will be interpreted incorrectly. 
+    - This applies only if you need correct absolute timestamps, as relative timestamps will still be good.
+    - Manual workaround: In the logcat log search/replace to add year. E.g. "12-21" -> "12-21-2021"
   - Logs are logged in local time zone and default assumed to be loaded in same time zone as captured
   - To provide a hint on the timezone if in a different zone
     - Place a "utcoffset.txt" file in the same folder as the trace. Place the UTC+Offset in the file as a double in hours. 

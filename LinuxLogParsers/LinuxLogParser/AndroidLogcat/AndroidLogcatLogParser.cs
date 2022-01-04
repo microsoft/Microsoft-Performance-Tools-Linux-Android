@@ -26,11 +26,11 @@ namespace LinuxLogParser.AndroidLogcat
         ///  Per https://developer.android.com/studio/debug/am-logcat
         ///  date time PID    TID    priority tag: message
         ///  Example: "12-13 10:32:24.869    26    26 I Checkpoint: cp_prepareCheckpoint called"
-        public static Regex AndroidLogCatRegex = new Regex(@"^(.{18})\s+(\d+)\s+(\d+)\s+(\S) (.+?)\s?: (.*)$");
+        public static Regex AndroidLogCatRegex = new Regex(@"^([0-9-]+ [0-9:.]+)\s+(\d+)\s+(\d+)\s+(\S) (.+?)\s?: (.*)$");
 
         const long SECONDS_TO_NS = 1000000000;
         const long MS_TO_NS = 1000000;
-        static TimestampDelta OneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
+        static readonly TimestampDelta OneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
 
         public AndroidLogcatLogParser(string[] filePaths) : base(filePaths)
         {
@@ -57,6 +57,8 @@ namespace LinuxLogParser.AndroidLogcat
                 var durationLogEntries = new List<DurationLogEntry>();
                 LogEntry logEntry = null;
 
+                string timeDateFormat = null;
+
                 var rootFolder = Path.GetDirectoryName(path);
                 var utcOffsetFilePath = Path.Combine(rootFolder, "utcoffset.txt");
                 if (File.Exists(utcOffsetFilePath))
@@ -79,10 +81,28 @@ namespace LinuxLogParser.AndroidLogcat
 
                     var androidLogCatMatch = AndroidLogCatRegex.Match(line);
 
+                    if (androidLogCatMatch.Success && timeDateFormat == null)
+                    {
+                        const string monthDayFormat = "MM-dd HH:mm:ss.fff";
+                        const string monthDayYearFormat = "MM-dd-yyyy HH:mm:ss.fff";
+                        if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTimeTmp1))
+                        {
+                            timeDateFormat = monthDayFormat;
+                        }
+                        else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTimeTmp2))
+                        {
+                            timeDateFormat = monthDayYearFormat;
+                        }
+                        else
+                        {
+                            throw new Exception($"Invalid date/time format: {androidLogCatMatch.Groups[1].Value}");
+                        }
+                    }
+
                     // First, we check if the line is a new log entry if it matched Regex and by trying to parse its timestamp
                     if (androidLogCatMatch.Success &&
                         androidLogCatMatch.Groups.Count >= 7 &&
-                        DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, "MM-dd HH:mm:ss.fff", dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
+                        DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, timeDateFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
                     {
                         var timeStamp = Timestamp.FromNanoseconds(parsedTime.Ticks * 100);
 
