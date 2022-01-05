@@ -85,11 +85,11 @@ namespace LinuxLogParser.AndroidLogcat
                     {
                         const string monthDayFormat = "MM-dd HH:mm:ss.fff";
                         const string monthDayYearFormat = "MM-dd-yyyy HH:mm:ss.fff";
-                        if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTimeTmp1))
+                        if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
                         {
                             timeDateFormat = monthDayFormat;
                         }
-                        else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTimeTmp2))
+                        else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
                         {
                             timeDateFormat = monthDayYearFormat;
                         }
