@@ -88,6 +88,7 @@ namespace AndroidLogcatMPTAddin.Tables
                     PriorityColumn,
                     TagColumn,
                     MessageColumn,
+                    TableConfiguration.RightFreezeColumn,
                     TableConfiguration.GraphColumn,
                     TimestampColumn
                 },

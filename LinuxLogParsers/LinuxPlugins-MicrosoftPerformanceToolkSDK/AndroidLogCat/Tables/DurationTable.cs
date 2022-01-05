@@ -44,7 +44,7 @@ namespace AndroidLogcatMPTAddin.Tables
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{3894B186-D168-4E46-B0B5-0091BD5807A1}"), "Duration", "Duration of the event"),
-            new UIHints { Width = 80, CellFormat = "ms" });
+            new UIHints { Width = 80, CellFormat = TimestampFormatter.FormatMillisecondsGrouped });
 
         private static readonly ColumnConfiguration DurationColumnOrderedMax = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{3894B186-D168-4E46-B0B5-0091BD5807A1}"), "Duration", "Duration of the event"),
@@ -141,14 +141,14 @@ namespace AndroidLogcatMPTAddin.Tables
                     MessageColumn,
                     DurationColumnOrderedMax,
                     TableConfiguration.GraphColumn,
-                    StartTimestampColumnSorted,
+                    StartTimestampColumn,
                     EndTimestampColumn
                 },
             };
 
             longestDurationConfig.AddColumnRole(ColumnRole.StartTime, StartTimestampColumnSorted);
             longestDurationConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn);
-            longestDurationConfig.AddColumnRole(ColumnRole.Duration, DurationColumn);
+            longestDurationConfig.AddColumnRole(ColumnRole.Duration, DurationColumnOrderedMax);
 
             tableBuilder.AddTableConfiguration(timeOrderConfig)
                 .AddTableConfiguration(longestDurationConfig)

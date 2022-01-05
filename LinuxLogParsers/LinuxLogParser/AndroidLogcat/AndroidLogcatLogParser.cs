@@ -26,10 +26,11 @@ namespace LinuxLogParser.AndroidLogcat
         ///  Per https://developer.android.com/studio/debug/am-logcat
         ///  date time PID    TID    priority tag: message
         ///  Example: "12-13 10:32:24.869    26    26 I Checkpoint: cp_prepareCheckpoint called"
-        public static Regex AndroidLogCatRegex = new Regex(@"^(.{18})\s+(\d+)\s+(\d+)\s+(\S) (.+?)\s?: (.*)$");
+        public static Regex AndroidLogCatRegex = new Regex(@"^([0-9-]+ [0-9:.]+)\s+(\d+)\s+(\d+)\s+(\S) (.+?)\s?: (.*)$");
 
-        const int SECONDS_TO_NS = 1000000000;
-        const int MS_TO_NS = 1000000;
+        const long SECONDS_TO_NS = 1000000000;
+        const long MS_TO_NS = 1000000;
+        static readonly TimestampDelta OneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
 
         public AndroidLogcatLogParser(string[] filePaths) : base(filePaths)
         {
@@ -45,7 +46,6 @@ namespace LinuxLogParser.AndroidLogcat
             long startNanoSeconds = 0;
             DateTime fileStartTime = default;
             var dateTimeCultureInfo = new CultureInfo("en-US");
-            var oneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
             double? utcOffsetInHours = null;
 
             foreach (var path in FilePaths)
@@ -56,6 +56,8 @@ namespace LinuxLogParser.AndroidLogcat
                 var logEntries = new List<LogEntry>();
                 var durationLogEntries = new List<DurationLogEntry>();
                 LogEntry logEntry = null;
+
+                string timeDateFormat = null;
 
                 var rootFolder = Path.GetDirectoryName(path);
                 var utcOffsetFilePath = Path.Combine(rootFolder, "utcoffset.txt");
@@ -79,10 +81,28 @@ namespace LinuxLogParser.AndroidLogcat
 
                     var androidLogCatMatch = AndroidLogCatRegex.Match(line);
 
+                    if (androidLogCatMatch.Success && timeDateFormat == null)
+                    {
+                        const string monthDayFormat = "MM-dd HH:mm:ss.fff";
+                        const string monthDayYearFormat = "MM-dd-yyyy HH:mm:ss.fff";
+                        if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
+                        {
+                            timeDateFormat = monthDayFormat;
+                        }
+                        else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
+                        {
+                            timeDateFormat = monthDayYearFormat;
+                        }
+                        else
+                        {
+                            throw new Exception($"Invalid date/time format: {androidLogCatMatch.Groups[1].Value}");
+                        }
+                    }
+
                     // First, we check if the line is a new log entry if it matched Regex and by trying to parse its timestamp
                     if (androidLogCatMatch.Success &&
                         androidLogCatMatch.Groups.Count >= 7 &&
-                        DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, "MM-dd HH:mm:ss.fff", dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
+                        DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, timeDateFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
                     {
                         var timeStamp = Timestamp.FromNanoseconds(parsedTime.Ticks * 100);
 
@@ -115,12 +135,12 @@ namespace LinuxLogParser.AndroidLogcat
                         {
                             var messageSplit = logEntry.Message.Split();
                             var firstSingleQuoteIdx = logEntry.Message.IndexOf('\'');
-                            var secondSingleQuoteIdx = logEntry.Message.IndexOf('\'', firstSingleQuoteIdx+1);
-                            var name = logEntry.Message.Substring(firstSingleQuoteIdx+1, secondSingleQuoteIdx - firstSingleQuoteIdx - 1);
+                            var secondSingleQuoteIdx = logEntry.Message.IndexOf('\'', firstSingleQuoteIdx + 1);
+                            var name = logEntry.Message.Substring(firstSingleQuoteIdx + 1, secondSingleQuoteIdx - firstSingleQuoteIdx - 1);
                             // Command 'write /dev/cpuctl/cpu.rt_period_us 1000000' action=init (/system/etc/init/hw/init.rc:271) took 0ms and failed: ....
                             if (logEntry.Message.Contains("0ms"))
                             {
-                                durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - oneNanoSecondTimestampDelta, oneNanoSecondTimestampDelta, name);
+                                durationLogEntry = LogEntryFromDurationNs(0, logEntry, name);
                             }
                             // Service 'boringssl_self_test32_vendor' (pid 18) exited with status 0 waiting took 0.022000 seconds
 
@@ -128,17 +148,15 @@ namespace LinuxLogParser.AndroidLogcat
                             {
                                 if (double.TryParse(messageSplit[^2], out double durationSeconds))
                                 {
-                                    var duration = new TimestampDelta((long)(durationSeconds * SECONDS_TO_NS));
-                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                    durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
                                 }
                             }
                             // Command 'mount_all /fstab.${ro.hardware}' action=fs (/vendor/etc/init/init.windows_x86_64.rc:14) took 1054ms and succeeded
-                            else if(messageSplit[^4] == "took" && messageSplit[^1] == "succeeded")
+                            else if (messageSplit[^4] == "took" && messageSplit[^1] == "succeeded")
                             {
                                 if (int.TryParse(messageSplit[^3].Replace("ms", String.Empty), out int durationMs))
                                 {
-                                    var duration = new TimestampDelta(durationMs * MS_TO_NS);
-                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
                                 }
                             }
                             // Service 'disable_lro' (pid 39) exited with status 0 oneshot service took 0.006000 seconds in background
@@ -146,8 +164,7 @@ namespace LinuxLogParser.AndroidLogcat
                             {
                                 if (double.TryParse(messageSplit[^4], out double durationSeconds))
                                 {
-                                    var duration = new TimestampDelta((long)(durationSeconds * SECONDS_TO_NS));
-                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                    durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
                                 }
                             }
                             // Command 'rm /data/user/0' action=post-fs-data (/system/etc/init/hw/init.rc:706) took 1ms and failed: unlink() failed: Is a directory
@@ -159,8 +176,7 @@ namespace LinuxLogParser.AndroidLogcat
                                 {
                                     if (int.TryParse(afterTook.Replace("ms", String.Empty), out int durationMs))
                                     {
-                                        var duration = new TimestampDelta(durationMs * MS_TO_NS);
-                                        durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                        durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
                                     }
                                 }
                             }
@@ -172,14 +188,73 @@ namespace LinuxLogParser.AndroidLogcat
                             var name = messageSplit[0];
                             if (int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
                             {
-                                if (durationMs == 0)
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
+                            }
+                        }
+                        else if (logEntry.Tag == "SurfaceFlinger" && logEntry.Message.Contains("Boot is finished"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (int.TryParse(messageSplit[^2].Replace("(", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "Boot is finished");
+                            }
+                        }
+                        else if (logEntry.Tag == "Looper" && logEntry.Message.StartsWith("Slow"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 6 && int.TryParse(messageSplit[3].Replace("ms", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, $"{messageSplit[4]} {messageSplit[5]}");
+                            }
+                        }
+                        else if (logEntry.Tag == "OpenGLRenderer" && logEntry.Message.StartsWith("Davey!")) // Jank & Perf
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 2 && int.TryParse(messageSplit[1].Replace("duration=", String.Empty).Replace("ms;", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "OpenGLRenderer Jank Perf");
+                            }
+                        }
+                        else if (logEntry.Tag == "Zygote" && logEntry.Message.EndsWith("ms."))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (int.TryParse(messageSplit[^1].Replace("ms.", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                            }
+                        }
+                        // Android 12
+                        else if (logEntry.Tag == "ServiceManager" && logEntry.Message.Contains("successful after waiting"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 3 && int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[3].Replace("'", String.Empty));
+                            }
+                        }
+                        else if (logEntry.Tag == "PackageManager" && logEntry.Message.StartsWith("Finished scanning"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 6 && int.TryParse(messageSplit[5], out int durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[2] + messageSplit[3]);
+                            }
+                        }
+                        else if (logEntry.Tag == "dex2oat32" && logEntry.Message.StartsWith("dex2oat took"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit[2].EndsWith("ms"))
+                            {
+                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("ms", String.Empty), out double durationMs))
                                 {
-                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - oneNanoSecondTimestampDelta, oneNanoSecondTimestampDelta, name);
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
                                 }
-                                else
+                            }
+                            else
+                            {
+                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("s", String.Empty), out double durationS))
                                 {
-                                    var duration = new TimestampDelta(durationMs * MS_TO_NS);
-                                    durationLogEntry = new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
+                                    durationLogEntry = LogEntryFromDurationS(durationS, logEntry, logEntry.Tag);
                                 }
                             }
                         }
@@ -243,6 +318,35 @@ namespace LinuxLogParser.AndroidLogcat
             else
             {
                 dataSourceInfo = new DataSourceInfo(0, offsetEndTimestamp.ToNanoseconds, DateTime.FromFileTimeUtc(fileStartTime.ToFileTime())); // Treat as current locale local time (default)
+            }
+        }
+
+        private DurationLogEntry LogEntryFromDurationS(double durationS, LogEntry logEntry, string name)
+        {
+            return LogEntryFromDurationNs((long) (durationS * SECONDS_TO_NS), logEntry, name);
+        }
+
+
+        private DurationLogEntry LogEntryFromDurationMs(int durationMs, LogEntry logEntry, string name)
+        {
+            return LogEntryFromDurationNs(durationMs * MS_TO_NS, logEntry, name);
+        }
+
+        private DurationLogEntry LogEntryFromDurationMs(double durationMs, LogEntry logEntry, string name)
+        {
+            return LogEntryFromDurationNs((long) (durationMs * MS_TO_NS), logEntry, name);
+        }
+
+        private DurationLogEntry LogEntryFromDurationNs(long durationNs, LogEntry logEntry, string name)
+        {
+            if (durationNs == 0)
+            {
+                return new DurationLogEntry(logEntry, logEntry.Timestamp - OneNanoSecondTimestampDelta, OneNanoSecondTimestampDelta, name);
+            }
+            else
+            {
+                var duration = new TimestampDelta(durationNs);
+                return new DurationLogEntry(logEntry, logEntry.Timestamp - duration, duration, name);
             }
         }
     }
