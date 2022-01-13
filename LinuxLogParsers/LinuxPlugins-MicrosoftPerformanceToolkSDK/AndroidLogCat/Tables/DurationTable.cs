@@ -59,7 +59,12 @@ namespace AndroidLogcatMPTAddin.Tables
 
         private static readonly ColumnConfiguration LineNumberColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{EDBD9BAF-0BD8-43D7-9752-BFCEF3FCBC13}"), "Line Number", "Ordering of the lines in the file"),
-            new UIHints { Width = 80 });
+            new UIHints
+            {
+                SortOrder = SortOrder.Ascending,
+                SortPriority = 1,
+                Width = 80,
+            });
 
         private static readonly ColumnConfiguration PIDColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{F75CD977-60C7-4CC3-9AB4-94ED44FFDC21}"), "PID", "The process ID that produced the message."),
@@ -107,9 +112,9 @@ namespace AndroidLogcatMPTAddin.Tables
                 Columns = new[]
                 {
                     FileNameColumn,
+                    LineNumberColumn,
                     NameColumn,
                     TableConfiguration.PivotColumn,
-                    LineNumberColumn,
                     PIDColumn,
                     TIDColumn,
                     PriorityColumn,
@@ -150,9 +155,10 @@ namespace AndroidLogcatMPTAddin.Tables
             longestDurationConfig.AddColumnRole(ColumnRole.EndTime, EndTimestampColumn);
             longestDurationConfig.AddColumnRole(ColumnRole.Duration, DurationColumnOrderedMax);
 
-            tableBuilder.AddTableConfiguration(timeOrderConfig)
+            tableBuilder
+                .AddTableConfiguration(timeOrderConfig)
                 .AddTableConfiguration(longestDurationConfig)
-                .SetDefaultTableConfiguration(timeOrderConfig)
+                .SetDefaultTableConfiguration(longestDurationConfig)
                 .SetRowCount(durationEntries.Count)
                 .AddColumn(NameColumn, nameProjection)
                 .AddColumn(FileNameColumn, fileNameProjection)

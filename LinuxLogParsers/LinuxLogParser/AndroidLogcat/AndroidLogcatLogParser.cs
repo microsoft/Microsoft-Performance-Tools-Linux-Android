@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -30,6 +31,7 @@ namespace LinuxLogParser.AndroidLogcat
 
         const long SECONDS_TO_NS = 1000000000;
         const long MS_TO_NS = 1000000;
+        const long US_TO_NS = 1000;
         static readonly TimestampDelta OneNanoSecondTimestampDelta = new TimestampDelta(1);  // At least 1ns timestamp for duration
 
         public AndroidLogcatLogParser(string[] filePaths) : base(filePaths)
@@ -55,7 +57,6 @@ namespace LinuxLogParser.AndroidLogcat
                 string line = string.Empty;
                 var logEntries = new List<LogEntry>();
                 var durationLogEntries = new List<DurationLogEntry>();
-                LogEntry logEntry = null;
 
                 string timeDateFormat = null;
 
@@ -72,6 +73,7 @@ namespace LinuxLogParser.AndroidLogcat
 
                 while ((line = file.ReadLine()) != null)
                 {
+                    LogEntry logEntry = null;
                     // Optimization - don't save blank lines
                     if (line == String.Empty)
                     {
@@ -223,6 +225,24 @@ namespace LinuxLogParser.AndroidLogcat
                                 durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
                             }
                         }
+                        // "Creating child chains: 13886us" - UserDebug
+                        else if (logEntry.Tag == "netd" && logEntry.Message.EndsWith("us"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (int.TryParse(messageSplit[^1].Replace("us", String.Empty), out int durationUs))
+                            {
+                                durationLogEntry = LogEntryFromDurationUs(durationUs, logEntry, logEntry.Tag);
+                            }
+                        }
+                        // "RenderEngine: shader cache generated - 48 shaders in 1452.951172 ms" - UserDebug
+                        else if (logEntry.Tag == "RenderEngine" && logEntry.Message.StartsWith("shader cache generated") && logEntry.Message.EndsWith(" ms"))
+                        {
+                            var messageSplit = logEntry.Message.Split();
+                            if (messageSplit.Length >= 9 && double.TryParse(messageSplit[7], out double durationMs))
+                            {
+                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                            }
+                        }
                         // Android 12
                         else if (logEntry.Tag == "ServiceManager" && logEntry.Message.Contains("successful after waiting"))
                         {
@@ -262,7 +282,6 @@ namespace LinuxLogParser.AndroidLogcat
                         if (durationLogEntry != null)
                         {
                             durationLogEntries.Add(durationLogEntry);
-                            dataProcessor.ProcessDataElement(durationLogEntry, Context, cancellationToken);
                         }
                     }
                     else
@@ -279,24 +298,50 @@ namespace LinuxLogParser.AndroidLogcat
                     if (logEntry != null)
                     {
                         logEntries.Add(logEntry);
-                        dataProcessor.ProcessDataElement(logEntry, Context, cancellationToken);
                     }
 
                     currentLineNumber++;
                 }
 
-                // Now adjust to start of trace
+                // Synthetic durations
+
+                // Kernel Boot
+                var kernelStart = logEntries.SingleOrDefault(f => f.LineNumber <= 100 && f.Tag == String.Empty && f.Message.StartsWith("Linux version"));
+                var initStart = logEntries.SingleOrDefault(f => f.Tag == "init" && f.Message == "init first stage started!");
+                if (kernelStart != null && initStart != null)
+                {
+                    const string kernelBoot = "Kernel Boot";
+                    var kernelBootLogEntry = new DurationLogEntry()
+                    {
+                        StartTimestamp = kernelStart.Timestamp,
+                        EndTimestamp = initStart.Timestamp,
+                        Duration = initStart.Timestamp - kernelStart.Timestamp,
+                        FilePath = initStart.FilePath,
+                        LineNumber = initStart.LineNumber,
+                        PID = initStart.PID,
+                        TID = initStart.TID,
+                        Priority = initStart.Priority,
+                        Message = kernelBoot,
+                        Name = kernelBoot,
+                    };
+                    durationLogEntries.Add(kernelBootLogEntry);
+                }
+
+                // Now adjust times to start of earliest message given out of order timestamps
                 foreach (var le in logEntries)
                 {
                     if (le.Timestamp != Timestamp.MinValue)
                     {
                         le.Timestamp = Timestamp.FromNanoseconds(le.Timestamp.ToNanoseconds - startNanoSeconds);
                     }
+                    dataProcessor.ProcessDataElement(le, Context, cancellationToken);
                 }
                 foreach (var durationLogEntry in durationLogEntries)
                 {
                     durationLogEntry.StartTimestamp = Timestamp.FromNanoseconds(durationLogEntry.StartTimestamp.ToNanoseconds - startNanoSeconds);
                     durationLogEntry.EndTimestamp = Timestamp.FromNanoseconds(durationLogEntry.EndTimestamp.ToNanoseconds - startNanoSeconds);
+
+                    dataProcessor.ProcessDataElement(durationLogEntry, Context, cancellationToken);
                 }
 
                 contentDictionary[path] = logEntries.AsReadOnly();
@@ -335,6 +380,11 @@ namespace LinuxLogParser.AndroidLogcat
         private DurationLogEntry LogEntryFromDurationMs(double durationMs, LogEntry logEntry, string name)
         {
             return LogEntryFromDurationNs((long) (durationMs * MS_TO_NS), logEntry, name);
+        }
+
+        private DurationLogEntry LogEntryFromDurationUs(int durationUs, LogEntry logEntry, string name)
+        {
+            return LogEntryFromDurationNs(durationUs * US_TO_NS, logEntry, name);
         }
 
         private DurationLogEntry LogEntryFromDurationNs(long durationNs, LogEntry logEntry, string name)

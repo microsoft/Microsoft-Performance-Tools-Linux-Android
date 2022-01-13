@@ -9,7 +9,7 @@
     <Company>Microsoft Corp.</Company>
     <Product>Performance ToolKit</Product>
     <Description>Contains the datasource plugin to parse Android Logcat log files.</Description>
-    <PackageId>Microsoft.Performance.Toolkit.Plugins.Android LogcatPlugin</PackageId>
+    <PackageId>Microsoft.Performance.Toolkit.Plugins.AndroidLogcatPlugin</PackageId>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</RepositoryUrl>
     <PackageProjectUrl>https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android</PackageProjectUrl>
