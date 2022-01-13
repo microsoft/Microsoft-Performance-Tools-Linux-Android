@@ -116,16 +116,22 @@ namespace LinuxLogParsersUnitTest
             Assert.IsTrue(eventData.DurationLogEntries[1].Duration.ToMilliseconds == 53);
             Assert.IsTrue((eventData.DurationLogEntries[1].EndTimestamp - eventData.DurationLogEntries[1].StartTimestamp).ToMilliseconds == 53);
 
-            Assert.IsTrue(eventData.DurationLogEntries.Count == 1025);
+            Assert.IsTrue(eventData.DurationLogEntries.Count == 1039);
 
             // MakeWindowManagerServiceReady took to complete: 3ms
-            Assert.IsTrue(eventData.DurationLogEntries[455].Name == "MakeWindowManagerServiceReady");
-            Assert.IsTrue(eventData.DurationLogEntries[455].Duration.ToMilliseconds == 3);
-            Assert.IsTrue((eventData.DurationLogEntries[455].EndTimestamp - eventData.DurationLogEntries[455].StartTimestamp).ToMilliseconds == 3);
+            // eventData.DurationLogEntries.IndexOf(eventData.DurationLogEntries.Single(f => f.Name == "MakeWindowManagerServiceReady"))
+            Assert.IsTrue(eventData.DurationLogEntries[468].Name == "MakeWindowManagerServiceReady");
+            Assert.IsTrue(eventData.DurationLogEntries[468].Duration.ToMilliseconds == 3);
+            Assert.IsTrue((eventData.DurationLogEntries[468].EndTimestamp - eventData.DurationLogEntries[468].StartTimestamp).ToMilliseconds == 3);
 
             // Looper  : Slow delivery took 2033ms main h=android.app.ActivityThread$H c=null m=156
-            Assert.IsTrue(eventData.DurationLogEntries[921].Name == "main h=android.app.ActivityThread$H");
-            Assert.IsTrue(eventData.DurationLogEntries[921].Duration.ToMilliseconds == 2033);
+            Assert.IsTrue(eventData.DurationLogEntries[934].Name == "main h=android.app.ActivityThread$H");
+            Assert.IsTrue(eventData.DurationLogEntries[934].Duration.ToMilliseconds == 2033);
+
+
+            // Kernel Boot
+            Assert.IsTrue(eventData.DurationLogEntries[^1].Name == "Kernel Boot");
+            Assert.IsTrue(eventData.DurationLogEntries[^1].Duration.ToMilliseconds == 1906);
         }
 
         [TestMethod]
