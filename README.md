@@ -22,8 +22,16 @@
 
 # Presentations
 
-If you want to see a demo or get more in-depth info on using these tools check out a talk given at the [Linux Tracing Summit](https://www.tracingsummit.org/ts/2019/):
->Linux & Windows Perf Analysis using WPA, ([slides](https://www.tracingsummit.org/ts/2019/files/Tracingsummit2019-wpa-berg-gibeau.pdf)) ([video](https://youtu.be/HUbVaIi-aaw))
+If you want to see a demo or get more in-depth info on using these tools (LTTng) check out a talk given at the [Linux Tracing Summit](https://www.tracingsummit.org/ts/2019/):
+>Linux & Windows Perf Analysis using WPA (LTTng), ([slides](https://www.tracingsummit.org/ts/2019/files/Tracingsummit2019-wpa-berg-gibeau.pdf)) ([video](https://youtu.be/HUbVaIi-aaw))
+
+# Blog Posts
+
+Featuring some use-cases and some walkthroughs
+
+- [New tools for analyzing Android, Linux, and Chromium browser performance – Microsoft-Performance-Tools for Linux-Android](https://devblogs.microsoft.com/performance-diagnostics/new-tools-for-analyzing-android-linux-and-chromium-browser-performance/)
+- [Perfetto tooling for analyzing Android, Linux, and Chromium browser performance – Microsoft-Performance-Tools-Linux-Android](https://devblogs.microsoft.com/performance-diagnostics/perfetto-tooling-for-analyzing-android-linux-and-chromium-browser-performance-microsoft-performance-tools-linux-android/)
+- [New Android logcat support available in Microsoft Performance Tools for Linux & Android](https://devblogs.microsoft.com/performance-diagnostics/new-android-logcat-support-available-in-microsoft-performance-tools-for-linux-android/)
 
 # Prerequisites
 
