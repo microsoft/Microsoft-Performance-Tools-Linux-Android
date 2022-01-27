@@ -61,7 +61,7 @@ namespace PerfDataProcessingSource
 
         protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
-            return dataSource.IsFile() && StringComparer.OrdinalIgnoreCase.Equals("perf.data.txt", Path.GetFileName(dataSource.Uri.LocalPath));
+            return dataSource.IsFile() && Path.GetFileName(dataSource.Uri.LocalPath).EndsWith("perf.data.txt", StringComparison.OrdinalIgnoreCase);
         }
 
         protected override ICustomDataProcessor CreateProcessorCore(
