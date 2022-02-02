@@ -8,37 +8,15 @@
             {
               "Key": 2,
               "Value": {
-                "DisplayHints": {
-                  "AggregationMode": 0,
-                  "IsVisible": true,
-                  "SortOrder": 0,
-                  "SortPriority": 3,
-                  "TextAlignment": 0,
-                  "Width": 100
-                },
-                "Metadata": {
-                  "Description": "Syscall Start Time",
-                  "Guid": "F8BBE984-0241-4DAC-99F4-A5D07DF0571A",
-                  "Name": "Syscall Start Time"
-                }
+                "ColumnGuid": "F8BBE984-0241-4DAC-99F4-A5D07DF0571A",
+                "ColumnName": "Syscall Start Time"
               }
             },
             {
               "Key": 3,
               "Value": {
-                "DisplayHints": {
-                  "AggregationMode": 0,
-                  "IsVisible": true,
-                  "SortOrder": 0,
-                  "SortPriority": 3,
-                  "TextAlignment": 0,
-                  "Width": 100
-                },
-                "Metadata": {
-                  "Description": "Syscall End Time",
-                  "Guid": "4F3066C1-C66E-4E94-847C-5D36626DA824",
-                  "Name": "Syscall End Time"
-                }
+                "ColumnGuid": "4F3066C1-C66E-4E94-847C-5D36626DA824",
+                "ColumnName": "Syscall End Time"
               }
             }
           ],

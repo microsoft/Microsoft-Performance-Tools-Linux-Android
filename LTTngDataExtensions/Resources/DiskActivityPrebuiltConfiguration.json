@@ -5,42 +5,20 @@
                 {
                     "ChartType": 0,
                     "ColumnRoles": [
-                        {
-                            "Key": 3,
-                            "Value": {
-                                "DisplayHints": {
-                                    "AggregationMode": 0,
-                                    "IsVisible": true,
-                                    "SortOrder": 0,
-                                    "SortPriority": 7,
-                                    "TextAlignment": 0,
-                                    "Width": 99
-                                },
-                                "Metadata": {
-                                    "Description": "Complete Time",
-                                    "Guid": "9c0f7be4-90d9-4098-abcb-ad767329c65b",
-                                    "Name": "Complete Time"
-                                }
-                            }
-                        },
-                        {
-                            "Key": 6,
-                            "Value": {
-                                "DisplayHints": {
-                                    "AggregationMode": 0,
-                                    "IsVisible": true,
-                                    "SortOrder": 0,
-                                    "SortPriority": 1,
-                                    "TextAlignment": 1,
-                                    "Width": 117
-                                },
-                                "Metadata": {
-                                    "Description": "Device Id",
-                                    "Guid": "ec918167-5a00-467a-abe6-f4c2e14b5c31",
-                                    "Name": "Device Id"
-                                }
-                            }
+                      {
+                        "Key": 3,
+                        "Value": {
+                          "ColumnGuid": "9c0f7be4-90d9-4098-abcb-ad767329c65b",
+                          "ColumnName": "Complete Time"
                         }
+                      },
+                      {
+                        "Key": 6,
+                        "Value": {
+                          "ColumnGuid": "ec918167-5a00-467a-abe6-f4c2e14b5c31",
+                          "ColumnName": "Device Id"
+                        }
+                      }
                     ],
                   "Columns": [
                     {
