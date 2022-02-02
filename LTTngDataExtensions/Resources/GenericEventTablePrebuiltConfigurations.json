@@ -8,37 +8,15 @@
                         {
                             "Key": 2,
                             "Value": {
-                                "DisplayHints": {
-                                    "AggregationMode": 0,
-                                    "IsVisible": true,
-                                    "SortOrder": 0,
-                                    "SortPriority": 3,
-                                    "TextAlignment": 0,
-                                    "Width": 100
-                                },
-                                "Metadata": {
-                                    "Description": "Timestamp",
-                                    "Guid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
-                                    "Name": "Timestamp"
-                                }
+                              "ColumnGuid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
+                              "ColumnName": "Timestamp"
                             }
                         },
                         {
                             "Key": 3,
                             "Value": {
-                                "DisplayHints": {
-                                    "AggregationMode": 0,
-                                    "IsVisible": true,
-                                    "SortOrder": 0,
-                                    "SortPriority": 3,
-                                    "TextAlignment": 0,
-                                    "Width": 100
-                                },
-                                "Metadata": {
-                                    "Description": "Timestamp",
-                                    "Guid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
-                                    "Name": "Timestamp"
-                                }
+                              "ColumnGuid": "f74e122e-2358-4c9c-b9f7-76668b7ad957",
+                              "ColumnName": "Timestamp"
                             }
                         }
                     ],
