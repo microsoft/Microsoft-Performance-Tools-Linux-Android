@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-	<Version>1.2</Version>
+	<Version>1.2.2</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
@@ -16,10 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.18.1">
+    <PackageReference Include="Google.Protobuf" Version="3.19.4">
       <GeneratePathProperty>true</GeneratePathProperty>
     </PackageReference>
-    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.9-rc1" />
+    <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.16" />
   </ItemGroup>
 
   <ItemGroup>
