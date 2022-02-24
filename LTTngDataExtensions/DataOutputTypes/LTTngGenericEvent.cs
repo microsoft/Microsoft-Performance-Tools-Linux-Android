@@ -105,9 +105,16 @@ namespace LTTngDataExtensions.DataOutputTypes
             // approach. We could probably generate a type from each event descriptor, and convert to that type.
             //
 
-            this.FieldValues = new List<string>(payload.Fields.Count);
+            this.FieldNames = new List<string>(payload.Fields.Count + data.StreamDefinedEventContext.Fields.Count);
+            this.FieldValues = new List<string>(payload.Fields.Count + data.StreamDefinedEventContext.Fields.Count);
+            foreach (var field in data.StreamDefinedEventContext.Fields)
+            {
+                this.FieldNames.Add(field.FieldName.ToString());
+                this.FieldValues.Add(field.GetValueAsString());
+            }
             foreach (var field in payload.Fields)
             {
+                this.FieldNames.Add(field.FieldName.ToString());
                 this.FieldValues.Add(field.GetValueAsString());
             }
         }
@@ -123,6 +130,6 @@ namespace LTTngDataExtensions.DataOutputTypes
         public uint DiscardedEvents { get; }
 
         public readonly List<string> FieldValues;
-        public List<string> FieldNames => this.kind.FieldNames;
+        public readonly List<string> FieldNames;
     }
 }
