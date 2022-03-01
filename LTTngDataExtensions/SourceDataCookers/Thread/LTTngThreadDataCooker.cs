@@ -701,21 +701,39 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
                     this.closingEventsToBeSkipped[threadInExecution.Tid] = eventsToBeSkipped + 1;
                     return;
                 }
-                uint flags = data.Payload.ReadFieldAsUInt32("_clone_flags");
-                if (cloneSyscallFlagsPerTid.TryGetValue(threadInExecution.Tid, out Dictionary<uint, int> lastCalls))
+
+                uint? cloneFlags = null;
+                const string SysCallCloneFlags = "_clone_flags";
+                const string SysCallFlagsAsStruct = "_flags";  // https://lttng.org/docs/v2.13/#doc-whats-new & https://github.com/lttng/lttng-modules/commit/d775625e2ba4825b73b5897e7701ad6e2bdba115
+
+                if (data.Payload.FieldsByName.ContainsKey(SysCallCloneFlags))
                 {
-                    if (lastCalls.TryGetValue(flags, out int timesUsed))
+                    cloneFlags = data.Payload.ReadFieldAsUInt32(SysCallCloneFlags);
+                }
+                else if (data.Payload.FieldsByName.ContainsKey(SysCallFlagsAsStruct)) // New since v2.13
+                {
+                    var flags = data.Payload.ReadFieldAsUInt32(SysCallFlagsAsStruct);
+                    // var exitSignal = flags & 0xFF;   // the least significant byte of the `unsigned long` is the signal the kernel need to send to the parent process on child exit
+                    cloneFlags = flags & 0xFFFFFF00; // the remaining bytes of the `unsigned long` is used a bitwise flag for the clone options.
+                }
+
+                if (cloneFlags.HasValue)
+                {
+                    if (cloneSyscallFlagsPerTid.TryGetValue(threadInExecution.Tid, out Dictionary<uint, int> lastCalls))
                     {
-                        lastCalls[flags] = timesUsed + 1;
+                        if (lastCalls.TryGetValue(cloneFlags.Value, out int timesUsed))
+                        {
+                            lastCalls[cloneFlags.Value] = timesUsed + 1;
+                        }
+                        else
+                        {
+                            lastCalls[cloneFlags.Value] = 1;
+                        }
                     }
                     else
                     {
-                        lastCalls[flags] = 1;
+                        cloneSyscallFlagsPerTid[threadInExecution.Tid] = new Dictionary<uint, int>() { [cloneFlags.Value] = 1 };
                     }
-                }
-                else
-                {
-                    cloneSyscallFlagsPerTid[threadInExecution.Tid] = new Dictionary<uint, int>() { [flags] = 1 };
                 }
             }
         }
