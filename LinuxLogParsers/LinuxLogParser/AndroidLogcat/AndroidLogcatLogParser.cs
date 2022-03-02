@@ -49,307 +49,325 @@ namespace LinuxLogParser.AndroidLogcat
             DateTime fileStartTime = default;
             var dateTimeCultureInfo = new CultureInfo("en-US");
             double? utcOffsetInHours = null;
+            var processingExceptions = new List<Exception>();
 
             foreach (var path in FilePaths)
             {
                 ulong currentLineNumber = 1;
-                var file = new System.IO.StreamReader(path);
                 string line = string.Empty;
-                var logEntries = new List<LogEntry>();
-                var durationLogEntries = new List<DurationLogEntry>();
 
-                string timeDateFormat = null;
-
-                var rootFolder = Path.GetDirectoryName(path);
-                var utcOffsetFilePath = Path.Combine(rootFolder, "utcoffset.txt");
-                if (File.Exists(utcOffsetFilePath))
+                try
                 {
-                    var utcOffSetStr = File.ReadAllText(utcOffsetFilePath);
-                    if (double.TryParse(utcOffSetStr, out double utcOffsetTmp))
-                    {
-                        utcOffsetInHours = utcOffsetTmp;
-                    }
-                }
+                    var file = new System.IO.StreamReader(path);
+                    var logEntries = new List<LogEntry>();
+                    var durationLogEntries = new List<DurationLogEntry>();
 
-                while ((line = file.ReadLine()) != null)
-                {
-                    LogEntry logEntry = null;
-                    // Optimization - don't save blank lines
-                    if (line == String.Empty)
-                    {
-                        currentLineNumber++;
-                        continue;
-                    }
+                    string timeDateFormat = null;
 
-                    var androidLogCatMatch = AndroidLogCatRegex.Match(line);
-
-                    if (androidLogCatMatch.Success && timeDateFormat == null)
+                    var rootFolder = Path.GetDirectoryName(path);
+                    var utcOffsetFilePath = Path.Combine(rootFolder, "utcoffset.txt");
+                    if (File.Exists(utcOffsetFilePath))
                     {
-                        const string monthDayFormat = "MM-dd HH:mm:ss.fff";
-                        const string monthDayYearFormat = "MM-dd-yyyy HH:mm:ss.fff";
-                        if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
+                        var utcOffSetStr = File.ReadAllText(utcOffsetFilePath);
+                        if (double.TryParse(utcOffSetStr, out double utcOffsetTmp))
                         {
-                            timeDateFormat = monthDayFormat;
-                        }
-                        else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out _ ))
-                        {
-                            timeDateFormat = monthDayYearFormat;
-                        }
-                        else
-                        {
-                            throw new Exception($"Invalid date/time format: {androidLogCatMatch.Groups[1].Value}");
+                            utcOffsetInHours = utcOffsetTmp;
                         }
                     }
 
-                    // First, we check if the line is a new log entry if it matched Regex and by trying to parse its timestamp
-                    if (androidLogCatMatch.Success &&
-                        androidLogCatMatch.Groups.Count >= 7 &&
-                        DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, timeDateFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
+                    while ((line = file.ReadLine()) != null)
                     {
-                        var timeStamp = Timestamp.FromNanoseconds(parsedTime.Ticks * 100);
-
-                        if (timeStamp < oldestTimestamp)
+                        LogEntry logEntry = null;
+                        // Optimization - don't save blank lines
+                        if (line == String.Empty)
                         {
-                            oldestTimestamp = timeStamp;
-                            fileStartTime = parsedTime;
-                            startNanoSeconds = oldestTimestamp.ToNanoseconds;
-                        }
-                        if (timeStamp > newestTimestamp)
-                        {
-                            newestTimestamp = timeStamp;
+                            currentLineNumber++;
+                            continue;
                         }
 
-                        logEntry = new LogEntry
-                        {
-                            Timestamp = new Timestamp(timeStamp.ToNanoseconds), // We can't subtract startNanoSeconds here because logs are not necessarily time ordered
-                            FilePath = path,
-                            LineNumber = currentLineNumber,
-                            PID = uint.Parse(androidLogCatMatch.Groups[2].Value),
-                            TID = uint.Parse(androidLogCatMatch.Groups[3].Value),
-                            Priority = Utilities.Common.StringIntern(androidLogCatMatch.Groups[4].Value),
-                            Tag = Utilities.Common.StringIntern(androidLogCatMatch.Groups[5].Value.Trim()),
-                            Message = androidLogCatMatch.Groups[6].Value,
-                        };
+                        var androidLogCatMatch = AndroidLogCatRegex.Match(line);
 
-                        // Specialized Duration parsing
-                        DurationLogEntry durationLogEntry = null;
-                        if (logEntry.Tag == "init" && logEntry.Message.Contains("took"))
+                        if (androidLogCatMatch.Success && timeDateFormat == null)
                         {
-                            var messageSplit = logEntry.Message.Split();
-                            var firstSingleQuoteIdx = logEntry.Message.IndexOf('\'');
-                            var secondSingleQuoteIdx = logEntry.Message.IndexOf('\'', firstSingleQuoteIdx + 1);
-                            var name = logEntry.Message.Substring(firstSingleQuoteIdx + 1, secondSingleQuoteIdx - firstSingleQuoteIdx - 1);
-                            // Command 'write /dev/cpuctl/cpu.rt_period_us 1000000' action=init (/system/etc/init/hw/init.rc:271) took 0ms and failed: ....
-                            if (logEntry.Message.Contains("0ms"))
+                            const string monthDayFormat = "MM-dd HH:mm:ss.fff";
+                            const string monthDayYearFormat = "MM-dd-yyyy HH:mm:ss.fff";
+                            if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayFormat, dateTimeCultureInfo, DateTimeStyles.None, out _))
                             {
-                                durationLogEntry = LogEntryFromDurationNs(0, logEntry, name);
+                                timeDateFormat = monthDayFormat;
                             }
-                            // Service 'boringssl_self_test32_vendor' (pid 18) exited with status 0 waiting took 0.022000 seconds
-
-                            if (messageSplit[^3] == "took" && messageSplit[^1] == "seconds")
+                            else if (DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, monthDayYearFormat, dateTimeCultureInfo, DateTimeStyles.None, out _))
                             {
-                                if (double.TryParse(messageSplit[^2], out double durationSeconds))
-                                {
-                                    durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
-                                }
+                                timeDateFormat = monthDayYearFormat;
                             }
-                            // Command 'mount_all /fstab.${ro.hardware}' action=fs (/vendor/etc/init/init.windows_x86_64.rc:14) took 1054ms and succeeded
-                            else if (messageSplit[^4] == "took" && messageSplit[^1] == "succeeded")
-                            {
-                                if (int.TryParse(messageSplit[^3].Replace("ms", String.Empty), out int durationMs))
-                                {
-                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
-                                }
-                            }
-                            // Service 'disable_lro' (pid 39) exited with status 0 oneshot service took 0.006000 seconds in background
-                            else if (messageSplit[^5] == "took" && messageSplit[^1] == "background")
-                            {
-                                if (double.TryParse(messageSplit[^4], out double durationSeconds))
-                                {
-                                    durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
-                                }
-                            }
-                            // Command 'rm /data/user/0' action=post-fs-data (/system/etc/init/hw/init.rc:706) took 1ms and failed: unlink() failed: Is a directory
                             else
                             {
-                                var tookIndex = Array.IndexOf(messageSplit, "took");
-                                var afterTook = messageSplit[tookIndex + 1];
-                                if (afterTook.Contains("ms"))
+                                throw new Exception($"Invalid date/time format: {androidLogCatMatch.Groups[1].Value}");
+                            }
+                        }
+
+                        // First, we check if the line is a new log entry if it matched Regex and by trying to parse its timestamp
+                        if (androidLogCatMatch.Success &&
+                            androidLogCatMatch.Groups.Count >= 7 &&
+                            DateTime.TryParseExact(androidLogCatMatch.Groups[1].Value, timeDateFormat, dateTimeCultureInfo, DateTimeStyles.None, out DateTime parsedTime))
+                        {
+                            var timeStamp = Timestamp.FromNanoseconds(parsedTime.Ticks * 100);
+
+                            if (timeStamp < oldestTimestamp)
+                            {
+                                oldestTimestamp = timeStamp;
+                                fileStartTime = parsedTime;
+                                startNanoSeconds = oldestTimestamp.ToNanoseconds;
+                            }
+                            if (timeStamp > newestTimestamp)
+                            {
+                                newestTimestamp = timeStamp;
+                            }
+
+                            logEntry = new LogEntry
+                            {
+                                Timestamp = new Timestamp(timeStamp.ToNanoseconds), // We can't subtract startNanoSeconds here because logs are not necessarily time ordered
+                                FilePath = path,
+                                LineNumber = currentLineNumber,
+                                PID = uint.Parse(androidLogCatMatch.Groups[2].Value),
+                                TID = uint.Parse(androidLogCatMatch.Groups[3].Value),
+                                Priority = Utilities.Common.StringIntern(androidLogCatMatch.Groups[4].Value),
+                                Tag = Utilities.Common.StringIntern(androidLogCatMatch.Groups[5].Value.Trim()),
+                                Message = androidLogCatMatch.Groups[6].Value,
+                            };
+
+                            // Specialized Duration parsing
+                            DurationLogEntry durationLogEntry = null;
+                            if (logEntry.Tag == "init" && logEntry.Message.Contains("took"))
+                            {
+                                var messageSplit = logEntry.Message.Split();
+                                var firstSingleQuoteIdx = logEntry.Message.IndexOf('\'');
+                                var secondSingleQuoteIdx = logEntry.Message.IndexOf('\'', firstSingleQuoteIdx + 1);
+                                var name = logEntry.Message.Substring(firstSingleQuoteIdx + 1, secondSingleQuoteIdx - firstSingleQuoteIdx - 1);
+                                // Command 'write /dev/cpuctl/cpu.rt_period_us 1000000' action=init (/system/etc/init/hw/init.rc:271) took 0ms and failed: ....
+                                if (logEntry.Message.Contains("0ms"))
                                 {
-                                    if (int.TryParse(afterTook.Replace("ms", String.Empty), out int durationMs))
+                                    durationLogEntry = LogEntryFromDurationNs(0, logEntry, name);
+                                }
+                                // Service 'boringssl_self_test32_vendor' (pid 18) exited with status 0 waiting took 0.022000 seconds
+
+                                if (messageSplit[^3] == "took" && messageSplit[^1] == "seconds")
+                                {
+                                    if (double.TryParse(messageSplit[^2], out double durationSeconds))
+                                    {
+                                        durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
+                                    }
+                                }
+                                // Command 'mount_all /fstab.${ro.hardware}' action=fs (/vendor/etc/init/init.windows_x86_64.rc:14) took 1054ms and succeeded
+                                else if (messageSplit[^4] == "took" && messageSplit[^1] == "succeeded")
+                                {
+                                    if (int.TryParse(messageSplit[^3].Replace("ms", String.Empty), out int durationMs))
                                     {
                                         durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
                                     }
                                 }
+                                // Service 'disable_lro' (pid 39) exited with status 0 oneshot service took 0.006000 seconds in background
+                                else if (messageSplit[^5] == "took" && messageSplit[^1] == "background")
+                                {
+                                    if (double.TryParse(messageSplit[^4], out double durationSeconds))
+                                    {
+                                        durationLogEntry = LogEntryFromDurationS(durationSeconds, logEntry, name);
+                                    }
+                                }
+                                // Command 'rm /data/user/0' action=post-fs-data (/system/etc/init/hw/init.rc:706) took 1ms and failed: unlink() failed: Is a directory
+                                else
+                                {
+                                    var tookIndex = Array.IndexOf(messageSplit, "took");
+                                    var afterTook = messageSplit[tookIndex + 1];
+                                    if (afterTook.Contains("ms"))
+                                    {
+                                        if (int.TryParse(afterTook.Replace("ms", String.Empty), out int durationMs))
+                                        {
+                                            durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
+                                        }
+                                    }
+                                }
                             }
-                        }
-                        // Zygote32Timing: PostZygoteInitGC took to complete: 61ms
-                        else if (logEntry.Tag.Contains("Timing") && logEntry.Message.Contains("took to complete"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            var name = messageSplit[0];
-                            if (int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                            // Zygote32Timing: PostZygoteInitGC took to complete: 61ms
+                            else if (logEntry.Tag.Contains("Timing") && logEntry.Message.Contains("took to complete"))
                             {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
+                                var messageSplit = logEntry.Message.Split();
+                                var name = messageSplit[0];
+                                if (int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, name);
+                                }
                             }
-                        }
-                        else if (logEntry.Tag == "SurfaceFlinger" && logEntry.Message.Contains("Boot is finished"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (int.TryParse(messageSplit[^2].Replace("(", String.Empty), out int durationMs))
+                            else if (logEntry.Tag == "SurfaceFlinger" && logEntry.Message.Contains("Boot is finished"))
                             {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "Boot is finished");
+                                var messageSplit = logEntry.Message.Split();
+                                if (int.TryParse(messageSplit[^2].Replace("(", String.Empty), out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "Boot is finished");
+                                }
                             }
-                        }
-                        else if (logEntry.Tag == "Looper" && logEntry.Message.StartsWith("Slow"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit.Length >= 6 && int.TryParse(messageSplit[3].Replace("ms", String.Empty), out int durationMs))
+                            else if (logEntry.Tag == "Looper" && logEntry.Message.StartsWith("Slow"))
                             {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, $"{messageSplit[4]} {messageSplit[5]}");
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit.Length >= 6 && int.TryParse(messageSplit[3].Replace("ms", String.Empty), out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, $"{messageSplit[4]} {messageSplit[5]}");
+                                }
                             }
-                        }
-                        else if (logEntry.Tag == "OpenGLRenderer" && logEntry.Message.StartsWith("Davey!")) // Jank & Perf
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit.Length >= 2 && int.TryParse(messageSplit[1].Replace("duration=", String.Empty).Replace("ms;", String.Empty), out int durationMs))
+                            else if (logEntry.Tag == "OpenGLRenderer" && logEntry.Message.StartsWith("Davey!")) // Jank & Perf
                             {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "OpenGLRenderer Jank Perf");
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit.Length >= 2 && int.TryParse(messageSplit[1].Replace("duration=", String.Empty).Replace("ms;", String.Empty), out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, "OpenGLRenderer Jank Perf");
+                                }
                             }
-                        }
-                        else if (logEntry.Tag == "Zygote" && logEntry.Message.EndsWith("ms."))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (int.TryParse(messageSplit[^1].Replace("ms.", String.Empty), out int durationMs))
+                            else if (logEntry.Tag == "Zygote" && logEntry.Message.EndsWith("ms."))
                             {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
-                            }
-                        }
-                        // "Creating child chains: 13886us" - UserDebug
-                        else if (logEntry.Tag == "netd" && logEntry.Message.EndsWith("us"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (int.TryParse(messageSplit[^1].Replace("us", String.Empty), out int durationUs))
-                            {
-                                durationLogEntry = LogEntryFromDurationUs(durationUs, logEntry, logEntry.Tag);
-                            }
-                        }
-                        // "RenderEngine: shader cache generated - 48 shaders in 1452.951172 ms" - UserDebug
-                        else if (logEntry.Tag == "RenderEngine" && logEntry.Message.StartsWith("shader cache generated") && logEntry.Message.EndsWith(" ms"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit.Length >= 9 && double.TryParse(messageSplit[7], out double durationMs))
-                            {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
-                            }
-                        }
-                        // Android 12
-                        else if (logEntry.Tag == "ServiceManager" && logEntry.Message.Contains("successful after waiting"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit.Length >= 3 && int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
-                            {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[3].Replace("'", String.Empty));
-                            }
-                        }
-                        else if (logEntry.Tag == "PackageManager" && logEntry.Message.StartsWith("Finished scanning"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit.Length >= 6 && int.TryParse(messageSplit[5], out int durationMs))
-                            {
-                                durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[2] + messageSplit[3]);
-                            }
-                        }
-                        else if (logEntry.Tag == "dex2oat32" && logEntry.Message.StartsWith("dex2oat took"))
-                        {
-                            var messageSplit = logEntry.Message.Split();
-                            if (messageSplit[2].EndsWith("ms"))
-                            {
-                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("ms", String.Empty), out double durationMs))
+                                var messageSplit = logEntry.Message.Split();
+                                if (int.TryParse(messageSplit[^1].Replace("ms.", String.Empty), out int durationMs))
                                 {
                                     durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
                                 }
                             }
-                            else
+                            // "Creating child chains: 13886us" - UserDebug
+                            else if (logEntry.Tag == "netd" && logEntry.Message.EndsWith("us"))
                             {
-                                if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("s", String.Empty), out double durationS))
+                                var messageSplit = logEntry.Message.Split();
+                                if (int.TryParse(messageSplit[^1].Replace("us", String.Empty), out int durationUs))
                                 {
-                                    durationLogEntry = LogEntryFromDurationS(durationS, logEntry, logEntry.Tag);
+                                    durationLogEntry = LogEntryFromDurationUs(durationUs, logEntry, logEntry.Tag);
                                 }
                             }
+                            // "RenderEngine: shader cache generated - 48 shaders in 1452.951172 ms" - UserDebug
+                            else if (logEntry.Tag == "RenderEngine" && logEntry.Message.StartsWith("shader cache generated") && logEntry.Message.EndsWith(" ms"))
+                            {
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit.Length >= 9 && double.TryParse(messageSplit[7], out double durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                                }
+                            }
+                            // Android 12
+                            else if (logEntry.Tag == "ServiceManager" && logEntry.Message.Contains("successful after waiting"))
+                            {
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit.Length >= 3 && int.TryParse(messageSplit[^1].Replace("ms", String.Empty), out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[3].Replace("'", String.Empty));
+                                }
+                            }
+                            else if (logEntry.Tag == "PackageManager" && logEntry.Message.StartsWith("Finished scanning"))
+                            {
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit.Length >= 6 && int.TryParse(messageSplit[5], out int durationMs))
+                                {
+                                    durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, messageSplit[2] + messageSplit[3]);
+                                }
+                            }
+                            else if (logEntry.Tag == "dex2oat32" && logEntry.Message.StartsWith("dex2oat took"))
+                            {
+                                var messageSplit = logEntry.Message.Split();
+                                if (messageSplit[2].EndsWith("ms"))
+                                {
+                                    if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("ms", String.Empty), out double durationMs))
+                                    {
+                                        durationLogEntry = LogEntryFromDurationMs(durationMs, logEntry, logEntry.Tag);
+                                    }
+                                }
+                                else
+                                {
+                                    if (messageSplit.Length >= 3 && double.TryParse(messageSplit[2].Replace("s", String.Empty), out double durationS))
+                                    {
+                                        durationLogEntry = LogEntryFromDurationS(durationS, logEntry, logEntry.Tag);
+                                    }
+                                }
+                            }
+
+                            if (durationLogEntry != null)
+                            {
+                                durationLogEntries.Add(durationLogEntry);
+                            }
+                        }
+                        else
+                        {
+                            logEntry = new LogEntry
+                            {
+                                Timestamp = Timestamp.MinValue,
+                                FilePath = path,
+                                LineNumber = currentLineNumber,
+                                Message = line,
+                            };
                         }
 
-                        if (durationLogEntry != null)
+                        if (logEntry != null)
                         {
-                            durationLogEntries.Add(durationLogEntry);
+                            logEntries.Add(logEntry);
+                        }
+
+                        currentLineNumber++;
+                    }
+
+                    // Synthetic durations
+
+                    // Kernel Boot
+                    try
+                    {
+                        var kernelStart = logEntries.SingleOrDefault(f => f.LineNumber <= 100 && f.Tag == String.Empty && f.Message.StartsWith("Linux version"));
+                        var initStart = logEntries.SingleOrDefault(f => f.Tag == "init" && f.Message == "init first stage started!");
+                        if (kernelStart != null && initStart != null)
+                        {
+                            const string kernelBoot = "Kernel Boot";
+                            var kernelBootLogEntry = new DurationLogEntry()
+                            {
+                                StartTimestamp = kernelStart.Timestamp,
+                                EndTimestamp = initStart.Timestamp,
+                                Duration = initStart.Timestamp - kernelStart.Timestamp,
+                                FilePath = initStart.FilePath,
+                                LineNumber = initStart.LineNumber,
+                                PID = initStart.PID,
+                                TID = initStart.TID,
+                                Priority = initStart.Priority,
+                                Message = kernelBoot,
+                                Name = kernelBoot,
+                            };
+                            durationLogEntries.Add(kernelBootLogEntry);
                         }
                     }
-                    else
+                    catch (InvalidOperationException)
                     {
-                        logEntry = new LogEntry
+                        logger.Error("Unable to process kernel boot region - multiple \"Linux version\" start and \"init first stage started!\" end detected");
+                    }
+
+                    // Now adjust times to start of earliest message given out of order timestamps
+                    foreach (var le in logEntries)
+                    {
+                        if (le.Timestamp != Timestamp.MinValue)
                         {
-                            Timestamp = Timestamp.MinValue,
-                            FilePath = path,
-                            LineNumber = currentLineNumber,
-                            Message = line,
-                        };    
+                            le.Timestamp = Timestamp.FromNanoseconds(le.Timestamp.ToNanoseconds - startNanoSeconds);
+                        }
+                        dataProcessor.ProcessDataElement(le, Context, cancellationToken);
+                    }
+                    foreach (var durationLogEntry in durationLogEntries)
+                    {
+                        durationLogEntry.StartTimestamp = Timestamp.FromNanoseconds(durationLogEntry.StartTimestamp.ToNanoseconds - startNanoSeconds);
+                        durationLogEntry.EndTimestamp = Timestamp.FromNanoseconds(durationLogEntry.EndTimestamp.ToNanoseconds - startNanoSeconds);
+
+                        dataProcessor.ProcessDataElement(durationLogEntry, Context, cancellationToken);
                     }
 
-                    if (logEntry != null)
-                    {
-                        logEntries.Add(logEntry);
-                    }
+                    contentDictionary[path] = logEntries.AsReadOnly();
 
-                    currentLineNumber++;
+                    file.Close();
+
+                    --currentLineNumber;
+                    Context.UpdateFileMetadata(path, new FileMetadata(currentLineNumber));
                 }
-
-                // Synthetic durations
-
-                // Kernel Boot
-                var kernelStart = logEntries.SingleOrDefault(f => f.LineNumber <= 100 && f.Tag == String.Empty && f.Message.StartsWith("Linux version"));
-                var initStart = logEntries.SingleOrDefault(f => f.Tag == "init" && f.Message == "init first stage started!");
-                if (kernelStart != null && initStart != null)
+                catch (Exception ex)
                 {
-                    const string kernelBoot = "Kernel Boot";
-                    var kernelBootLogEntry = new DurationLogEntry()
-                    {
-                        StartTimestamp = kernelStart.Timestamp,
-                        EndTimestamp = initStart.Timestamp,
-                        Duration = initStart.Timestamp - kernelStart.Timestamp,
-                        FilePath = initStart.FilePath,
-                        LineNumber = initStart.LineNumber,
-                        PID = initStart.PID,
-                        TID = initStart.TID,
-                        Priority = initStart.Priority,
-                        Message = kernelBoot,
-                        Name = kernelBoot,
-                    };
-                    durationLogEntries.Add(kernelBootLogEntry);
+                    logger.Fatal($"Error processing line number {currentLineNumber} \"{line}\" on {path}. {ex.Message}");
+                    logger.Fatal($"{ex}");
+                    processingExceptions.Add(ex);
                 }
-
-                // Now adjust times to start of earliest message given out of order timestamps
-                foreach (var le in logEntries)
-                {
-                    if (le.Timestamp != Timestamp.MinValue)
-                    {
-                        le.Timestamp = Timestamp.FromNanoseconds(le.Timestamp.ToNanoseconds - startNanoSeconds);
-                    }
-                    dataProcessor.ProcessDataElement(le, Context, cancellationToken);
-                }
-                foreach (var durationLogEntry in durationLogEntries)
-                {
-                    durationLogEntry.StartTimestamp = Timestamp.FromNanoseconds(durationLogEntry.StartTimestamp.ToNanoseconds - startNanoSeconds);
-                    durationLogEntry.EndTimestamp = Timestamp.FromNanoseconds(durationLogEntry.EndTimestamp.ToNanoseconds - startNanoSeconds);
-
-                    dataProcessor.ProcessDataElement(durationLogEntry, Context, cancellationToken);
-                }
-
-                contentDictionary[path] = logEntries.AsReadOnly();
-
-                file.Close();
-
-                --currentLineNumber;
-                Context.UpdateFileMetadata(path, new FileMetadata(currentLineNumber));
             }
 
             var offsetEndTimestamp = new Timestamp(newestTimestamp.ToNanoseconds - startNanoSeconds);
@@ -363,6 +381,11 @@ namespace LinuxLogParser.AndroidLogcat
             else
             {
                 dataSourceInfo = new DataSourceInfo(0, offsetEndTimestamp.ToNanoseconds, DateTime.FromFileTimeUtc(fileStartTime.ToFileTime())); // Treat as current locale local time (default)
+            }
+
+            if (processingExceptions.Any())
+            {
+                throw new AggregateException(processingExceptions);
             }
         }
 
