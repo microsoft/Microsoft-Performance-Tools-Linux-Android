@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-	<Version>1.2.2</Version>
+	<Version>1.3.0</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
@@ -28,8 +28,9 @@
   </ItemGroup>
 
   <Target Name="DownloadTraceProcessorShell">
+	<!-- Keep in sync with other DownloadTraceProcessorShell Targets -->
     <!-- Download the trace_processor.exe from Perfetto's GitHub release and copy it to the output directory-->
-    <DownloadFile SourceUrl="https://github.com/google/perfetto/releases/download/v18.0/windows-amd64.zip" DestinationFolder="$(TargetDir)" />
+    <DownloadFile SourceUrl="https://github.com/google/perfetto/releases/download/v24.2/windows-amd64.zip" DestinationFolder="$(TargetDir)" />
     <Unzip SourceFiles="$(TargetDir)\windows-amd64.zip" DestinationFolder="$(TargetDir)" />
     <Copy SourceFiles="$(TargetDir)\windows-amd64\trace_processor_shell.exe" DestinationFolder="$(TargetDir)" />
     <RemoveDir Directories="$(TargetDir)\windows-amd64" />
