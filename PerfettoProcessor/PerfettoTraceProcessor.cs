@@ -301,6 +301,8 @@ namespace PerfettoProcessor
                                 PerfettoStackProfileFrameEvent.Key => new PerfettoStackProfileFrameEvent(),
                                 PerfettoStackProfileMappingEvent.Key => new PerfettoStackProfileMappingEvent(),
                                 PerfettoStackProfileSymbolEvent.Key => new PerfettoStackProfileSymbolEvent(),
+                                PerfettoActualFrameEvent.Key => new PerfettoActualFrameEvent(),
+                                PerfettoExpectedFrameEvent.Key => new PerfettoExpectedFrameEvent(),
                                 _ => throw new Exception("Invalid event type"),
                             };
                         }

@@ -35,6 +35,8 @@ namespace PerfettoCds
         public const string StackProfileFrameCookerId = nameof(PerfettoStackProfileFrameCooker);
         public const string StackProfileMappingCookerId = nameof(PerfettoStackProfileMappingCooker);
         public const string StackProfileSymbolCookerId = nameof(PerfettoStackProfileSymbolCooker);
+        public const string ExpectedFrameCookerId = nameof(PerfettoExpectedFrameCooker);
+        public const string ActualFrameCookerId = nameof(PerfettoActualFrameCooker);
 
         // ID for composite data cookers
         public const string GenericEventCookerId = nameof(PerfettoGenericEventCooker);
@@ -47,6 +49,7 @@ namespace PerfettoCds
         public const string ProcessMemoryEventCookerId = nameof(PerfettoProcessMemoryEventCooker);
         public const string SystemMemoryEventCookerId = nameof(PerfettoSystemMemoryEventCooker);
         public const string CpuSamplingEventCookerId = nameof(PerfettoCpuSamplingEventCooker);
+        public const string FrameEventCookerId = nameof(PerfettoFrameEventCooker);
 
         // Events for source cookers
         public const string SliceEvent = PerfettoSliceEvent.Key;
@@ -68,6 +71,8 @@ namespace PerfettoCds
         public const string StackProfileFrameEvent = PerfettoStackProfileFrameEvent.Key;
         public const string StackProfileMappingEvent = PerfettoStackProfileMappingEvent.Key;
         public const string StackProfileSymbolEvent = PerfettoStackProfileSymbolEvent.Key;
+        public const string ExpectedFrameEvent = PerfettoExpectedFrameEvent.Key;
+        public const string ActualFrameEvent = PerfettoActualFrameEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = nameof(PerfettoGenericEvent);
@@ -80,6 +85,7 @@ namespace PerfettoCds
         public const string ProcessMemoryEvent = nameof(PerfettoProcessMemoryEvent);
         public const string SystemMemoryEvent = nameof(PerfettoSystemMemoryEvent);
         public const string CpuSamplingEvent = nameof(PerfettoCpuSamplingEvent);
+        public const string FrameEvent = nameof(PerfettoFrameEvent);
 
         // Paths for source cookers
         public static readonly DataCookerPath SliceCookerPath =
@@ -120,6 +126,10 @@ namespace PerfettoCds
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileMappingCookerId);
         public static readonly DataCookerPath StackProfileSymbolCookerPath =
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.StackProfileSymbolCookerId);
+        public static readonly DataCookerPath ExpectedFrameCookerPath =
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ExpectedFrameCookerId);
+        public static readonly DataCookerPath ActualFrameCookerPath =
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ActualFrameCookerId);
 
         // Paths for composite cookers
         public static readonly DataCookerPath GenericEventCookerPath =
@@ -142,5 +152,7 @@ namespace PerfettoCds
             DataCookerPath.ForComposite(PerfettoPluginConstants.SystemMemoryEventCookerId);
         public static readonly DataCookerPath CpuSamplingEventCookerPath =
             DataCookerPath.ForComposite(PerfettoPluginConstants.CpuSamplingEventCookerId);
+        public static readonly DataCookerPath FrameEventCookerPath =
+            DataCookerPath.ForComposite(PerfettoPluginConstants.FrameEventCookerId);
     }
 }
