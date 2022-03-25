@@ -60,11 +60,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // The sched slice data contains the timings, CPU, priority, and end state info. We get the process and thread from
             // those respective tables
             var joinedActual = from frame in actualFrameData
-                               join process in processData on frame.Upid equals process.Upid into pd
+                               join process in processData on frame.Upid equals process.Upid into pd orderby frame.Id
                                from process in pd.DefaultIfEmpty()
                                select new { frame, process };
             var joinedExpected = from frame in expectedFrameData
-                               join process in processData on frame.Upid equals process.Upid into pd
+                               join process in processData on frame.Upid equals process.Upid into pd orderby frame.Id
                                from process in pd.DefaultIfEmpty()
                                select new { frame, process };
 
