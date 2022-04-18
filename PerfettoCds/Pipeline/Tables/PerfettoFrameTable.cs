@@ -39,8 +39,8 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{9194517e-94ba-471f-8472-a505762b28e0}"), "JankType", "The kind of jank experienced if any"),
             new UIHints { Width = 210 });
 
-        private static readonly ColumnConfiguration AppOnTimeColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{2954eb20-961a-40e4-957f-f455e0bede1c}"), "AppOnTime", "Whether the app finished the frame on time"),
+        private static readonly ColumnConfiguration OnTimeFinishColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{2954eb20-961a-40e4-957f-f455e0bede1c}"), "OnTimeFinish", "Whether the app finished the frame on time"),
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration StartTimestampColumn = new ColumnConfiguration(
@@ -53,7 +53,7 @@ namespace PerfettoCds.Pipeline.Tables
 
         private static readonly ColumnConfiguration DurationColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{49f0442f-bac7-4385-893e-ad343ed2b82a}"), "Duration", "Duration of the event"),
-            new UIHints { Width = 70 });
+            new UIHints { Width = 70 , AggregationMode = AggregationMode.Max , SortOrder = SortOrder.Descending });
 
         private static readonly ColumnConfiguration DisplayTokenColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{104a249c-3254-4700-852f-482e9de23feb}"), "DisplayToken", "Display Token"),
@@ -101,10 +101,10 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(ProcessIdColumn, baseProjection.Compose(x => x.Upid));
             tableGenerator.AddColumn(FrameTypeColumn, baseProjection.Compose(x => x.FrameType));
             tableGenerator.AddColumn(JankTypeColumn, baseProjection.Compose(x => x.JankType));
-            tableGenerator.AddColumn(AppOnTimeColumn, baseProjection.Compose(x => x.AppOnTime));
+            tableGenerator.AddColumn(OnTimeFinishColumn, baseProjection.Compose(x => x.OnTimeFinish));
             tableGenerator.AddColumn(DurationColumn, baseProjection.Compose(x => x.Duration));
-            tableGenerator.AddColumn(DisplayTokenColumn, baseProjection.Compose(x => x.DisplayToken));
-            tableGenerator.AddColumn(SurfaceTokenColumn, baseProjection.Compose(x => x.SurfaceToken));
+            tableGenerator.AddColumn(DisplayTokenColumn, baseProjection.Compose(x => x.DisplayFrameToken));
+            tableGenerator.AddColumn(SurfaceTokenColumn, baseProjection.Compose(x => x.SurfaceFrameToken));
             tableGenerator.AddColumn(PresentTypeColumn, baseProjection.Compose(x => x.PresentType));
             tableGenerator.AddColumn(PredictionTypeColumn, baseProjection.Compose(x => x.PredictionType));
             tableGenerator.AddColumn(GpuCompositionColumn, baseProjection.Compose(x => x.GpuComposition));
@@ -113,17 +113,17 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(EndTimestampColumn, endProjection);
 
 
-            var jankFramesConfig = new TableConfiguration("Jank Frames")
+            var jankFramesConfig = new TableConfiguration("Expected/Actual Frames by Process")
             {
                 Columns = new[]
                 {
                     ProcessNameColumn,
+                    DisplayTokenColumn,
                     SurfaceTokenColumn,
                     FrameTypeColumn,
                     TableConfiguration.PivotColumn, // Columns before this get pivotted on
-                    DisplayTokenColumn,
                     PresentTypeColumn,
-                    AppOnTimeColumn,
+                    OnTimeFinishColumn,
                     PredictionTypeColumn,
                     JankTypeColumn,
                     JankTagColumn,

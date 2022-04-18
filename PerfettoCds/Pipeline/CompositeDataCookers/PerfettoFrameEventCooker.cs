@@ -79,8 +79,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     "Expected",
                     result.process.Name,
                     result.frame.Upid,
-                    result.frame.DisplayToken,
-                    result.frame.SurfaceToken,
+                    result.frame.DisplayFrameToken,
+                    result.frame.SurfaceFrameToken,
                     new TimestampDelta(result.frame.Duration),
                     startTimestamp,
                     endTimestamp,
@@ -105,17 +105,17 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     "Actual",
                     result.process.Name,
                     result.frame.Upid,
-                    result.frame.DisplayToken,
-                    result.frame.SurfaceToken,
+                    result.frame.DisplayFrameToken,
+                    result.frame.SurfaceFrameToken,
                     new TimestampDelta(result.frame.Duration),
                     startTimestamp,
                     endTimestamp,
                     result.frame.JankType,
                     result.frame.JankTag,
-                    result.frame.OnTimeFinish.ToString(),
                     result.frame.PresentType,
-                    result.frame.GpuComposition.ToString(),
-                    result.frame.PredictionType
+                    result.frame.PredictionType,
+                    result.frame.OnTimeFinish.ToString(),
+                    result.frame.GpuComposition.ToString()
                 );
 
                 this.FrameEvents.AddEvent(ev);

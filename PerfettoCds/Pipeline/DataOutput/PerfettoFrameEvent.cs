@@ -15,17 +15,18 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string FrameType { get; }
         public string ProcessName { get; }
         public long Upid { get; }
-        public long DisplayToken { get; }
-        public long SurfaceToken { get; }
+        public long DisplayFrameToken { get; }
+        public long SurfaceFrameToken { get; }
         public TimestampDelta Duration { get; }
         public Timestamp StartTimestamp { get; }
         public Timestamp EndTimestamp { get; }
         public string JankType { get; }
         public string JankTag { get; }
-        public string AppOnTime { get; }
         public string PresentType { get; }
-        public string GpuComposition { get; }
         public string PredictionType { get; }
+        public string GpuComposition { get; }
+
+        public string OnTimeFinish { get; }
 
 
         public PerfettoFrameEvent(string FrameType,
@@ -38,25 +39,25 @@ namespace PerfettoCds.Pipeline.DataOutput
             Timestamp endTimestamp,
             string JankType,
             string JankTag,
-            string AppOnTime,
             string PresentType,
-            string GpuComposition,
-            string PredictionType)
+            string PredictionType,
+            string OnTimeFinish,
+            string GpuComposition)
         {
             this.FrameType = Common.StringIntern(FrameType);
             this.ProcessName = Common.StringIntern(processName);
             this.Upid = upid;
-            this.DisplayToken = displayToken;
-            this.SurfaceToken = surfaceToken;
+            this.DisplayFrameToken = displayToken;
+            this.SurfaceFrameToken = surfaceToken;
             this.Duration = duration;
             this.StartTimestamp = startTimestamp;
             this.EndTimestamp = endTimestamp;
             this.JankType = Common.StringIntern(JankType);
             this.JankTag = Common.StringIntern(JankTag);
-            this.AppOnTime = Common.StringIntern(AppOnTime);
             this.PresentType = Common.StringIntern(PresentType);
-            this.GpuComposition = Common.StringIntern(GpuComposition);
             this.PredictionType = Common.StringIntern(PredictionType);
+            this.OnTimeFinish = OnTimeFinish;
+            this.GpuComposition = GpuComposition;
         }
     }
 }

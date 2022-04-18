@@ -241,18 +241,20 @@ namespace PerfettoUnitTest
             var frameEvents = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFrameEvent>>(
                 new DataOutputPath(PerfettoPluginConstants.FrameEventCookerPath, nameof(PerfettoFrameEventCooker.FrameEvents)));
 
-            Assert.IsTrue(frameEvents.Count == 4827);
-            Assert.IsTrue(frameEvents[0].ProcessName == "com.android.systemui");
-            Assert.IsTrue(frameEvents[1].StartTimestamp.ToNanoseconds == 16666666);
-            Assert.IsTrue(frameEvents[3007].FrameType == "Actual");
-            Assert.IsTrue(frameEvents[3007].JankTag == "Self Jank");
-            Assert.IsTrue(frameEvents[3007].DisplayToken == 20016);
-            Assert.IsTrue(frameEvents[3926].GpuComposition == "0");
-            Assert.IsTrue(frameEvents[3926].PresentType == "Late Present");
-            Assert.IsTrue(frameEvents[3926].DisplayToken == 21423);
-            Assert.IsTrue(frameEvents[3926].PredictionType == "Valid Prediction");
-            Assert.IsTrue(frameEvents[3926].JankType == "SurfaceFlinger CPU Deadline Missed, App Deadline Missed, Buffer Stuffing");
-            Assert.IsTrue(frameEvents[3926].AppOnTime == "0");
+            Assert.IsTrue(frameEvents.Count == 1219);
+            Assert.IsTrue(frameEvents[0].ProcessName == "/system/bin/surfaceflinger");
+            Assert.IsTrue(frameEvents[1].StartTimestamp.ToNanoseconds == 7299914108);
+            Assert.IsTrue(frameEvents[930].FrameType == "Actual");
+            Assert.IsTrue(frameEvents[930].Upid == 1);
+            Assert.IsTrue(frameEvents[930].JankTag == "Self Jank");
+            Assert.IsTrue(frameEvents[930].SurfaceFrameToken == 0);
+            Assert.IsTrue(frameEvents[930].GpuComposition == "0");
+            Assert.IsTrue(frameEvents[930].PresentType == "Late Present");
+            Assert.IsTrue(frameEvents[930].DisplayFrameToken == 5329);
+            Assert.IsTrue(frameEvents[930].PredictionType == "Valid Prediction");
+            Assert.IsTrue(frameEvents[930].JankType == "SurfaceFlinger CPU Deadline Missed");
+            Assert.IsTrue(frameEvents[930].OnTimeFinish == "0");
+            Assert.IsTrue(frameEvents[930].Duration.ToNanoseconds == 28924900);
         }
     }
 }

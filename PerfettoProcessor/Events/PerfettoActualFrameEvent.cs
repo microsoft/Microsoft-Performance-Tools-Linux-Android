@@ -33,14 +33,14 @@ namespace PerfettoProcessor
         public string Category { get; set; }
         public int TrackId { get; set; }
         public int? ParentId { get; set; }
-        public long DisplayToken { get; set; }
-        public long SurfaceToken { get; set; }
+        public long DisplayFrameToken { get; set; }
+        public long SurfaceFrameToken { get; set; }
         public string LayerName { get; set; }
         public string PresentType { get; set; }
         public string JankType { get; set; }
         public string JankTag { get; set; }
         public string PredictionType { get; set; }
-        public int Upid { get; set; }
+        public uint Upid { get; set; }
         public int OnTimeFinish { get; set; }
         public int GpuComposition { get; set; }
 
@@ -89,13 +89,13 @@ namespace PerfettoProcessor
                             ParentId = (int)longVal;
                             break;
                         case "display_frame_token":
-                            DisplayToken = longVal;
+                            DisplayFrameToken = longVal;
                             break;
                         case "surface_frame_token":
-                            SurfaceToken = longVal;
+                            SurfaceFrameToken = longVal;
                             break;
                         case "upid":
-                            Upid = (int)longVal;
+                            Upid = (uint)longVal;
                             break;
                         case "on_time_finish":
                             OnTimeFinish = (int)longVal;
@@ -125,16 +125,16 @@ namespace PerfettoProcessor
                             LayerName = strVal;
                             break;
                         case "jank_type":
-                            JankType = strVal;
+                            JankType = Common.StringIntern(strVal);
                             break;
                         case "jank_tag":
-                            JankTag = strVal;
+                            JankTag = Common.StringIntern(strVal);
                             break;
                         case "prediction_type":
-                            PredictionType = strVal;
+                            PredictionType = Common.StringIntern(strVal);
                             break;
                         case "present_type":
-                            PresentType = strVal;
+                            PresentType = Common.StringIntern(strVal);
                             break;
                     }
                     break;

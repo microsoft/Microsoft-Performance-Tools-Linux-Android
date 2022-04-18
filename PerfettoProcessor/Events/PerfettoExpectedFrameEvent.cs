@@ -33,10 +33,10 @@ namespace PerfettoProcessor
         public string Category { get; set; }
         public int TrackId { get; set; }
         public int? ParentId { get; set; }
-        public int DisplayToken { get; set; }
-        public int SurfaceToken { get; set; }
+        public int DisplayFrameToken { get; set; }
+        public int SurfaceFrameToken { get; set; }
         public string LayerName { get; set; }
-        public int Upid { get; set; }
+        public uint Upid { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -83,13 +83,13 @@ namespace PerfettoProcessor
                             ParentId = (int)longVal;
                             break;
                         case "display_frame_token":
-                            DisplayToken = (int)longVal;
+                            DisplayFrameToken = (int)longVal;
                             break;
                         case "surface_frame_token":
-                            SurfaceToken = (int)longVal;
+                            SurfaceFrameToken = (int)longVal;
                             break;
                         case "upid":
-                            Upid = (int)longVal;
+                            Upid = (uint)longVal;
                             break;
                     }
 
