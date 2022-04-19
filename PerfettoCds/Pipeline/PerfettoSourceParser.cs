@@ -178,6 +178,8 @@ namespace PerfettoCds
                     new PerfettoStackProfileFrameEvent(),
                     new PerfettoStackProfileMappingEvent(),
                     new PerfettoStackProfileSymbolEvent(),
+                    new PerfettoActualFrameEvent(),
+                    new PerfettoExpectedFrameEvent()
                 };
 
                 // Increment progress for each table queried.

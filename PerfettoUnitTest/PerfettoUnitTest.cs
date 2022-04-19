@@ -57,6 +57,8 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.StackProfileFrameCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.StackProfileMappingCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.StackProfileSymbolCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ExpectedFrameCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ActualFrameCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
@@ -66,6 +68,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.FtraceEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuFrequencyEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.FrameEventCookerPath);
 
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
@@ -228,6 +231,30 @@ namespace PerfettoUnitTest
             Assert.IsTrue(logcatEventData.Count == 43);
             Assert.IsTrue(logcatEventData[0].Message == "type: 97 score: 0.8\n");
             Assert.IsTrue(logcatEventData[1].ProcessName == "Browser");
+        }
+
+        [TestMethod]
+        public void TestJankFrameTrace()
+        {
+            LoadTrace(@"..\..\..\..\TestData\Perfetto\jankFrame.pftrace");
+
+            var frameEvents = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoFrameEvent>>(
+                new DataOutputPath(PerfettoPluginConstants.FrameEventCookerPath, nameof(PerfettoFrameEventCooker.FrameEvents)));
+
+            Assert.IsTrue(frameEvents.Count == 1219);
+            Assert.IsTrue(frameEvents[0].ProcessName == "/system/bin/surfaceflinger");
+            Assert.IsTrue(frameEvents[1].StartTimestamp.ToNanoseconds == 7299914108);
+            Assert.IsTrue(frameEvents[930].FrameType == "Actual");
+            Assert.IsTrue(frameEvents[930].Upid == 1);
+            Assert.IsTrue(frameEvents[930].JankTag == "Self Jank");
+            Assert.IsTrue(frameEvents[930].SurfaceFrameToken == 0);
+            Assert.IsTrue(frameEvents[930].GpuComposition == "0");
+            Assert.IsTrue(frameEvents[930].PresentType == "Late Present");
+            Assert.IsTrue(frameEvents[930].DisplayFrameToken == 5329);
+            Assert.IsTrue(frameEvents[930].PredictionType == "Valid Prediction");
+            Assert.IsTrue(frameEvents[930].JankType == "SurfaceFlinger CPU Deadline Missed");
+            Assert.IsTrue(frameEvents[930].OnTimeFinish == "0");
+            Assert.IsTrue(frameEvents[930].Duration.ToNanoseconds == 28924900);
         }
     }
 }
