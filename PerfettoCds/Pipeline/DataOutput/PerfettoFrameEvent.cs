@@ -14,7 +14,7 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public string FrameType { get; }
         public string ProcessName { get; }
-        public long Upid { get; }
+        public uint Upid { get; }
         public long DisplayFrameToken { get; }
         public long SurfaceFrameToken { get; }
         public TimestampDelta Duration { get; }
@@ -31,7 +31,7 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public PerfettoFrameEvent(string FrameType,
             string processName,
-            long upid,
+            uint upid,
             long displayToken,
             long surfaceToken,
             TimestampDelta duration,
