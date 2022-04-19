@@ -15,7 +15,7 @@ using Utilities;
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
     /// <summary>
-    /// Pulls data from multiple individual SQL tables and joins them to create a frame event.
+    /// Pulls data from multiple individual SQL tables and joins them to create PerfettoFrameEvents.
     /// These frame events represent frames that were scheduled and then rendered by apps.
     /// </summary>
     public sealed class PerfettoFrameEventCooker : CookedDataReflector, ICompositeDataCookerDescriptor
@@ -57,8 +57,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var actualFrameData = requiredData.QueryOutput<ProcessedEventData<PerfettoActualFrameEvent>>(new DataOutputPath(PerfettoPluginConstants.ActualFrameCookerPath, nameof(PerfettoActualFrameCooker.ActualFrameEvents)));
             var expectedFrameData = requiredData.QueryOutput<ProcessedEventData<PerfettoExpectedFrameEvent>>(new DataOutputPath(PerfettoPluginConstants.ExpectedFrameCookerPath, nameof(PerfettoExpectedFrameCooker.ExpectedFrameEvents)));
 
-            // The sched slice data contains the timings, CPU, priority, and end state info. We get the process and thread from
-            // those respective tables
+            // Gather from both actual/expected tables and join with process info
             var joinedActual = from frame in actualFrameData
                                join process in processData on frame.Upid equals process.Upid into pd orderby frame.Id
                                from process in pd.DefaultIfEmpty()
@@ -68,7 +67,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                                from process in pd.DefaultIfEmpty()
                                select new { frame, process };
 
-            // Create events out of the joined results
+            // Create FrameEvents out of each type of event
             foreach (var result in joinedExpected)
             {
                 Timestamp startTimestamp = new Timestamp(result.frame.RelativeTimestamp);
