@@ -88,6 +88,12 @@ data_sources: {
         }
     }
 }`
+* Perfetto Jank Detection
+  * `data_sources: {
+    config {
+        name: "android.surfaceflinger.frametimeline"
+    }
+}`
 
 
 ## Additional Features
