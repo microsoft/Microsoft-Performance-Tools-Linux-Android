@@ -9,7 +9,7 @@
 > Tracing supported: 
 - [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
 - [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock)
-- [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Sampling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks, GPU Counters)
+- [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Sampling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks, GPU Counters, Jank Detection)
 
 > Logs supported: 
 - [Dmesg](https://en.wikipedia.org/wiki/Dmesg)
