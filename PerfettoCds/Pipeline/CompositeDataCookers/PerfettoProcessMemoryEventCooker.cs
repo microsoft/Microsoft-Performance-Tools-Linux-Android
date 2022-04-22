@@ -29,7 +29,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         {
             PerfettoPluginConstants.CounterCookerPath,
             PerfettoPluginConstants.ProcessCounterTrackCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath
+            PerfettoPluginConstants.ProcessRawCookerPath
         };
 
         [DataOutput]
@@ -46,7 +46,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Gather the data from all the SQL tables
             var counterData = requiredData.QueryOutput<ProcessedEventData<PerfettoCounterEvent>>(new DataOutputPath(PerfettoPluginConstants.CounterCookerPath, nameof(PerfettoCounterCooker.CounterEvents)));
             var processCounterTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessCounterTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCounterTrackCookerPath, nameof(PerfettoProcessCounterTrackCooker.ProcessCounterTrackEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
 
             // Join them all together
             // Counter table contains the memory count value, timestamp

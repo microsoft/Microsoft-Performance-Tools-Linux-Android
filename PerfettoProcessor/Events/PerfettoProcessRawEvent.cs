@@ -8,14 +8,14 @@ namespace PerfettoProcessor
     /// <summary>
     /// https://perfetto.dev/docs/analysis/sql-tables#process
     /// </summary>
-    public class PerfettoProcessEvent : PerfettoSqlEvent
+    public class PerfettoProcessRawEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoProcessEvent";
+        public const string Key = "PerfettoProcessRawEvent";
 
         public const string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
-        public long Upid { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }
+        public long Upid { get; set; }
         public long Pid { get; set; }
         public string Name { get; set; }
         public long? StartTimestamp { get; set; }

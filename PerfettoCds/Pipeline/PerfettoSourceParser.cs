@@ -163,7 +163,7 @@ namespace PerfettoCds
                     new PerfettoArgEvent(),
                     new PerfettoThreadTrackEvent(),
                     new PerfettoThreadEvent(),
-                    new PerfettoProcessEvent(),
+                    new PerfettoProcessRawEvent(),
                     new PerfettoSchedSliceEvent(),
                     new PerfettoAndroidLogEvent(),
                     new PerfettoRawEvent(),
@@ -201,6 +201,7 @@ namespace PerfettoCds
                     traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
                     var dateTimeQueryFinished = DateTime.UtcNow;
 
+                    // TODO log #events returned
                     logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
 
                     IncreaseProgress(queryProgressIncrease);

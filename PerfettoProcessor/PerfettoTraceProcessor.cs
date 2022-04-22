@@ -283,7 +283,7 @@ namespace PerfettoProcessor
                                 PerfettoArgEvent.Key => new PerfettoArgEvent(),
                                 PerfettoThreadTrackEvent.Key => new PerfettoThreadTrackEvent(),
                                 PerfettoThreadEvent.Key => new PerfettoThreadEvent(),
-                                PerfettoProcessEvent.Key => new PerfettoProcessEvent(),
+                                PerfettoProcessRawEvent.Key => new PerfettoProcessRawEvent(),
                                 PerfettoSchedSliceEvent.Key => new PerfettoSchedSliceEvent(),
                                 PerfettoAndroidLogEvent.Key => new PerfettoAndroidLogEvent(),
                                 PerfettoRawEvent.Key => new PerfettoRawEvent(),
@@ -303,6 +303,7 @@ namespace PerfettoProcessor
                                 PerfettoStackProfileSymbolEvent.Key => new PerfettoStackProfileSymbolEvent(),
                                 PerfettoActualFrameEvent.Key => new PerfettoActualFrameEvent(),
                                 PerfettoExpectedFrameEvent.Key => new PerfettoExpectedFrameEvent(),
+                                PerfettoPackageListEvent.Key => new PerfettoPackageListEvent(),
                                 _ => throw new Exception("Invalid event type"),
                             };
                         }

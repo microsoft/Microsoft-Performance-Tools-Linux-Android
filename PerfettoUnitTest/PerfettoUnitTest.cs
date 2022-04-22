@@ -44,7 +44,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.ArgCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ThreadTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ThreadCookerPath);
-                runtime.EnableCooker(PerfettoPluginConstants.ProcessCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessRawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.SchedSliceCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
@@ -59,9 +59,11 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.StackProfileSymbolCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ExpectedFrameCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ActualFrameCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.PackageListCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.GpuCountersEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSchedEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
@@ -163,6 +165,11 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
             Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
             Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
+
+            var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.ProcessEventCookerPath,
+                    nameof(PerfettoProcessEventCooker.ProcessEvents)));
         }
 
         [TestMethod]

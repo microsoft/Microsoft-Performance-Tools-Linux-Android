@@ -61,7 +61,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.ArgCookerPath,
             PerfettoPluginConstants.ThreadTrackCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessRawCookerPath,
             PerfettoPluginConstants.ProcessTrackCookerPath
         };
 
@@ -154,7 +154,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var argData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
             var processTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessTrackCookerPath, nameof(PerfettoProcessTrackCooker.ProcessTrackEvents)));
 
             // Join them all together
@@ -188,6 +188,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
 
                 string provider = string.Empty;
+
+                // TODO - Replace with Args.ParseArgs
                 List<string> argKeys = new List<string>();
                 List<string> values = new List<string>();
                 // Each event has multiple of these "debug annotations". They get stored in lists

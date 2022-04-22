@@ -13,35 +13,33 @@ using PerfettoProcessor;
 namespace PerfettoCds.Pipeline.SourceDataCookers
 {
     /// <summary>
-    /// Cooks the data from the Process table in Perfetto traces
+    /// Cooks the data from the package_list table in Perfetto traces
     /// </summary>
-    public sealed class PerfettoProcessCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
+    public sealed class PerfettoPackageListCooker : SourceDataCooker<PerfettoSqlEventKeyed, PerfettoSourceParser, string>
     {
-        public override string Description => "Processes events from the process Perfetto SQL table";
+        public override string Description => "Processes events from the package_list Perfetto SQL table";
 
         //
         //  The data this cooker outputs. Tables or other cookers can query for this data
         //  via the SDK runtime
         //
         [DataOutput]
-        public ProcessedEventData<PerfettoProcessEvent> ProcessEvents { get; }
+        public ProcessedEventData<PerfettoPackageListEvent> PackageListEvents { get; }
 
         // Instructs runtime to only send events with the given keys this data cooker
         public override ReadOnlyHashSet<string> DataKeys =>
-            new ReadOnlyHashSet<string>(new HashSet<string> { PerfettoPluginConstants.ProcessEvent });
+            new ReadOnlyHashSet<string>(new HashSet<string> { PerfettoPluginConstants.PackageListEvent });
 
 
-        public PerfettoProcessCooker() : base(PerfettoPluginConstants.ProcessCookerPath)
+        public PerfettoPackageListCooker() : base(PerfettoPluginConstants.PackageListCookerPath)
         {
-            this.ProcessEvents = new ProcessedEventData<PerfettoProcessEvent>();
+            this.PackageListEvents = new ProcessedEventData<PerfettoPackageListEvent>();
         }
 
         public override DataProcessingResult CookDataElement(PerfettoSqlEventKeyed perfettoEvent, PerfettoSourceParser context, CancellationToken cancellationToken)
         {
-            var newEvent = (PerfettoProcessEvent)perfettoEvent.SqlEvent;
-            newEvent.RelativeStartTimestamp = newEvent.StartTimestamp - context.FirstEventTimestamp.ToNanoseconds;
-            newEvent.RelativeEndTimestamp = newEvent.EndTimestamp - context.FirstEventTimestamp.ToNanoseconds;
-            this.ProcessEvents.AddEvent(newEvent);
+            var newEvent = (PerfettoPackageListEvent)perfettoEvent.SqlEvent;
+            this.PackageListEvents.AddEvent(newEvent);
 
             return DataProcessingResult.Processed;
         }
@@ -49,7 +47,7 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
         public override void EndDataCooking(CancellationToken cancellationToken)
         {
             base.EndDataCooking(cancellationToken);
-            this.ProcessEvents.FinalizeData();
+            this.PackageListEvents.FinalizeData();
         }
     }
 }
