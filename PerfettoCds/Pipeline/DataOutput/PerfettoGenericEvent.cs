@@ -27,6 +27,7 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         // From Process table
         public string Process { get; }
+        public string ProcessLabel { get; }
 
         // From Thread table
         public string Thread { get; }
@@ -50,6 +51,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             List<string> values,
             List<string> argKeys,
             string process,
+            string processLabel,
             string thread,
             string provider,
             PerfettoThreadTrackEvent threadTrack,
@@ -66,6 +68,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             Values = values.ToArray();
             ArgKeys = argKeys.ToArray();
             Process = Common.StringIntern(process);
+            ProcessLabel = Common.StringIntern(processLabel);
             Thread = Common.StringIntern(thread);
             Provider = Common.StringIntern(provider);
             ThreadTrack = threadTrack;

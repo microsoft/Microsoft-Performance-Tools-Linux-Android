@@ -1,4 +1,5 @@
 using System.IO;
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
@@ -170,6 +171,22 @@ namespace PerfettoUnitTest
                 new DataOutputPath(
                     PerfettoPluginConstants.ProcessEventCookerPath,
                     nameof(PerfettoProcessEventCooker.ProcessEvents)));
+
+            Assert.IsTrue(processEventData.Count == 121);
+            Assert.IsTrue(processEventData[1].AndroidAppId == 10135);
+            Assert.IsTrue(processEventData[1].Uid == 10135);
+            Assert.IsTrue(processEventData[1].CmdLine == "com.android.systemui");
+            Assert.IsTrue(processEventData[1].ParentUpid == 25);
+            Assert.IsTrue(processEventData[1].ParentProcess != null && processEventData[1].ParentProcess.Name == "zygote64");
+
+            Assert.IsTrue(processEventData[1].Pid == 980);
+            Assert.IsTrue(processEventData[1].Upid == 1);
+            Assert.IsTrue(processEventData[1].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
+            Assert.IsTrue(processEventData[1].EndTimestamp == new Timestamp(39446647558)); // NULL should be at trace stop
+
+            Assert.IsTrue(processEventData[119].StartTimestamp == new Timestamp(33970357558));
+            Assert.IsTrue(processEventData[119].EndTimestamp == new Timestamp(34203203358));
+            Assert.IsTrue(processEventData[119].ParentProcess != null && processEventData[119].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
         }
 
         [TestMethod]

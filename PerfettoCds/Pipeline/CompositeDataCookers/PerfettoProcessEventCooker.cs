@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Performance.SDK;
@@ -35,10 +36,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public ProcessedEventData<PerfettoProcessEvent> ProcessEvents { get; }
 
         /// <summary>
-        /// The highest number of fields found in any single event.
+        /// The highest number of arg fields found in any single event.
         /// </summary>
         [DataOutput]
-        public int MaximumEventFieldCount { get; private set; }
+        public int MaximumArgsEventFieldCount { get; private set; }
 
         public PerfettoProcessEventCooker() : base(PerfettoPluginConstants.ProcessEventCookerPath)
         {
@@ -60,13 +61,22 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          join arg in argData on process.ArgSetId equals arg.ArgSetId into args
                          join packageList in packageListData on process.Uid equals packageList.Uid into pld
                          from packageList in pld.DefaultIfEmpty()
-                         select new { process, args, packageList };
+                         join parentProcess in processData on process.ParentUpid equals parentProcess.Upid into pp
+                         from parentProcess in pp.DefaultIfEmpty()
+                         select new { process, args, packageList, parentProcess };
 
             // Create events out of the joined results
             foreach (var result in joined)
             {
-
                 var args = Args.ParseArgs(result.args);
+                MaximumArgsEventFieldCount = Math.Max(MaximumArgsEventFieldCount, args.ArgKeys.Count());
+
+                const string ChromeProcessLabel = "chrome.process_label[0]";
+                string processLabel = null;
+                if (args.ArgKeys.Contains(ChromeProcessLabel))
+                {
+                    processLabel = (string) args.Values[args.ArgKeys.IndexOf(ChromeProcessLabel)];
+                }
 
                 var ev = new PerfettoProcessEvent
                 (
@@ -75,14 +85,17 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     result.process.Upid,
                     result.process.Pid,
                     result.process.Name,
-                    result.process.StartTimestamp.HasValue ? new Timestamp(result.process.StartTimestamp.Value) : Timestamp.Zero,
-                    result.process.EndTimestamp.HasValue ? new Timestamp(result.process.EndTimestamp.Value) : Timestamp.MaxValue,
+                    processLabel,
+                    result.process.RelativeStartTimestamp.HasValue ? new Timestamp(result.process.RelativeStartTimestamp.Value) : Timestamp.Zero,
+                    result.process.RelativeEndTimestamp.HasValue ? new Timestamp(result.process.RelativeEndTimestamp.Value) : Timestamp.MaxValue,
                     result.process.ParentUpid,
+                    result.parentProcess,
                     result.process.Uid,
                     result.process.AndroidAppId,
                     result.process.CmdLine,
                     args.ArgKeys.ToArray(),
-                    args.Values.ToArray()
+                    args.Values.ToArray(),
+                    result.packageList
                 );
                 this.ProcessEvents.AddEvent(ev);
             }

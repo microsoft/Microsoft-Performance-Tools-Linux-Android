@@ -61,7 +61,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.ArgCookerPath,
             PerfettoPluginConstants.ThreadTrackCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessRawCookerPath,
+            PerfettoPluginConstants.ProcessEventCookerPath,
             PerfettoPluginConstants.ProcessTrackCookerPath
         };
 
@@ -154,7 +154,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var argData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessEventCookerPath, nameof(PerfettoProcessEventCooker.ProcessEvents)));
             var processTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessTrackCookerPath, nameof(PerfettoProcessTrackCooker.ProcessTrackEvents)));
 
             // Join them all together
@@ -232,6 +232,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 }
 
                 string processName = string.Empty;
+                string processLabel = string.Empty;
                 string threadName = string.Empty;
                 if (result.thread != null)
                 {
@@ -246,6 +247,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 else if (result.process != null)
                 {
                     processName = $"{result.process.Name} ({result.process.Pid})";
+                }
+
+                if (result.process != null)
+                {
+                    processLabel = result.process.Label;
                 }
 
                 int parentTreeDepthLevel = 0;
@@ -295,6 +301,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    values,
                    argKeys,
                    processName,
+                   processLabel,
                    threadName,
                    provider,
                    result.threadTrack,

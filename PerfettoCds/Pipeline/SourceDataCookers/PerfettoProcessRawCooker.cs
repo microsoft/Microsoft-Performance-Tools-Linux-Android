@@ -40,7 +40,9 @@ namespace PerfettoCds.Pipeline.SourceDataCookers
         {
             var newEvent = (PerfettoProcessRawEvent)perfettoEvent.SqlEvent;
             newEvent.RelativeStartTimestamp = newEvent.StartTimestamp - context.FirstEventTimestamp.ToNanoseconds;
-            newEvent.RelativeEndTimestamp = newEvent.EndTimestamp - context.FirstEventTimestamp.ToNanoseconds;
+            newEvent.RelativeEndTimestamp = newEvent.EndTimestamp.HasValue ?
+                                                newEvent.EndTimestamp - context.FirstEventTimestamp.ToNanoseconds :
+                                                (context.LastEventTimestamp - context.FirstEventTimestamp).ToNanoseconds;
             this.ProcessEvents.AddEvent(newEvent);
 
             return DataProcessingResult.Processed;

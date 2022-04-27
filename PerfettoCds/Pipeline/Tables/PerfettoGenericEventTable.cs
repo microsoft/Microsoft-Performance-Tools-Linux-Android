@@ -32,6 +32,10 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{b690f27e-7938-4e86-94ef-d048cbc476cc}"), "Process", "Name of the process"),
             new UIHints { Width = 210 });
 
+        private static readonly ColumnConfiguration ProcessLabelColConfig = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{043E8352-0543-4593-9F7A-04DBD0103A80}"), "ProcessLabel", "Label of the process"),
+            new UIHints { Width = 210, IsVisible = false });
+
         private static readonly ColumnConfiguration ThreadNameColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{dd1cf3f6-1cab-4012-bbdf-e99e920c4112}"), "Thread", "Name of the thread"),
             new UIHints { Width = 210 });
@@ -156,6 +160,15 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.Process));
             tableGenerator.AddColumn(processNameColumn);
 
+            var processLabelColumn = new DataColumn<string>(
+                ProcessLabelColConfig,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ProcessLabel));
+            tableGenerator.AddColumn(processLabelColumn);
+            if (events.Any(f => !String.IsNullOrWhiteSpace(f.ProcessLabel)))
+            {
+                ProcessLabelColConfig.DisplayHints.IsVisible = true;
+            }
+
             var threadNameColumn = new DataColumn<string>(
                 ThreadNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Thread));
@@ -254,6 +267,7 @@ namespace PerfettoCds.Pipeline.Tables
             {
                 ProviderColConfig,
                 ProcessNameColConfig,
+                ProcessLabelColConfig,
                 ThreadNameColConfig,
                 TableConfiguration.PivotColumn, // Columns before this get pivotted on
                 EventNameColConfig,
