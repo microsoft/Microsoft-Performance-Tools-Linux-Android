@@ -199,11 +199,10 @@ namespace PerfettoCds
 
                     // Run the query and process the events.
                     var dateTimeQueryStarted = DateTime.UtcNow;
-                    traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
+                    var rowCount = traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
                     var dateTimeQueryFinished = DateTime.UtcNow;
 
-                    // TODO log #events returned
-                    logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
+                    logger.Verbose($"Query for {query.GetEventKey()} returning {rowCount} rows completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
 
                     IncreaseProgress(queryProgressIncrease);
 

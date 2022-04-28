@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
@@ -8,6 +9,7 @@ using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
+using PerfettoCds.Pipeline.Tables;
 using PerfettoProcessor;
 
 namespace PerfettoUnitTest
@@ -73,6 +75,9 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FrameEventCookerPath);
 
+                // Enable tables
+                runtime.EnableTable(PerfettoProcessTable.TableDescriptor);
+                runtime.EnableTable(PerfettoPackageTable.TableDescriptor);
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
             }
@@ -178,7 +183,6 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processEventData[1].CmdLine == "com.android.systemui");
             Assert.IsTrue(processEventData[1].ParentUpid == 25);
             Assert.IsTrue(processEventData[1].ParentProcess != null && processEventData[1].ParentProcess.Name == "zygote64");
-
             Assert.IsTrue(processEventData[1].Pid == 980);
             Assert.IsTrue(processEventData[1].Upid == 1);
             Assert.IsTrue(processEventData[1].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
@@ -187,6 +191,17 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processEventData[119].StartTimestamp == new Timestamp(33970357558));
             Assert.IsTrue(processEventData[119].EndTimestamp == new Timestamp(34203203358));
             Assert.IsTrue(processEventData[119].ParentProcess != null && processEventData[119].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
+
+            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
+            Assert.IsTrue(processTable.RowCount == 121);
+
+            var packagesList = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPackageListEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.PackageListCookerPath,
+                    nameof(PerfettoPackageListCooker.PackageListEvents)));
+            Assert.IsTrue(packagesList.Count == 0);
+            var packageTable = RuntimeExecutionResults.BuildTable(PerfettoPackageTable.TableDescriptor);
+            Assert.IsTrue(packageTable.RowCount == 0);
         }
 
         [TestMethod]
@@ -255,6 +270,26 @@ namespace PerfettoUnitTest
             Assert.IsTrue(logcatEventData.Count == 43);
             Assert.IsTrue(logcatEventData[0].Message == "type: 97 score: 0.8\n");
             Assert.IsTrue(logcatEventData[1].ProcessName == "Browser");
+
+            // Processes
+            var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.ProcessEventCookerPath,
+                    nameof(PerfettoProcessEventCooker.ProcessEvents)));
+
+            Assert.IsTrue(processEventData.Count == 15);
+            Assert.IsNull(processEventData[14].AndroidAppId);
+            Assert.IsNull(processEventData[14].Uid);
+            Assert.IsNull(processEventData[14].CmdLine);
+            Assert.IsNull(processEventData[14].ParentUpid);
+            Assert.IsNull(processEventData[14].ParentProcess);
+            Assert.IsTrue(processEventData[14].Name == "Renderer");
+            Assert.IsTrue(processEventData[14].Pid == 17456);
+            Assert.IsTrue(processEventData[14].Upid == 14);
+            Assert.IsTrue(processEventData[14].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
+            Assert.IsTrue(processEventData[14].EndTimestamp == new Timestamp(40409516000)); // NULL should be at trace stop
+            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
+            Assert.IsTrue(processTable.RowCount == 15);
         }
 
         [TestMethod]
