@@ -11,7 +11,7 @@ namespace PerfettoProcessor
 
         public const string SqlQuery = "select utid, ts, dur, cpu, end_state, priority from sched_slice";
 
-        public int Utid { get; set; }
+        public uint Utid { get; set; }
         public long Timestamp { get; set; }
         public long RelativeTimestamp { get; set; }
         public long Duration { get; set; }
@@ -111,7 +111,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = (int)longVal;
+                            Utid = (uint)longVal;
                             break;
                         case "ts":
                             Timestamp = longVal;

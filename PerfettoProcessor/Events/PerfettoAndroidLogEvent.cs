@@ -17,7 +17,7 @@ namespace PerfettoProcessor
         public string PriorityString { get; set; }
         public string Tag { get; set; }
         public string  Message { get; set; }
-        public int Utid { get; set; }
+        public uint Utid { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -49,7 +49,7 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = (int)longVal;
+                            Utid = (uint)longVal;
                             break;
                         case "ts":
                             Timestamp = longVal;

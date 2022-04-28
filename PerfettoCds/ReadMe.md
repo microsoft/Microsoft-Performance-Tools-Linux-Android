@@ -12,13 +12,13 @@ See Perfetto documentation for more information on how to create [config files](
 See the ["Record new trace"](https://ui.perfetto.dev/#!/record) menu for a helpful guide on creating custom config files.
 
 ### Some config options for some event types we support
-* Generic Events
+* [Generic Events](https://perfetto.dev/docs/reference/trace-config-proto#DataSourceConfig)
   * `data_sources: {
   config {
     name: "My.Trace.Event"
   }
 }`
-* CPU Counters (coarse)
+* [CPU Counters (coarse)](https://perfetto.dev/docs/reference/trace-config-proto#SysStatsConfig)
   * `data_sources: {
     config {
         name: "linux.sys_stats"
@@ -29,7 +29,7 @@ See the ["Record new trace"](https://ui.perfetto.dev/#!/record) menu for a helpf
         }
     }
 }`
-* CPU Frequency Scaling
+* [CPU Frequency Scaling](https://perfetto.dev/docs/reference/trace-config-proto#FtraceConfig)
   * `data_sources: {
     config {
         name: "linux.ftrace"
@@ -40,7 +40,7 @@ See the ["Record new trace"](https://ui.perfetto.dev/#!/record) menu for a helpf
         }
     }
 }`
-* CPU Scheduler
+* [CPU Scheduler 1](https://perfetto.dev/docs/reference/trace-config-proto#ProcessStatsConfig) [2](https://perfetto.dev/docs/reference/trace-config-proto#FtraceConfig)
   * `data_sources: {
     config {
         name: "linux.process_stats"
@@ -66,7 +66,7 @@ data_sources: {
         }
     }
 }`
-* Perfetto Process Memory
+* [Perfetto Process Memory](https://perfetto.dev/docs/reference/trace-config-proto#SysStatsConfig)
   * `data_sources: {
     config {
         name: "linux.process_stats"
@@ -76,7 +76,7 @@ data_sources: {
         }
     }
 }`
-* Perfetto System Memory
+* [Perfetto System Memory](https://perfetto.dev/docs/reference/trace-config-proto#SysStatsConfig)
   * `data_sources: {
     config {
         name: "linux.sys_stats"
@@ -88,10 +88,20 @@ data_sources: {
         }
     }
 }`
-* Perfetto Jank Detection
+* [Perfetto Jank Detection]()
   * `data_sources: {
     config {
         name: "android.surfaceflinger.frametimeline"
+    }
+}`
+* [Perfetto Processes]()
+  * No specific config required to capture process info either for Android or Chromium
+* [Perfetto Android Packages](https://perfetto.dev/docs/reference/trace-config-proto#PackagesListConfig)
+  * `data_sources: {
+    config {
+        name: "android.packages_list"
+        packages_list_config {
+        }
     }
 }`
 

@@ -32,7 +32,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.StackProfileMappingCookerPath,
             PerfettoPluginConstants.StackProfileSymbolCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessRawCookerPath,
         };
 
         [DataOutput]
@@ -47,7 +47,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         {
             // Gather the data from all the SQL tables
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
 
             var perfSampleData = requiredData.QueryOutput<ProcessedEventData<PerfettoPerfSampleEvent>>(new DataOutputPath(PerfettoPluginConstants.PerfSampleCookerPath, nameof(PerfettoPerfSampleCooker.PerfSampleEvents)));
             var stackProfileCallSiteData = requiredData.QueryOutput<ProcessedEventData<PerfettoStackProfileCallSiteEvent>>(new DataOutputPath(PerfettoPluginConstants.StackProfileCallSiteCookerPath, nameof(PerfettoStackProfileCallSiteCooker.StackProfileCallSiteEvents)));

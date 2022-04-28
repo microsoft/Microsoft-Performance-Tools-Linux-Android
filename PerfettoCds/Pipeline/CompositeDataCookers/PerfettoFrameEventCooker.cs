@@ -30,7 +30,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public IReadOnlyCollection<DataCookerPath> RequiredDataCookers => new[]
         {
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessRawCookerPath,
             PerfettoPluginConstants.ActualFrameCookerPath,
             PerfettoPluginConstants.ExpectedFrameCookerPath
         };
@@ -48,11 +48,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         {
             // Gather the data from all the SQL tables
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
             PopulateFrameEvents(requiredData, threadData, processData);
         }
 
-        void PopulateFrameEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessEvent> processData)
+        void PopulateFrameEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessRawEvent> processData)
         {
             var actualFrameData = requiredData.QueryOutput<ProcessedEventData<PerfettoActualFrameEvent>>(new DataOutputPath(PerfettoPluginConstants.ActualFrameCookerPath, nameof(PerfettoActualFrameCooker.ActualFrameEvents)));
             var expectedFrameData = requiredData.QueryOutput<ProcessedEventData<PerfettoExpectedFrameEvent>>(new DataOutputPath(PerfettoPluginConstants.ExpectedFrameCookerPath, nameof(PerfettoExpectedFrameCooker.ExpectedFrameEvents)));

@@ -5,23 +5,28 @@ using Perfetto.Protos;
 
 namespace PerfettoProcessor
 {
-    public class PerfettoThreadEvent : PerfettoSqlEvent
+    /// <summary>
+    /// https://perfetto.dev/docs/analysis/sql-tables#process
+    /// </summary>
+    public class PerfettoProcessRawEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoThreadEvent";
+        public const string Key = "PerfettoProcessRawEvent";
 
-        public const string SqlQuery = "select utid, id, type, tid, name, start_ts, end_ts, upid, is_main_thread from thread";
-        public uint Utid { get; set; }
+        public const string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
         public long Id { get; set; }
         public string Type { get; set; }
-        public uint Tid { get; set; }
-        public string Name{ get; set; }
+        public uint Upid { get; set; }
+        public uint Pid { get; set; }
+        public string Name { get; set; }
         public long? StartTimestamp { get; set; }
         public long? RelativeStartTimestamp { get; set; }
-        public long? EndTimestamp { get; set; }
+        public long? EndTimestamp{ get; set; }
         public long? RelativeEndTimestamp { get; set; }
-
-        public uint? Upid { get; set; }
-        public uint? IsMainThread{ get; set; }
+        public uint? ParentUpid { get; set; }
+        public uint? Uid { get; set; }
+        public uint? AndroidAppId { get; set; }
+        public string CmdLine { get; set; }
+        public uint ArgSetId { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -49,20 +54,26 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "utid":
-                            Utid = (uint) longVal;
+                        case "upid":
+                            Upid = (uint) longVal;
                             break;
                         case "id":
                             Id = longVal;
                             break;
-                        case "upid":
-                            Upid = (uint) longVal;
+                        case "pid":
+                            Pid = (uint) longVal;
                             break;
-                        case "tid":
-                            Tid = (uint) longVal;
+                        case "uid":
+                            Uid = (uint) longVal;
                             break;
-                        case "is_main_thread":
-                            IsMainThread = (uint) longVal;
+                        case "parent_upid":
+                            ParentUpid = (uint) longVal;
+                            break;
+                        case "android_appid":
+                            AndroidAppId = (uint) longVal;
+                            break;
+                        case "arg_set_id":
+                            ArgSetId = (uint)longVal;
                             break;
                         case "start_ts":
                             StartTimestamp = longVal;
@@ -82,10 +93,14 @@ namespace PerfettoProcessor
                         case "type":
                             Type = strVal;
                             break;
+                        case "cmdline":
+                            CmdLine = strVal;
+                            break;
                         case "name":
                             Name = strVal;
                             break;
                     }
+
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
                     break;

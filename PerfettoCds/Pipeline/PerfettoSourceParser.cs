@@ -35,6 +35,7 @@ namespace PerfettoCds
         private double CurrentProgress;
 
         public Timestamp FirstEventTimestamp { get; private set; }
+        public Timestamp LastEventTimestamp { get; private set; }
 
         /// <summary>
         /// Increase the progress percentage by a fixed percent
@@ -163,7 +164,7 @@ namespace PerfettoCds
                     new PerfettoArgEvent(),
                     new PerfettoThreadTrackEvent(),
                     new PerfettoThreadEvent(),
-                    new PerfettoProcessEvent(),
+                    new PerfettoProcessRawEvent(),
                     new PerfettoSchedSliceEvent(),
                     new PerfettoAndroidLogEvent(),
                     new PerfettoRawEvent(),
@@ -198,10 +199,10 @@ namespace PerfettoCds
 
                     // Run the query and process the events.
                     var dateTimeQueryStarted = DateTime.UtcNow;
-                    traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
+                    var rowCount = traceProc.QueryTraceForEvents(query.GetSqlQuery(), query.GetEventKey(), EventCallback);
                     var dateTimeQueryFinished = DateTime.UtcNow;
 
-                    logger.Verbose($"Query for {query.GetEventKey()} completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
+                    logger.Verbose($"Query for {query.GetEventKey()} returning {rowCount} rows completed in {(dateTimeQueryFinished - dateTimeQueryStarted).TotalSeconds}s at {dateTimeQueryFinished.ToString("MM/dd/yyyy HH:mm:ss.fff")} UTC");
 
                     IncreaseProgress(queryProgressIncrease);
 
@@ -222,6 +223,7 @@ namespace PerfettoCds
                             // Get the delta between the first and last event
                             var eventDelta = new Timestamp(lastEventTime.ToNanoseconds - firstEventTime.ToNanoseconds);
                             this.FirstEventTimestamp = firstEventTime;
+                            this.LastEventTimestamp = lastEventTime;
 
                             // The starting UTC time is from the snapshot. We need to adjust it based on when the first event happened
                             // The highest precision DateTime has is ticks (a tick is a group of 100 nanoseconds)

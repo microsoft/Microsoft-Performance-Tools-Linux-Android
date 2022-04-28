@@ -20,7 +20,7 @@ namespace PerfettoCds
         public const string ArgCookerId = nameof(PerfettoArgCooker);
         public const string ThreadCookerId = nameof(PerfettoThreadCooker);
         public const string ThreadTrackCookerId = nameof(PerfettoThreadTrackCooker);
-        public const string ProcessCookerId = nameof(PerfettoProcessCooker);
+        public const string ProcessRawCookerId = nameof(PerfettoProcessRawCooker);
         public const string SchedSliceCookerId = nameof(PerfettoSchedSliceCooker);
         public const string AndroidLogCookerId = nameof(PerfettoAndroidLogCooker);
         public const string RawCookerId = nameof(PerfettoRawCooker);
@@ -37,9 +37,11 @@ namespace PerfettoCds
         public const string StackProfileSymbolCookerId = nameof(PerfettoStackProfileSymbolCooker);
         public const string ExpectedFrameCookerId = nameof(PerfettoExpectedFrameCooker);
         public const string ActualFrameCookerId = nameof(PerfettoActualFrameCooker);
+        public const string PackageListCookerId = nameof(PerfettoPackageListCooker);
 
         // ID for composite data cookers
         public const string GenericEventCookerId = nameof(PerfettoGenericEventCooker);
+        public const string ProcessEventCookerId = nameof(PerfettoProcessEventCooker);
         public const string CpuSchedEventCookerId = nameof(PerfettoCpuSchedEventCooker);
         public const string LogcatEventCookerId = nameof(PerfettoLogcatEventCooker);
         public const string FtraceEventCookerId = nameof(PerfettoFtraceEventCooker);
@@ -56,7 +58,7 @@ namespace PerfettoCds
         public const string ArgEvent = PerfettoArgEvent.Key;
         public const string ThreadTrackEvent = PerfettoThreadTrackEvent.Key;
         public const string ThreadEvent = PerfettoThreadEvent.Key;
-        public const string ProcessEvent = PerfettoProcessEvent.Key;
+        public const string ProcessEventRaw = PerfettoProcessRawEvent.Key;
         public const string SchedSliceEvent = PerfettoSchedSliceEvent.Key;
         public const string AndroidLogEvent = PerfettoAndroidLogEvent.Key;
         public const string RawEvent = PerfettoRawEvent.Key;
@@ -73,9 +75,11 @@ namespace PerfettoCds
         public const string StackProfileSymbolEvent = PerfettoStackProfileSymbolEvent.Key;
         public const string ExpectedFrameEvent = PerfettoExpectedFrameEvent.Key;
         public const string ActualFrameEvent = PerfettoActualFrameEvent.Key;
+        public const string PackageListEvent = PerfettoPackageListEvent.Key;
 
         // Output events for composite cookers
         public const string GenericEvent = nameof(PerfettoGenericEvent);
+        public const string ProcessEvent = nameof(PerfettoProcessEvent);
         public const string CpuSchedEvent = nameof(PerfettoCpuSchedEvent);
         public const string LogcatEvent = nameof(PerfettoLogcatEvent);
         public const string FtraceEvent = nameof(PerfettoFtraceEvent);
@@ -96,8 +100,8 @@ namespace PerfettoCds
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadTrackCookerId);
         public static readonly DataCookerPath ThreadCookerPath =
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ThreadCookerId);
-        public static readonly DataCookerPath ProcessCookerPath =
-            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessCookerId);
+        public static readonly DataCookerPath ProcessRawCookerPath =
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ProcessRawCookerId);
         public static readonly DataCookerPath SchedSliceCookerPath =
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.SchedSliceCookerId);
         public static readonly DataCookerPath AndroidLogCookerPath =
@@ -130,10 +134,14 @@ namespace PerfettoCds
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ExpectedFrameCookerId);
         public static readonly DataCookerPath ActualFrameCookerPath =
             DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.ActualFrameCookerId);
+        public static readonly DataCookerPath PackageListCookerPath =
+            DataCookerPath.ForSource(PerfettoPluginConstants.ParserId, PerfettoPluginConstants.PackageListCookerId);
 
         // Paths for composite cookers
         public static readonly DataCookerPath GenericEventCookerPath =
             DataCookerPath.ForComposite(PerfettoPluginConstants.GenericEventCookerId);
+        public static readonly DataCookerPath ProcessEventCookerPath =
+            DataCookerPath.ForComposite(PerfettoPluginConstants.ProcessEventCookerId);
         public static readonly DataCookerPath CpuSchedEventCookerPath =
             DataCookerPath.ForComposite(PerfettoPluginConstants.CpuSchedEventCookerId);
         public static readonly DataCookerPath LogcatEventCookerPath =

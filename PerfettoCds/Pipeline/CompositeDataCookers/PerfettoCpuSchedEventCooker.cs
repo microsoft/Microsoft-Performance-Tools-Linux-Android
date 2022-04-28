@@ -28,7 +28,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         public IReadOnlyCollection<DataCookerPath> RequiredDataCookers => new[]
         {
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessRawCookerPath,
             PerfettoPluginConstants.SchedSliceCookerPath,
             PerfettoPluginConstants.FtraceEventCookerPath
         };
@@ -49,11 +49,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         {
             // Gather the data from all the SQL tables
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
             PopulateCpuSchedulingEvents(requiredData, threadData, processData);
         }
 
-        void PopulateCpuSchedulingEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessEvent> processData)
+        void PopulateCpuSchedulingEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessRawEvent> processData)
         {
             var schedSliceData = requiredData.QueryOutput<ProcessedEventData<PerfettoSchedSliceEvent>>(new DataOutputPath(PerfettoPluginConstants.SchedSliceCookerPath, nameof(PerfettoSchedSliceCooker.SchedSliceEvents)));
 
@@ -138,31 +138,31 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             }
         }
 
-        void PopulateCpuWakeEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessEvent> processData)
+        void PopulateCpuWakeEvents(IDataExtensionRetrieval requiredData, ProcessedEventData<PerfettoThreadEvent> threadData, ProcessedEventData<PerfettoProcessRawEvent> processData)
         {
             var schedWakeData = requiredData.QueryOutput<ProcessedEventData<PerfettoFtraceEvent>>(new DataOutputPath(PerfettoPluginConstants.FtraceEventCookerPath, nameof(PerfettoFtraceEventCooker.FtraceEvents)))
                 .Where(f => f.Name == "sched_wakeup");
 
-            Dictionary<long, PerfettoThreadEvent> tidToThreadMap = threadData
+            Dictionary<uint, PerfettoThreadEvent> tidToThreadMap = threadData
                 .ToLookup(t => t.Tid)
                 .ToDictionary(tg => tg.Key, tg => tg.Last());
-            Dictionary<long, PerfettoProcessEvent> upidToProcessMap = processData
+            Dictionary<uint, PerfettoProcessRawEvent> upidToProcessMap = processData
                 .ToLookup(p => p.Upid)
                 .ToDictionary(pg => pg.Key, pg => pg.Last());
 
             // Create events out of the joined results
             foreach (var wake in schedWakeData)
             {
-                long wokenTid = long.Parse(wake.Values[1]); // This field name is pid but it is woken thread's Tid.
+                var wokenTid = uint.Parse(wake.Values[1]); // This field name is pid but it is woken thread's Tid.
                 PerfettoThreadEvent wokenThread = tidToThreadMap[wokenTid];
                 string wokenThreadName = wokenThread.Name;
-                long? wokenPid = wokenThread.Upid;
+                var wokenPid = wokenThread.Upid;
                 string wokenProcessName = wokenPid != null ? upidToProcessMap[wokenPid.Value].Name : wake.Values[0]; // This field name is comms but it is woken process name.
 
                 string wakerThreadName = wake.ThreadName;
-                long wakerTid = wake.Tid;
+                var wakerTid = wake.Tid;
                 PerfettoThreadEvent wakerThread = tidToThreadMap[wakerTid];
-                long? wakerPid = wakerThread.Upid;
+                var wakerPid = wakerThread.Upid;
                 string wakerProcessName = wakerPid != null ? upidToProcessMap[wakerPid.Value].Name : String.Empty;
 
                 PerfettoCpuWakeEvent ev = new PerfettoCpuWakeEvent

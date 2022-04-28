@@ -32,6 +32,10 @@ namespace PerfettoCds.Pipeline.Tables
             new ColumnMetadata(new Guid("{b690f27e-7938-4e86-94ef-d048cbc476cc}"), "Process", "Name of the process"),
             new UIHints { Width = 210 });
 
+        private static readonly ColumnConfiguration ProcessLabelColConfig = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{043E8352-0543-4593-9F7A-04DBD0103A80}"), "ProcessLabel", "Label of the process"),
+            new UIHints { Width = 210, IsVisible = false });
+
         private static readonly ColumnConfiguration ThreadNameColConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{dd1cf3f6-1cab-4012-bbdf-e99e920c4112}"), "Thread", "Name of the thread"),
             new UIHints { Width = 210 });
@@ -156,6 +160,15 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.Process));
             tableGenerator.AddColumn(processNameColumn);
 
+            var processLabelColumn = new DataColumn<string>(
+                ProcessLabelColConfig,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ProcessLabel));
+            tableGenerator.AddColumn(processLabelColumn);
+            if (events.Any(f => !String.IsNullOrWhiteSpace(f.ProcessLabel)))
+            {
+                ProcessLabelColConfig.DisplayHints.IsVisible = true;
+            }
+
             var threadNameColumn = new DataColumn<string>(
                 ThreadNameColConfig,
                 genericEventProjection.Compose((genericEvent) => genericEvent.Thread));
@@ -254,6 +267,7 @@ namespace PerfettoCds.Pipeline.Tables
             {
                 ProviderColConfig,
                 ProcessNameColConfig,
+                ProcessLabelColConfig,
                 ThreadNameColConfig,
                 TableConfiguration.PivotColumn, // Columns before this get pivotted on
                 EventNameColConfig,
@@ -287,14 +301,14 @@ namespace PerfettoCds.Pipeline.Tables
             // Process-Thread Activity config
             var processThreadActivityColumns = new List<ColumnConfiguration>(defaultColumns);
             processThreadActivityColumns.Remove(StartTimestampColConfig);
-            processThreadActivityColumns.Insert(8, StartTimestampColConfig);
+            processThreadActivityColumns.Insert(9, StartTimestampColConfig);
             processThreadActivityColumns.Remove(EndTimestampColConfig);
-            processThreadActivityColumns.Insert(9, EndTimestampColConfig);
+            processThreadActivityColumns.Insert(10, EndTimestampColConfig);
             processThreadActivityColumns.Add(CountSortedColConfig);
 
             // Different sorting than default
             processThreadActivityColumns.Remove(DurationColConfig);
-            processThreadActivityColumns.Insert(7, DurationNotSortedColConfig);
+            processThreadActivityColumns.Insert(8, DurationNotSortedColConfig);
             DurationNotSortedColConfig.DisplayHints.SortPriority = 1;
             DurationNotSortedColConfig.DisplayHints.SortOrder = SortOrder.Descending;
 
@@ -306,10 +320,10 @@ namespace PerfettoCds.Pipeline.Tables
 
             // Process-Thread-Name config
             var processThreadNameColumns = new List<ColumnConfiguration>(defaultColumns);
-            processThreadNameColumns.Insert(3, ParentDepthLevelColConfig);
+            processThreadNameColumns.Insert(4, ParentDepthLevelColConfig);
             processThreadNameColumns.Remove(EventNameColConfig);
-            processThreadNameColumns.Insert(4, EventNameColConfig);
-            processThreadNameColumns.Insert(9, ParentEventNameTreeBranchColConfig);
+            processThreadNameColumns.Insert(5, EventNameColConfig);
+            processThreadNameColumns.Insert(10, ParentEventNameTreeBranchColConfig);
             var processThreadNameConfig = new TableConfiguration("Process-Thread-Name")
             {
                 Columns = processThreadNameColumns,
@@ -318,10 +332,10 @@ namespace PerfettoCds.Pipeline.Tables
 
             // Process-Thread-Name by StartTime config
             var processThreadNameByStartTimeColumns = new List<ColumnConfiguration>(defaultColumns);
-            processThreadNameByStartTimeColumns.Insert(3, ParentDepthLevelColConfig);
+            processThreadNameByStartTimeColumns.Insert(4, ParentDepthLevelColConfig);
             processThreadNameByStartTimeColumns.Remove(EventNameColConfig);
-            processThreadNameByStartTimeColumns.Insert(4, EventNameColConfig);
-            processThreadNameByStartTimeColumns.Insert(9, ParentEventNameTreeBranchColConfig);
+            processThreadNameByStartTimeColumns.Insert(5, EventNameColConfig);
+            processThreadNameByStartTimeColumns.Insert(10, ParentEventNameTreeBranchColConfig);
             processThreadNameByStartTimeColumns.Remove(EndTimestampColConfig);
             processThreadNameByStartTimeColumns.Insert(processThreadNameByStartTimeColumns.Count - 2, EndTimestampColConfig);
 
@@ -333,9 +347,9 @@ namespace PerfettoCds.Pipeline.Tables
 
             // Process-Thread-ParentNameTree config
             var processThreadNameTreeColumns = new List<ColumnConfiguration>(defaultColumns);
-            processThreadNameTreeColumns.Insert(3, ParentEventNameTreeBranchColConfig);
-            processThreadNameTreeColumns.Insert(9, ParentDepthLevelColConfig);
-            processThreadNameTreeColumns.Insert(10, ParentEventNameTreeBranchColConfig);
+            processThreadNameTreeColumns.Insert(4, ParentEventNameTreeBranchColConfig);
+            processThreadNameTreeColumns.Insert(10, ParentDepthLevelColConfig);
+            processThreadNameTreeColumns.Insert(11, ParentEventNameTreeBranchColConfig);
             var processThreadParentNameTreeConfig = new TableConfiguration("Process-Thread-ParentNameTree")
             {
                 Columns = processThreadNameTreeColumns,

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
@@ -7,6 +9,7 @@ using PerfettoCds;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
+using PerfettoCds.Pipeline.Tables;
 using PerfettoProcessor;
 
 namespace PerfettoUnitTest
@@ -44,7 +47,7 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.ArgCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ThreadTrackCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ThreadCookerPath);
-                runtime.EnableCooker(PerfettoPluginConstants.ProcessCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessRawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.SchedSliceCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.RawCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CounterCookerPath);
@@ -59,9 +62,11 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.StackProfileSymbolCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ExpectedFrameCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.ActualFrameCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.PackageListCookerPath);
 
                 // Enable the composite data cookers
                 runtime.EnableCooker(PerfettoPluginConstants.GenericEventCookerPath);
+                runtime.EnableCooker(PerfettoPluginConstants.ProcessEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.GpuCountersEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSchedEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.LogcatEventCookerPath);
@@ -70,6 +75,9 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FrameEventCookerPath);
 
+                // Enable tables
+                runtime.EnableTable(PerfettoProcessTable.TableDescriptor);
+                runtime.EnableTable(PerfettoPackageTable.TableDescriptor);
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
             }
@@ -163,6 +171,37 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
             Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
             Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
+
+            var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.ProcessEventCookerPath,
+                    nameof(PerfettoProcessEventCooker.ProcessEvents)));
+
+            Assert.IsTrue(processEventData.Count == 121);
+            Assert.IsTrue(processEventData[1].AndroidAppId == 10135);
+            Assert.IsTrue(processEventData[1].Uid == 10135);
+            Assert.IsTrue(processEventData[1].CmdLine == "com.android.systemui");
+            Assert.IsTrue(processEventData[1].ParentUpid == 25);
+            Assert.IsTrue(processEventData[1].ParentProcess != null && processEventData[1].ParentProcess.Name == "zygote64");
+            Assert.IsTrue(processEventData[1].Pid == 980);
+            Assert.IsTrue(processEventData[1].Upid == 1);
+            Assert.IsTrue(processEventData[1].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
+            Assert.IsTrue(processEventData[1].EndTimestamp == new Timestamp(39446647558)); // NULL should be at trace stop
+
+            Assert.IsTrue(processEventData[119].StartTimestamp == new Timestamp(33970357558));
+            Assert.IsTrue(processEventData[119].EndTimestamp == new Timestamp(34203203358));
+            Assert.IsTrue(processEventData[119].ParentProcess != null && processEventData[119].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
+
+            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
+            Assert.IsTrue(processTable.RowCount == 121);
+
+            var packagesList = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPackageListEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.PackageListCookerPath,
+                    nameof(PerfettoPackageListCooker.PackageListEvents)));
+            Assert.IsTrue(packagesList.Count == 0);
+            var packageTable = RuntimeExecutionResults.BuildTable(PerfettoPackageTable.TableDescriptor);
+            Assert.IsTrue(packageTable.RowCount == 0);
         }
 
         [TestMethod]
@@ -231,6 +270,26 @@ namespace PerfettoUnitTest
             Assert.IsTrue(logcatEventData.Count == 43);
             Assert.IsTrue(logcatEventData[0].Message == "type: 97 score: 0.8\n");
             Assert.IsTrue(logcatEventData[1].ProcessName == "Browser");
+
+            // Processes
+            var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
+                new DataOutputPath(
+                    PerfettoPluginConstants.ProcessEventCookerPath,
+                    nameof(PerfettoProcessEventCooker.ProcessEvents)));
+
+            Assert.IsTrue(processEventData.Count == 15);
+            Assert.IsNull(processEventData[14].AndroidAppId);
+            Assert.IsNull(processEventData[14].Uid);
+            Assert.IsNull(processEventData[14].CmdLine);
+            Assert.IsNull(processEventData[14].ParentUpid);
+            Assert.IsNull(processEventData[14].ParentProcess);
+            Assert.IsTrue(processEventData[14].Name == "Renderer");
+            Assert.IsTrue(processEventData[14].Pid == 17456);
+            Assert.IsTrue(processEventData[14].Upid == 14);
+            Assert.IsTrue(processEventData[14].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
+            Assert.IsTrue(processEventData[14].EndTimestamp == new Timestamp(40409516000)); // NULL should be at trace stop
+            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
+            Assert.IsTrue(processTable.RowCount == 15);
         }
 
         [TestMethod]

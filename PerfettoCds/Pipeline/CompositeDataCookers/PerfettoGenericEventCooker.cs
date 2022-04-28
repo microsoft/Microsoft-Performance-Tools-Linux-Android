@@ -61,7 +61,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             PerfettoPluginConstants.ArgCookerPath,
             PerfettoPluginConstants.ThreadTrackCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessEventCookerPath,
             PerfettoPluginConstants.ProcessTrackCookerPath
         };
 
@@ -154,7 +154,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var argData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
             var threadTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadTrackCookerPath, nameof(PerfettoThreadTrackCooker.ThreadTrackEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessEventCookerPath, nameof(PerfettoProcessEventCooker.ProcessEvents)));
             var processTrackData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessTrackEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessTrackCookerPath, nameof(PerfettoProcessTrackCooker.ProcessTrackEvents)));
 
             // Join them all together
@@ -173,11 +173,13 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          from thread in td.DefaultIfEmpty()
                          join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd
                          from threadProcess in pd.DefaultIfEmpty()
+                         join threadProcessProcess in processData on threadProcess?.Upid equals threadProcessProcess.Upid into pd1
+                         from threadProcessProcess in pd1.DefaultIfEmpty()
                          join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd
                          from processTrack in ptd.DefaultIfEmpty()
-                         join process in processData on processTrack?.Upid equals process.Upid into pd2
-                         from process in pd2.DefaultIfEmpty()
-                         select new { slice, args, threadTrack, thread, threadProcess, process };
+                         join processTrackProcess in processData on processTrack?.Upid equals processTrackProcess.Upid into pd2
+                         from processTrackProcess in pd2.DefaultIfEmpty()
+                         select new { slice, args, threadTrack, thread, threadProcess, threadProcessProcess, processTrackProcess };
 
             var longestRelTS = joined.Max(f => f.slice?.RelativeTimestamp);
             var longestEndTs = longestRelTS.HasValue ? new Timestamp(longestRelTS.Value) : Timestamp.MaxValue;
@@ -188,6 +190,8 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
 
                 string provider = string.Empty;
+
+                // TODO - Replace with Args.ParseArgs
                 List<string> argKeys = new List<string>();
                 List<string> values = new List<string>();
                 // Each event has multiple of these "debug annotations". They get stored in lists
@@ -230,6 +234,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 }
 
                 string processName = string.Empty;
+                string processLabel = string.Empty;
                 string threadName = string.Empty;
                 if (result.thread != null)
                 {
@@ -241,9 +246,18 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 {
                     processName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
                 }
-                else if (result.process != null)
+                else if (result.processTrackProcess != null)
                 {
-                    processName = $"{result.process.Name} ({result.process.Pid})";
+                    processName = $"{result.processTrackProcess.Name} ({result.processTrackProcess.Pid})";
+                }
+
+                if (result.threadProcessProcess != null)
+                {
+                    processLabel = result.threadProcessProcess.Label;
+                }
+                else if (result.processTrackProcess != null)
+                {
+                    processLabel = result.processTrackProcess.Label;
                 }
 
                 int parentTreeDepthLevel = 0;
@@ -293,6 +307,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                    values,
                    argKeys,
                    processName,
+                   processLabel,
                    threadName,
                    provider,
                    result.threadTrack,

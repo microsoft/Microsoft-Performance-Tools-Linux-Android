@@ -247,13 +247,15 @@ namespace PerfettoProcessor
         /// <param name="sqlQuery">The query to perform against the loaded trace in trace_processor_shell</param>
         /// <param name="eventKey">The event key that corresponds to the type of PerfettoSqlEvent to process for this query</param>
         /// <param name="eventCallback">Completed PerfettoSqlEvents will be sent here</param>
-        public void QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent> eventCallback)
+        /// <returns>Count of rows from query result</returns>
+        public long QueryTraceForEvents(string sqlQuery, string eventKey, Action<PerfettoSqlEvent> eventCallback)
         {
+            long eventCount = 0;
             var rpcs = QueryTrace(sqlQuery);
 
             if (rpcs.Count == 0)
             {
-                return;
+                return eventCount;
             }
 
             // Column information is only available in first result
@@ -283,7 +285,7 @@ namespace PerfettoProcessor
                                 PerfettoArgEvent.Key => new PerfettoArgEvent(),
                                 PerfettoThreadTrackEvent.Key => new PerfettoThreadTrackEvent(),
                                 PerfettoThreadEvent.Key => new PerfettoThreadEvent(),
-                                PerfettoProcessEvent.Key => new PerfettoProcessEvent(),
+                                PerfettoProcessRawEvent.Key => new PerfettoProcessRawEvent(),
                                 PerfettoSchedSliceEvent.Key => new PerfettoSchedSliceEvent(),
                                 PerfettoAndroidLogEvent.Key => new PerfettoAndroidLogEvent(),
                                 PerfettoRawEvent.Key => new PerfettoRawEvent(),
@@ -303,6 +305,7 @@ namespace PerfettoProcessor
                                 PerfettoStackProfileSymbolEvent.Key => new PerfettoStackProfileSymbolEvent(),
                                 PerfettoActualFrameEvent.Key => new PerfettoActualFrameEvent(),
                                 PerfettoExpectedFrameEvent.Key => new PerfettoExpectedFrameEvent(),
+                                PerfettoPackageListEvent.Key => new PerfettoPackageListEvent(),
                                 _ => throw new Exception("Invalid event type"),
                             };
                         }
@@ -320,10 +323,12 @@ namespace PerfettoProcessor
                             eventCallback(ev);
 
                             ev = null;
+                            eventCount++;
                         }
                     }
                 }
             }
+            return eventCount;
         }
 
         public void CloseTraceConnection()

@@ -30,7 +30,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
         {
             PerfettoPluginConstants.RawCookerPath,
             PerfettoPluginConstants.ThreadCookerPath,
-            PerfettoPluginConstants.ProcessCookerPath,
+            PerfettoPluginConstants.ProcessRawCookerPath,
             PerfettoPluginConstants.ArgCookerPath
         };
 
@@ -54,7 +54,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Gather the data from all the SQL tables
             var rawData = requiredData.QueryOutput<ProcessedEventData<PerfettoRawEvent>>(new DataOutputPath(PerfettoPluginConstants.RawCookerPath, nameof(PerfettoRawCooker.RawEvents)));
             var threadData = requiredData.QueryOutput<ProcessedEventData<PerfettoThreadEvent>>(new DataOutputPath(PerfettoPluginConstants.ThreadCookerPath, nameof(PerfettoThreadCooker.ThreadEvents)));
-            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessCookerPath, nameof(PerfettoProcessCooker.ProcessEvents)));
+            var processData = requiredData.QueryOutput<ProcessedEventData<PerfettoProcessRawEvent>>(new DataOutputPath(PerfettoPluginConstants.ProcessRawCookerPath, nameof(PerfettoProcessRawCooker.ProcessEvents)));
             var argsData = requiredData.QueryOutput<ProcessedEventData<PerfettoArgEvent>>(new DataOutputPath(PerfettoPluginConstants.ArgCookerPath, nameof(PerfettoArgCooker.ArgEvents)));
 
             // Join them all together

@@ -15,7 +15,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string ProcessFormattedName { get; }
         public string ThreadFormattedName { get; }
         public string ThreadName { get; }
-        public long Tid { get; }
+        public uint Tid { get; }
         public uint Cpu { get; }
         // Name of the ftrace event
         public string Name { get; }
@@ -28,7 +28,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             string processFormattedName,
             string threadFormattedName,
             string threadName,
-            long tid,
+            uint tid,
             uint cpu,
             string name,
             List<string> values,

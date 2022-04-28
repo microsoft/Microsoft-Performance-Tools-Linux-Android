@@ -2,31 +2,45 @@
 // Licensed under the MIT License.
 using System;
 using Perfetto.Protos;
+using Utilities;
 
 namespace PerfettoProcessor
 {
     /// <summary>
-    /// https://perfetto.dev/docs/analysis/sql-tables#process
+    /// https://perfetto.dev/docs/analysis/sql-tables#package_list
     /// </summary>
-    public class PerfettoProcessEvent : PerfettoSqlEvent
+    public class PerfettoPackageListEvent : PerfettoSqlEvent
     {
-        public const string Key = "PerfettoProcessEvent";
+        public const string Key = "PerfettoPackageListEvent";
 
-        public const string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
-        public long Upid { get; set; }
-        public long Id { get; set; }
+        public const string SqlQuery = "select id, type, package_name, uid, debuggable, profileable_from_shell, version_code from package_list order by id";
+        public int Id { get; set; }
         public string Type { get; set; }
-        public long Pid { get; set; }
-        public string Name { get; set; }
-        public long? StartTimestamp { get; set; }
-        public long? RelativeStartTimestamp { get; set; }
-        public long? EndTimestamp{ get; set; }
-        public long? RelativeEndTimestamp { get; set; }
-        public long? ParentUpid { get; set; }
-        public long? Uid { get; set; }
-        public long? AndroidAppId { get; set; }
-        public string CmdLine { get; set; }
-        public uint ArgSetId { get; set; }
+
+        /// <summary>
+        /// name of the package, e.g. com.google.android.gm.
+        /// </summary>
+        public string PackageName { get; set; }
+
+        /// <summary>
+        /// UID processes of this package run as.
+        /// </summary>
+        public uint Uid { get; set; }  // Probably doc'ed incorrectly as a long since every other uid in Perfetto is uint
+
+        /// <summary>
+        /// bool whether this app is debuggable.
+        /// </summary>
+        public bool Debuggable { get; set; }
+
+        /// <summary>
+        /// bool whether this app is profileable.
+        /// </summary>
+        public bool ProfileableFromShell { get; set; }
+
+        /// <summary>
+        /// versionCode from the APK.
+        /// </summary>
+        public long VersionCode { get; set; }
 
         public override string GetSqlQuery()
         {
@@ -54,32 +68,20 @@ namespace PerfettoProcessor
                     var longVal = batch.VarintCells[counters.IntCounter++];
                     switch (col)
                     {
-                        case "upid":
-                            Upid = longVal;
-                            break;
                         case "id":
-                            Id = longVal;
-                            break;
-                        case "pid":
-                            Pid = longVal;
+                            Id = (int)longVal;
                             break;
                         case "uid":
-                            Uid = longVal;
+                            Uid = (uint) longVal;
                             break;
-                        case "parent_upid":
-                            ParentUpid = longVal;
+                        case "debuggable":
+                            Debuggable = Convert.ToBoolean(longVal);
                             break;
-                        case "android_appid":
-                            AndroidAppId = longVal;
+                        case "profileable_from_shell":
+                            ProfileableFromShell = Convert.ToBoolean(longVal);
                             break;
-                        case "arg_set_id":
-                            ArgSetId = (uint)longVal;
-                            break;
-                        case "start_ts":
-                            StartTimestamp = longVal;
-                            break;
-                        case "end_ts":
-                            EndTimestamp = longVal;
+                        case "version_code":
+                            VersionCode = longVal;
                             break;
                     }
 
@@ -87,20 +89,16 @@ namespace PerfettoProcessor
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellFloat64:
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellString:
-                    var strVal = stringCells[counters.StringCounter++];
+                    var strVal = Common.StringIntern(stringCells[counters.StringCounter++]);
                     switch (col)
                     {
                         case "type":
                             Type = strVal;
                             break;
-                        case "cmdline":
-                            CmdLine = strVal;
-                            break;
-                        case "name":
-                            Name = strVal;
+                        case "package_name":
+                            PackageName = strVal;
                             break;
                     }
-
                     break;
                 case Perfetto.Protos.QueryResult.Types.CellsBatch.Types.CellType.CellBlob:
                     break;
