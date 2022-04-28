@@ -25,7 +25,7 @@ namespace PerfettoProcessor
         /// <summary>
         /// UID processes of this package run as.
         /// </summary>
-        public long Uid { get; set; }
+        public uint Uid { get; set; }  // Probably doc'ed incorrectly as a long since every other uid in Perfetto is uint
 
         /// <summary>
         /// bool whether this app is debuggable.
@@ -72,7 +72,7 @@ namespace PerfettoProcessor
                             Id = (int)longVal;
                             break;
                         case "uid":
-                            Uid = longVal;
+                            Uid = (uint) longVal;
                             break;
                         case "debuggable":
                             Debuggable = Convert.ToBoolean(longVal);

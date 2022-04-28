@@ -10,18 +10,18 @@ namespace PerfettoProcessor
         public const string Key = "PerfettoThreadEvent";
 
         public const string SqlQuery = "select utid, id, type, tid, name, start_ts, end_ts, upid, is_main_thread from thread";
-        public long Utid { get; set; }
+        public uint Utid { get; set; }
         public long Id { get; set; }
         public string Type { get; set; }
-        public long Tid { get; set; }
+        public uint Tid { get; set; }
         public string Name{ get; set; }
         public long? StartTimestamp { get; set; }
         public long? RelativeStartTimestamp { get; set; }
         public long? EndTimestamp { get; set; }
         public long? RelativeEndTimestamp { get; set; }
 
-        public long? Upid { get; set; }
-        public long? IsMainThread{ get; set; }
+        public uint? Upid { get; set; }
+        public uint? IsMainThread{ get; set; }
 
         public override string GetSqlQuery()
         {
@@ -50,19 +50,19 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "utid":
-                            Utid = longVal;
+                            Utid = (uint) longVal;
                             break;
                         case "id":
                             Id = longVal;
                             break;
                         case "upid":
-                            Upid = longVal;
+                            Upid = (uint) longVal;
                             break;
                         case "tid":
-                            Tid = longVal;
+                            Tid = (uint) longVal;
                             break;
                         case "is_main_thread":
-                            IsMainThread = longVal;
+                            IsMainThread = (uint) longVal;
                             break;
                         case "start_ts":
                             StartTimestamp = longVal;

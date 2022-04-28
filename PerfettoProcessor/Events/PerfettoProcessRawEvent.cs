@@ -15,16 +15,16 @@ namespace PerfettoProcessor
         public const string SqlQuery = "select upid, id, type, pid, name, start_ts, end_ts, parent_upid, uid, android_appid, cmdline, arg_set_id from process";
         public long Id { get; set; }
         public string Type { get; set; }
-        public long Upid { get; set; }
-        public long Pid { get; set; }
+        public uint Upid { get; set; }
+        public uint Pid { get; set; }
         public string Name { get; set; }
         public long? StartTimestamp { get; set; }
         public long? RelativeStartTimestamp { get; set; }
         public long? EndTimestamp{ get; set; }
         public long? RelativeEndTimestamp { get; set; }
-        public long? ParentUpid { get; set; }
-        public long? Uid { get; set; }
-        public long? AndroidAppId { get; set; }
+        public uint? ParentUpid { get; set; }
+        public uint? Uid { get; set; }
+        public uint? AndroidAppId { get; set; }
         public string CmdLine { get; set; }
         public uint ArgSetId { get; set; }
 
@@ -55,22 +55,22 @@ namespace PerfettoProcessor
                     switch (col)
                     {
                         case "upid":
-                            Upid = longVal;
+                            Upid = (uint) longVal;
                             break;
                         case "id":
                             Id = longVal;
                             break;
                         case "pid":
-                            Pid = longVal;
+                            Pid = (uint) longVal;
                             break;
                         case "uid":
-                            Uid = longVal;
+                            Uid = (uint) longVal;
                             break;
                         case "parent_upid":
-                            ParentUpid = longVal;
+                            ParentUpid = (uint) longVal;
                             break;
                         case "android_appid":
-                            AndroidAppId = longVal;
+                            AndroidAppId = (uint) longVal;
                             break;
                         case "arg_set_id":
                             ArgSetId = (uint)longVal;

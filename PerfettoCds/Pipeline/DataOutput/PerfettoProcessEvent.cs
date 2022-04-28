@@ -10,7 +10,7 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// <summary>
     /// Contains information of processes seen during the trace (composite)
     /// </summary>
-    public class PerfettoProcessEvent
+    public class PerfettoProcessEvent : IStartTimestamp, IEndTimestamp
     {
         public long Id { get; }
         public string Type { get; }
@@ -19,12 +19,12 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// Unique process id. This is != the OS pid.This is a monotonic number associated to each process
         /// The OS process id(pid) cannot be used as primary key because tids and pids are recycled by most kernels.
         /// </summary>
-        public long Upid { get; }
+        public uint Upid { get; }
 
         /// <summary>
         /// The OS id for this process. Note: this is notunique over the lifetime of the trace so cannot be used as a primary key.
         /// </summary>
-        public long Pid { get; }
+        public uint Pid { get; }
 
         /// <summary>
         /// The name of the process. Can be populated from manysources (e.g. ftrace, /proc scraping, track event etc).
@@ -49,7 +49,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// <summary>
         /// The upid of the process which caused this process to be spawned
         /// </summary>
-        public long? ParentUpid { get; }
+        public uint? ParentUpid { get; }
 
         /// <summary>
         /// The parent process which caused this process to be spawned
@@ -59,12 +59,12 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// <summary>
         /// The Unix user id of the process
         /// </summary>
-        public long? Uid { get; }
+        public uint? Uid { get; }
 
         /// <summary>
         /// Android appid of this process.
         /// </summary>
-        public long? AndroidAppId { get; }
+        public uint? AndroidAppId { get; }
 
         /// <summary>
         /// /proc/cmdline for this process.
@@ -79,7 +79,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public object[] Values { get; }
         public PerfettoPackageListEvent PackageList { get; }
 
-        public PerfettoProcessEvent(long id, string type, long upid, long pid, string name, string label, Timestamp startTimestamp, Timestamp endTimestamp, long? parentUpid, PerfettoProcessRawEvent parentProcess, long? uid, long? androidAppId, string cmdLine, string[] argKeys, object[] values, PerfettoPackageListEvent packageList)
+        public PerfettoProcessEvent(long id, string type, uint upid, uint pid, string name, string label, Timestamp startTimestamp, Timestamp endTimestamp, uint? parentUpid, PerfettoProcessRawEvent parentProcess, uint? uid, uint? androidAppId, string cmdLine, string[] argKeys, object[] values, PerfettoPackageListEvent packageList)
         {
             Id = id;
             Type = type;

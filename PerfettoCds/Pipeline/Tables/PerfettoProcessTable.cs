@@ -27,7 +27,7 @@ namespace PerfettoCds.Pipeline.Tables
         public const int AbsoluteMaxFields = 20;
 
         private static readonly ColumnConfiguration ProcessNameColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{96C00E4C-9544-442D-BA36-8BBE980BF1D6}"), "ProcessName", "The name of the process. Can be populated from manysources (e.g. ftrace, /proc scraping, track event etc)"),
+            new ColumnMetadata(new Guid("{96C00E4C-9544-442D-BA36-8BBE980BF1D6}"), "ProcessName", "The name of the process. Can be populated from many sources (e.g. ftrace, /proc scraping, track event etc)"),
             new UIHints { Width = 210 });
         private static readonly ColumnConfiguration ProcessLabelColumn = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{57CE4F9E-A687-45C8-9A7B-CA7824773AD0}"), "ProcessLabel", "The process label"),
