@@ -173,11 +173,13 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                          from thread in td.DefaultIfEmpty()
                          join threadProcess in processData on thread?.Upid equals threadProcess.Upid into pd
                          from threadProcess in pd.DefaultIfEmpty()
+                         join threadProcessProcess in processData on threadProcess?.Upid equals threadProcessProcess.Upid into pd1
+                         from threadProcessProcess in pd1.DefaultIfEmpty()
                          join processTrack in processTrackData on slice.TrackId equals processTrack.Id into ptd
                          from processTrack in ptd.DefaultIfEmpty()
-                         join process in processData on processTrack?.Upid equals process.Upid into pd2
-                         from process in pd2.DefaultIfEmpty()
-                         select new { slice, args, threadTrack, thread, threadProcess, process };
+                         join processTrackProcess in processData on processTrack?.Upid equals processTrackProcess.Upid into pd2
+                         from processTrackProcess in pd2.DefaultIfEmpty()
+                         select new { slice, args, threadTrack, thread, threadProcess, threadProcessProcess, processTrackProcess };
 
             var longestRelTS = joined.Max(f => f.slice?.RelativeTimestamp);
             var longestEndTs = longestRelTS.HasValue ? new Timestamp(longestRelTS.Value) : Timestamp.MaxValue;
@@ -244,14 +246,18 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 {
                     processName = $"{result.threadProcess.Name} ({result.threadProcess.Pid})";
                 }
-                else if (result.process != null)
+                else if (result.processTrackProcess != null)
                 {
-                    processName = $"{result.process.Name} ({result.process.Pid})";
+                    processName = $"{result.processTrackProcess.Name} ({result.processTrackProcess.Pid})";
                 }
 
-                if (result.process != null)
+                if (result.threadProcessProcess != null)
                 {
-                    processLabel = result.process.Label;
+                    processLabel = result.threadProcessProcess.Label;
+                }
+                else if (result.processTrackProcess != null)
+                {
+                    processLabel = result.processTrackProcess.Label;
                 }
 
                 int parentTreeDepthLevel = 0;
