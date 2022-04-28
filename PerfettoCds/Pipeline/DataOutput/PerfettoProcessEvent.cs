@@ -10,7 +10,7 @@ namespace PerfettoCds.Pipeline.DataOutput
     /// <summary>
     /// Contains information of processes seen during the trace (composite)
     /// </summary>
-    public class PerfettoProcessEvent : IStartTimestamp, IEndTimestamp
+    public class PerfettoProcessEvent
     {
         public long Id { get; }
         public string Type { get; }
