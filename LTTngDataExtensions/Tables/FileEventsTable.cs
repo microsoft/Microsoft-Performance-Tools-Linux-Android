@@ -9,6 +9,7 @@ using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 using LTTngCds.CookerData;
+using System.Linq;
 
 namespace LTTngDataExtensions.Tables
 {
@@ -67,6 +68,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{62A57C1A-45AE-4A81-B2D9-850A2C8D53C8}"), "File"),
                 new UIHints { Width = 80, });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IFileEvent>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier, nameof(LTTngDiskDataCooker.FileEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

@@ -1,12 +1,11 @@
-﻿using Microsoft.Performance.SDK.Processing;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using Microsoft.Performance.Toolkit.Engine;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
-namespace PerfettoUnitTest
+namespace UnitTestCommon
 {
     public static class ITableResultExts
     {

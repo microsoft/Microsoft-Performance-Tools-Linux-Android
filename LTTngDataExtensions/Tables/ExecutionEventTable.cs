@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Thread;
 using Microsoft.Performance.SDK;
@@ -13,7 +14,7 @@ namespace LTTngDataExtensions.Tables
 {
     [Table]
     [RequiresSourceCooker(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier)]
-    public class ExecutionEvent
+    public class ExecutionEventTable
     {
         public static TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{91A234C3-3A3C-4230-85DA-76DE1C8E86BA}"),
@@ -139,6 +140,12 @@ namespace LTTngDataExtensions.Tables
                 SortOrder = SortOrder.Descending,
                 SortPriority = 0,
             });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IExecutionEvent>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier, nameof(LTTngThreadDataCooker.ExecutionEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

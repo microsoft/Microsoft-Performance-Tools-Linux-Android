@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using LTTngCds.CookerData;
+using System.Linq;
 
 namespace LTTngDataExtensions.Tables
 {
@@ -95,6 +96,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{6F29EABD-12B9-47BD-A78A-BD885456437F}"), "Idle time", "Time spent idle"),
                 new UIHints { Width = 80, CellFormat = "ms" });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IThread>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngThreadDataCooker.Identifier, nameof(LTTngThreadDataCooker.Threads))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PerfettoCds\PerfettoCds.csproj" />
     <ProjectReference Include="..\PerfettoProcessor\PerfettoProcessor.csproj" />
+    <ProjectReference Include="..\UnitTestCommon\UnitTestCommon.csproj" />
   </ItemGroup>
 
   <Target Name="DownloadTraceProcessorShell">
