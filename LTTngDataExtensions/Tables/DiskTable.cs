@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.DataOutputTypes;
 using LTTngDataExtensions.SourceDataCookers.Disk;
@@ -154,6 +155,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{6F229839-2D61-4780-858B-6574E73E43F9}"), "Time Delta"),
                 new UIHints { Width = 80, IsVisible = false });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IDiskActivity>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDiskDataCooker.Identifier, nameof(LTTngDiskDataCooker.DiskActivity))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

@@ -13,10 +13,12 @@ using LTTngDataExtensions.SourceDataCookers.Disk;
 using LTTngDataExtensions.SourceDataCookers.Module;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
 using LTTngDataExtensions.SourceDataCookers.Thread;
+using LTTngDataExtensions.Tables;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UnitTestCommon;
 
 namespace LTTngDataExtUnitTest
 {
@@ -74,6 +76,18 @@ namespace LTTngDataExtUnitTest
                     LTTngDiskDataCookerPath = lttngDiskDataCooker.Path;
                     runtime.EnableCooker(LTTngDiskDataCookerPath);
 
+                    // Enable tables used by UI
+                    //runtime.EnableTable(CpuTable.TableDescriptor);
+                    runtime.EnableTable(DiagnosticMessageTable.TableDescriptor);
+                    runtime.EnableTable(DiskTable.TableDescriptor);
+                    runtime.EnableTable(ExecutionEventTable.TableDescriptor);
+                    runtime.EnableTable(FileEventsTable.TableDescriptor);
+                    runtime.EnableTable(GenericEventTable.TableDescriptor);
+                    runtime.EnableTable(ModuleEventsTable.TableDescriptor);
+                    //runtime.EnableTable(ProcessTable.TableDescriptor);
+                    runtime.EnableTable(SyscallTable.TableDescriptor);
+                    runtime.EnableTable(ThreadTable.TableDescriptor);
+
                     //
                     // Process our data.
                     //
@@ -120,7 +134,7 @@ namespace LTTngDataExtUnitTest
         }
 
         [TestMethod]
-        public void DiagnosticMessageTable()
+        public void DiagnosticMessageTableTest()
         {
             ProcessTrace();
 
@@ -130,10 +144,12 @@ namespace LTTngDataExtUnitTest
                     nameof(LTTngDmesgDataCooker.DiagnosticMessages)));
 
             Assert.IsTrue(eventData.Count == 0); // TODO - UT - Trace has no DiagMessages
+
+            UnitTest.TestTableBuild(RuntimeExecutionResults, DiagnosticMessageTable.TableDescriptor, 0, true);
         }
 
         [TestMethod]
-        public void DiskTable()
+        public void DiskTableTest()
         {
             ProcessTrace();
 
@@ -142,11 +158,13 @@ namespace LTTngDataExtUnitTest
                     LTTngDiskDataCookerPath,
                     nameof(LTTngDiskDataCooker.DiskActivity)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(eventData.Count == 6437);
+
+            UnitTest.TestTableBuild(RuntimeExecutionResults, DiskTable.TableDescriptor, 6437);
         }
 
         [TestMethod]
-        public void ExecutionEventTable()
+        public void ExecutionEventTableTest()
         {
             ProcessTrace();
 
@@ -155,11 +173,12 @@ namespace LTTngDataExtUnitTest
                     LTTngThreadDataCookerPath,
                     nameof(LTTngThreadDataCooker.ExecutionEvents)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(eventData.Count == 18780);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, ExecutionEventTable.TableDescriptor, 18780);
         }
 
         [TestMethod]
-        public void FileEventsTable()
+        public void FileEventsTableTest()
         {
             ProcessTrace();
 
@@ -168,11 +187,12 @@ namespace LTTngDataExtUnitTest
                     LTTngDiskDataCookerPath,
                     nameof(LTTngDiskDataCooker.FileEvents)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(eventData.Count == 433143);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, FileEventsTable.TableDescriptor, 433143);
         }
 
         [TestMethod]
-        public void GenericEventsTable()
+        public void GenericEventsTableTest()
         {
             ProcessTrace();
 
@@ -181,14 +201,15 @@ namespace LTTngDataExtUnitTest
                     LTTngGenericEventDataCookerPath,
                     nameof(LTTngGenericEventDataCooker.Events)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(eventData.Count == 936356);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, GenericEventTable.TableDescriptor, 936356);
 
             Assert.IsTrue(!String.IsNullOrWhiteSpace(eventData[0].FieldNames[0]));
             Assert.IsTrue(!String.IsNullOrWhiteSpace(eventData[0].FieldValues[0]));
         }
 
         [TestMethod]
-        public void ModuleEventsTable()
+        public void ModuleEventsTableTest()
         {
             ProcessTrace();
 
@@ -198,10 +219,11 @@ namespace LTTngDataExtUnitTest
                     nameof(LTTngModuleDataCooker.ModuleEvents)));
 
             Assert.IsTrue(eventData.Count == 0);         // TODO - UT - Trace has no ModuleEvents
+            UnitTest.TestTableBuild(RuntimeExecutionResults, ModuleEventsTable.TableDescriptor, 0, true);
         }
 
         [TestMethod]
-        public void SyscallTable()
+        public void SyscallTableTest()
         {
             ProcessTrace();
 
@@ -210,11 +232,12 @@ namespace LTTngDataExtUnitTest
                     LTTngSyscallDataCookerPath,
                     nameof(LTTngSyscallDataCooker.Syscalls)));
 
-            Assert.IsTrue(eventData.Count > 0);
+            Assert.IsTrue(eventData.Count == 441037);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, SyscallTable.TableDescriptor, 441037);
         }
 
         [TestMethod]
-        public void ThreadTable()
+        public void ThreadTableTest()
         {
             ProcessTrace();
 
@@ -223,7 +246,8 @@ namespace LTTngDataExtUnitTest
                     LTTngThreadDataCookerPath,
                     nameof(LTTngThreadDataCooker.Threads)));
 
-            Assert.IsTrue(threads.Count > 0);
+            Assert.IsTrue(threads.Count == 82);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, ThreadTable.TableDescriptor, 82);
         }
     }
 }

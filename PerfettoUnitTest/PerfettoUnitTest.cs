@@ -11,6 +11,7 @@ using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoCds.Pipeline.Tables;
 using PerfettoProcessor;
+using UnitTestCommon;
 
 namespace PerfettoUnitTest
 {
@@ -75,9 +76,21 @@ namespace PerfettoUnitTest
                 runtime.EnableCooker(PerfettoPluginConstants.CpuSamplingEventCookerPath);
                 runtime.EnableCooker(PerfettoPluginConstants.FrameEventCookerPath);
 
-                // Enable tables
-                runtime.EnableTable(PerfettoProcessTable.TableDescriptor);
+                // Enable tables used by UI
+                runtime.EnableTable(PerfettoCpuCountersTable.TableDescriptor);
+                runtime.EnableTable(PerfettoCpuFrequencyTable.TableDescriptor);
+                runtime.EnableTable(PerfettoCpuSamplingTable.TableDescriptor);
+                runtime.EnableTable(PerfettoCpuSchedTable.TableDescriptor);
+                runtime.EnableTable(PerfettoFrameTable.TableDescriptor);
+                runtime.EnableTable(PerfettoFtraceEventTable.TableDescriptor);
+                runtime.EnableTable(PerfettoGenericEventTable.TableDescriptor);
+                runtime.EnableTable(PerfettoGpuCountersTable.TableDescriptor);
+                runtime.EnableTable(PerfettoLogcatEventTable.TableDescriptor);
                 runtime.EnableTable(PerfettoPackageTable.TableDescriptor);
+                runtime.EnableTable(PerfettoProcessMemoryTable.TableDescriptor);
+                runtime.EnableTable(PerfettoProcessTable.TableDescriptor);
+                runtime.EnableTable(PerfettoSystemMemoryTable.TableDescriptor);
+
                 // Process our data.
                 RuntimeExecutionResults = runtime.Process();
             }
@@ -96,6 +109,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(genericEventData[0].EventName == "Hello Trace");
             Assert.IsTrue(genericEventData[0].Thread == "TraceLogApiTest (20855)");
             Assert.IsTrue(genericEventData[0].Process == "TraceLogApiTest (20855)");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoGenericEventTable.TableDescriptor, 1);
 
             var cpuSchedEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuSchedEvent>>(
                 new DataOutputPath(
@@ -108,6 +122,8 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
             Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest (20855)");
             Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest (20855)");
+
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoCpuSchedTable.TableDescriptor, 15267);
 
             // Wake event validation
             Assert.IsTrue(cpuSchedEventData[0].WakeEvent.WokenTid == cpuSchedEventData[0].Tid);
@@ -128,6 +144,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(ftraceEventData.Count == 35877);
             Assert.IsTrue(ftraceEventData[0].ThreadFormattedName == "swapper (0)");
             Assert.IsTrue(ftraceEventData[1].Cpu == 3);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoFtraceEventTable.TableDescriptor, 35877);
 
             var cpuFreqEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoCpuFrequencyEvent>>(
                 new DataOutputPath(
@@ -136,6 +153,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuFreqEventData.Count == 11855);
             Assert.IsTrue(cpuFreqEventData[0].CpuNum == 3);
             Assert.IsTrue(cpuFreqEventData[1].Name == "cpuidle");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoCpuFrequencyTable.TableDescriptor, 11855);
         }
 
         [TestMethod]
@@ -171,7 +189,9 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSamplingData[0].CallStack.Length == 33);
             Assert.IsTrue(cpuSamplingData[0].CallStack[0] == "/apex/com.android.runtime/lib64/bionic/libc.so!__libc_init");
             Assert.IsTrue(cpuSamplingData[0].CallStack[32] == "/kernel!smp_call_function_many_cond");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoCpuSamplingTable.TableDescriptor, 684);
 
+            // Processes
             var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.ProcessEventCookerPath,
@@ -191,17 +211,15 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processEventData[119].StartTimestamp == new Timestamp(33970357558));
             Assert.IsTrue(processEventData[119].EndTimestamp == new Timestamp(34203203358));
             Assert.IsTrue(processEventData[119].ParentProcess != null && processEventData[119].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoProcessTable.TableDescriptor, 121);
 
-            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
-            Assert.IsTrue(processTable.RowCount == 121);
-
+            // Packages
             var packagesList = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPackageListEvent>>(
                 new DataOutputPath(
                     PerfettoPluginConstants.PackageListCookerPath,
                     nameof(PerfettoPackageListCooker.PackageListEvents)));
             Assert.IsTrue(packagesList.Count == 0);
-            var packageTable = RuntimeExecutionResults.BuildTable(PerfettoPackageTable.TableDescriptor);
-            Assert.IsTrue(packageTable.RowCount == 0);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoPackageTable.TableDescriptor, 0, true);          
         }
 
         [TestMethod]
@@ -216,6 +234,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(systemMemoryEventData.Count == 810);
             Assert.IsTrue(systemMemoryEventData[0].Value == 4008026112);
             Assert.IsTrue(systemMemoryEventData[1].Duration.ToNanoseconds == 249555208);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoSystemMemoryTable.TableDescriptor, 810);
 
             var processMemoryEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessMemoryEvent>>(
                 new DataOutputPath(
@@ -224,6 +243,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processMemoryEventData.Count == 10811);
             Assert.IsTrue(processMemoryEventData[0].RssFile == 2822144);
             Assert.IsTrue(processMemoryEventData[1].ProcessName == "/system/bin/init 1");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoProcessMemoryTable.TableDescriptor, 10811);
         }
 
         [TestMethod]
@@ -237,6 +257,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(gpuEvents.Count == 11564);
             Assert.IsTrue(gpuEvents[0].Value == 0.26908825347823023);
             Assert.IsTrue(gpuEvents[1].StartTimestamp.ToNanoseconds == 1104948);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoGpuCountersTable.TableDescriptor, 11564);
         }
 
         [TestMethod]
@@ -262,6 +283,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(genericEventData[2].ParentTreeDepthLevel == 1);
             Assert.IsTrue(genericEventData[2].ParentEventNameTree[1] == "PipelineReporter");
             Assert.IsTrue(genericEventData[2].ParentEventNameTree[2] == "BeginImplFrameToSendBeginMainFrame");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoGenericEventTable.TableDescriptor, 147906);
 
             var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(
                 new DataOutputPath(
@@ -270,6 +292,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(logcatEventData.Count == 43);
             Assert.IsTrue(logcatEventData[0].Message == "type: 97 score: 0.8\n");
             Assert.IsTrue(logcatEventData[1].ProcessName == "Browser");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoLogcatEventTable.TableDescriptor, 43);
 
             // Processes
             var processEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoProcessEvent>>(
@@ -288,8 +311,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(processEventData[14].Upid == 14);
             Assert.IsTrue(processEventData[14].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
             Assert.IsTrue(processEventData[14].EndTimestamp == new Timestamp(40409516000)); // NULL should be at trace stop
-            var processTable = RuntimeExecutionResults.BuildTable(PerfettoProcessTable.TableDescriptor);
-            Assert.IsTrue(processTable.RowCount == 15);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoProcessTable.TableDescriptor, 15);
         }
 
         [TestMethod]
@@ -314,6 +336,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(frameEvents[930].JankType == "SurfaceFlinger CPU Deadline Missed");
             Assert.IsTrue(frameEvents[930].OnTimeFinish == "0");
             Assert.IsTrue(frameEvents[930].Duration.ToNanoseconds == 28924900);
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoFrameTable.TableDescriptor, 1219);
         }
     }
 }

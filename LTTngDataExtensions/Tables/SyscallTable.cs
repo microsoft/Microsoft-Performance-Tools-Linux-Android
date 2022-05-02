@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Syscall;
 using Microsoft.Performance.SDK.Extensibility;
@@ -70,6 +71,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{9721F620-CCC6-40E3-BB26-EBE522F2FCE7}"), "Return Value"),
                 new UIHints { Width = 80, });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<ISyscall>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngSyscallDataCooker.Identifier, nameof(LTTngSyscallDataCooker.Syscalls))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

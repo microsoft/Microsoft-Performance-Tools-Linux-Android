@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.DataOutputTypes;
 using LTTngDataExtensions.SourceDataCookers;
@@ -71,6 +72,12 @@ namespace LTTngDataExtensions.Tables
                 Width = 80,
                 AggregationMode = AggregationMode.Sum,
             });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<ProcessedEventData<LTTngGenericEvent>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngGenericEventDataCooker.Identifier, nameof(LTTngGenericEventDataCooker.Events))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

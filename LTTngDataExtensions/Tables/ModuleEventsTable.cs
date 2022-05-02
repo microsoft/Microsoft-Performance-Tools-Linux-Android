@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Module;
 using Microsoft.Performance.SDK.Extensibility;
@@ -59,6 +60,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{FE56A50D-5CF2-4BD9-8A87-8DED7F67CAB0}"), "Thread's Command"),
                 new UIHints { Width = 80, });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IModuleEvent>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngModuleDataCooker.Identifier, nameof(LTTngModuleDataCooker.ModuleEvents))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {

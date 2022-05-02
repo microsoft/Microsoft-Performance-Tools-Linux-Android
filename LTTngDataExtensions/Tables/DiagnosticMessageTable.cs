@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LTTngCds.CookerData;
 using LTTngDataExtensions.SourceDataCookers.Diagnostic_Messages;
 using Microsoft.Performance.SDK.Extensibility;
@@ -29,6 +30,12 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{45A3AB1A-503E-46F0-B10D-20FC303DF0C7}"), "Timestamp"),
                 new UIHints { Width = 80, });
+
+        public static bool IsDataAvailable(IDataExtensionRetrieval tableData)
+        {
+            return tableData.QueryOutput<IReadOnlyList<IDiagnosticMessage>>(
+                DataOutputPath.ForSource(LTTngConstants.SourceId, LTTngDmesgDataCooker.Identifier, nameof(LTTngDmesgDataCooker.DiagnosticMessages))).Any();
+        }
 
         public static void BuildTable(ITableBuilder tableBuilder, IDataExtensionRetrieval tableData)
         {
