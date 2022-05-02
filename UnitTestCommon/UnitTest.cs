@@ -21,6 +21,7 @@ namespace UnitTestCommon
                 var tableResult = runtimeExecutionResults.BuildTable(tableDescriptor);
                 Assert.IsTrue(tableResult.RowCount == expectedCount);
                 var tableData = tableResult.GetDataForAllRows();
+                Assert.IsTrue(tableData.Length == expectedCount);
             }
             else if (!isTableDataAvailable && expectedCount > 0)
             {
