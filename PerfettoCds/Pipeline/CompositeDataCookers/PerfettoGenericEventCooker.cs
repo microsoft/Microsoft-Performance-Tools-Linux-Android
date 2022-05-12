@@ -188,48 +188,25 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             foreach (var result in joined)
             {
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
-
+                var args = Args.ParseArgs(result.args);
                 string provider = string.Empty;
 
-                // TODO - Replace with Args.ParseArgs
-                List<string> argKeys = new List<string>();
-                List<string> values = new List<string>();
                 // Each event has multiple of these "debug annotations". They get stored in lists
-                foreach (var arg in result.args)
+                foreach (var arg in args)
                 {
-                    argKeys.Add(Common.StringIntern(arg.ArgKey));
-                    switch (arg.ValueType)
+                    // Check if there are mappings present and if the arg key is the keyword we're looking for
+                    if (ProviderGuidMapping.Count > 0 && arg.Key.ToLower().Contains(ProviderDebugAnnotationKey))
                     {
-                        case "json":
-                        case "string":
-                            values.Add(Common.StringIntern(arg.StringValue));
-
-                            // Check if there are mappings present and if the arg key is the keyword we're looking for
-                            if (ProviderGuidMapping.Count > 0 && arg.ArgKey.ToLower().Contains(ProviderDebugAnnotationKey))
+                        // The value for this key was flagged as containing a provider GUID that needs to be mapped to its provider name
+                        // Check if the mapping exists
+                        if (Guid.TryParse(arg.Value.ToString(), out Guid guid))
+                        {
+                            if (ProviderGuidMapping.ContainsKey(guid))
                             {
-                                // The value for this key was flagged as containing a provider GUID that needs to be mapped to its provider name
-                                // Check if the mapping exists
-                                Guid guid = new Guid(arg.StringValue);
-                                if (ProviderGuidMapping.ContainsKey(guid))
-                                {
-                                    HasProviders = true;
-                                    provider = ProviderGuidMapping[guid];
-                                }
+                                HasProviders = true;
+                                provider = ProviderGuidMapping[guid];
                             }
-                            break;
-                        case "bool":
-                        case "int":
-                            values.Add(Common.StringIntern(arg.IntValue.ToString()));
-                            break;
-                        case "uint":
-                        case "pointer":
-                            values.Add(Common.StringIntern(((uint)arg.IntValue).ToString()));
-                            break;
-                        case "real":
-                            values.Add(Common.StringIntern(arg.RealValue.ToString()));
-                            break;
-                        default:
-                            throw new Exception("Unexpected Perfetto value type");
+                        }
                     }
                 }
 
@@ -304,8 +281,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     new Timestamp(result.slice.RelativeTimestamp + result.slice.Duration) :
                     longestEndTs,
                    result.slice.Category,
-                   values,
-                   argKeys,
+                   args,
                    processName,
                    processLabel,
                    threadName,

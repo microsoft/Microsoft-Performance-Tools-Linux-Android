@@ -22,8 +22,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string Category { get; }
 
         // From Args table. The debug annotations for an event. Variable number per event
-        public string[] Values { get; }
-        public string[] ArgKeys { get; }
+        public Dictionary<string, object> Args { get; }
 
         // From Process table
         public string Process { get; }
@@ -47,9 +46,8 @@ namespace PerfettoCds.Pipeline.DataOutput
             TimestampDelta duration, 
             Timestamp startTimestamp, 
             Timestamp endTimestamp, 
-            string category, 
-            List<string> values,
-            List<string> argKeys,
+            string category,
+            Dictionary<string, object> args,
             string process,
             string processLabel,
             string thread,
@@ -65,8 +63,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
             Category =  Common.StringIntern(category);
-            Values = values.ToArray();
-            ArgKeys = argKeys.ToArray();
+            Args = args;
             Process = Common.StringIntern(process);
             ProcessLabel = Common.StringIntern(processLabel);
             Thread = Common.StringIntern(thread);

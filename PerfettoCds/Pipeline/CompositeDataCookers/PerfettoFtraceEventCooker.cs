@@ -73,35 +73,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             foreach (var result in joined)
             {
                 MaximumEventFieldCount = Math.Max(MaximumEventFieldCount, result.args.Count());
-
-                List<string> argKeys = new List<string>();
-                List<string> values = new List<string>();
-
-                // Each event has multiple of these arguments. They get stored in lists
-                foreach (var arg in result.args)
-                {
-                    argKeys.Add(Common.StringIntern(arg.ArgKey));
-                    switch (arg.ValueType)
-                    {
-                        case "json":
-                        case "string":
-                            values.Add(Common.StringIntern(arg.StringValue));
-                            break;
-                        case "bool":
-                        case "int":
-                            values.Add(Common.StringIntern(arg.IntValue.ToString()));
-                            break;
-                        case "uint":
-                        case "pointer":
-                            values.Add(Common.StringIntern(((uint)arg.IntValue).ToString()));
-                            break;
-                        case "real":
-                            values.Add(Common.StringIntern(arg.RealValue.ToString()));
-                            break;
-                        default:
-                            throw new Exception("Unexpected Perfetto value type");
-                    }
-                }
+                var args = Args.ParseArgs(result.args);
 
                 // An event can have a thread+process or just a process
                 string processFormattedName = string.Empty;
@@ -120,8 +92,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     result.thread.Tid,
                     result.raw.Cpu,
                     result.raw.Name,
-                    values,
-                    argKeys
+                    args
                 );
                 this.FtraceEvents.AddEvent(ev);
             }
