@@ -153,11 +153,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             // Create events out of the joined results
             foreach (var wake in schedWakeData)
             {
-                var wokenTid = uint.Parse(wake.Values[1]); // This field name is pid but it is woken thread's Tid.
+                var wokenTid = uint.Parse(wake.Args.ElementAt(1).Value.ToString()); // This field name is pid but it is woken thread's Tid.
                 PerfettoThreadEvent wokenThread = tidToThreadMap[wokenTid];
                 string wokenThreadName = wokenThread.Name;
                 var wokenPid = wokenThread.Upid;
-                string wokenProcessName = wokenPid != null ? upidToProcessMap[wokenPid.Value].Name : wake.Values[0]; // This field name is comms but it is woken process name.
+                string wokenProcessName = wokenPid != null ? upidToProcessMap[wokenPid.Value].Name : wake.Args.ElementAt(0).Value.ToString(); // This field name is comms but it is woken process name.
 
                 string wakerThreadName = wake.ThreadName;
                 var wakerTid = wake.Tid;
@@ -176,10 +176,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     wakerThreadName: wakerThreadName,
                     wakerTid: wakerTid,
                     timestamp: wake.StartTimestamp,
-                    success: int.Parse(wake.Values[3]), // Success is at index 3
+                    success: int.Parse(wake.Args.ElementAt(3).Value.ToString()),   // Success is at index 3
                     cpu: wake.Cpu,
-                    targetCpu: int.Parse(wake.Values[4]), // TargetCpu is at index 4
-                    priority: int.Parse(wake.Values[2]) // Priority is at index 2
+                    targetCpu: int.Parse(wake.Args.ElementAt(4).Value.ToString()), // TargetCpu is at index 4
+                    priority: int.Parse(wake.Args.ElementAt(2).Value.ToString())   // Priority is at index 2
                 );
 
                 this.CpuWakeEvents.AddEvent(ev);

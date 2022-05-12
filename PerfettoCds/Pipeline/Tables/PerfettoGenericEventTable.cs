@@ -240,7 +240,7 @@ namespace PerfettoCds.Pipeline.Tables
                 var colIndex = index;  // This seems unncessary but causes odd runtime behavior if not done this way. Compiler is confused perhaps because w/o this func will index=genericEvent.FieldNames.Count every time. index is passed as ref but colIndex as value into func
                 string fieldName = "Field " + (colIndex + 1);
 
-                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.ArgKeys.Length ? genericEvent.ArgKeys[colIndex] : string.Empty);
+                var genericEventFieldNameProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Args?.Count ? genericEvent.Args.ElementAt(colIndex).Key : string.Empty);
 
                 // generate a column configuration
                 var fieldColumnConfiguration = new ColumnConfiguration(
@@ -258,7 +258,7 @@ namespace PerfettoCds.Pipeline.Tables
                 // Add this column to the column order
                 fieldColumns.Add(fieldColumnConfiguration);
 
-                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Values.Length ? genericEvent.Values[colIndex] : string.Empty);
+                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Args?.Count ? genericEvent.Args.ElementAt(colIndex).Value : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }

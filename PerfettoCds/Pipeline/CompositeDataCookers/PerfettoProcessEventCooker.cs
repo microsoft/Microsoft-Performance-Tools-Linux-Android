@@ -69,13 +69,13 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             foreach (var result in joined)
             {
                 var args = Args.ParseArgs(result.args);
-                MaximumArgsEventFieldCount = Math.Max(MaximumArgsEventFieldCount, args.ArgKeys.Count());
+                MaximumArgsEventFieldCount = Math.Max(MaximumArgsEventFieldCount, args.Count);
 
                 const string ChromeProcessLabel = "chrome.process_label[0]";
                 string processLabel = null;
-                if (args.ArgKeys.Contains(ChromeProcessLabel))
+                if (args.ContainsKey(ChromeProcessLabel))
                 {
-                    processLabel = (string) args.Values[args.ArgKeys.IndexOf(ChromeProcessLabel)];
+                    processLabel = (string) args[ChromeProcessLabel];
                 }
 
                 var ev = new PerfettoProcessEvent
@@ -93,8 +93,7 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     result.process.Uid,
                     result.process.AndroidAppId,
                     result.process.CmdLine,
-                    args.ArgKeys.ToArray(),
-                    args.Values.ToArray(),
+                    args,
                     result.packageList
                 );
                 this.ProcessEvents.AddEvent(ev);

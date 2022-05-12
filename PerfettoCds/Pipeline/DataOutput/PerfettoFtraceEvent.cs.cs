@@ -21,8 +21,7 @@ namespace PerfettoCds.Pipeline.DataOutput
         public string Name { get; }
 
         // From Args table. Variable number per event
-        public string[] Values { get; }
-        public string[] ArgKeys { get; }
+        public Dictionary<string, object> Args { get; }
 
         public PerfettoFtraceEvent(Timestamp startTimestamp,
             string processFormattedName,
@@ -31,8 +30,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             uint tid,
             uint cpu,
             string name,
-            List<string> values,
-            List<string> argKeys)
+            Dictionary<string, object> args)
         {
             this.StartTimestamp = startTimestamp;
             this.ProcessFormattedName = Common.StringIntern(processFormattedName);
@@ -41,8 +39,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             this.Tid = tid;
             this.Cpu = cpu;
             this.Name = Common.StringIntern(name);
-            this.Values = values.ToArray();
-            this.ArgKeys = argKeys.ToArray();
+            this.Args = args;
         }
     }
 }

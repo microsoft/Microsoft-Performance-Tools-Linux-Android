@@ -75,11 +75,10 @@ namespace PerfettoCds.Pipeline.DataOutput
         /// <summary>
         /// Extra args for this process
         /// </summary>
-        public string[] ArgKeys { get; }
-        public object[] Values { get; }
+        public Dictionary<string, object> Args { get; }
         public PerfettoPackageListEvent PackageList { get; }
 
-        public PerfettoProcessEvent(long id, string type, uint upid, uint pid, string name, string label, Timestamp startTimestamp, Timestamp endTimestamp, uint? parentUpid, PerfettoProcessRawEvent parentProcess, uint? uid, uint? androidAppId, string cmdLine, string[] argKeys, object[] values, PerfettoPackageListEvent packageList)
+        public PerfettoProcessEvent(long id, string type, uint upid, uint pid, string name, string label, Timestamp startTimestamp, Timestamp endTimestamp, uint? parentUpid, PerfettoProcessRawEvent parentProcess, uint? uid, uint? androidAppId, string cmdLine, Dictionary<string, object> args, PerfettoPackageListEvent packageList)
         {
             Id = id;
             Type = type;
@@ -94,8 +93,7 @@ namespace PerfettoCds.Pipeline.DataOutput
             Uid = uid;
             AndroidAppId = androidAppId;
             CmdLine = cmdLine;
-            ArgKeys = argKeys;
-            Values = values;
+            Args = Args;
             PackageList = packageList;
         }
     }

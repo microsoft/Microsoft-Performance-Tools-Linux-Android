@@ -12,35 +12,32 @@ namespace PerfettoCds
 {
     public class Args
     {
-        public List<string> ArgKeys { get; private set; }
-        public List<object> Values { get; private set; }
-
-        public static Args ParseArgs(IEnumerable<PerfettoArgEvent> perfettoArgEvents)
+        public static Dictionary<string, object> ParseArgs(IEnumerable<PerfettoArgEvent> perfettoArgEvents)
         {
-            var args = new Args();
-            args.ArgKeys = new List<string>();
-            args.Values = new List<object>();
+            var args = new Dictionary<string, object>();
 
             // Each event has multiple of these "debug annotations". They get stored in lists
             foreach (var arg in perfettoArgEvents)
             {
-                args.ArgKeys.Add(Common.StringIntern(arg.ArgKey));
                 switch (arg.ValueType)
                 {
                     case "json":
                     case "string":
-                        args.Values.Add(Common.StringIntern(arg.StringValue));
+                        args.Add(arg.ArgKey, Common.StringIntern(arg.StringValue));
                         break;
                     case "bool":
                     case "int":
-                        args.Values.Add(arg.IntValue);
+                        args.Add(arg.ArgKey, arg.IntValue);
                         break;
                     case "uint":
                     case "pointer":
-                        args.Values.Add((uint)arg.IntValue);
+                        args.Add(arg.ArgKey, (uint)arg.IntValue);
                         break;
                     case "real":
-                        args.Values.Add(arg.RealValue);
+                        args.Add(arg.ArgKey, arg.RealValue);
+                        break;
+                    case "null":
+                        args.Add(arg.ArgKey, null);
                         break;
                     default:
                         throw new Exception("Unexpected Perfetto value type");
