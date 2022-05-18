@@ -12,7 +12,7 @@ using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 using PerfDataExtensions.Tables.Generators;
 using Utilities.AccessProviders;
-using static PerfDataExtensions.Tables.TimeHelper;
+using static Utilities.TimeHelper;
 
 namespace PerfDataExtensions.Tables
 {

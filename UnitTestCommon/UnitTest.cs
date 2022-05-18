@@ -19,7 +19,10 @@ namespace UnitTestCommon
             if (skipDataAvailableCheck || isTableDataAvailable)
             {
                 var tableResult = runtimeExecutionResults.BuildTable(tableDescriptor);
-                Assert.IsTrue(tableResult.RowCount == expectedCount);
+                if (tableResult.RowCount != expectedCount)
+                {
+                    throw new Exception($"We have {tableResult.RowCount} rows, but we expected {expectedCount} rows");
+                }
                 var tableData = tableResult.GetDataForAllRows();
                 Assert.IsTrue(tableData.Length == expectedCount);
             }
