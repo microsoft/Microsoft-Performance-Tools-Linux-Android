@@ -283,6 +283,18 @@ namespace PerfettoUnitTest
             Assert.IsTrue(genericEventData[2].ParentTreeDepthLevel == 1);
             Assert.IsTrue(genericEventData[2].ParentEventNameTree[1] == "PipelineReporter");
             Assert.IsTrue(genericEventData[2].ParentEventNameTree[2] == "BeginImplFrameToSendBeginMainFrame");
+
+            Assert.IsTrue(genericEventData[98715].SliceId == 98715);
+            Assert.IsTrue(genericEventData[98715].EventName == "Document::updateStyle");
+            Assert.IsTrue(genericEventData[98715].Process == "Renderer (27768)");
+            Assert.IsTrue(genericEventData[98715].Thread == "CrRendererMain (28380)");
+            Assert.IsTrue(genericEventData[98715].ParentId == 98710);
+            Assert.IsTrue(genericEventData[98715].ParentTreeDepthLevel == 6);
+            Assert.IsTrue(genericEventData[98715].ParentEventNameTree[6] == "UpdateLayoutTree");
+            Assert.IsTrue(genericEventData[98715].ParentEventNameTree[7] == "Document::updateStyle");
+            Assert.IsTrue(genericEventData[98715].Duration == new TimestampDelta(2533000));
+            Assert.IsTrue(genericEventData[98715].DurationExclusive == new TimestampDelta(31000));
+
             UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoGenericEventTable.TableDescriptor, 147906);
 
             var logcatEventData = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoLogcatEvent>>(

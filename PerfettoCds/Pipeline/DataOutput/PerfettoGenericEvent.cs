@@ -14,9 +14,16 @@ namespace PerfettoCds.Pipeline.DataOutput
     public readonly struct PerfettoGenericEvent
     {
         // From Slice table
+        public int SliceId { get; }
         public string EventName { get; }
         public string Type { get; }
+
+        // The duration of the event
         public TimestampDelta Duration { get; }
+
+        // The duration of the event excluding it's children
+        public TimestampDelta DurationExclusive { get; }
+
         public Timestamp StartTimestamp { get; }
         public Timestamp EndTimestamp { get; }
         public string Category { get; }
@@ -41,9 +48,12 @@ namespace PerfettoCds.Pipeline.DataOutput
 
         public string[] ParentEventNameTree { get; }
 
-        public PerfettoGenericEvent(string eventName, 
+        public PerfettoGenericEvent(
+            int sliceId,
+            string eventName, 
             string type, 
-            TimestampDelta duration, 
+            TimestampDelta duration,
+            TimestampDelta durationExclusive,
             Timestamp startTimestamp, 
             Timestamp endTimestamp, 
             string category,
@@ -57,9 +67,11 @@ namespace PerfettoCds.Pipeline.DataOutput
             int parentTreeDepthLevel,
             string[] parentEventNameTree)
         {
+            SliceId = sliceId;
             EventName = Common.StringIntern(eventName);
             Type = Common.StringIntern(type);
             Duration = duration;
+            DurationExclusive = durationExclusive;
             StartTimestamp = startTimestamp;
             EndTimestamp = endTimestamp;
             Category =  Common.StringIntern(category);
