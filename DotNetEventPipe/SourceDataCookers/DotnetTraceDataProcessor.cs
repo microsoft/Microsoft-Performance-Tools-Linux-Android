@@ -63,7 +63,9 @@ namespace DotNetEventPipe
                     this.dataSourceInfo = new DataSourceInfo(0, traceSource.SessionDuration.Ticks * 100, traceSource.SessionStartTime.ToUniversalTime());
                 }
 
-                string traceLogPath = TraceLog.CreateFromEventPipeDataFile(path);
+                var tmpEtlx = Path.Combine(Path.GetTempPath(), Path.GetFileName(path) + ".etlx");
+                
+                string traceLogPath = TraceLog.CreateFromEventPipeDataFile(path, tmpEtlx);
                 using (TraceLog traceLog = new TraceLog(traceLogPath))
                 {
                     TraceLogEventSource source = traceLog.Events.GetSource();
@@ -74,6 +76,7 @@ namespace DotNetEventPipe
                     source.Process();
                     //this.dataSourceInfo = new DataSourceInfo(0, source.SessionDuration.Ticks * 100, source.SessionStartTime.ToUniversalTime());
                 }
+                File.Delete(tmpEtlx);
             }
 
             this.fileContent = new ReadOnlyDictionary<string, TraceEventProcessor>(contentDictionary);

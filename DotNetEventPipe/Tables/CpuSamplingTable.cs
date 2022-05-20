@@ -19,9 +19,9 @@ namespace DotNetEventPipe.Tables
     {
         public static readonly TableDescriptor TableDescriptor = new TableDescriptor(
             Guid.Parse("{29C3ECF1-0857-4A3D-B6E3-2197CE1E9C81}"),
-            ".NET (dotnet)",
-            ".nettrace (dotnet-trace)",
-            category: ".NET");
+            "CPU Sampling",
+            "Thread Profiler Samples",
+            category: ".NET trace (dotnet-trace)");
 
         public CpuSamplingTable(IReadOnlyDictionary<string, TraceEventProcessor> traceEventProcessor)
             : base(traceEventProcessor)
