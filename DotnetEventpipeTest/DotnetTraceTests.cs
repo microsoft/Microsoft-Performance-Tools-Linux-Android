@@ -24,7 +24,7 @@ namespace DotnetEventpipeTest
                 if (!IsTraceProcessed)
                 {
                     // Input data
-                    string[] dotnetTraceData = { @"..\..\..\..\TestData\Dotnet-Trace\dotnet_20220517_102703.nettrace" };
+                    string[] dotnetTraceData = { @"..\..\..\..\TestData\Dotnet-Trace\HelloWorld_GC_Threads_Exception.nettrace" };
                     var dotnetTraceDataPath = new FileInfo(dotnetTraceData[0]);
                     Assert.IsTrue(dotnetTraceDataPath.Exists);
 
@@ -45,10 +45,10 @@ namespace DotnetEventpipeTest
                     //
 
                     RuntimeExecutionResults = runtime.Process();
-                    UnitTest.TestTableBuild(RuntimeExecutionResults, CpuSamplingTable.TableDescriptor, 103800);
-                    UnitTest.TestTableBuild(RuntimeExecutionResults, GenericEventTable.TableDescriptor, 26104); // Wrong??
-                    UnitTest.TestTableBuild(RuntimeExecutionResults, ExceptionTable.TableDescriptor, 2);
-                    UnitTest.TestTableBuild(RuntimeExecutionResults, GCTable.TableDescriptor, 12);
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, CpuSamplingTable.TableDescriptor, 39);
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, GenericEventTable.TableDescriptor, 421);
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, ExceptionTable.TableDescriptor, 1);
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, GCTable.TableDescriptor, 1);
 
                     IsTraceProcessed = true;
                 }

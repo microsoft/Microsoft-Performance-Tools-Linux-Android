@@ -21,7 +21,7 @@ namespace UnitTestCommon
                 var tableResult = runtimeExecutionResults.BuildTable(tableDescriptor);
                 if (tableResult.RowCount != expectedCount)
                 {
-                    throw new Exception($"We have {tableResult.RowCount} rows, but we expected {expectedCount} rows");
+                    throw new Exception($"We have {tableResult.RowCount} rows for {tableDescriptor.Name}, but we expected {expectedCount} rows");
                 }
                 var tableData = tableResult.GetDataForAllRows();
                 Assert.IsTrue(tableData.Data.Length == expectedCount);

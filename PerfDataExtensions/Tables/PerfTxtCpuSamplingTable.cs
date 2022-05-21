@@ -10,8 +10,8 @@ using Microsoft.Diagnostics.Tracing.Stacks;
 using Microsoft.Diagnostics.Tracing.StackSources;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
-using PerfDataExtensions.Tables.Generators;
 using Utilities.AccessProviders;
+using Utilities.Generators;
 using static Utilities.TimeHelper;
 
 namespace PerfDataExtensions.Tables

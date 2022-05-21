@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetEventPipe.DataOutputTypes;
+using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 using Utilities.AccessProviders;
+using Utilities.Generators;
 using static Utilities.TimeHelper;
 
 namespace DotNetEventPipe.Tables
@@ -45,8 +48,6 @@ namespace DotNetEventPipe.Tables
             new UIHints { 
                 Width = 130, 
                 AggregationMode = AggregationMode.Sum, // Sum needed instead of Count for flame
-                SortOrder = SortOrder.Descending,
-                SortPriority = 0,
             }); 
 
         private static readonly ColumnConfiguration callStackColumn =
@@ -74,6 +75,38 @@ namespace DotNetEventPipe.Tables
                 new ColumnMetadata(new Guid("{DB744571-72CE-4C56-8277-58A402682016}"), "CPU"),
                 new UIHints { Width = 80, });
 
+        private static readonly ColumnConfiguration weightColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{46478B6A-C6FB-4552-AF78-E129E660189B}"), "Sample Weight"),
+                new UIHints { Width = 80, CellFormat = TimestampFormatter.FormatMillisecondsGrouped, });
+
+        private static readonly ColumnConfiguration weightPctColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{EED346D1-98C4-4702-838F-FF3EFF822EC1}"), "Weight %"),
+                new UIHints
+                {
+                    Width = 80,
+                    AggregationMode = AggregationMode.Sum,
+                    SortPriority = 0,
+                    SortOrder = SortOrder.Descending,
+                });
+
+        private static readonly ColumnConfiguration viewportClippedStartTimeCol =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{D0F5DE08-E4FF-45D2-8644-E6D2AACFB2CD}"), "Clipped Start Time"),
+                new UIHints { Width = 80, });
+
+        private static readonly ColumnConfiguration viewportClippedEndTimeCol =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{8AC0B8A4-CE20-4B54-A031-1558B2A9238C}"), "Clipped End Time"),
+                new UIHints { Width = 80, });
+
+        private static readonly ColumnConfiguration clippedWeightCol =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{E5A38163-3FB1-47DC-9E0E-E296041A563D}"), "Clipped Weight"),
+                new UIHints { Width = 80, });
+
+        private IReadOnlyList<ThreadSamplingEvent> ThreadSamplingEvents;
 
         public override void Build(ITableBuilder tableBuilder)
         {
@@ -83,10 +116,10 @@ namespace DotNetEventPipe.Tables
             }
 
             var firstTraceProcessorEventsParsed = TraceEventProcessor.First().Value;  // First Log
-            var threadSamplingEvents = firstTraceProcessorEventsParsed.ThreadSamplingEvents;
+            ThreadSamplingEvents = firstTraceProcessorEventsParsed.ThreadSamplingEvents;
 
-            var tableGenerator = tableBuilder.SetRowCount(threadSamplingEvents.Count);
-            var baseProjection = Projection.Index(threadSamplingEvents);
+            var tableGenerator = tableBuilder.SetRowCount(ThreadSamplingEvents.Count);
+            var baseProjection = Projection.Index(ThreadSamplingEvents);
 
             
             tableGenerator.AddColumn(countColumn, baseProjection.Compose(x => 1));                  // 1 sample
@@ -94,10 +127,38 @@ namespace DotNetEventPipe.Tables
             tableGenerator.AddColumn(processColumn, baseProjection.Compose(x => x.ProcessName));
             tableGenerator.AddColumn(cpuColumn, baseProjection.Compose(x => x.ProcessorNumber));
             tableGenerator.AddColumn(threadIdColumn, baseProjection.Compose(x => x.ThreadID));
-            tableGenerator.AddColumn(timestampColumn, baseProjection.Compose(x => x.Timestamp));
             tableGenerator.AddColumn(moduleColumn, baseProjection.Compose(x => x.Module?.Name));
             tableGenerator.AddColumn(functionColumn, baseProjection.Compose(x => x.FullMethodName));
             tableGenerator.AddHierarchicalColumn(callStackColumn, baseProjection.Compose(x => x.CallStack), new ArrayAccessProvider<string>());
+            var timeStampProjection = Projection.CreateUsingFuncAdaptor((i) => ThreadSamplingEvents[i].Timestamp);
+
+            // Calculating sample weights
+            var tenMsSample = new TimestampDelta(10000000); // 10ms - https://docs.microsoft.com/en-us/dotnet/core/diagnostics/well-known-event-providers
+            var weightProj = Projection.Constant(tenMsSample);
+            var oneNs = new TimestampDelta(1);
+
+            var timeStampStartProjection = baseProjection.Compose(x => x.Timestamp - oneNs); // We will say sample lasted 1ns
+            IProjection<int, Timestamp> viewportClippedStartTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampStartProjection);
+            IProjection<int, Timestamp> viewportClippedEndTimeProj = Projection.ClipTimeToVisibleDomain.Create(timeStampProjection);
+
+            IProjection<int, TimestampDelta> clippedWeightProj = Projection.Select(
+                viewportClippedEndTimeProj,
+                viewportClippedStartTimeProj,
+                new ReduceTimeSinceLastDiff());
+
+            IProjection<int, double> weightPercentProj = Projection.VisibleDomainRelativePercent.Create(clippedWeightProj);
+
+            IProjection<int, int> countProj = SequentialGenerator.Create(
+                ThreadSamplingEvents.Count,
+                Projection.Constant(1),
+                Projection.Constant(0));
+
+            tableGenerator.AddColumn(weightColumn, weightProj);
+            tableGenerator.AddColumn(weightPctColumn, weightPercentProj);
+            tableGenerator.AddColumn(timestampColumn, timeStampStartProjection);
+            tableGenerator.AddColumn(viewportClippedStartTimeCol, viewportClippedStartTimeProj);
+            tableGenerator.AddColumn(viewportClippedEndTimeCol, viewportClippedEndTimeProj);
+            tableGenerator.AddColumn(clippedWeightCol, clippedWeightProj);
 
             var utilByCpuStackConfig = new TableConfiguration("Utilization by CPU, Stack")
             {
@@ -111,15 +172,15 @@ namespace DotNetEventPipe.Tables
                     functionColumn,
                     moduleColumn,
                     timestampColumn,
-                    //weightColumn,
+                    countColumn,
                     TableConfiguration.GraphColumn,
-                    countColumn
-                    //weightPctColumn
+                    weightPctColumn
 
                 },
             };
             utilByCpuStackConfig.AddColumnRole(ColumnRole.EndTime, timestampColumn);
             utilByCpuStackConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
+            utilByCpuStackConfig.AddColumnRole(ColumnRole.Duration, weightColumn);
 
             var utilByCpuConfig = new TableConfiguration("Utilization by CPU")
             {
@@ -127,21 +188,20 @@ namespace DotNetEventPipe.Tables
               {
                     cpuColumn,
                     TableConfiguration.PivotColumn,
-                    callStackColumn,
                     processColumn,
                     threadIdColumn,
                     functionColumn,
                     moduleColumn,
                     timestampColumn,
-                    //weightColumn,
+                    countColumn,
                     TableConfiguration.GraphColumn,
-                    countColumn
-                    //weightPctColumn
+                    weightPctColumn
 
                 },
             };
             utilByCpuConfig.AddColumnRole(ColumnRole.EndTime, timestampColumn);
             utilByCpuConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
+            utilByCpuConfig.AddColumnRole(ColumnRole.Duration, weightColumn);
 
             var utilByProcessConfig = new TableConfiguration("Utilization by Process")
             {
@@ -149,21 +209,20 @@ namespace DotNetEventPipe.Tables
               {
                     processColumn,
                     TableConfiguration.PivotColumn,
-                    callStackColumn,
                     cpuColumn,
                     threadIdColumn,
                     functionColumn,
                     moduleColumn,
                     timestampColumn,
-                    //weightColumn,
-                    TableConfiguration.GraphColumn,
                     countColumn,
-                    //weightPctColumn
+                    TableConfiguration.GraphColumn,
+                    weightPctColumn
 
                 },
             };
             utilByProcessConfig.AddColumnRole(ColumnRole.EndTime, timestampColumn);
             utilByProcessConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
+            utilByProcessConfig.AddColumnRole(ColumnRole.Duration, weightColumn);
 
             var utilByProcessStackConfig = new TableConfiguration("Utilization by Process, Stack")
             {
@@ -177,15 +236,15 @@ namespace DotNetEventPipe.Tables
                     functionColumn,
                     moduleColumn,
                     timestampColumn,
-                    //weightColumn,
+                    countColumn,
                     TableConfiguration.GraphColumn,
-                    countColumn
-                    //weightPctColumn
+                    weightPctColumn
 
                 },
             };
             utilByProcessStackConfig.AddColumnRole(ColumnRole.EndTime, timestampColumn);
             utilByProcessStackConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
+            utilByProcessStackConfig.AddColumnRole(ColumnRole.Duration, weightColumn);
 
             var flameByProcessStackConfig = new TableConfiguration("Flame by Process, Stack")
             {
@@ -199,10 +258,9 @@ namespace DotNetEventPipe.Tables
                     functionColumn,
                     moduleColumn,
                     timestampColumn,
-                    //weightColumn,
+                    countColumn,
                     TableConfiguration.GraphColumn,
-                    countColumn
-                    //weightPctColumn
+                    weightPctColumn
 
                 },
                 ChartType = ChartType.Flame,
@@ -210,6 +268,7 @@ namespace DotNetEventPipe.Tables
             };
             flameByProcessStackConfig.AddColumnRole(ColumnRole.EndTime, timestampColumn);
             flameByProcessStackConfig.AddColumnRole(ColumnRole.ResourceId, cpuColumn);
+            flameByProcessStackConfig.AddColumnRole(ColumnRole.Duration, weightColumn);
 
             var table = tableBuilder
             .AddTableConfiguration(utilByCpuStackConfig)
