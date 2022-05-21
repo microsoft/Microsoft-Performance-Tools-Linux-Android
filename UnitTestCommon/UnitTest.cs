@@ -24,7 +24,7 @@ namespace UnitTestCommon
                     throw new Exception($"We have {tableResult.RowCount} rows, but we expected {expectedCount} rows");
                 }
                 var tableData = tableResult.GetDataForAllRows();
-                Assert.IsTrue(tableData.Length == expectedCount);
+                Assert.IsTrue(tableData.Data.Length == expectedCount);
             }
             else if (!isTableDataAvailable && expectedCount > 0)
             {

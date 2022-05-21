@@ -11,7 +11,7 @@ namespace DotNetEventPipe.DataOutputTypes
     /// <summary>
     /// A GenericEvent
     /// </summary>
-    public readonly struct GenericEvent
+    public class GenericEvent
     {
         public string EventName { get; }
         public TraceEventID ID { get; }

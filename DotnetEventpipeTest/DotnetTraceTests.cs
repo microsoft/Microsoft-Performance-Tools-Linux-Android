@@ -37,15 +37,18 @@ namespace DotnetEventpipeTest
                     // Enable tables used by UI
                     runtime.EnableTable(CpuSamplingTable.TableDescriptor);
                     runtime.EnableTable(GenericEventTable.TableDescriptor);
+                    runtime.EnableTable(ExceptionTable.TableDescriptor);
+                    runtime.EnableTable(GCTable.TableDescriptor);
 
                     //
                     // Process our data.
                     //
 
                     RuntimeExecutionResults = runtime.Process();
-
                     UnitTest.TestTableBuild(RuntimeExecutionResults, CpuSamplingTable.TableDescriptor, 103800);
                     UnitTest.TestTableBuild(RuntimeExecutionResults, GenericEventTable.TableDescriptor, 26104); // Wrong??
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, ExceptionTable.TableDescriptor, 2);
+                    UnitTest.TestTableBuild(RuntimeExecutionResults, GCTable.TableDescriptor, 12);
 
                     IsTraceProcessed = true;
                 }

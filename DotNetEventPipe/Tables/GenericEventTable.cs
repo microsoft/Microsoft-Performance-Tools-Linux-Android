@@ -77,12 +77,12 @@ namespace DotNetEventPipe.Tables
 
         private static readonly ColumnConfiguration hascallStackColumn =
             new ColumnConfiguration(
-                new ColumnMetadata(new Guid("{2BCEC64D-A3A2-4EC5-B376-4040560066FC}"), "Has Callstack"),
+                new ColumnMetadata(new Guid("{2BCEC64D-A3A2-4EC5-B376-4040560066FC}"), "HasCallstack", "Has Callstack"),
                 new UIHints { Width = 40, });
 
         private static readonly ColumnConfiguration callStackColumn =
             new ColumnConfiguration(
-                new ColumnMetadata(new Guid("{37EF26BF-8FAF-4700-AD66-01D90DA743BF}"), "Callstack"),
+                new ColumnMetadata(new Guid("{37EF26BF-8FAF-4700-AD66-01D90DA743BF}"), "Callstack", "Call stack"),
                 new UIHints { Width = 800, });
 
         private static readonly ColumnConfiguration threadIdColumn =
