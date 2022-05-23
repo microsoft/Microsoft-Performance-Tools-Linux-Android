@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,6 @@ using Microsoft.Performance.SDK.Processing;
 using PerfettoCds.Pipeline.DataOutput;
 using PerfettoCds.Pipeline.SourceDataCookers;
 using PerfettoProcessor;
-using Utilities;
 
 namespace PerfettoCds.Pipeline.CompositeDataCookers
 {
@@ -184,6 +184,42 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
             var longestRelTS = joined.Max(f => f.slice?.RelativeTimestamp);
             var longestEndTs = longestRelTS.HasValue ? new Timestamp(longestRelTS.Value) : Timestamp.MaxValue;
 
+            Dictionary<int, long> SliceId_DurationExclusive = new Dictionary<int, long>();
+            // Duration Exclusion calculation (Duration minus child durations)
+            // First we need to walk all the events & their direct parent
+            // Slices seem to be per-thread in Perfetto and thus are non-overlapping (time-wise work)
+            // Thus we can just subtract children time
+            foreach (var result in joined)
+            {
+                int? parentId = result.slice.ParentId;
+
+                if (!SliceId_DurationExclusive.ContainsKey(result.slice.Id))
+                {
+                    SliceId_DurationExclusive[result.slice.Id] = result.slice.Duration;
+                }
+
+                if (parentId.HasValue)
+                {
+                    var parentPerfettoSliceEvent = sliceData[parentId.Value];
+                    if (parentPerfettoSliceEvent != null)
+                    {
+                        if (SliceId_DurationExclusive.TryGetValue(parentId.Value, out long currentParentExDuration))
+                        {
+                            // Some slices have negative duration and we don't want to increase exclusive duration of parent for this
+                            if (result.slice.Duration > 0 && currentParentExDuration > 0)
+                            {
+                                SliceId_DurationExclusive[parentId.Value] = currentParentExDuration - result.slice.Duration;
+                            }
+                            Debug.Assert(SliceId_DurationExclusive[parentId.Value] >= -1);  // Verify non-overlapping otherwise duration will go negative excluding bad durations
+                        }
+                        else
+                        {
+                            SliceId_DurationExclusive.Add(parentId.Value, parentPerfettoSliceEvent.Duration);
+                        }
+                    }
+                }
+            }
+
             // Create events out of the joined results
             foreach (var result in joined)
             {
@@ -238,14 +274,14 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 }
 
                 int parentTreeDepthLevel = 0;
-                long? currentParentId = result.slice.ParentId;
+                int? currentParentId = result.slice.ParentId;
                 List<string> tmpParentEventNameTreeBranch = new List<string>();
                 tmpParentEventNameTreeBranch.Add(result.slice.Name);
 
                 // Walk the parent tree
                 while (currentParentId.HasValue)
                 {
-                    var parentPerfettoSliceEvent = sliceData[(int)currentParentId.Value];
+                    var parentPerfettoSliceEvent = sliceData[currentParentId.Value];
                     // Debug.Assert(parentPerfettoSliceEvent == null || (parentPerfettoSliceEvent.Id == currentParentId.Value)); // Should be guaranteed by slice Id ordering. Since we are relying on index being the Id
 
                     if (parentPerfettoSliceEvent != null)
@@ -273,9 +309,11 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
 
                 PerfettoGenericEvent ev = new PerfettoGenericEvent
                 (
+                   result.slice.Id,
                    result.slice.Name,
                    result.slice.Type,
                    new TimestampDelta(result.slice.Duration),
+                   new TimestampDelta(SliceId_DurationExclusive[result.slice.Id]),
                    new Timestamp(result.slice.RelativeTimestamp),
                    result.slice.Duration >= 0 ?             // Duration can be not complete / negative
                     new Timestamp(result.slice.RelativeTimestamp + result.slice.Duration) :
