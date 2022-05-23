@@ -10,6 +10,7 @@
 - [LTTng](https://lttng.org) (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc)
 - [perf](https://perf.wiki.kernel.org/) CPU Sampling(cpu-clock)
 - [Perfetto](https://perfetto.dev/) Android & Chromium (CPU Scheduling, CPU Sampling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks, GPU Counters, Jank Detection, Processes, Android Packages)
+- [dotnet-trace (.nettrace)](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace) - Cross-platform .NET trace. CPU Sampling, Generic Events, Exceptions, Garbage Collector (GC)
 
 > Logs supported: 
 - [Dmesg](https://en.wikipedia.org/wiki/Dmesg)
@@ -96,6 +97,7 @@ The tools can be run in several modes:
 # How to capture a trace or logs
 - Linux 
   - Please see [Linux Trace Log Capture](LinuxTraceLogCapture.md)
+- Cross Platform [dotnet-trace (.nettrace)](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
 - Perfetto
   - Android - Please see [Record traces on Android](https://perfetto.dev/docs/quickstart/android-tracing)
   - Linux - Please see [Record traces on Linux](https://perfetto.dev/docs/quickstart/linux-tracing)
