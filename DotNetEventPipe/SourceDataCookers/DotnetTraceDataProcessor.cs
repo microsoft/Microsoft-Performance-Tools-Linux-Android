@@ -56,6 +56,7 @@ namespace DotNetEventPipe
 
                 // EventPipeEventSource doesn't expose the callstacks - https://github.com/Microsoft/perfview/blob/main/src/TraceEvent/EventPipe/EventPipeFormat.md
                 // But currently it's SessionDuration, SessionStartTime are correct
+                // Can remove when when this is released - https://github.com/microsoft/perfview/pull/1635
                 var dotnetFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 using (var traceSource = new EventPipeEventSource(dotnetFileStream))
                 {
@@ -74,6 +75,7 @@ namespace DotNetEventPipe
                     contentDictionary[path] = traceEventProcessor;
                     source.AllEvents += traceEventProcessor.ProcessTraceEvent;
                     source.Process();
+                    // Below will work when this is released - https://github.com/microsoft/perfview/pull/1635
                     //this.dataSourceInfo = new DataSourceInfo(0, source.SessionDuration.Ticks * 100, source.SessionStartTime.ToUniversalTime());
                 }
                 File.Delete(tmpEtlx);
