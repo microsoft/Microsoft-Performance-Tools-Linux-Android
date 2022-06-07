@@ -48,37 +48,45 @@ namespace DotNetEventPipe
            IProgress<int> progress,
            CancellationToken cancellationToken)
         {
+            const string ReadPastEndOfStreamExceptionMessage = "Read past end of stream."; // Trace can be partially written but still have data - https://github.com/microsoft/perfview/issues/1637
             var contentDictionary = new Dictionary<string, TraceEventProcessor>();
 
             foreach (var path in this.filePaths)
             {
                 var traceStartTime = DateTime.UtcNow.Date;
 
-                // EventPipeEventSource doesn't expose the callstacks - https://github.com/Microsoft/perfview/blob/main/src/TraceEvent/EventPipe/EventPipeFormat.md
-                // But currently it's SessionDuration, SessionStartTime are correct
-                // Can remove when when this is released - https://github.com/microsoft/perfview/pull/1635
-                var dotnetFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using (var traceSource = new EventPipeEventSource(dotnetFileStream))
-                {
-                    traceSource.Process();
-                    this.dataSourceInfo = new DataSourceInfo(0, traceSource.SessionDuration.Ticks * 100, traceSource.SessionStartTime.ToUniversalTime());
-                }
-
                 var tmpEtlx = Path.Combine(Path.GetTempPath(), Path.GetFileName(path) + ".etlx");
-                
-                string traceLogPath = TraceLog.CreateFromEventPipeDataFile(path, tmpEtlx);
-                using (TraceLog traceLog = new TraceLog(traceLogPath))
+                var traceEventProcessor = new TraceEventProcessor();
+                try
                 {
-                    TraceLogEventSource source = traceLog.Events.GetSource();
+                    string traceLogPath = TraceLog.CreateFromEventPipeDataFile(path, tmpEtlx);
+                    using (TraceLog traceLog = new TraceLog(traceLogPath))
+                    {
+                        TraceLogEventSource source = traceLog.Events.GetSource();
 
-                    var traceEventProcessor = new TraceEventProcessor();
-                    contentDictionary[path] = traceEventProcessor;
-                    source.AllEvents += traceEventProcessor.ProcessTraceEvent;
-                    source.Process();
-                    // Below will work when this is released - https://github.com/microsoft/perfview/pull/1635
-                    //this.dataSourceInfo = new DataSourceInfo(0, source.SessionDuration.Ticks * 100, source.SessionStartTime.ToUniversalTime());
+                        contentDictionary[path] = traceEventProcessor;
+                        source.AllEvents += traceEventProcessor.ProcessTraceEvent;
+                        source.Process();
+                        this.dataSourceInfo = new DataSourceInfo(0, source.SessionDuration.Ticks * 100, source.SessionStartTime.ToUniversalTime());
+                    }
                 }
-                File.Delete(tmpEtlx);
+                catch (Exception e)
+                {
+                    if (e.Message != ReadPastEndOfStreamExceptionMessage || !traceEventProcessor.HasTraceData())
+                    {
+                        throw;
+                    }
+                }
+                finally
+                {
+                    try
+                    {
+                        File.Delete(tmpEtlx);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
             }
 
             this.fileContent = new ReadOnlyDictionary<string, TraceEventProcessor>(contentDictionary);

@@ -43,6 +43,8 @@ Featuring some use-cases and some walkthroughs
 - [.NET Core SDK 3.1.x](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 - [Visual Studio](https://visualstudio.microsoft.com/), [VSCode](https://visualstudio.microsoft.com/), or your favorite editor!
 
+See [full developer instructions](DeveloperInfo.md) for more information
+
 # Download
 - **For plugins Download** see [Releases](https://github.com/microsoft/Microsoft-Performance-Tools-Linux/releases)
 
@@ -86,6 +88,8 @@ The tools can be run in several modes:
         wpa.exe /?
         "C:\Program Files\WindowsApps\Microsoft.WindowsPerformanceAnalyzerPreview_10.0.22504.0_x64__8wekyb3d8bbwe\10\Windows Performance Toolkit\wpa.exe" /?
         ```
+        PowerShell:
+        ```Get-AppxPackage Microsoft.WindowsPerformanceAnalyzer*```
     - Verify that these 2 command line WPA options are supported:
       - OPTIONS: **-addsearchdir PATH**. Adds a directory path to the plugin search path. ....
       - ENVIRONMENT VARIABLES: **WPA_ADDITIONAL_SEARCH_DIRECTORIES** - A semicolon (;) delimited list of additional directories to search for plugins. Equivalent to the -addsearchdir option.
@@ -111,13 +115,12 @@ The tools can be run in several modes:
     - Note: Requires >= 1.2 release AND WPA >= 10.6.20.1 (via WPA Help -> About)
 - Perfetto
   - WPA -> Open -> (Select Perfetto trace file)
-    - Note: The Perfetto plugin explicitly supports the _.perfetto-trace_ and _.pftrace_ file types, but it does support more (e.g. Protobuf, Chrome JSON). You just need to rename to one of the stated supported types
-- Unified (LTTng, Perfetto, or other multiple different logs files together)
-  - Once you gather the data, there is a tiny bit of prep needed to open them in a single unified timeline (like the screenshot above)
+- Single session (LTTng, Perfetto, or other multiple different logs files together)
+  - Once you gather the data, there is a tiny bit of prep needed to open them in a single session (unified timeline) (like the screenshot above)
   - If you want to open multiple logs together in single timeline - Copy all trace files and logs you want to open to single folder
   - Example: You want to open in the same timeline: LTTng, Perf CPU Sampling, Dmesg
     - Ensure that the Linux CTF folder/trace is zipped and renamed to .ctf in the same folder (hack so open Unified works)
-  - WPA -> File -> Open -> Multi-select all files and choose "Open Unified"
+  - WPA -> File -> Open -> Multi-select all files and choose "Single Session"
 
 # How do I use WPA in general?
 If you want to learn how to use the GUI UI in general see [WPA MSDN Docs](https://docs.microsoft.com/en-us/windows-hardware/test/wpt/windows-performance-analyzer)

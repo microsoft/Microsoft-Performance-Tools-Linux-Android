@@ -20,8 +20,12 @@ namespace DotNetEventPipe
         public IReadOnlyList<GenericEvent> GenericEvents => genericEvents.AsReadOnly();
         List<GenericEvent> genericEvents = new List<GenericEvent>();
 
-        // TODO - Move this to a DataCooker
+        public bool HasTraceData()
+        {
+            return threadSamplingEvents.Any() || genericEvents.Any();
+        }
 
+        // TODO - Move this to a DataCooker
         public void ProcessTraceEvent(TraceEvent data)
         {
             string eventName = data.ProviderName + "/" + data.EventName;

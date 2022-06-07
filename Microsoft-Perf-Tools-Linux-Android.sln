@@ -30,6 +30,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{E48222FC-D167-4281-BC94-961C22908B25}"
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		DeveloperInfo.md = DeveloperInfo.md
 		LinuxTraceLogCapture.md = LinuxTraceLogCapture.md
 		NOTICE.md = NOTICE.md
 		README.md = README.md
@@ -73,7 +74,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AndroidLogcat", "LinuxLogPa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetEventpipe", "DotNetEventPipe\DotnetEventpipe.csproj", "{863E041F-0715-4B08-A1B8-B5CFC027ED6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetEventpipeTest", "DotnetEventpipeTest\DotnetEventpipeTest.csproj", "{46861BDC-350C-45ED-A72E-9661C3BBE2D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetEventpipeTest", "DotnetEventpipeTest\DotnetEventpipeTest.csproj", "{46861BDC-350C-45ED-A72E-9661C3BBE2D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
