@@ -19,6 +19,7 @@ namespace LTTngCds.CookerData
     {
         private readonly ICtfEvent ctfEvent;
         private readonly IEventDescriptor eventDescriptor;
+        private readonly CtfTimestamp adjustedCtfTimestamp;
 
         internal LTTngEvent(ICtfEvent ctfEvent)
         {
@@ -39,8 +40,13 @@ namespace LTTngCds.CookerData
 
             this.ctfEvent = ctfEvent;
             this.eventDescriptor = eventDescriptor;
+        }
 
-  ///          streamDefinedEventContext
+        internal LTTngEvent(LTTngEvent lttngEvent, long timestampAdjustmentNano) : this(lttngEvent.ctfEvent)
+        {
+            long adjustedTimestamp = Math.Max(0, (long)lttngEvent.ctfEvent.Timestamp.NanosecondsFromClockBase + timestampAdjustmentNano);
+            CtfTimestamp origCtfTimestamp = lttngEvent.ctfEvent.Timestamp;
+            this.adjustedCtfTimestamp = new CtfTimestamp(origCtfTimestamp.BaseIntegerValue, adjustedTimestamp, origCtfTimestamp.ClockDescriptor, origCtfTimestamp.ClockName);
         }
 
         /// <summary>
@@ -56,17 +62,17 @@ namespace LTTngCds.CookerData
         /// <summary>
         /// Event timestamp. Nanoseconds from the CTF clock the timestamp is associated with.
         /// </summary>
-        public Timestamp Timestamp => new Timestamp((long)this.ctfEvent.Timestamp.NanosecondsFromClockBase);
+        public Timestamp Timestamp => new Timestamp((long)(adjustedCtfTimestamp?.NanosecondsFromClockBase ?? this.ctfEvent.Timestamp.NanosecondsFromClockBase));
 
         /// <summary>
         /// Event time as a wall clock.
         /// </summary>
-        public DateTime WallClockTime => this.ctfEvent.Timestamp.GetDateTime();
+        public DateTime WallClockTime => adjustedCtfTimestamp?.GetDateTime() ?? this.ctfEvent.Timestamp.GetDateTime();
 
         /// <summary>
         /// CTF timestamp
         /// </summary>
-        public CtfTimestamp CtfTimestamp => this.ctfEvent.Timestamp;
+        public CtfTimestamp CtfTimestamp => adjustedCtfTimestamp ?? this.ctfEvent.Timestamp;
 
         /// <summary>
         /// Event header as defined in the stream for this event.

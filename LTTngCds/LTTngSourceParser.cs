@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using CtfPlayback;
 using CtfPlayback.Inputs;
@@ -25,6 +26,20 @@ namespace LTTngCds
     {
         private ICtfInput ctfInput;
         private DataSourceInfo dataSourceInfo;
+        private readonly long timeOffsetNanos = 0;
+
+        public LTTngSourceParser(ProcessorOptions options)
+        {
+            IEnumerable<String> timeOffsetArgs;
+            if (options.Options.TryGetOptionArguments("LTTngOffsetTime", out timeOffsetArgs))
+            {
+                long localOffset = 0;
+                if (long.TryParse(timeOffsetArgs.First(), out localOffset))
+                {
+                    timeOffsetNanos = localOffset;
+                }
+            }
+        }
 
         public void SetZippedInput(string pathToZip)
         {
@@ -79,6 +94,11 @@ namespace LTTngCds
 
             void EventCallback(LTTngEvent lttngEvent, LTTngContext lttngContext)
             {
+                if (timeOffsetNanos != 0)
+                {
+                    lttngEvent = new LTTngEvent(lttngEvent, timeOffsetNanos);
+                }
+
                 if (this.EventCount == 0)
                 {
                     this.FirstEventTimestamp = lttngEvent.Timestamp;
