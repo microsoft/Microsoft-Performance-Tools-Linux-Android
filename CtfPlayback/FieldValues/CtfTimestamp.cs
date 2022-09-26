@@ -89,7 +89,7 @@ namespace CtfPlayback.FieldValues
                 throw new ArgumentException("Negative timestamp value is not supported.", nameof(timestampValue));
             }
 
-            this.NanosecondsFromClockBase = ConvertTimeToNanoseconds((ulong) timestampValue);
+            this.NanosecondsFromClockBase = ConvertTimeToNanoseconds((ulong)timestampValue);
         }
 
         /// <summary>
