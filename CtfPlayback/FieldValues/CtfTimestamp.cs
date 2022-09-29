@@ -89,7 +89,32 @@ namespace CtfPlayback.FieldValues
                 throw new ArgumentException("Negative timestamp value is not supported.", nameof(timestampValue));
             }
 
-            this.NanosecondsFromClockBase = ConvertTimeToNanoseconds((ulong) timestampValue);
+            this.NanosecondsFromClockBase = ConvertTimeToNanoseconds((ulong)timestampValue);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="integerValue">Integer representation of the timestamp</param>
+        /// <param name="timestampValue">Timestamp value in units specified by the ClockDescriptor</param>
+        public CtfTimestamp(CtfIntegerValue integerValue, long timestampValue, ICtfClockDescriptor clockDescriptor, string clockName)
+        {
+            if (timestampValue < 0)
+            {
+                throw new ArgumentException("Negative timestamp value is not supported.", nameof(timestampValue));
+            }
+            this.BaseIntegerValue = integerValue;
+            this.ClockDescriptor = clockDescriptor;
+
+            if (!this.BaseIntegerValue.Value.TryGetInt64(out long value))
+            {
+                throw new CtfPlaybackException("Unable to retrieve timestamp as long.");
+            }
+
+            this.NanosecondsFromClockBase = ConvertTimeToNanoseconds((ulong)timestampValue);
+
+            this.ClockName = clockName;
+            this.ClockOffsetFromPosixEpochInNanoseconds = ConvertTimeToNanoseconds(this.ClockDescriptor.Offset);
         }
 
         /// <summary>

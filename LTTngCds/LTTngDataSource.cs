@@ -22,7 +22,7 @@ namespace LTTngCds
         private IApplicationEnvironment applicationEnvironment;
 
         /// <inheritdoc />
-        public override IEnumerable<Option> CommandLineOptions => Enumerable.Empty<Option>();
+        public override IEnumerable<Option> CommandLineOptions => new List<Option> { new Option("LTTngOffsetTime", "offsetTime", 1, 1) };
 
         protected override bool IsDataSourceSupportedCore(IDataSource dataSource)
         {
@@ -70,7 +70,7 @@ namespace LTTngCds
             Guard.NotNull(processorEnvironment, nameof(processorEnvironment));
             Guard.Any(dataSources, nameof(dataSources));
 
-            var sourceParser = new LTTngSourceParser();
+            var sourceParser = new LTTngSourceParser(options);
 
             var firstDataSource = dataSources.First();
             string sourcePath = firstDataSource.Uri.LocalPath;
