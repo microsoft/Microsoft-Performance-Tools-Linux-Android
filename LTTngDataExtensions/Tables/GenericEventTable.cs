@@ -24,6 +24,14 @@ namespace LTTngDataExtensions.Tables
             "All events in the LTTng trace",
             "Linux LTTng");
 
+        private static readonly ColumnConfiguration providerNameColumnConfig = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{0ABDBEDE-8B10-4660-ACCA-3F41FCE90D25}"), "Provider"),
+            new UIHints
+            {
+                IsVisible = true,
+                Width = 200,
+            });
+
         private static readonly ColumnConfiguration eventNameColumnConfig = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{8132DED0-8FE7-4533-B139-4C81133A7BCD}"), "Name"),
             new UIHints
@@ -90,6 +98,11 @@ namespace LTTngDataExtensions.Tables
             var tableGenerator = tableBuilder.SetRowCount((int)events.Count);
 
             var genericEventProjection = new EventProjection<LTTngGenericEvent>(events);
+
+            var providerNameColumn = new DataColumn<string>(
+                providerNameColumnConfig,
+                genericEventProjection.Compose((genericEvent) => genericEvent.ProviderName));
+            tableGenerator.AddColumn(providerNameColumn);
 
             var eventNameColumn = new DataColumn<string>(
                 eventNameColumnConfig,

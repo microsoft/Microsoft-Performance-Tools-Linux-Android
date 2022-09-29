@@ -31,6 +31,21 @@
                         "Width": 200
                       },
                       "Metadata": {
+                        "Description": "Provider",
+                        "Guid": "0ABDBEDE-8B10-4660-ACCA-3F41FCE90D25",
+                        "Name": "Provider"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
+                        "IsVisible": true,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 200
+                      },
+                      "Metadata": {
                         "Description": "Name",
                         "Guid": "8132ded0-8fe7-4533-b139-4c81133a7bcd",
                         "Name": "Name"

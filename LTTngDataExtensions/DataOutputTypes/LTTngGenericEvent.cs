@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using CtfPlayback;
 using CtfPlayback.FieldValues;
 using LTTngCds.CookerData;
@@ -45,13 +46,24 @@ namespace LTTngDataExtensions.DataOutputTypes
 
         public string Domain { get; }
         public uint Id { get; }
+        public string ProviderName { get; }
         public string EventName { get; }
         public readonly List<string> FieldNames;
         public EventKind(string domain, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
             this.Domain = domain;
             this.Id = id;
-            this.EventName = name;
+            Match traceLoggingMatch = TraceLoggingEventRegex.Match(name);
+            if (traceLoggingMatch.Success)
+            {
+                this.ProviderName = String.Intern(traceLoggingMatch.Groups["ProviderName"].Value);
+                this.EventName = String.Intern(traceLoggingMatch.Groups["EventName"].Value);
+            }
+            else
+            {
+                this.ProviderName = "Unknonwn";
+                this.EventName = String.Intern(name);
+            }
             this.FieldNames = new List<string>(fields.Count);
             foreach (var field in fields)
             {
@@ -60,6 +72,7 @@ namespace LTTngDataExtensions.DataOutputTypes
         }
 
         private static readonly Dictionary<Key, EventKind> RegisteredKinds = new Dictionary<Key, EventKind>();
+        private static readonly Regex TraceLoggingEventRegex = new Regex("^(?<ProviderName>[a-zA-Z_.0-9]+):(?<EventName>[a-zA-Z_.0-9]+);(?<Unknown>.+);$");
 
         public static bool TryGetRegisteredKind(string domain, uint id, out EventKind kind)
         {
@@ -128,6 +141,8 @@ namespace LTTngDataExtensions.DataOutputTypes
                 this.FieldValues.Add(field.GetValueAsString());
             }
         }
+
+        public string ProviderName => this.kind.ProviderName;
 
         public string EventName => this.kind.EventName;
 
