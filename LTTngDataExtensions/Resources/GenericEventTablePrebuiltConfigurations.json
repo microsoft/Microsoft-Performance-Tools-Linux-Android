@@ -24,7 +24,7 @@
                     {
                       "DisplayHints": {
                         "AggregationMode": 0,
-                        "IsVisible": true,
+                        "IsVisible": false,
                         "SortOrder": 0,
                         "SortPriority": 0,
                         "TextAlignment": 0,
