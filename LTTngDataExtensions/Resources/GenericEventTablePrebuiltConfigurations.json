@@ -24,6 +24,21 @@
                     {
                       "DisplayHints": {
                         "AggregationMode": 0,
+                        "IsVisible": false,
+                        "SortOrder": 0,
+                        "SortPriority": 0,
+                        "TextAlignment": 0,
+                        "Width": 200
+                      },
+                      "Metadata": {
+                        "Description": "Provider",
+                        "Guid": "0ABDBEDE-8B10-4660-ACCA-3F41FCE90D25",
+                        "Name": "Provider"
+                      }
+                    },
+                    {
+                      "DisplayHints": {
+                        "AggregationMode": 0,
                         "IsVisible": true,
                         "SortOrder": 0,
                         "SortPriority": 0,

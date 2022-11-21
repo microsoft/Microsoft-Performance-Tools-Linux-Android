@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CtfPlayback.Inputs;
 using CtfPlayback.Metadata.Interfaces;
 using LTTngCds.CtfExtensions;
@@ -18,6 +19,7 @@ namespace LTTngCds.CookerData
         private readonly LTTngMetadataCustomization metadata;
         private readonly ICtfInputStream eventStream;
         private readonly TraceContext traceContext;
+        private ISet<string> stringDictionary = new HashSet<string>();
 
         internal LTTngContext(LTTngMetadataCustomization metadata, ICtfInputStream eventStream, TraceContext traceContext)
         {
@@ -31,6 +33,19 @@ namespace LTTngCds.CookerData
         /// </summary>
         public IReadOnlyDictionary<string, ICtfClockDescriptor> Clocks => this.metadata.Metadata.ClocksByName;
 
+        /// <summary>
+        /// Intern (de-duplicate) string to save memory.
+        /// </summary>
+        public string Intern(string input)
+        {
+            if (stringDictionary.Contains(input))
+            {
+                return stringDictionary.First(item => item.Equals(input));
+            }
+            stringDictionary.Add(input);
+            return input;
+        }
+        
         /// <inheritdoc />
         public long Timestamp { get; internal set; }
 

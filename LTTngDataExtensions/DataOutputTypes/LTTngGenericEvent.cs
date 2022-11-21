@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using CtfPlayback;
 using CtfPlayback.FieldValues;
 using LTTngCds.CookerData;
@@ -45,13 +46,24 @@ namespace LTTngDataExtensions.DataOutputTypes
 
         public string Domain { get; }
         public uint Id { get; }
+        public string ProviderName { get; }
         public string EventName { get; }
         public readonly List<string> FieldNames;
-        public EventKind(string domain, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
+        public EventKind(LTTngContext context, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
-            this.Domain = domain;
+            this.Domain = context.Domain;
             this.Id = id;
-            this.EventName = name;
+            Match traceLoggingMatch = TraceLoggingEventRegex.Match(name);
+            if (traceLoggingMatch.Success)
+            {
+                this.ProviderName = context.Intern(traceLoggingMatch.Groups["ProviderName"].Value);
+                this.EventName = context.Intern(traceLoggingMatch.Groups["EventName"].Value);
+            }
+            else
+            {
+                this.ProviderName = "Unknown";
+                this.EventName = context.Intern(name);
+            }
             this.FieldNames = new List<string>(fields.Count);
             foreach (var field in fields)
             {
@@ -60,16 +72,17 @@ namespace LTTngDataExtensions.DataOutputTypes
         }
 
         private static readonly Dictionary<Key, EventKind> RegisteredKinds = new Dictionary<Key, EventKind>();
+        private static readonly Regex TraceLoggingEventRegex = new Regex("^(?<ProviderName>[a-zA-Z_.0-9]+):(?<EventName>[a-zA-Z_.0-9]+);(?<Unknown>.+);$");
 
         public static bool TryGetRegisteredKind(string domain, uint id, out EventKind kind)
         {
             return RegisteredKinds.TryGetValue(new Key(domain, id), out kind);
         }
 
-        public static EventKind RegisterKind(string domain, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
+        public static EventKind RegisterKind(LTTngContext context, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
-            EventKind kind = new EventKind(domain, id, name, fields);
-            RegisteredKinds.Add(new Key(domain, id), kind);
+            EventKind kind = new EventKind(context, id, name, fields);
+            RegisteredKinds.Add(new Key(context.Domain, id), kind);
             return kind;
         }
     }
@@ -92,7 +105,7 @@ namespace LTTngDataExtensions.DataOutputTypes
 
             if (!EventKind.TryGetRegisteredKind(context.Domain, data.Id, out this.kind))
             {
-                this.kind = EventKind.RegisterKind(context.Domain, data.Id, data.Name, payload.Fields);
+                this.kind = EventKind.RegisterKind(context, data.Id, data.Name, payload.Fields);
             }
 
             // As this is being written, all columns are of type 'T', so all rows are the same. For generic events,
@@ -128,6 +141,8 @@ namespace LTTngDataExtensions.DataOutputTypes
                 this.FieldValues.Add(field.GetValueAsString());
             }
         }
+
+        public string ProviderName => this.kind.ProviderName;
 
         public string EventName => this.kind.EventName;
 
