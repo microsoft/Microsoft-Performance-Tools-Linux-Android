@@ -1,18 +1,29 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using Microsoft.Performance.SDK.Processing;
 using Microsoft.Performance.Toolkit.Engine;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UnitTestCommon
 {
+    public class ColumnsWithData
+    {
+        public IEnumerable<string> ColumnNames{ get; set; }
+        public object[][] Data { get; set; }
+    }
+
     public static class ITableResultExts
     {
-        public static object[][] GetDataForAllRows(this ITableResult tableResult)
+        public static ColumnsWithData GetDataForAllRows(this ITableResult tableResult)
         {
-            var allColumns = tableResult.Columns.Select(f => f.Configuration.Metadata.Guid).ToArray();
-            return GetDataForAllRows(tableResult, allColumns);
+            var allColumns = tableResult.Columns.Select(f => f.Configuration.Metadata);
+            var columnsWithData = new ColumnsWithData();
+            columnsWithData.ColumnNames = allColumns.Select(f => f.Name).ToArray();
+            columnsWithData.Data = GetDataForAllRows(tableResult, allColumns.Select(f => f.Guid).ToArray());
+            return columnsWithData;
         }
 
         public static object[][] GetDataForAllRows(this ITableResult tableResult, Guid[] columns)

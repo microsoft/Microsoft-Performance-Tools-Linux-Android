@@ -3,7 +3,7 @@
 
 using Microsoft.Performance.SDK;
 
-namespace PerfDataExtensions.Tables
+namespace Utilities
 {
     public static class TimeHelper
     {

@@ -9,9 +9,9 @@ using Microsoft.Performance.SDK.Processing;
 using PerfCds.CookerData;
 using PerfDataExtensions.DataOutputTypes;
 using PerfDataExtensions.SourceDataCookers.Cpu;
-using PerfDataExtensions.Tables.Generators;
 using Utilities.AccessProviders;
-using static PerfDataExtensions.Tables.TimeHelper;
+using Utilities.Generators;
+using static Utilities.TimeHelper;
 
 namespace PerfDataExtensions.Tables
 {

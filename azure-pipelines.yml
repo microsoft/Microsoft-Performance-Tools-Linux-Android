@@ -52,6 +52,13 @@ jobs:
         projects:  |
           CtfPlayback\CtfPlayback.csproj
           CtfUnitTest\CtfUnitTest.csproj
+          DotNetEventPipe\DotnetEventpipe.csproj
+          DotnetEventpipeTest\DotnetEventpipeTest.csproj
+          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
+          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
+          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
+          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj
+          LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
           LTTngCds\LTTngCds.csproj
           LTTngDataExtensions\LTTngDataExtensions.csproj
           LTTngDataExtUnitTest\LTTngDataExtUnitTest.csproj
@@ -60,11 +67,6 @@ jobs:
           PerfDataExtensions\PerfDataExtensions.csproj
           PerfettoCds\PerfettoCds.csproj
           PerfUnitTest\PerfUnitTest.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj
-          LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
           
         includesymbols: true
         versioningScheme: 'byBuildNumber'
@@ -131,6 +133,13 @@ jobs:
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/AndroidLogCat'
         
+    - task: CopyFiles@2
+      displayName: Copy DotNetEventPipe Build to Output Artifacts
+      inputs:
+        SourceFolder: 'DotNetEventPipe/bin/$(BuildConfiguration)/netstandard2.1'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/DotNetEventPipe'
+
     - task: CopyFiles@2
       displayName: Copy Launcher
       inputs:

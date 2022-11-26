@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 
-namespace PerfDataExtensions.Tables.Generators
+namespace Utilities.Generators
 {
     public static class SequentialGenerator
     {

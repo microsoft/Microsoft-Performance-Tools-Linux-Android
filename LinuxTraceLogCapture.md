@@ -16,6 +16,7 @@ Logs:
   - LogLevel can be turned more verbose in custom image
   - /etc/waagent.conf
   - Logs.Verbose=y
+- [dotnet-trace (.nettrace)](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-trace)
 - [AndroidLogcat](https://developer.android.com/studio/command-line/logcat)
   - Default log format should be supported
   - Basic durations are supported/parsed on production builds / logs.

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-namespace PerfDataExtensions.Tables.Generators
+namespace Utilities.Generators
 {
     public interface IMapListToStream
     {
