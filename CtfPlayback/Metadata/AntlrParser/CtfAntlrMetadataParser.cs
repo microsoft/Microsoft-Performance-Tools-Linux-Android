@@ -8,7 +8,6 @@ using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using CtfPlayback.Metadata.Interfaces;
-using CtfReader.Metadata.AntlrParser;
 
 namespace CtfPlayback.Metadata.AntlrParser
 {

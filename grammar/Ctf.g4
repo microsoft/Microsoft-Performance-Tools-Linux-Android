@@ -1,6 +1,6 @@
-// Install java runtime
+// Install java runtime such as from https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=406&field_operating_system_target_id=436&field_architecture_target_id=391&field_java_package_target_id=401
 // Download Antlr4 jar from http://antlr.org
-// run: java -jar antlr-4.7.2-complete.jar -Dlanguage=CSharp Ctf.g4
+// run: java -jar antlr-4.11.1-complete.jar -Dlanguage=CSharp Ctf.g4
 
 // this is almost a direct port from the BabelTrace reference implementation which
 // currently uses flex/bison.

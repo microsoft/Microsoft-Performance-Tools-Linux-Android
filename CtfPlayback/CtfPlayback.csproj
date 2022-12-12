@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" GeneratePathProperty="true" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
