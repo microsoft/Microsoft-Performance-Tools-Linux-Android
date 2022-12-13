@@ -81,7 +81,8 @@ namespace CtfPlayback.Metadata.AntlrParser
 
             while (true)
             {
-                if (metadataStream.Read(headerBuffer, 0, headerBuffer.Length) != headerBuffer.Length)
+                int bytesRead = metadataStream.Read(headerBuffer, 0, headerBuffer.Length);
+                if (bytesRead == 0)
                 {
                     break;
                 }
@@ -94,7 +95,7 @@ namespace CtfPlayback.Metadata.AntlrParser
 
                 // todo:check the endianness based on the magic number
 
-                if (header.Magic == 0x75d11d57) // CTF: Magic Header for binary metadata streams
+                if (header.Magic == 0x75d11d57) // CTF: Magic Header for binary metadata streams // 1976638807
                 {
                     int packetSize = (int) header.PacketSize / 8 - headerBuffer.Length;
 
@@ -107,6 +108,16 @@ namespace CtfPlayback.Metadata.AntlrParser
                     if (read == 0)
                     {
                         break;
+                    }
+
+                    if (read != packetSize) // .NET 6.0 breaking change - https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/partial-byte-reads-in-streams - bytes read can be less than what was requested
+                    {
+                        while (read < buffer.Length) // Keep reading until we fill up our buffer to the packetSize
+                        {
+                            int tmpBytesRead = metadataStream.Read(buffer.AsSpan().Slice(read));
+                            if (tmpBytesRead == 0) break;
+                            read += tmpBytesRead;
+                        }
                     }
 
                     int contentSize = (int) header.ContentSize / 8 - headerBuffer.Length;
