@@ -3,7 +3,6 @@
 
 using System.IO;
 using Antlr4.Runtime;
-using CtfReader.Metadata.AntlrParser;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CtfUnitTest
