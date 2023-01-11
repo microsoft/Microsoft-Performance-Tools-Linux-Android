@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using CtfPlayback.Helpers;
 using CtfPlayback.Metadata.Interfaces;
 
 namespace CtfPlayback.Metadata.AntlrParser
@@ -68,6 +69,8 @@ namespace CtfPlayback.Metadata.AntlrParser
         /// <returns>String representation of the metadata</returns>
         private unsafe string GetMetadata(Stream metadataStream)
         {
+            // See https://diamon.org/ctf/#spec7.1
+
             byte[] headerBuffer = new byte[Marshal.SizeOf(typeof(MetadataPacketHeader))];
             byte[] buffer = null;
 
@@ -81,7 +84,7 @@ namespace CtfPlayback.Metadata.AntlrParser
 
             while (true)
             {
-                int bytesRead = metadataStream.Read(headerBuffer, 0, headerBuffer.Length);
+                int bytesRead = metadataStream.ReadUntilBytesRequested(headerBuffer, 0, headerBuffer.Length);
                 if (bytesRead == 0)
                 {
                     break;
@@ -104,29 +107,19 @@ namespace CtfPlayback.Metadata.AntlrParser
                         buffer = new byte[packetSize];
                     }
 
-                    int read = metadataStream.Read(buffer, 0, packetSize);
+                    int read = metadataStream.ReadUntilBytesRequested(buffer, 0, packetSize);
                     if (read == 0)
                     {
-                        break;
-                    }
-
-                    if (read != packetSize) // .NET 6.0 breaking change - https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/partial-byte-reads-in-streams - bytes read can be less than what was requested
-                    {
-                        while (read < buffer.Length) // Keep reading until we fill up our buffer to the packetSize
-                        {
-                            int tmpBytesRead = metadataStream.Read(buffer.AsSpan().Slice(read));
-                            if (tmpBytesRead == 0) break;
-                            read += tmpBytesRead;
-                        }
+                        throw new InvalidDataException($"Metadata stream seems to be corrupt. We read 0 bytes when we expected packetSize:{packetSize} bytes.");
                     }
 
                     int contentSize = (int) header.ContentSize / 8 - headerBuffer.Length;
-                    if (contentSize < read)
+                    if (read < contentSize)
                     {
-                        read = contentSize;
+                        throw new InvalidDataException($"Metadata stream seems to be corrupt. We read {read} packetSize bytes but the header says there should be {contentSize} bytes.");
                     }
 
-                    string result = Encoding.ASCII.GetString(buffer, 0, read);
+                    string result = Encoding.ASCII.GetString(buffer, 0, contentSize);
 
                     sb.Append(result);
                 }
@@ -151,7 +144,7 @@ namespace CtfPlayback.Metadata.AntlrParser
                     }
                 }
             }
-
+            
             return sb.ToString();
         }
 
