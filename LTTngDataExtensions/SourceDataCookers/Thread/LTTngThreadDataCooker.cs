@@ -456,7 +456,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             {
                 if (this.lastContextSwitch.TryGetValue(context.CurrentCpu, out ContextSwitch lastContextSwitchOnCpu))
                 {
-                    processedExecutionEvents.Add(new ExecutionEvent(lastContextSwitchOnCpu, lastContextSwitchOnCpu.SwitchInTime));
+                    processedExecutionEvents.Add(new ExecutionEvent(lastContextSwitchOnCpu, default, lastContextSwitchOnCpu.SwitchInTime));
                     this.lastContextSwitch.Remove(context.CurrentCpu);
                 }
                 this.cloneSyscallFlagsPerTid.Clear();
@@ -577,19 +577,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public void ProcessContextSwitch(LTTngEvent data, LTTngContext context)
         {
             int prevTid = data.Payload.ReadFieldAsInt32("_prev_tid");
-            if (lastContextSwitch.TryGetValue(context.CurrentCpu, out ContextSwitch previousContextSwitch))
-            {
-                if (prevTid == previousContextSwitch.NextTid)
-                {
-                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, data.Timestamp));
-                }
-                else
-                {
-                    ///If we missed context switch events, 
-                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, previousContextSwitch.SwitchInTime));
-                }
-                
-            }
+
             int nextTid = data.Payload.ReadFieldAsInt32("_next_tid");
             ThreadInfo.ThreadState switchOutState;
             var prevStateValue = data.Payload.FieldsByName["_prev_state"];
@@ -598,7 +586,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
                ((CtfEnumValue)prevStateValue).IntegerValue.TryGetInt32(out int enumValue);
                 switchOutState = (ThreadInfo.ThreadState)enumValue;
             }
-            else 
+            else
             {
                 switchOutState = (ThreadInfo.ThreadState)data.Payload.ReadFieldAsInt32("_prev_state");
             }
@@ -620,17 +608,33 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             }
 
             ThreadInfo nextThread;
+
             if (runningThreads.TryGetValue(nextTid, out nextThread))
             {
-                lastContextSwitch[context.CurrentCpu] = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
                 nextThread.SwitchIn(data.Timestamp);
             }
             else
             {
                 nextThread = new ThreadInfo(nextTid, data.Timestamp, ThreadInfo.ThreadState.TASK_RUNNING);
-                lastContextSwitch[context.CurrentCpu] = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
                 this.AddNewThread(nextThread);
             }
+
+            ContextSwitch currentContextSwitch = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
+
+            if (lastContextSwitch.TryGetValue(context.CurrentCpu, out ContextSwitch previousContextSwitch))
+            {
+                if (prevTid == previousContextSwitch.NextTid)
+                {
+                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, currentContextSwitch, data.Timestamp));
+                }
+                else
+                {
+                    ///If we missed context switch events, 
+                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, currentContextSwitch, previousContextSwitch.SwitchInTime));
+                }
+            }
+
+            lastContextSwitch[context.CurrentCpu] = currentContextSwitch;
         }
 
         public void ProcessThreadExit(LTTngEvent data)

@@ -2,8 +2,8 @@
   "profiles": {
     "LTTngDataExtensions": {
       "commandName": "Executable",
-      "executablePath": "C:\\Tools\\WPT\\latest\\wpa.exe",
-      "commandLineArgs": "-addsearchdir C:\\src\\Microsoft-Performance-Tools-Linux\\LTTngDataExtensions\\bin\\Debug\\netstandard2.1"
+      "executablePath": "G:\\Work\\wpa\\wpa.exe",
+      "commandLineArgs": "-addsearchdir C:\\src\\Microsoft-Performance-Tools-Linux\\LTTngDataExtensions\\bin\\Debug\\netstandard2.1 C:\\src\\Microsoft-Performance-Tools-Linux\\PerfDataExtensions\\bin\\Debug\\netstandard2.1 "
     }
   }
 }

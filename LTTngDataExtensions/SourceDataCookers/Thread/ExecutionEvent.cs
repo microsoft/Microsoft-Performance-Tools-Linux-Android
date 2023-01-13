@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Performance.SDK;
 
 namespace LTTngDataExtensions.SourceDataCookers.Thread
@@ -27,25 +28,37 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         private Timestamp switchInTime;
         private Timestamp switchOutTime;
         private Timestamp nextThreadPreviousSwitchOutTime;
+        private Dictionary<string, long> performanceCountersDiffByName;
 
-        public ExecutionEvent(ContextSwitch contextSwitch, Timestamp switchOutTime)
+        public ExecutionEvent(ContextSwitch switchInContextSwitch, ContextSwitch switchOutContextSwitch, Timestamp switchOutTime)
         {
-            this.cpu = contextSwitch.Cpu;
-            this.nextPid = contextSwitch.NextPid;
-            this.nextTid = contextSwitch.NextTid;
-            this.previousPid = contextSwitch.PreviousPid;
-            this.previousTid = contextSwitch.PreviousTid;
-            this.priority = contextSwitch.Priority;
-            this.readyingPid = contextSwitch.ReadyingPid;
-            this.readyingTid = contextSwitch.ReadyingTid;
-            this.previousState = contextSwitch.PreviousState;
-            this.nextCommand = contextSwitch.NextImage;
-            this.previousCommand = contextSwitch.PreviousImage;
-            this.readyTime = contextSwitch.ReadyTime;
-            this.waitTime = contextSwitch.WaitTime;
-            this.switchInTime = contextSwitch.SwitchInTime;
+            this.cpu = switchInContextSwitch.Cpu;
+            this.nextPid = switchInContextSwitch.NextPid;
+            this.nextTid = switchInContextSwitch.NextTid;
+            this.previousPid = switchInContextSwitch.PreviousPid;
+            this.previousTid = switchInContextSwitch.PreviousTid;
+            this.priority = switchInContextSwitch.Priority;
+            this.readyingPid = switchInContextSwitch.ReadyingPid;
+            this.readyingTid = switchInContextSwitch.ReadyingTid;
+            this.previousState = switchInContextSwitch.PreviousState;
+            this.nextCommand = switchInContextSwitch.NextImage;
+            this.previousCommand = switchInContextSwitch.PreviousImage;
+            this.readyTime = switchInContextSwitch.ReadyTime;
+            this.waitTime = switchInContextSwitch.WaitTime;
+            this.switchInTime = switchInContextSwitch.SwitchInTime;
             this.switchOutTime = switchOutTime;
-            this.nextThreadPreviousSwitchOutTime = contextSwitch.NextThreadPreviousSwitchOutTime;
+            this.nextThreadPreviousSwitchOutTime = switchInContextSwitch.NextThreadPreviousSwitchOutTime;
+            this.performanceCountersDiffByName = new Dictionary<string, long>();
+
+            foreach(string performanceCounterName in switchInContextSwitch.PerformanceCountersByName.Keys)
+            {
+                if (switchOutContextSwitch!= default && switchOutContextSwitch.PerformanceCountersByName.ContainsKey(performanceCounterName))
+                {
+                    performanceCountersDiffByName[performanceCounterName] =
+                        switchOutContextSwitch.PerformanceCountersByName[performanceCounterName] -
+                        switchInContextSwitch.PerformanceCountersByName[performanceCounterName];
+                }
+            }
         }
 
         public void RecoverPids(Dictionary<int, int> recoveredPids)
@@ -90,5 +103,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public Timestamp SwitchInTime => this.switchInTime;
         public Timestamp SwitchOutTime => this.switchOutTime;
         public Timestamp NextThreadPreviousSwitchOutTime => this.nextThreadPreviousSwitchOutTime;
+        public IReadOnlyDictionary<string, long> PerformanceCountersDiffByName => this.performanceCountersDiffByName;
     }
 }

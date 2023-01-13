@@ -107,6 +107,25 @@ namespace LTTngDataExtensions.Tables
             new ColumnConfiguration(
                 new ColumnMetadata(new Guid("{5AB96EE5-FE5C-45AE-9BA2-965EFF4833D8}"), "Last Switch-Out Time"),
                 new UIHints { Width = 80, });
+        private static readonly ColumnConfiguration instructionCountColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{63447522-514D-4F7D-81E0-544E0670BB1D}"), "Instruction Count"),
+                new UIHints { Width = 80, });
+
+        private static readonly ColumnConfiguration lastLevelCacheMissesColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{7EB3DBFA-B1CA-4CB7-9D70-66E0BEFA0F32}"), "LLC Misses"),
+                new UIHints { Width = 80, });
+
+        private static readonly ColumnConfiguration cpuCycleColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{AC255EA6-BA80-4A7D-BCF5-710B6B3618A9}"), "CPU Cycle"),
+                new UIHints { Width = 80, });
+
+        private static readonly ColumnConfiguration cacheMissesColumn =
+            new ColumnConfiguration(
+                new ColumnMetadata(new Guid("{6BBB2F84-4215-46CF-9C92-FA79DB8DE55C}"), "Cache Misses"),
+                new UIHints { Width = 80, });
 
         private static readonly ColumnConfiguration cpuUsageInViewportPreset = new ColumnConfiguration(
             new ColumnMetadata(new Guid("{0cf6ffa6-2f41-4460-a201-718c37cbf413}"), "CPU Usage (in view)"),
@@ -271,6 +290,11 @@ namespace LTTngDataExtensions.Tables
             table.AddColumn(switchInTimeColumn, switchInTime);
             table.AddColumn(switchOutTimeColumn, switchOutTime);
             table.AddColumn(previousPidColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PreviousPid));
+            table.AddColumn(instructionCountColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PerformanceCountersDiffByName["_perf_cpu_instructions"]));
+            table.AddColumn(lastLevelCacheMissesColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PerformanceCountersDiffByName["_perf_cpu_LLC_load_misses"]));
+            table.AddColumn(cpuCycleColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PerformanceCountersDiffByName["_perf_cpu_cpu_cycles"]));
+            table.AddColumn(cacheMissesColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PerformanceCountersDiffByName["_perf_cpu_cache_misses"]));
+
             table.AddColumn(nextCommandColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].NextImage));
             table.AddColumn(previousCommandColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PreviousImage));
 

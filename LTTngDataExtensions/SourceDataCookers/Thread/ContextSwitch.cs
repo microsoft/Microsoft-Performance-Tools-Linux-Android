@@ -3,6 +3,10 @@
 
 using Microsoft.Performance.SDK;
 using LTTngCds.CookerData;
+using CtfPlayback.FieldValues;
+using System.Collections;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace LTTngDataExtensions.SourceDataCookers.Thread
 {
@@ -23,6 +27,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         private TimestampDelta waitTime;
         private Timestamp switchInTime;
         private Timestamp nextThreadPreviousSwitchOutTime;
+        private Dictionary<string, long> performanceCountersByName;
 
         public ContextSwitch(LTTngEvent data, ThreadInfo nextThread, ThreadInfo previousThread, uint cpu)
         {
@@ -61,6 +66,17 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             this.previousCommand = data.Payload.ReadFieldAsArray("_prev_comm").GetValueAsString();
             this.switchInTime = data.Timestamp;
             this.nextThreadPreviousSwitchOutTime = nextThread.previousSwitchOutTime;
+
+            performanceCountersByName = new Dictionary<string, long>();
+
+            foreach (string fieldName in data.StreamDefinedEventContext.FieldsByName.Keys)
+            {
+                if (data.StreamDefinedEventContext.FieldsByName[fieldName].FieldType ==
+                    CtfPlayback.Metadata.CtfTypes.Integer && fieldName.Contains("perf"))
+                {
+                    performanceCountersByName[fieldName] = data.StreamDefinedEventContext.ReadFieldAsInt64(fieldName);
+                }
+            }
         }
 
         public uint Cpu => this.cpu;
@@ -78,5 +94,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public TimestampDelta WaitTime => this.waitTime;
         public Timestamp SwitchInTime => this.switchInTime;
         public Timestamp NextThreadPreviousSwitchOutTime => this.nextThreadPreviousSwitchOutTime;
+        public IReadOnlyDictionary<string, long> PerformanceCountersByName => performanceCountersByName;
     }
 }

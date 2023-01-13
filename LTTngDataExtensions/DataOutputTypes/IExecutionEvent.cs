@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.Performance.SDK;
+using System.Collections.Generic;
 
 namespace LTTngDataExtensions.SourceDataCookers.Thread
 {
@@ -23,5 +24,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         Timestamp SwitchInTime { get; }
         Timestamp SwitchOutTime { get; }
         Timestamp NextThreadPreviousSwitchOutTime { get; }
+        IReadOnlyDictionary<string, long> PerformanceCountersDiffByName { get; }
     }
 }
