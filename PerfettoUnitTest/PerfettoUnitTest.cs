@@ -133,6 +133,12 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData[9581].WakeEvent.WakerTid == 19701);
             Assert.IsTrue(cpuSchedEventData[9581].WakeEvent.WakerThreadName == "kworker/u16:13");
 
+            Assert.IsTrue(cpuSchedEventData[5802].WakeEvent.WakerProcessName == "TraceLogApiTest");
+            Assert.IsTrue(cpuSchedEventData[5802].WakeEvent.WakerPid == 1);
+            Assert.IsTrue(cpuSchedEventData[5802].WakeEvent.Priority == 120);
+            Assert.IsTrue(cpuSchedEventData[5802].WakeEvent.Success == 1);
+            Assert.IsTrue(cpuSchedEventData[5802].WakeEvent.TargetCpu == 1);
+
             // Previous scheduling event validation
             Assert.IsTrue(cpuSchedEventData[9581].PreviousSchedulingEvent.EndState == "Task Dead");
             Assert.IsTrue(cpuSchedEventData[9581].PreviousSchedulingEvent.Tid == cpuSchedEventData[9581].Tid);
