@@ -157,7 +157,9 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 PerfettoThreadEvent wokenThread = tidToThreadMap[wokenTid];
                 string wokenThreadName = wokenThread.Name;
                 var wokenPid = wokenThread.Upid;
-                string wokenProcessName = wokenPid != null ? upidToProcessMap[wokenPid.Value].Name : wake.Args.ElementAt(0).Value.ToString(); // This field name is comms but it is woken process name.
+                object comm;
+                wake.Args.TryGetValue("comm", out comm);  // This field name is comm but it is woken process name.
+                string wokenProcessName = wokenPid != null ? upidToProcessMap[wokenPid.Value].Name : (string)comm;
 
                 string wakerThreadName = wake.ThreadName;
                 var wakerTid = wake.Tid;
@@ -165,6 +167,12 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                 var wakerPid = wakerThread.Upid;
                 string wakerProcessName = wakerPid != null ? upidToProcessMap[wakerPid.Value].Name : String.Empty;
 
+                object prio;
+                wake.Args.TryGetValue("prio", out prio);
+                object success;
+                wake.Args.TryGetValue("success", out success);
+                object target_cpu;
+                wake.Args.TryGetValue("target_cpu", out target_cpu);
                 PerfettoCpuWakeEvent ev = new PerfettoCpuWakeEvent
                 (
                     wokenProcessName: wokenProcessName,
@@ -176,10 +184,10 @@ namespace PerfettoCds.Pipeline.CompositeDataCookers
                     wakerThreadName: wakerThreadName,
                     wakerTid: wakerTid,
                     timestamp: wake.StartTimestamp,
-                    success: int.Parse(wake.Args.ElementAt(3).Value.ToString()),   // Success is at index 3
+                    success: success == null ? -1 : (int)(long)success,
                     cpu: wake.Cpu,
-                    targetCpu: int.Parse(wake.Args.ElementAt(4).Value.ToString()), // TargetCpu is at index 4
-                    priority: int.Parse(wake.Args.ElementAt(2).Value.ToString())   // Priority is at index 2
+                    targetCpu: target_cpu == null ? -1 : (int)(long)target_cpu,
+                    priority: prio == null ? -1 : (int)(long)prio
                 );
 
                 this.CpuWakeEvents.AddEvent(ev);

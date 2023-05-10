@@ -84,7 +84,19 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration WakerPriorityColumn = new ColumnConfiguration(
-            new ColumnMetadata(new Guid("{E98DFD4E-6931-49E2-A6E5-6CAC538C7A4E}"), "WakerPriority", "Priority of the waker threadd"),
+            new ColumnMetadata(new Guid("{E98DFD4E-6931-49E2-A6E5-6CAC538C7A4E}"), "WakerPriority", "Priority of the waker thread"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration WakerPidColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{2978F5AD-2C73-462F-8850-5910BCA6F251}"), "WakerPid", "Pid of the waker thread"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration WakerSuccessColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{4F990FD6-9AD0-4952-B52C-3E0A15FA6A85}"), "WakerSuccess", "Success of the waker"),
+            new UIHints { Width = 70 });
+
+        private static readonly ColumnConfiguration WakerTargetCpuColumn = new ColumnConfiguration(
+            new ColumnMetadata(new Guid("{C6E97388-A240-474A-B0CD-16C66044A55F}"), "WakerTargetCpu", "Target CPU of the waker thread"),
             new UIHints { Width = 70 });
 
         private static readonly ColumnConfiguration WakeTimestampColumn = new ColumnConfiguration(
@@ -145,9 +157,12 @@ namespace PerfettoCds.Pipeline.Tables
             tableGenerator.AddColumn(WakeEventFoundColumn, baseProjection.Compose(x => x.WakeEvent != null));
             tableGenerator.AddColumn(WakerProcessNameColumn, baseProjection.Compose(x => x.WakeEvent?.WakerProcessName ?? String.Empty));
             tableGenerator.AddColumn(WakerThreadNameColumn, baseProjection.Compose(x => x.WakeEvent?.WakerThreadName ?? String.Empty));
-            tableGenerator.AddColumn(WakerTidColumn, baseProjection.Compose(x => x.WakeEvent?.WakerTid ?? -1));
-            tableGenerator.AddColumn(WakerPriorityColumn, baseProjection.Compose(x => x.WakeEvent?.Priority ?? -1));
+            tableGenerator.AddColumn(WakerPidColumn, baseProjection.Compose(x => x.WakeEvent?.WakerPid ?? -1));
+            tableGenerator.AddColumn(WakerTidColumn, baseProjection.Compose(x => x.WakeEvent?.WakerTid));
+            tableGenerator.AddColumn(WakerPriorityColumn, baseProjection.Compose(x => x.WakeEvent?.Priority));
             tableGenerator.AddColumn(WakerCpuColumn, baseProjection.Compose(x => x.WakeEvent != null ? (int)x.WakeEvent.Cpu : -1));
+            tableGenerator.AddColumn(WakerSuccessColumn, baseProjection.Compose(x => x.WakeEvent?.Success));
+            tableGenerator.AddColumn(WakerTargetCpuColumn, baseProjection.Compose(x => x.WakeEvent?.TargetCpu));
             tableGenerator.AddColumn(WakeTimestampColumn, baseProjection.Compose(x => x.WakeEvent?.Timestamp ?? Timestamp.MinValue));
             tableGenerator.AddColumn(SchedulingLatencyColumn, baseProjection.Compose(x => x.SchedulingLatency));
             tableGenerator.AddColumn(WaitDurationColumn, baseProjection.Compose(x => x.WaitDuration));
