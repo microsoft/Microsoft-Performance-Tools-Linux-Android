@@ -137,7 +137,9 @@ namespace PerfettoCds
                     {
                         var metadata = (PerfettoMetadataEvent)ev;
 
-                        if (!traceStartDateTime.HasValue && metadata.Name == "cr-trace-capture-datetime")
+                        if (!traceStartDateTime.HasValue && (
+                            metadata.Name == "cr-trace-capture-datetime") ||
+                            metadata.Name == "trace-capture-datetime")
                         {
                             DateTime chromiumTraceCaptureDateTime;
                             if (DateTime.TryParse(metadata.StrValue, out chromiumTraceCaptureDateTime))
