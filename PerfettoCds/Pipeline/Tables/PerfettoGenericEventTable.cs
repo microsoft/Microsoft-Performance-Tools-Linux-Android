@@ -6,10 +6,10 @@ using System.Linq;
 using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Extensibility;
 using Microsoft.Performance.SDK.Processing;
+using PerfettoCds.CollectionAccessProviders;
 using PerfettoCds.Pipeline.CompositeDataCookers;
 using PerfettoCds.Pipeline.DataOutput;
 using Utilities;
-using Utilities.AccessProviders;
 
 namespace PerfettoCds.Pipeline.Tables
 {
@@ -132,7 +132,7 @@ namespace PerfettoCds.Pipeline.Tables
             new UIHints
             {
                 Width = 210,
-                IsVisible = false,
+                IsVisible = true,
             });
 
         // Need 2 of these with different sorting
@@ -261,7 +261,10 @@ namespace PerfettoCds.Pipeline.Tables
                 genericEventProjection.Compose((genericEvent) => genericEvent.ParentTreeDepthLevel));
             tableGenerator.AddColumn(parentDepthLevelColumn);
 
-            tableGenerator.AddHierarchicalColumn(ParentEventNameTreeBranchColConfig, genericEventProjection.Compose((genericEvent) => genericEvent.ParentEventNameTree), new ArrayAccessProvider<string>());
+            tableGenerator.AddHierarchicalColumn(
+                ParentEventNameTreeBranchColConfig,
+                genericEventProjection.Compose((genericEvent) => new ArraySegment<string>(genericEvent.ParentEventNameTree)),
+                new ArraySegmentAccessProvider<string>());
 
             tableGenerator.AddColumn(CountColConfig, Projection.Constant<int>(1));
 
@@ -405,7 +408,6 @@ namespace PerfettoCds.Pipeline.Tables
             {
                 Columns = processThreadNameTreeColumns,
             };
-            ParentEventNameTreeBranchColConfig.DisplayHints.IsVisible = true;
             SetGraphTableConfig(processThreadParentNameTreeConfig);
             tableBuilder.AddTableConfiguration(processThreadParentNameTreeConfig);
         }
