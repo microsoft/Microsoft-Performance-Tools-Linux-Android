@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using System;
-using Microsoft.Performance.SDK;
 using Microsoft.Performance.SDK.Processing;
 
 namespace PerfettoCds.CollectionAccessProviders
@@ -9,13 +8,18 @@ namespace PerfettoCds.CollectionAccessProviders
         public class ArraySegmentAccessProvider<T>
             : ICollectionAccessProvider<ArraySegment<T>, T>
         {
-            public bool IsNull(ArraySegment<T> value)
+            public bool IsNull(ArraySegment<T> collection)
             {
-                return value.Count == 0;
+                return collection == null || collection.Count == 0;
             }
 
             public int GetCount(ArraySegment<T> collection)
             {
+                if (collection == null)
+                {
+                    return 0;
+                }
+
                 return collection.Count;
             }
 
@@ -23,37 +27,27 @@ namespace PerfettoCds.CollectionAccessProviders
 
             public bool Equals(ArraySegment<T> x, ArraySegment<T> y)
             {
-                if (x.Offset != y.Offset || x.Count != y.Count)
+                if (x == null || y == null)
                 {
-                    return false;
+                    return x == y;
                 }
 
-                for (int i = 0; i < x.Count; i++)
-                {
-                    if (!x[i].Equals(y[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return x.Equals(y);
             }
 
             public int GetHashCode(ArraySegment<T> collection)
             {
-                int hashCode = 42;
-
-                foreach (T val in collection)
+                if (collection == null)
                 {
-                    hashCode = HashCodeUtils.CombineHashCodeValues(hashCode, val.GetHashCode());
+                    return 0;
                 }
 
-                return hashCode;
+                return collection.GetHashCode();
             }
 
             public ArraySegment<T> GetParent(ArraySegment<T> collection)
             {
-                if (collection.Count == 0)
+                if (collection == null || collection.Count == 0)
                 {
                     return ArraySegment<T>.Empty;
                 }
@@ -63,7 +57,7 @@ namespace PerfettoCds.CollectionAccessProviders
 
             public T GetValue(ArraySegment<T> collection, int index)
             {
-                if (index >= collection.Count)
+                if (collection == null || index >= collection.Count)
                 {
                     return PastEndValue;
                 }
