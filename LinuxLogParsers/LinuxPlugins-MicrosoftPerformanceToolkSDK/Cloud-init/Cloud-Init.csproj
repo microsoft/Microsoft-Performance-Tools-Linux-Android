@@ -34,6 +34,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="pluginManifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="DeployStagedFiles">
     <Exec Command="CALL XCOPY /dickherfy $(SolutionDir)Linux\WaLinuxAgent\$(OutDir) $(ProjectDir)$(OutDir)WaLinuxAgent" />
     <Exec Command="CALL XCOPY /dickherfy &quot;$(SolutionDir)Linux\DmesgIsoLog\$(OutDir)\Dmesg $(ProjectDir)$(OutDir)Dmesg" />

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/microsoft-performance-toolkit-sdk/main/src/PluginsSystem/Tools/Microsoft.Performance.Toolkit.Plugins.Cli/Manifest/PluginManifestSchema.json",
+  "identity": {
+    "id": "Microsoft.Performance.Toolkit.Plugins.WaLinuxAgent",
+    "version": "1.2.1"
+  },
+  "displayName": "Azure WALinuxAgent",
+  "description": "Azure WALinuxAgent - https://github.com/Azure/WALinuxAgent",
+  "owners": [
+    {
+      "name": "Ivan Berg",
+      "address": "1 Microsoft Way, Redmond, WA 98052",
+      "emailAddresses": [ "ivberg@microsoft.com" ],
+      "phoneNumbers": []
+    }
+  ],
+  "projectUrl": "https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android",
+  "manifestVersion": 1.0
+}
