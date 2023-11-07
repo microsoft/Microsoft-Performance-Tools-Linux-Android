@@ -119,7 +119,7 @@ namespace PerfettoUnitTest
             Assert.IsTrue(cpuSchedEventData[0].ThreadName == "kworker/u17:9 (834)");
             Assert.IsTrue(cpuSchedEventData[1].EndState == "Task Dead");
             Assert.IsTrue(cpuSchedEventData[0].ProcessName == string.Empty);
-            Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable");
+            Assert.IsTrue(cpuSchedEventData[5801].EndState == "Runnable (Preempted)");
             Assert.IsTrue(cpuSchedEventData[5801].ThreadName == "TraceLogApiTest (20855)");
             Assert.IsTrue(cpuSchedEventData[5801].ProcessName == "TraceLogApiTest (20855)");
 
@@ -203,21 +203,22 @@ namespace PerfettoUnitTest
                     PerfettoPluginConstants.ProcessEventCookerPath,
                     nameof(PerfettoProcessEventCooker.ProcessEvents)));
 
-            Assert.IsTrue(processEventData.Count == 121);
+            Assert.IsTrue(processEventData.Count == 266);
             Assert.IsTrue(processEventData[1].AndroidAppId == 10135);
             Assert.IsTrue(processEventData[1].Uid == 10135);
             Assert.IsTrue(processEventData[1].CmdLine == "com.android.systemui");
-            Assert.IsTrue(processEventData[1].ParentUpid == 25);
+            Assert.IsTrue(processEventData[1].ParentUpid == 158);
             Assert.IsTrue(processEventData[1].ParentProcess != null && processEventData[1].ParentProcess.Name == "zygote64");
             Assert.IsTrue(processEventData[1].Pid == 980);
             Assert.IsTrue(processEventData[1].Upid == 1);
             Assert.IsTrue(processEventData[1].StartTimestamp == Timestamp.Zero); // NULL should be at trace start
             Assert.IsTrue(processEventData[1].EndTimestamp == new Timestamp(39446647558)); // NULL should be at trace stop
 
-            Assert.IsTrue(processEventData[119].StartTimestamp == new Timestamp(33970357558));
-            Assert.IsTrue(processEventData[119].EndTimestamp == new Timestamp(34203203358));
-            Assert.IsTrue(processEventData[119].ParentProcess != null && processEventData[119].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
-            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoProcessTable.TableDescriptor, 121);
+            Assert.IsTrue(processEventData[264].StartTimestamp == new Timestamp(33970357558));
+            Assert.IsTrue(processEventData[264].EndTimestamp == new Timestamp(34203203358));
+            Assert.IsTrue(processEventData[264].ParentProcess != null && processEventData[264].ParentProcess.Name == "/apex/com.android.adbd/bin/adbd");
+            Assert.IsTrue(processEventData[264].CmdLine == "/system/bin/sh -c cat /proc/10628/cmdline");
+            UnitTest.TestTableBuild(RuntimeExecutionResults, PerfettoProcessTable.TableDescriptor, 266);
 
             // Packages
             var packagesList = RuntimeExecutionResults.QueryOutput<ProcessedEventData<PerfettoPackageListEvent>>(
