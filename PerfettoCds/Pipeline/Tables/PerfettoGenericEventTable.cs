@@ -293,7 +293,7 @@ namespace PerfettoCds.Pipeline.Tables
                 // Add this column to the column order
                 fieldColumns.Add(fieldColumnConfiguration);
 
-                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Args?.Count ? genericEvent.Args.ElementAt(colIndex).Value : string.Empty);
+                var genericEventFieldAsStringProjection = genericEventProjection.Compose((genericEvent) => colIndex < genericEvent.Args?.Count ? genericEvent.Args.ElementAt(colIndex).Value.ToString() : string.Empty);
 
                 tableGenerator.AddColumn(fieldColumnConfiguration, genericEventFieldAsStringProjection);
             }
