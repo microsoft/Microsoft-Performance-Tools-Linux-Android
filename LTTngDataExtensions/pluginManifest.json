@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/microsoft-performance-toolkit-sdk/main/src/PluginsSystem/Tools/Microsoft.Performance.Toolkit.Plugins.Cli/Manifest/PluginManifestSchema.json",
+  "identity": {
+    "id": "Microsoft.Performance.Toolkit.Plugins.LTTngDataExtensions",
+    "version": "1.3.0"
+  },
+  "displayName": "Linux LTTng",
+  "description": "LTTng (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc) - https://lttng.org/",
+  "owners": [
+    {
+      "name": "Ivan Berg",
+      "address": "1 Microsoft Way, Redmond, WA 98052",
+      "emailAddresses": [ "ivberg@microsoft.com" ],
+      "phoneNumbers": []
+    }
+  ],
+  "projectUrl": "https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android",
+  "manifestVersion": 1.0
+}

@@ -31,4 +31,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="pluginManifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

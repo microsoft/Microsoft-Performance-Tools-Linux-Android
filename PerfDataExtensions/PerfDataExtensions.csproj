@@ -73,6 +73,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="pluginManifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\DiskActivityPrebuiltConfiguration.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
