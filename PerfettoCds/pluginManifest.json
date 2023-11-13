@@ -4,14 +4,14 @@
     "id": "Microsoft.Performance.Toolkit.Plugins.PerfettoPlugin",
     "version": "1.5.5"
   },
-  "displayName": "Perfetto for Android and Chromium logs",
-  "description": "Perfetto Android & Chromium (CPU Scheduling, CPU Sampling, CPU Frequency, FTrace, Android Logs, Generic Events / Default Tracks, GPU Counters, Jank Detection, Processes, Android Packages) - https://perfetto.dev/",
+  "displayName": "Perfetto for Android and Chromium",
+  "description": "Processes Android system and user traces, as well as Chromium based browser performance trace files",
   "owners": [
     {
       "name": "Ivan Berg",
       "address": "1 Microsoft Way, Redmond, WA 98052",
       "emailAddresses": [ "ivberg@microsoft.com" ],
-      "phoneNumbers": [ ]
+      "phoneNumbers": []
     }
   ],
   "projectUrl": "https://github.com/microsoft/Microsoft-Performance-Tools-Linux-Android",

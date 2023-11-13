@@ -4,8 +4,8 @@
     "id": "Microsoft.Performance.Toolkit.Plugins.LTTngDataExtensions",
     "version": "1.3.0"
   },
-  "displayName": "Linux LTTng",
-  "description": "LTTng (Kernel CPU scheduling, Processes, Threads, Block IO/Disk, Syscalls, File events, etc) - https://lttng.org/",
+  "displayName": "Linux - LTTng",
+  "description": "Enables processing LTTng performance trace files that contain key Linux performance indicators, such as kernel CPU scheduling, system calls, file events, and userspace applications",
   "owners": [
     {
       "name": "Ivan Berg",

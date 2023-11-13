@@ -4,8 +4,8 @@
     "id": "Microsoft.Performance.Toolkit.Plugins.Cloud-Init",
     "version": "1.2.1"
   },
-  "displayName": "Linux Cloud-Init",
-  "description": "Linux Cloud-Init - https://cloud-init.io/",
+  "displayName": "Linux - Cloud-Init",
+  "description": "Processes log files from Cloud-init. Linux/UNIX Cloud-init is the industry standard multi-distribution method for cross-platform cloud instance initialization",
   "owners": [
     {
       "name": "Ivan Berg",
