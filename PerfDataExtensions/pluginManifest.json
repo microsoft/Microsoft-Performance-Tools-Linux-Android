@@ -5,7 +5,7 @@
     "version": "1.2.3"
   },
   "displayName": "Linux Perf",
-  "description": "Linux Perf CPU Sampling(cpu-clock) - https://perf.wiki.kernel.org/",
+  "description": "Linux perf profiling with performance counters - CPU Sampling(cpu-clock)",
   "owners": [
     {
       "name": "Ivan Berg",

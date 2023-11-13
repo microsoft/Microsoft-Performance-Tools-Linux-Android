@@ -4,8 +4,8 @@
     "id": "Microsoft.Performance.Toolkit.Plugins.WaLinuxAgent",
     "version": "1.2.1"
   },
-  "displayName": "Azure WALinuxAgent",
-  "description": "Azure WALinuxAgent - https://github.com/Azure/WALinuxAgent",
+  "displayName": "Microsoft Azure Linux Guest Agent (WALinuxAgent)",
+  "description": "Processes log files produced by WALinuxAgent",
   "owners": [
     {
       "name": "Ivan Berg",

@@ -5,7 +5,7 @@
     "version": "1.2.1"
   },
   "displayName": "Dmesg",
-  "description": "Dmesg - https://en.wikipedia.org/wiki/Dmesg",
+  "description": "Processes Dmesg Linux/UNIX kernel ring buffer logs",
   "owners": [
     {
       "name": "Ivan Berg",
