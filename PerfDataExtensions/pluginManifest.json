@@ -4,8 +4,8 @@
     "id": "Microsoft.Performance.Toolkit.Plugins.PerfDataExtensions",
     "version": "1.2.3"
   },
-  "displayName": "Linux Perf",
-  "description": "Linux perf profiling with performance counters - CPU Sampling(cpu-clock)",
+  "displayName": "Linux - Perf",
+  "description": "Enables viewing Linux CPU Sampling events recorded with the kernel perf profiling utility",
   "owners": [
     {
       "name": "Ivan Berg",

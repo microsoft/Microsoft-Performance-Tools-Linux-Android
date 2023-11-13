@@ -5,7 +5,7 @@
     "version": "1.5.5"
   },
   "displayName": "Perfetto for Android and Chromium",
-  "description": "Processes Android & Chromium based browsers performance trace files",
+  "description": "Processes Android system and user traces, as well as Chromium based browser performance trace files",
   "owners": [
     {
       "name": "Ivan Berg",
