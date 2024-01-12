@@ -19,134 +19,144 @@ variables:
 # The version of dotnet core to use.
   Build.DotNetCoreVersion: 3.x
 
-jobs:
-  - job: MicrosoftPerformanceToolsLinux
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
     pool:
-      vmImage: 'windows-latest'
-      name: Azure Pipelines
-      demands:
-      - msbuild
-      - vstest
+      name: Azure-Pipelines-1ESPT-ExDShared
+      image: windows-2022
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: stage
+      jobs:
+      - job: MicrosoftPerformanceToolsLinux
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: '$(Build.ArtifactStagingDirectory)'
+            artifactName: 'drop'
+            publishLocation: 'Container'
+        steps:
+        - task: UseDotNet@2
+          displayName: Use DotNet Core
+          inputs:
+           packageType: 'sdk'
+           version: $(Build.DotNetCoreVersion)
+           performMultiLevelLookup: true
 
-    steps:
-    - task: UseDotNet@2
-      displayName: Use DotNet Core
-      inputs:
-       packageType: 'sdk'
-       version: $(Build.DotNetCoreVersion)
-       performMultiLevelLookup: true
+        - task: DotNetCoreCLI@2
+          displayName: DotNetCore restore
+          inputs:
+            command: 'restore'
+            projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
+            verbosityRestore: $(Debug.NuGetVerbosityRestore)
+            includeNugetOrg: true
 
-    - task: DotNetCoreCLI@2
-      displayName: DotNetCore restore
-      inputs:
-        command: 'restore'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
-        verbosityRestore: $(Debug.NuGetVerbosityRestore)
-        includeNugetOrg: true
-
-    - task: DotNetCoreCLI@2
-      displayName: DotNetCore build
-      inputs:
-        command: 'build'
-        arguments: '--configuration Release --verbosity normal'
-        projects:  |
-          CtfPlayback\CtfPlayback.csproj
-          CtfUnitTest\CtfUnitTest.csproj
-          LTTngCds\LTTngCds.csproj
-          LTTngDataExtensions\LTTngDataExtensions.csproj
-          LTTngDataExtUnitTest\LTTngDataExtUnitTest.csproj
-          LTTngDriver\LTTngDriver.csproj
-          PerfCds\PerfCds.csproj
-          PerfDataExtensions\PerfDataExtensions.csproj
-          PerfettoCds\PerfettoCds.csproj
-          PerfUnitTest\PerfUnitTest.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
-          LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj
-          LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
-          
-        includesymbols: true
-        versioningScheme: 'byBuildNumber'
+        - task: DotNetCoreCLI@2
+          displayName: DotNetCore build
+          inputs:
+            command: 'build'
+            arguments: '--configuration Release --verbosity normal'
+            projects:  |
+              CtfPlayback\CtfPlayback.csproj
+              CtfUnitTest\CtfUnitTest.csproj
+              LTTngCds\LTTngCds.csproj
+              LTTngDataExtensions\LTTngDataExtensions.csproj
+              LTTngDataExtUnitTest\LTTngDataExtUnitTest.csproj
+              LTTngDriver\LTTngDriver.csproj
+              PerfCds\PerfCds.csproj
+              PerfDataExtensions\PerfDataExtensions.csproj
+              PerfettoCds\PerfettoCds.csproj
+              PerfUnitTest\PerfUnitTest.csproj
+              LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\Cloud-init\Cloud-Init.csproj
+              LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\DmesgIsoLog\Dmesg.csproj
+              LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\WaLinuxAgent\WaLinuxAgent.csproj
+              LinuxLogParsers\LinuxPlugins-MicrosoftPerformanceToolkSDK\AndroidLogCat\AndroidLogcat.csproj
+              LinuxLogParsers\LinuxLogParsersUnitTest\LinuxLogParsersUnitTest.csproj
+              
+            includesymbols: true
+            versioningScheme: 'byBuildNumber'
     
-    - task: DotNetCoreCLI@2
-      displayName: DotNetCore test
-      inputs:
-        command: 'test'
-        projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
+        - task: DotNetCoreCLI@2
+          displayName: DotNetCore test
+          inputs:
+            command: 'test'
+            projects: '$(System.DefaultWorkingDirectory)/Microsoft-Perf-Tools-Linux-Android.sln'
+        
+        - task: CopyFiles@2
+          displayName: Copy PerfDataExtensions Build to Output Artifacts
+          inputs:
+            SourceFolder: 'PerfDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/PerfDataExtensions'
+            
+        - task: CopyFiles@2
+          displayName: Copy LTTngDataExtensions Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LTTngDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/LTTngDataExtensions'
+            
+        - task: CopyFiles@2
+          displayName: Copy LTTngDriver Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LTTngDriver/bin/$(BuildConfiguration)/netcoreapp3.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/LTTngDriver'
     
-    - task: CopyFiles@2
-      displayName: Copy PerfDataExtensions Build to Output Artifacts
-      inputs:
-        SourceFolder: 'PerfDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/PerfDataExtensions'
-        
-    - task: CopyFiles@2
-      displayName: Copy LTTngDataExtensions Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LTTngDataExtensions/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/LTTngDataExtensions'
-        
-    - task: CopyFiles@2
-      displayName: Copy LTTngDriver Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LTTngDriver/bin/$(BuildConfiguration)/netcoreapp3.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/LTTngDriver'
-
-    - task: CopyFiles@2
-      displayName: Copy Perfetto Build to Output Artifacts
-      inputs:
-        SourceFolder: 'PerfettoCds/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Perfetto'
-        
-    - task: CopyFiles@2
-      displayName: Copy Cloud-init Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Cloud-init'
-        
-    - task: CopyFiles@2
-      displayName: Copy DmesgIsoLog Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Dmesg'
-        
-    - task: CopyFiles@2
-      displayName: Copy WaLinuxAgent Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/WaLinuxAgent'
-
-    - task: CopyFiles@2
-      displayName: Copy AndroidLogCat Build to Output Artifacts
-      inputs:
-        SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/AndroidLogCat/bin/$(BuildConfiguration)/netstandard2.1'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/AndroidLogCat'
-        
-    - task: CopyFiles@2
-      displayName: Copy Launcher
-      inputs:
-        SourceFolder: 'Launcher'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/Launcher'
-        
-    - task: CopyFiles@2
-      displayName: Copy Extra Release Files
-      inputs:
-        SourceFolder: 'ReleaseFiles'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux'
+        - task: CopyFiles@2
+          displayName: Copy Perfetto Build to Output Artifacts
+          inputs:
+            SourceFolder: 'PerfettoCds/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Perfetto'
+            
+        - task: CopyFiles@2
+          displayName: Copy Cloud-init Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Cloud-init'
+            
+        - task: CopyFiles@2
+          displayName: Copy DmesgIsoLog Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/Dmesg'
+            
+        - task: CopyFiles@2
+          displayName: Copy WaLinuxAgent Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/WaLinuxAgent'
     
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        - task: CopyFiles@2
+          displayName: Copy AndroidLogCat Build to Output Artifacts
+          inputs:
+            SourceFolder: 'LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/AndroidLogCat/bin/$(BuildConfiguration)/netstandard2.1'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/AndroidLogCat'
+            
+        - task: CopyFiles@2
+          displayName: Copy Launcher
+          inputs:
+            SourceFolder: 'Launcher'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux/Launcher'
+            
+        - task: CopyFiles@2
+          displayName: Copy Extra Release Files
+          inputs:
+            SourceFolder: 'ReleaseFiles'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Microsoft-Performance-Tools-Linux'
