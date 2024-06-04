@@ -45,7 +45,7 @@ jobs:
         dotnet build LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.csproj --configuration Release --no-restore
 
     - name: Test projects
-      run: dotnet test Microsoft-Perf-Tools-Linux-Android.sln --no-restore --verbosity normal
+      run: dotnet test Microsoft-Perf-Tools-Linux-Android.sln --no-restore --no-build --verbosity normal
 
     - name: Copy files and prepare artifacts
       run: |
