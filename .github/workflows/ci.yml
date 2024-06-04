@@ -1,0 +1,76 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Microsoft-Perf-Tools-Linux-Android.sln
+
+    - name: Build projects
+      run: |
+        dotnet build CtfPlayback/CtfPlayback.csproj --configuration Release --no-restore
+        dotnet build CtfUnitTest/CtfUnitTest.csproj --configuration Release --no-restore
+        dotnet build LTTngCds/LTTngCds.csproj --configuration Release --no-restore
+        dotnet build LTTngDataExtensions/LTTngDataExtensions.csproj --configuration Release --no-restore
+        dotnet build LTTngDataExtUnitTest/LTTngDataExtUnitTest.csproj --configuration Release --no-restore
+        dotnet build LTTngDriver/LTTngDriver.csproj --configuration Release --no-restore
+        dotnet build PerfDataExtension/PerfDataExtension.csproj --configuration Release --no-restore
+        dotnet build PerfDataUnitTest/PerfDataUnitTest.csproj --configuration Release --no-restore
+        dotnet build PerfDataTxtExtension/PerfDataTxtExtension.csproj --configuration Release --no-restore
+        dotnet build PerfettoCds/PerfettoCds.csproj --configuration Release --no-restore
+        dotnet build PerfUnitTest/PerfUnitTest.csproj --configuration Release --no-restore
+        dotnet build LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/Cloud-Init.csproj --configuration Release --no-restore
+        dotnet build LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/Dmesg.csproj --configuration Release --no-restore
+        dotnet build LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/WaLinuxAgent.csproj --configuration Release --no-restore
+        dotnet build LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/AndroidLogCat/AndroidLogcat.csproj --configuration Release --no-restore
+        dotnet build LinuxLogParsers/LinuxLogParsersUnitTest/LinuxLogParsersUnitTest.csproj --configuration Release --no-restore
+
+    - name: Test projects
+      run: dotnet test Microsoft-Perf-Tools-Linux-Android.sln --no-restore --verbosity normal
+
+    - name: Copy files and prepare artifacts
+      run: |
+        $dirs = @{
+          "PerfDataExtension" = "PerfDataExtension/bin/Release/netstandard2.1/*"
+          "PerfDataTxtExtension" = "PerfDataTxtExtension/bin/Release/netstandard2.1/*"
+          "LTTngDataExtensions" = "LTTngDataExtensions/bin/Release/netstandard2.1/*"
+          "LTTngDriver" = "LTTngDriver/bin/Release/netcoreapp8.0/*"
+          "Perfetto" = "PerfettoCds/bin/Release/netstandard2.1/*"
+          "Cloud-init" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/bin/Release/netstandard2.1/*"
+          "Dmesg" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/bin/Release/netstandard2.1/*"
+          "WaLinuxAgent" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/WaLinuxAgent/bin/Release/netstandard2.1/*"
+          "AndroidLogCat" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/AndroidLogCat/bin/Release/netstandard2.1/*"
+          "Launcher" = "Launcher/*"
+          "ReleaseFiles" = "ReleaseFiles/*"
+        }
+        foreach ($dir in $dirs.Keys) {
+          $sourcePath = $dirs[$dir]
+          $targetPath = "${{ github.workspace }}/drop/Microsoft-Performance-Tools-Linux/MicrosoftPerfToolkitAddins/$dir"
+          New-Item -ItemType Directory -Force -Path $targetPath
+          Copy-Item $sourcePath -Destination $targetPath -Recurse
+        }
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: drop
+        path: ${{ github.workspace }}/drop/
