@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-	<Version>1.2.5</Version>
+	<Version>1.2.6</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Microsoft</Authors>
     <Company>Microsoft Corp.</Company>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.0.6" GeneratePathProperty="true">
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.13" GeneratePathProperty="true">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Performance.SDK" Version="1.0.27" />
