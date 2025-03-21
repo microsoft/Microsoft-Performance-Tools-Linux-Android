@@ -24,6 +24,10 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions: # https://eng.ms/docs/more/github-inside-microsoft/sdl/codeql#create-standalone-codeql-workflow
+      actions: read
+      contents: read
+      security-events: write
 
     strategy:
       fail-fast: false
