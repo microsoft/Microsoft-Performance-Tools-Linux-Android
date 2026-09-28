@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.Performance.SDK;
 using LTTngCds.CookerData;
+using CtfPlayback.Metadata;
 
 namespace LTTngDataExtensions.SourceDataCookers.Thread
 {
@@ -23,6 +25,7 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         private TimestampDelta waitTime;
         private Timestamp switchInTime;
         private Timestamp nextThreadPreviousSwitchOutTime;
+        private Dictionary<string, long> performanceCountersByName;
 
         public ContextSwitch(LTTngEvent data, ThreadInfo nextThread, ThreadInfo previousThread, uint cpu)
         {
@@ -61,6 +64,20 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             this.previousCommand = data.Payload.ReadFieldAsArray("_prev_comm").GetValueAsString();
             this.switchInTime = data.Timestamp;
             this.nextThreadPreviousSwitchOutTime = nextThread.previousSwitchOutTime;
+
+            // PMU counters (e.g. _perf_cpu_instructions) are added to the stream event context by "lttng add-context -t perf:cpu:..."
+            this.performanceCountersByName = new Dictionary<string, long>();
+            var eventContext = data.StreamDefinedEventContext;
+            if (eventContext != null)
+            {
+                foreach (var field in eventContext.FieldsByName)
+                {
+                    if (field.Value.FieldType == CtfTypes.Integer && field.Key.Contains("perf"))
+                    {
+                        this.performanceCountersByName[field.Key] = eventContext.ReadFieldAsInt64(field.Key);
+                    }
+                }
+            }
         }
 
         public uint Cpu => this.cpu;
@@ -78,5 +95,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public TimestampDelta WaitTime => this.waitTime;
         public Timestamp SwitchInTime => this.switchInTime;
         public Timestamp NextThreadPreviousSwitchOutTime => this.nextThreadPreviousSwitchOutTime;
+        public IReadOnlyDictionary<string, long> PerformanceCountersByName => this.performanceCountersByName;
     }
 }

@@ -577,19 +577,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public void ProcessContextSwitch(LTTngEvent data, LTTngContext context)
         {
             int prevTid = data.Payload.ReadFieldAsInt32("_prev_tid");
-            if (lastContextSwitch.TryGetValue(context.CurrentCpu, out ContextSwitch previousContextSwitch))
-            {
-                if (prevTid == previousContextSwitch.NextTid)
-                {
-                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, data.Timestamp));
-                }
-                else
-                {
-                    ///If we missed context switch events, 
-                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, previousContextSwitch.SwitchInTime));
-                }
-                
-            }
             int nextTid = data.Payload.ReadFieldAsInt32("_next_tid");
             ThreadInfo.ThreadState switchOutState;
             var prevStateValue = data.Payload.FieldsByName["_prev_state"];
@@ -620,17 +607,34 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             }
 
             ThreadInfo nextThread;
+            ContextSwitch currentContextSwitch;
             if (runningThreads.TryGetValue(nextTid, out nextThread))
             {
-                lastContextSwitch[context.CurrentCpu] = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
+                currentContextSwitch = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
                 nextThread.SwitchIn(data.Timestamp);
             }
             else
             {
                 nextThread = new ThreadInfo(nextTid, data.Timestamp, ThreadInfo.ThreadState.TASK_RUNNING);
-                lastContextSwitch[context.CurrentCpu] = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
+                currentContextSwitch = new ContextSwitch(data, nextThread, prevThread, context.CurrentCpu);
                 this.AddNewThread(nextThread);
             }
+
+            // The execution event for the previous context switch is completed here so the PMU counter deltas can be computed against this switch-out.
+            if (lastContextSwitch.TryGetValue(context.CurrentCpu, out ContextSwitch previousContextSwitch))
+            {
+                if (prevTid == previousContextSwitch.NextTid)
+                {
+                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, currentContextSwitch, data.Timestamp));
+                }
+                else
+                {
+                    ///If we missed context switch events, 
+                    processedExecutionEvents.Add(new ExecutionEvent(previousContextSwitch, previousContextSwitch.SwitchInTime));
+                }
+            }
+
+            lastContextSwitch[context.CurrentCpu] = currentContextSwitch;
         }
 
         public void ProcessThreadExit(LTTngEvent data)
