@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using CtfPlayback.EventStreams.Interfaces;
 using CtfPlayback.FieldValues;
+using CtfPlayback.Metadata;
 using CtfPlayback.Metadata.Interfaces;
 
 namespace CtfPlayback.EventStreams
@@ -24,6 +25,8 @@ namespace CtfPlayback.EventStreams
         }
 
         public ulong ByteOffsetWithinPacket { get; private set; }
+
+        public uint StreamId => this.owningPacket.StreamId;
 
         public CtfTimestamp Timestamp { get; private set; }
 
@@ -102,8 +105,7 @@ namespace CtfPlayback.EventStreams
 
         private void ReadStreamEventHeader()
         {
-            uint streamIndex = this.owningPacket.StreamId;
-            var eventHeaderDescriptor = this.packetReader.Metadata.Streams[(int)streamIndex].EventHeader;
+            var eventHeaderDescriptor = this.packetReader.Metadata.GetStream(this.owningPacket.StreamId).EventHeader;
             Debug.Assert(eventHeaderDescriptor != null);
 
             StreamDefinedEventHeader = eventHeaderDescriptor.Read(this.packetReader);
@@ -111,8 +113,7 @@ namespace CtfPlayback.EventStreams
 
         private void ReadStreamEventContext()
         {
-            uint streamIndex = this.owningPacket.StreamId;
-            var eventContextDescriptor = this.packetReader.Metadata.Streams[(int)streamIndex].EventContext;
+            var eventContextDescriptor = this.packetReader.Metadata.GetStream(this.owningPacket.StreamId).EventContext;
             if (eventContextDescriptor == null)
             {
                 return;

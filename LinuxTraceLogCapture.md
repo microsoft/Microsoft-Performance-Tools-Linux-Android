@@ -44,7 +44,9 @@ Supports:
 - Block IO / Disk Activity
 - Diagnostic Messages
 
-Once you have everything set up you just need to decide what kind of information you are looking for and begin tracing. 
+Traces in both the CTF 1.8 and CTF 2 formats are supported (CTF 2 is the default trace format since LTTng 2.15).
+
+Once you have everything set up you just need to decide what kind of information you are looking for and begin tracing.
 
 In this example we are looking at process scheduler events. We might use this to determine process lifetime and identify dependencies. You can learn more about what kind of "events" you can enable [here](https://lttng.org/man/1/lttng-enable-event/v2.8/). 
 ```bash
@@ -83,6 +85,12 @@ $ sudo lttng enable-event --kernel --syscall �-all
 $ sudo lttng add-context --kernel --channel=channel0 --type=tid
 $ sudo lttng add-context --kernel --channel=channel0 --type=pid
 $ sudo lttng add-context --kernel --channel=channel0 --type=procname
+```
+
+### Optionally, add CPU performance counters:
+The Execution Events table shows how much each counter changed while a thread was running (Instruction Count, CPU Cycle, LLC Misses, Cache Misses).
+```bash
+$ sudo lttng add-context --kernel --channel=channel0 --type=perf:cpu:instructions --type=perf:cpu:cycles --type=perf:cpu:cache-misses --type=perf:cpu:LLC-load-misses
 ```
 
 ### Start the recording:

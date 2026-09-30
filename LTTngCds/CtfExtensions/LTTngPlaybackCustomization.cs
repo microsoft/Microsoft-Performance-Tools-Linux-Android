@@ -10,7 +10,6 @@ using CtfPlayback.EventStreams.Interfaces;
 using CtfPlayback.FieldValues;
 using CtfPlayback.Inputs;
 using CtfPlayback.Metadata;
-using CtfPlayback.Metadata.AntlrParser;
 using CtfPlayback.Metadata.Interfaces;
 using LTTngCds.CookerData;
 using LTTngCds.CtfExtensions.Descriptors;
@@ -41,7 +40,10 @@ namespace LTTngCds.CtfExtensions
             ICtfTraceInput traceInput)
         {
             this.metadataCustomization.PrepareForNewTrace(traceInput.MetadataStream);
-            return new CtfAntlrMetadataParser(this.metadataCustomization, this.metadataCustomization.LTTngMetadata);
+            return new CtfVersionDetectingMetadataParser(
+                this.metadataCustomization,
+                this.metadataCustomization.LTTngMetadata,
+                prefixCtf2EventFieldNamesWithUnderscore: true);
         }
 
         public bool GetTimestampsFromPacketContext(
@@ -223,22 +225,24 @@ namespace LTTngCds.CtfExtensions
         public ICtfEventDescriptor GetEventDescriptor(ICtfEvent ctfEvent, ICtfMetadata metadata)
         {
             uint id = this.GetEventId(ctfEvent);
+            uint streamId = ctfEvent.StreamId;
 
             ICtfEventDescriptor eventDescriptor;
             if (metadata is LTTngMetadata typedMetadata)
             {
                 // optimization if we got our own typed metadata back
                 // we check for success below
-                typedMetadata.EventByEventId.TryGetValue(id, out eventDescriptor);
+                typedMetadata.TryGetEvent(streamId, id, out eventDescriptor);
             }
             else
             {
-                eventDescriptor = metadata.Events.FirstOrDefault(x => x.Id == id);
+                eventDescriptor = metadata.Events.FirstOrDefault(x =>
+                    x.Id == id && (!(x is EventDescriptor lttngDescriptor) || lttngDescriptor.Stream == streamId));
             }
 
             if (eventDescriptor == null)
             {
-                throw new LTTngPlaybackException($"Unable to find event descriptor for event id={id}.");
+                throw new LTTngPlaybackException($"Unable to find event descriptor for stream id={streamId}, event id={id}.");
             }
 
             return eventDescriptor;

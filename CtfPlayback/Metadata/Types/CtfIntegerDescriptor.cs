@@ -62,6 +62,9 @@ namespace CtfPlayback.Metadata.Types
 
         internal string ByteOrder { get; private set; }
 
+        private bool IsExplicitlyBigEndian =>
+            StringComparer.Ordinal.Equals(this.ByteOrder, "be") || StringComparer.Ordinal.Equals(this.ByteOrder, "network");
+
         /// <inheritdoc />
         public override string ToString()
         {
@@ -98,6 +101,17 @@ namespace CtfPlayback.Metadata.Types
             // if byte order is not set, or if the value is "native", then endianness is determined by the trace descriptor
             // if the byte order is "be" or "network", then it is big endian
             // if the byte order is "le", then it is little endian
+            // Only explicitly big endian, whole-byte integers are handled for now (e.g. IPv4 addresses in network order).
+            if (this.IsExplicitlyBigEndian && (this.Size % 8) == 0)
+            {
+                var littleEndianBuffer = new byte[byteCount];
+                for (int x = 0; x < byteCount; x++)
+                {
+                    littleEndianBuffer[x] = buffer[byteCount - 1 - x];
+                }
+
+                buffer = littleEndianBuffer;
+            }
 
             IntegerLiteral value;
 
