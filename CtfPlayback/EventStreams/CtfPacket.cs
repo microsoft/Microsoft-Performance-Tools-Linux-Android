@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using CtfPlayback.EventStreams.Interfaces;
 using CtfPlayback.FieldValues;
+using CtfPlayback.Metadata;
 using CtfPlayback.Metadata.Interfaces;
 
 namespace CtfPlayback.EventStreams
@@ -61,9 +62,11 @@ namespace CtfPlayback.EventStreams
             this.PacketByteOffset = this.packetReader.CountOfBytesProcessed;
 
             ReadPacketHeader();
-            ReadPacketContext();
 
+            // The packet context layout depends on the stream, which is identified in the packet header.
             this.DetermineStreamIndex();
+
+            ReadPacketContext();
 
             this.packetReader.SetPacketSize(this.packetReader.PlaybackCustomization.GetBitsInPacket(this));
 
@@ -116,7 +119,7 @@ namespace CtfPlayback.EventStreams
 
         private void ReadPacketContext()
         {
-            this.StreamPacketContext = this.Metadata.Streams[(int)this.StreamId].PacketContext.Read(this.packetReader) as CtfStructValue;
+            this.StreamPacketContext = this.Metadata.GetStream(this.StreamId).PacketContext.Read(this.packetReader) as CtfStructValue;
         }
 
         private ulong GetRemainingBits()
@@ -135,6 +138,7 @@ namespace CtfPlayback.EventStreams
             if (streamIdDescriptor == null)
             {
                 this.StreamId = 0;
+                return;
             }
 
             bool streamIdFound = this.TracePacketHeader.FieldsByName.TryGetValue("stream_id", out var streamIdFieldValue);

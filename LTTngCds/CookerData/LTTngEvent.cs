@@ -50,9 +50,14 @@ namespace LTTngCds.CookerData
         }
 
         /// <summary>
-        /// Event Id
+        /// Event Id. Event ids are only unique within a stream, see <see cref="StreamId"/>.
         /// </summary>
         public uint Id => this.eventDescriptor.Id;
+
+        /// <summary>
+        /// Id of the stream (LTTng channel) that contains the event.
+        /// </summary>
+        public uint StreamId => this.ctfEvent.StreamId;
 
         /// <summary>
         /// Event name

@@ -17,6 +17,11 @@ namespace CtfPlayback.EventStreams.Interfaces
         ulong ByteOffsetWithinPacket { get; }
 
         /// <summary>
+        /// Id of the stream (stream class) that contains this event.
+        /// </summary>
+        uint StreamId { get; }
+
+        /// <summary>
         /// Timestamp associated with the event
         /// </summary>
         CtfTimestamp Timestamp { get; }
