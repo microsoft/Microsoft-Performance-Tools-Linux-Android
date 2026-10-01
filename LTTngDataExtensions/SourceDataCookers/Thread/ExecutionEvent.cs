@@ -27,8 +27,14 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         private Timestamp switchInTime;
         private Timestamp switchOutTime;
         private Timestamp nextThreadPreviousSwitchOutTime;
+        private Dictionary<string, long> performanceCountersDiffByName;
 
         public ExecutionEvent(ContextSwitch contextSwitch, Timestamp switchOutTime)
+            : this(contextSwitch, null, switchOutTime)
+        {
+        }
+
+        public ExecutionEvent(ContextSwitch contextSwitch, ContextSwitch switchOutContextSwitch, Timestamp switchOutTime)
         {
             this.cpu = contextSwitch.Cpu;
             this.nextPid = contextSwitch.NextPid;
@@ -46,6 +52,18 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
             this.switchInTime = contextSwitch.SwitchInTime;
             this.switchOutTime = switchOutTime;
             this.nextThreadPreviousSwitchOutTime = contextSwitch.NextThreadPreviousSwitchOutTime;
+
+            this.performanceCountersDiffByName = new Dictionary<string, long>();
+            if (switchOutContextSwitch != null)
+            {
+                foreach (var counter in contextSwitch.PerformanceCountersByName)
+                {
+                    if (switchOutContextSwitch.PerformanceCountersByName.TryGetValue(counter.Key, out long switchOutValue))
+                    {
+                        this.performanceCountersDiffByName[counter.Key] = switchOutValue - counter.Value;
+                    }
+                }
+            }
         }
 
         public void RecoverPids(Dictionary<int, int> recoveredPids)
@@ -90,5 +108,6 @@ namespace LTTngDataExtensions.SourceDataCookers.Thread
         public Timestamp SwitchInTime => this.switchInTime;
         public Timestamp SwitchOutTime => this.switchOutTime;
         public Timestamp NextThreadPreviousSwitchOutTime => this.nextThreadPreviousSwitchOutTime;
+        public IReadOnlyDictionary<string, long> PerformanceCountersDiffByName => this.performanceCountersDiffByName;
     }
 }
