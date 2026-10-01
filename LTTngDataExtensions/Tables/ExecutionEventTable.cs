@@ -293,7 +293,7 @@ namespace LTTngDataExtensions.Tables
             table.AddColumn(previousPidColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PreviousPid));
             table.AddColumn(instructionCountColumn, Projection.CreateUsingFuncAdaptor((i) => GetPerformanceCounterDiff(threads[i], "_perf_cpu_instructions")));
             table.AddColumn(lastLevelCacheMissesColumn, Projection.CreateUsingFuncAdaptor((i) => GetPerformanceCounterDiff(threads[i], "_perf_cpu_LLC_load_misses")));
-            table.AddColumn(cpuCycleColumn, Projection.CreateUsingFuncAdaptor((i) => GetPerformanceCounterDiff(threads[i], "_perf_cpu_cpu_cycles")));
+            table.AddColumn(cpuCycleColumn, Projection.CreateUsingFuncAdaptor((i) => GetPerformanceCounterDiff(threads[i], "_perf_cpu_cpu_cycles", "_perf_cpu_cycles")));
             table.AddColumn(cacheMissesColumn, Projection.CreateUsingFuncAdaptor((i) => GetPerformanceCounterDiff(threads[i], "_perf_cpu_cache_misses")));
             table.AddColumn(nextCommandColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].NextImage));
             table.AddColumn(previousCommandColumn, Projection.CreateUsingFuncAdaptor((i) => threads[i].PreviousImage));
@@ -319,9 +319,18 @@ namespace LTTngDataExtensions.Tables
             table.AddColumn(percentCpuUsagePreset, percentCpuUsageColumn);
         }
 
-        private static long GetPerformanceCounterDiff(IExecutionEvent executionEvent, string counterName)
+        // Some counters can be recorded under more than one name, e.g. "lttng add-context -t perf:cpu:cpu-cycles" vs "-t perf:cpu:cycles".
+        private static long GetPerformanceCounterDiff(IExecutionEvent executionEvent, params string[] counterNames)
         {
-            return executionEvent.PerformanceCountersDiffByName.TryGetValue(counterName, out long value) ? value : 0;
+            foreach (var counterName in counterNames)
+            {
+                if (executionEvent.PerformanceCountersDiffByName.TryGetValue(counterName, out long value))
+                {
+                    return value;
+                }
+            }
+
+            return 0;
         }
     }
 
