@@ -49,6 +49,16 @@ namespace CtfPlayback.Metadata.Ctf2
 
             reader.Align((uint)this.Align);
 
+            return new CtfIntegerValue(DecodeLeb128(reader, this.Signed), this);
+        }
+
+        /// <summary>
+        /// Decodes an unsigned or signed LEB128 value (https://en.wikipedia.org/wiki/LEB128): each byte holds 7 bits
+        /// of the value, least significant group first, and its high bit is set when more bytes follow. A signed
+        /// value is sign-extended from bit 6 of its last byte. Bits beyond 64 are ignored.
+        /// </summary>
+        internal static IntegerLiteral DecodeLeb128(IPacketReader reader, bool signed)
+        {
             ulong value = 0;
             int shift = 0;
             byte current;
@@ -64,9 +74,9 @@ namespace CtfPlayback.Metadata.Ctf2
             }
             while ((current & 0x80) != 0);
 
-            if (!this.Signed)
+            if (!signed)
             {
-                return new CtfIntegerValue(new IntegerLiteral(value), this);
+                return new IntegerLiteral(value);
             }
 
             if (shift < 64 && (current & 0x40) != 0)
@@ -74,7 +84,7 @@ namespace CtfPlayback.Metadata.Ctf2
                 value |= ulong.MaxValue << shift;
             }
 
-            return new CtfIntegerValue(new IntegerLiteral((long)value), this);
+            return new IntegerLiteral((long)value);
         }
 
         /// <inheritdoc />
