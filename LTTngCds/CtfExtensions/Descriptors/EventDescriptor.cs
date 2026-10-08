@@ -31,6 +31,11 @@ namespace LTTngCds.CtfExtensions.Descriptors
             this.Name = string.Intern(name.Trim(new[] { '"' }));
 
             this.SetPayload(typeDeclarations);
+
+            if (typeDeclarations.TryGetValue("context", out var context))
+            {
+                this.Context = context;
+            }
         }
 
         public uint Id { get; private set; }
@@ -41,9 +46,9 @@ namespace LTTngCds.CtfExtensions.Descriptors
 
         public uint LogLevel { get; private set; }
 
-        // LTTng defines no context for an event
+        // CTF 1.8 LTTng traces define no context for an event; CTF 2 traces may define a specific context.
 
-        public ICtfTypeDescriptor Context => null;
+        public ICtfTypeDescriptor Context { get; }
 
         public ICtfTypeDescriptor Payload { get; private set; }
 

@@ -45,10 +45,12 @@ namespace LTTngDataExtensions.SourceDataCookers
         {
             try
             {
-                Events.AddEvent(new LTTngGenericEvent(data, context));
+                var genericEvent = new LTTngGenericEvent(data, context);
+                Events.AddEvent(genericEvent);
 
+                // Generic events list their context fields as well as their payload fields.
                 this.MaximumEventFieldCount =
-                    Math.Max(data.Payload.Fields.Count, this.MaximumEventFieldCount);
+                    Math.Max(genericEvent.FieldNames.Count, this.MaximumEventFieldCount);
             }
             catch (CtfPlaybackException e)
             {

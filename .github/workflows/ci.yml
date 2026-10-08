@@ -54,11 +54,12 @@ jobs:
 
     - name: Create PTIX
       run: |
-        $dirs = @{
+        # LTTngDriver is a command-line tool, not a WPA plugin: it ships the SDK and engine, so it can't be packed (its
+        # build output also carries the LTTng plugin's manifest). Its files are published by the next step.
+        $dirs = [ordered]@{
           "PerfDataExtension" = "PerfDataExtension/bin/Release/netstandard2.1/"
           "PerfDataTxtExtension" = "PerfDataTxtExtension/bin/Release/netstandard2.1/"
           "LTTngDataExtensions" = "LTTngDataExtensions/bin/Release/netstandard2.1/"
-          "LTTngDriver" = "LTTngDriver/bin/Release/net8.0/"
           "Perfetto" = "PerfettoCds/bin/Release/netstandard2.1/"
           "Cloud-init" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/Cloud-init/bin/Release/netstandard2.1/"
           "Dmesg" = "LinuxLogParsers/LinuxPlugins-MicrosoftPerformanceToolkSDK/DmesgIsoLog/bin/Release/netstandard2.1/"
@@ -73,7 +74,7 @@ jobs:
           $pluginManifestPath = "$sourcePath/pluginManifest.json"
 
           if (!(Test-Path $pluginManifestPath)) {
-            Write-Error "pluginManifest.json not found in $sourcePath"
+            throw "pluginManifest.json not found in $sourcePath"
           }
 
           $pluginManifest = Get-Content -Path $pluginManifestPath | ConvertFrom-Json
@@ -83,6 +84,11 @@ jobs:
           $packageName = "$pluginId-$pluginVersion.ptix"
 
           plugintool pack -s $sourcePath -o "$targetPath/$packageName"
+
+          # Only the last command's exit code would otherwise decide the step's result.
+          if ($LASTEXITCODE -ne 0) {
+            throw "plugintool pack failed for $plugin (exit code $LASTEXITCODE)"
+          }
         }
 
     - name: Copy files and prepare artifacts

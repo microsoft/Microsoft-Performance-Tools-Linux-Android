@@ -50,9 +50,20 @@ namespace LTTngCds.CookerData
         }
 
         /// <summary>
-        /// Event Id
+        /// Event Id. Event ids are only unique within a stream, see <see cref="StreamId"/>.
         /// </summary>
         public uint Id => this.eventDescriptor.Id;
+
+        /// <summary>
+        /// Id of the stream (LTTng channel) that contains the event.
+        /// </summary>
+        public uint StreamId => this.ctfEvent.StreamId;
+
+        /// <summary>
+        /// Metadata describing the event's class. A single instance is shared by all events of that class within a
+        /// trace, so it identifies the event class even across traces whose stream and event ids overlap.
+        /// </summary>
+        public IEventDescriptor EventDescriptor => this.eventDescriptor;
 
         /// <summary>
         /// Event name
@@ -83,6 +94,12 @@ namespace LTTngCds.CookerData
         /// Event context as defined in the stream for this event.
         /// </summary>
         public CtfStructValue StreamDefinedEventContext => this.ctfEvent.StreamDefinedEventContext as CtfStructValue;
+
+        /// <summary>
+        /// Context specific to the event's class (a CTF 2 event record specific context), read after the stream
+        /// defined event context and before the payload. Null when the event class doesn't define one.
+        /// </summary>
+        public CtfStructValue SpecificContext => this.ctfEvent.Context as CtfStructValue;
 
         /// <summary>
         /// Event payload

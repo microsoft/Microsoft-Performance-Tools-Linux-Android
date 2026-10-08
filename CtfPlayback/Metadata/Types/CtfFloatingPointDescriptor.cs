@@ -31,6 +31,9 @@ namespace CtfPlayback.Metadata.Types
         /// <inheritdoc />
         public string ByteOrder { get; }
 
+        private bool IsExplicitlyBigEndian =>
+            StringComparer.Ordinal.Equals(this.ByteOrder, "be") || StringComparer.Ordinal.Equals(this.ByteOrder, "network");
+
         /// exp_dig is the number of digits represented in the exponent.
         public int Exponent { get; }
 
@@ -71,6 +74,18 @@ namespace CtfPlayback.Metadata.Types
             Debug.Assert(buffer != null);
             Debug.Assert(byteCount > 0);
             Debug.Assert(byteCount <= 8);  // Up to 64-bits
+
+            // Values are decoded as little endian; reverse explicitly big-endian values first.
+            if (this.IsExplicitlyBigEndian)
+            {
+                var littleEndianBuffer = new byte[byteCount];
+                for (int x = 0; x < byteCount; x++)
+                {
+                    littleEndianBuffer[x] = buffer[byteCount - 1 - x];
+                }
+
+                buffer = littleEndianBuffer;
+            }
 
             if (byteCount == 4)
             {

@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using CtfPlayback.FieldValues;
+using CtfPlayback.Metadata.InternalHelpers;
 using CtfPlayback.Metadata.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,7 +28,7 @@ namespace CtfUnitTest
                 { new byte[] { 0x00, 0x00, 0xC8, 0x3C }, 0.0244140625f},
                 
                 // From https://en.wikipedia.org/wiki/Single-precision_floating-point_format
-                // CTF is supposed to follow IEEE 754-2008 format - https://diamon.org/ctf/#spec4.1.7
+                // CTF is supposed to follow IEEE 754-2008 format - https://diamon.org/ctf/v1.8.3/#spec4.1.7
                 { new byte[] { 0x00, 0x00, 0x20, 0x3E }, 0.15625f },
                 { new byte[] { 0x00, 0x20, 0xA7, 0x44 }, 1337.0f },
                 { new byte[] { 0x00, 0x00, 0x46, 0x41 }, 12.375f },
@@ -89,6 +91,50 @@ namespace CtfUnitTest
 
                 Assert.AreEqual(rawDoubleDict.Value, fpDouble);
             }
+        }
+
+        [TestMethod]
+        [TestCategory("UnitTest")]
+        [DataRow(null)]
+        [DataRow("le")]
+        [DataRow("native")]
+        [DataRow("be")]
+        [DataRow("network")]
+        public void FloatingPointByteOrder(string byteOrder)
+        {
+            bool bigEndian = byteOrder == "be" || byteOrder == "network";
+
+            // 123.4f = 0x42F6CCCD, -2.0 = 0xC000000000000000
+            byte[] float32 = { 0xCD, 0xCC, 0xF6, 0x42 };
+            byte[] float64 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0 };
+            if (bigEndian)
+            {
+                Array.Reverse(float32);
+                Array.Reverse(float64);
+            }
+
+            var single = (CtfFloatValue)CreateDescriptor(8, 24, byteOrder).Read(float32, float32.Length);
+            Assert.AreEqual(123.4f, single.Value);
+
+            var dbl = (CtfDoubleValue)CreateDescriptor(11, 53, byteOrder).Read(float64, float64.Length);
+            Assert.AreEqual(-2.0, dbl.Value);
+
+            // The caller's buffer must not be modified.
+            Assert.AreEqual(bigEndian ? (byte)0x42 : (byte)0xCD, float32[0]);
+        }
+
+        private static CtfFloatingPointDescriptor CreateDescriptor(int exponent, int mantissa, string byteOrder)
+        {
+            var bag = new CtfPropertyBag();
+            bag.AddValue("exp_dig", exponent.ToString());
+            bag.AddValue("mant_dig", mantissa.ToString());
+            bag.AddValue("align", "8");
+            if (byteOrder != null)
+            {
+                bag.AddValue("byte_order", byteOrder);
+            }
+
+            return new CtfFloatingPointDescriptor(bag);
         }
     }
 }

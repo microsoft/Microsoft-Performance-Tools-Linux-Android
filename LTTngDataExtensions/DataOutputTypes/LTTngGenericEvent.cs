@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using CtfPlayback;
 using CtfPlayback.FieldValues;
 using LTTngCds.CookerData;
+using LTTngCds.CtfExtensions.DescriptorInterfaces;
 using Microsoft.Performance.SDK;
 
 namespace LTTngDataExtensions.DataOutputTypes
@@ -74,16 +76,40 @@ namespace LTTngDataExtensions.DataOutputTypes
         private static readonly Dictionary<Key, EventKind> RegisteredKinds = new Dictionary<Key, EventKind>();
         private static readonly Regex TraceLoggingEventRegex = new Regex("^(?<ProviderName>[a-zA-Z_.0-9]+):(?<EventName>[a-zA-Z_.0-9]+);(?<Unknown>.+);$");
 
+        // Event ids are only unique within one stream of one trace, and a single input can contain several traces of
+        // the same domain (e.g. per-UID and per-PID UST buffers). The event descriptor identifies the event class
+        // itself. Entries are released with the trace's metadata, so traces processed later or concurrently never
+        // share kinds.
+        private static readonly ConditionalWeakTable<IEventDescriptor, EventKind> KindsByEventClass = new ConditionalWeakTable<IEventDescriptor, EventKind>();
+
+        internal static EventKind GetKind(LTTngEvent data, LTTngContext context, IReadOnlyList<CtfFieldValue> fields)
+        {
+            if (KindsByEventClass.TryGetValue(data.EventDescriptor, out var kind))
+            {
+                return kind;
+            }
+
+            return AddKind(data, context, fields);
+        }
+
+        [Obsolete("Event ids are not unique across streams or traces. LTTngGenericEvent identifies event kinds by event class instead.")]
         public static bool TryGetRegisteredKind(string domain, uint id, out EventKind kind)
         {
             return RegisteredKinds.TryGetValue(new Key(domain, id), out kind);
         }
 
+        [Obsolete("Event ids are not unique across streams or traces. LTTngGenericEvent identifies event kinds by event class instead.")]
         public static EventKind RegisterKind(LTTngContext context, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
             EventKind kind = new EventKind(context, id, name, fields);
             RegisteredKinds.Add(new Key(context.Domain, id), kind);
             return kind;
+        }
+
+        private static EventKind AddKind(LTTngEvent data, LTTngContext context, IReadOnlyList<CtfFieldValue> fields)
+        {
+            // If another thread adds the same event class first, its kind is returned.
+            return KindsByEventClass.GetValue(data.EventDescriptor, _ => new EventKind(context, data.Id, data.Name, fields));
         }
     }
 
@@ -103,10 +129,7 @@ namespace LTTngDataExtensions.DataOutputTypes
             this.CpuId = context.CurrentCpu;
             this.DiscardedEvents = data.DiscardedEvents;
 
-            if (!EventKind.TryGetRegisteredKind(context.Domain, data.Id, out this.kind))
-            {
-                this.kind = EventKind.RegisterKind(context, data.Id, data.Name, payload.Fields);
-            }
+            this.kind = EventKind.GetKind(data, context, payload.Fields);
 
             // As this is being written, all columns are of type 'T', so all rows are the same. For generic events,
             // where columns have different types for different rows, this means everything becomes a string.
@@ -124,9 +147,15 @@ namespace LTTngDataExtensions.DataOutputTypes
                 fieldCount += data.StreamDefinedEventContext.Fields.Count;
             }
 
+            if (data.SpecificContext != null)
+            {
+                fieldCount += data.SpecificContext.Fields.Count;
+            }
+
             this.FieldNames = new List<string>(fieldCount);
             this.FieldValues = new List<string>(fieldCount);
 
+            // Fields in the order they are recorded: stream context, event specific context, then payload.
             if (data.StreamDefinedEventContext != null)
             {
                 foreach (var field in data.StreamDefinedEventContext.Fields)
@@ -135,6 +164,16 @@ namespace LTTngDataExtensions.DataOutputTypes
                     this.FieldValues.Add(field.GetValueAsString());
                 }
             }
+
+            if (data.SpecificContext != null)
+            {
+                foreach (var field in data.SpecificContext.Fields)
+                {
+                    this.FieldNames.Add(field.FieldName.ToString());
+                    this.FieldValues.Add(field.GetValueAsString());
+                }
+            }
+
             foreach (var field in payload.Fields)
             {
                 this.FieldNames.Add(field.FieldName.ToString());

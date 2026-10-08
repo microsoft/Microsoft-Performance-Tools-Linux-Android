@@ -45,6 +45,16 @@ namespace CtfPlayback.Metadata.AntlrParser
         {
             string metadata = this.GetMetadata(metadataStream);
 
+            return this.ParseText(metadata);
+        }
+
+        /// <summary>
+        /// Parse CTF metadata text that is not packetized.
+        /// </summary>
+        /// <param name="metadata">Metadata text</param>
+        /// <returns>Metadata parsed from the text</returns>
+        internal ICtfMetadata ParseText(string metadata)
+        {
             this.parser = GetContext(metadata);
 
             // Error listeners can be switched out for debugging purposes. Leaving these comments here for easy access.
@@ -69,7 +79,7 @@ namespace CtfPlayback.Metadata.AntlrParser
         /// <returns>String representation of the metadata</returns>
         private unsafe string GetMetadata(Stream metadataStream)
         {
-            // See https://diamon.org/ctf/#spec7.1
+            // See https://diamon.org/ctf/v1.8.3/#spec7.1
 
             byte[] headerBuffer = new byte[Marshal.SizeOf(typeof(MetadataPacketHeader))];
             byte[] buffer = null;

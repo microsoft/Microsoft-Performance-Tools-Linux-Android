@@ -15,7 +15,7 @@ namespace LTTngCds.CtfExtensions
         private readonly List<ICtfStreamDescriptor> streams = new List<ICtfStreamDescriptor>();
         private readonly List<ICtfClockDescriptor> clocks = new List<ICtfClockDescriptor>();
         private readonly List<ICtfEventDescriptor> events = new List<ICtfEventDescriptor>();
-        private readonly Dictionary<uint, ICtfEventDescriptor> eventsById = new Dictionary<uint, ICtfEventDescriptor>();
+        private readonly Dictionary<(int StreamId, uint EventId), ICtfEventDescriptor> eventsByStreamAndId = new Dictionary<(int StreamId, uint EventId), ICtfEventDescriptor>();
         private readonly Dictionary<string, ICtfClockDescriptor> clocksByName = new Dictionary<string, ICtfClockDescriptor>();
 
         public ICtfTraceDescriptor TraceDescriptor { get; private set; }
@@ -30,7 +30,13 @@ namespace LTTngCds.CtfExtensions
 
         public IReadOnlyList<ICtfEventDescriptor> Events => this.events;
 
-        public IReadOnlyDictionary<uint, ICtfEventDescriptor> EventByEventId => this.eventsById;
+        /// <summary>
+        /// Event ids are only unique within a stream (e.g. with multiple channels, or in CTF 2 traces).
+        /// </summary>
+        public bool TryGetEvent(uint streamId, uint eventId, out ICtfEventDescriptor eventDescriptor)
+        {
+            return this.eventsByStreamAndId.TryGetValue(((int)streamId, eventId), out eventDescriptor);
+        }
 
         public void SetTraceDescriptor(ICtfTraceDescriptor traceDescriptor)
         {
@@ -52,7 +58,7 @@ namespace LTTngCds.CtfExtensions
         {
             var eventDescriptor = new EventDescriptor(assignments, typeDeclarations);
             this.events.Add(eventDescriptor);
-            this.eventsById.Add(eventDescriptor.Id, eventDescriptor);
+            this.eventsByStreamAndId.Add((eventDescriptor.Stream, eventDescriptor.Id), eventDescriptor);
         }
 
         public void AddClock(ICtfClockDescriptor clockDescriptor)
