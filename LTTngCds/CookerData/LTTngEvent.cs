@@ -96,6 +96,12 @@ namespace LTTngCds.CookerData
         public CtfStructValue StreamDefinedEventContext => this.ctfEvent.StreamDefinedEventContext as CtfStructValue;
 
         /// <summary>
+        /// Context specific to the event's class (a CTF 2 event record specific context), read after the stream
+        /// defined event context and before the payload. Null when the event class doesn't define one.
+        /// </summary>
+        public CtfStructValue SpecificContext => this.ctfEvent.Context as CtfStructValue;
+
+        /// <summary>
         /// Event payload
         /// </summary>
         public CtfStructValue Payload => this.ctfEvent.Payload as CtfStructValue;

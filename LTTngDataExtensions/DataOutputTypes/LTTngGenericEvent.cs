@@ -147,9 +147,15 @@ namespace LTTngDataExtensions.DataOutputTypes
                 fieldCount += data.StreamDefinedEventContext.Fields.Count;
             }
 
+            if (data.SpecificContext != null)
+            {
+                fieldCount += data.SpecificContext.Fields.Count;
+            }
+
             this.FieldNames = new List<string>(fieldCount);
             this.FieldValues = new List<string>(fieldCount);
 
+            // Fields in the order they are recorded: stream context, event specific context, then payload.
             if (data.StreamDefinedEventContext != null)
             {
                 foreach (var field in data.StreamDefinedEventContext.Fields)
@@ -158,6 +164,16 @@ namespace LTTngDataExtensions.DataOutputTypes
                     this.FieldValues.Add(field.GetValueAsString());
                 }
             }
+
+            if (data.SpecificContext != null)
+            {
+                foreach (var field in data.SpecificContext.Fields)
+                {
+                    this.FieldNames.Add(field.FieldName.ToString());
+                    this.FieldValues.Add(field.GetValueAsString());
+                }
+            }
+
             foreach (var field in payload.Fields)
             {
                 this.FieldNames.Add(field.FieldName.ToString());

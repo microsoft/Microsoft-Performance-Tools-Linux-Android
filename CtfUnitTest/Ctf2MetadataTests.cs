@@ -280,8 +280,43 @@ namespace CtfUnitTest
             StringAssert.Contains(exception.Message, expectedMessage);
         }
 
-        private static string MetadataWithPayload(string payloadMembers)
+        [TestMethod]
+        public void ParsesAndDecodesEventSpecificContext()
         {
+            const string context =
+                @"[{""name"":""ctx_flag"",""field-class"":""u8""}," +
+                @"{""name"":""ctx_len"",""field-class"":""u8""}," +
+                @"{""name"":""ctx_values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""origin"":""event-record-specific-context"",""path"":[""ctx_len""]}}}]";
+            const string payload = @"[{""name"":""after"",""field-class"":""u32""}]";
+
+            var added = Parse(MetadataWithPayload(payload, context)).AddedEvents.Single();
+
+            var contextType = (ICtfStructDescriptor)added.TypeDeclarations["context"];
+            CollectionAssert.AreEqual(new[] { "_ctx_flag", "_ctx_len", "_ctx_values" }, contextType.Fields.Select(f => f.Name).ToArray());
+            Assert.AreEqual("_ctx_len", ((ICtfArrayDescriptor)contextType.GetField("_ctx_values").TypeDescriptor).Index);
+
+            // An event's specific context is read right before its payload.
+            var bytes = new List<byte> { 9, 2 };
+            bytes.AddRange(BitConverter.GetBytes(10u));
+            bytes.AddRange(BitConverter.GetBytes(20u));
+            bytes.AddRange(BitConverter.GetBytes(7u));
+            var reader = new BufferPacketReader(bytes.ToArray());
+
+            var contextValue = (CtfStructValue)contextType.Read(reader);
+            var payloadValue = (CtfStructValue)((ICtfStructDescriptor)added.TypeDeclarations["fields"]).Read(reader);
+
+            Assert.AreEqual(9u, contextValue.ReadFieldAsUInt32("_ctx_flag"));
+            CollectionAssert.AreEqual(new uint[] { 10, 20 }, contextValue.ReadFieldAsArray("_ctx_values").ReadAsUInt32Array());
+            Assert.AreEqual(7u, payloadValue.ReadFieldAsUInt32("_after"));
+            Assert.IsTrue(reader.EndOfStream);
+        }
+
+        private static string MetadataWithPayload(string payloadMembers, string specificContextMembers = null)
+        {
+            string specificContext = specificContextMembers == null
+                ? string.Empty
+                : @",""specific-context-field-class"":{""type"":""structure"",""member-classes"":" + specificContextMembers + "}";
+
             return string.Concat(new[]
             {
                 @"{""type"":""preamble"",""version"":2}",
@@ -292,7 +327,7 @@ namespace CtfUnitTest
                     @"""packet-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""content_size"",""field-class"":""u32""}]}," +
                     @"""event-record-header-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""id"",""field-class"":""u8""},{""name"":""v"",""field-class"":{""type"":""variant"",""selector-field-location"":{""origin"":""event-record-header"",""path"":[""id""]},""options"":[{""name"":""compact"",""selector-field-ranges"":[[0,254]],""field-class"":{""type"":""structure"",""member-classes"":[]}},{""name"":""extended"",""selector-field-ranges"":[[255,255]],""field-class"":{""type"":""structure"",""member-classes"":[{""name"":""id"",""field-class"":""u32""}]}}]}}]}," +
                     @"""event-record-common-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""ctx_len"",""field-class"":""u32""}]}}",
-                @"{""type"":""event-record-class"",""data-stream-class-id"":0,""id"":0,""name"":""ust_event"",""payload-field-class"":{""type"":""structure"",""member-classes"":" + payloadMembers + "}}",
+                @"{""type"":""event-record-class"",""data-stream-class-id"":0,""id"":0,""name"":""ust_event""" + specificContext + @",""payload-field-class"":{""type"":""structure"",""member-classes"":" + payloadMembers + "}}",
             }.Select(fragment => "\u001e" + fragment + "\n"));
         }
 
