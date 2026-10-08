@@ -28,7 +28,7 @@ namespace CtfUnitTest
                 { new byte[] { 0x00, 0x00, 0xC8, 0x3C }, 0.0244140625f},
                 
                 // From https://en.wikipedia.org/wiki/Single-precision_floating-point_format
-                // CTF is supposed to follow IEEE 754-2008 format - https://diamon.org/ctf/#spec4.1.7
+                // CTF is supposed to follow IEEE 754-2008 format - https://diamon.org/ctf/v1.8.3/#spec4.1.7
                 { new byte[] { 0x00, 0x00, 0x20, 0x3E }, 0.15625f },
                 { new byte[] { 0x00, 0x20, 0xA7, 0x44 }, 1337.0f },
                 { new byte[] { 0x00, 0x00, 0x46, 0x41 }, 12.375f },

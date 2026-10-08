@@ -10,7 +10,8 @@ namespace CtfPlayback.Metadata
 {
     /// <summary>
     /// Helpers for reading a metadata stream, which may be plain text or packetized
-    /// (see https://diamon.org/ctf/#spec7.1 and https://diamon.org/ctf/files/CTF2-PMETA-1.0.html).
+    /// (CTF 1.8: https://diamon.org/ctf/v1.8.3/#spec7.1, CTF 2: https://diamon.org/ctf/#metadata-stream and
+    /// https://diamon.org/ctf/files/CTF2-PMETA-1.0.html).
     /// </summary>
     internal static class CtfMetadataText
     {
