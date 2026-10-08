@@ -181,7 +181,7 @@ namespace CtfPlayback.Metadata.Ctf2
                 throw new CtfMetadataException("CTF 2 trace-class does not define a packet header field class.");
             }
 
-            if (!(this.BuildFieldClass(packetHeaderClass, BuildContext.Header(null)) is CtfStructDescriptor packetHeader))
+            if (!(this.BuildFieldClass(packetHeaderClass, BuildContext.Root("packet-header", null, false)) is CtfStructDescriptor packetHeader))
             {
                 throw new CtfMetadataException("CTF 2 trace-class packet header field class is not a structure.");
             }
@@ -273,14 +273,12 @@ namespace CtfPlayback.Metadata.Ctf2
             var eventHeaderClass = GetValue(dataStreamClass, "event-record-header-field-class")
                 ?? throw new CtfMetadataException($"CTF 2 data stream class {id} does not define an event record header.");
 
-            var headerContext = BuildContext.Header(clockName);
-
-            if (!(this.BuildFieldClass(packetContextClass, headerContext) is CtfStructDescriptor packetContext))
+            if (!(this.BuildFieldClass(packetContextClass, BuildContext.Root("packet-context", clockName, false)) is CtfStructDescriptor packetContext))
             {
                 throw new CtfMetadataException($"CTF 2 data stream class {id} packet context is not a structure.");
             }
 
-            if (!(this.BuildFieldClass(eventHeaderClass, headerContext) is CtfStructDescriptor eventHeader))
+            if (!(this.BuildFieldClass(eventHeaderClass, BuildContext.Root("event-record-header", clockName, false)) is CtfStructDescriptor eventHeader))
             {
                 throw new CtfMetadataException($"CTF 2 data stream class {id} event record header is not a structure.");
             }
@@ -289,7 +287,8 @@ namespace CtfPlayback.Metadata.Ctf2
             var eventContextClass = GetValue(dataStreamClass, "event-record-common-context-field-class");
             if (eventContextClass != null)
             {
-                eventContext = this.BuildFieldClass(eventContextClass, this.EventContext(clockName)) as CtfStructDescriptor
+                var commonContext = BuildContext.Root("event-record-common-context", clockName, this.prefixEventFieldNamesWithUnderscore);
+                eventContext = this.BuildFieldClass(eventContextClass, commonContext) as CtfStructDescriptor
                     ?? throw new CtfMetadataException($"CTF 2 data stream class {id} event record common context is not a structure.");
             }
 
@@ -319,18 +318,19 @@ namespace CtfPlayback.Metadata.Ctf2
                     assignments["loglevel"] = logLevel;
                 }
 
-                var context = this.EventContext(null);
                 var typeDeclarations = new Dictionary<string, ICtfTypeDescriptor>(StringComparer.Ordinal);
 
                 var payloadClass = GetValue(eventRecordClass, "payload-field-class");
                 typeDeclarations["fields"] = payloadClass != null
-                    ? this.BuildFieldClass(payloadClass, context)
+                    ? this.BuildFieldClass(payloadClass, BuildContext.Root("event-record-payload", null, this.prefixEventFieldNamesWithUnderscore))
                     : new CtfStructDescriptor(new CtfPropertyBag(), Array.Empty<ICtfFieldDescriptor>());
 
                 var specificContextClass = GetValue(eventRecordClass, "specific-context-field-class");
                 if (specificContextClass != null)
                 {
-                    typeDeclarations["context"] = this.BuildFieldClass(specificContextClass, context);
+                    typeDeclarations["context"] = this.BuildFieldClass(
+                        specificContextClass,
+                        BuildContext.Root("event-record-specific-context", null, this.prefixEventFieldNamesWithUnderscore));
                 }
 
                 this.metadataBuilder.AddEvent(assignments, typeDeclarations);
@@ -339,11 +339,6 @@ namespace CtfPlayback.Metadata.Ctf2
             {
                 throw new CtfMetadataException($"Unable to process CTF 2 event record class '{name}': {e.Message}", e);
             }
-        }
-
-        private BuildContext EventContext(string clockName)
-        {
-            return new BuildContext(clockName, this.prefixEventFieldNamesWithUnderscore);
         }
 
         private CtfMetadataTypeDescriptor BuildFieldClass(object fieldClass, BuildContext context, IReadOnlyList<SelectorOption> selectorOptions = null)
@@ -508,7 +503,7 @@ namespace CtfPlayback.Metadata.Ctf2
         // "minimum-alignment" here; the length ("length" or "length-field-location") is handled by the caller.
         private CtfMetadataTypeDescriptor BuildArrayElement(Dictionary<string, object> fieldClass, BuildContext context)
         {
-            var element = this.BuildFieldClass(GetRequiredValue(fieldClass, "element-field-class"), context);
+            var element = this.BuildFieldClass(GetRequiredValue(fieldClass, "element-field-class"), context.NotAddressable());
             if (TryGetNumber(fieldClass, "minimum-alignment", out var minimumAlignment) && minimumAlignment.AsLong() > element.Align)
             {
                 throw new CtfMetadataException("CTF 2 arrays with a minimum alignment greater than their element alignment are not supported.");
@@ -534,7 +529,8 @@ namespace CtfPlayback.Metadata.Ctf2
                     continue;
                 }
 
-                string selectorName = GetSiblingSelectorName(memberClass);
+                string memberName = GetRequiredString(member, "name");
+                string selectorName = GetSiblingSelectorName(memberClass, context.ForMember(memberName));
                 if (!selectorOptionsByMember.TryGetValue(selectorName, out var selectorOptions))
                 {
                     selectorOptions = new List<SelectorOption>();
@@ -549,7 +545,7 @@ namespace CtfPlayback.Metadata.Ctf2
             {
                 string memberName = GetRequiredString(member, "name");
                 selectorOptionsByMember.TryGetValue(memberName, out var selectorOptions);
-                var memberType = this.BuildFieldClass(GetRequiredValue(member, "field-class"), context, selectorOptions);
+                var memberType = this.BuildFieldClass(GetRequiredValue(member, "field-class"), context.ForMember(memberName), selectorOptions);
                 fields.Add(new CtfFieldDescriptor(memberType, context.MapName(memberName)));
             }
 
@@ -560,7 +556,7 @@ namespace CtfPlayback.Metadata.Ctf2
 
         private CtfVariantDescriptor BuildVariant(Dictionary<string, object> fieldClass, BuildContext context)
         {
-            string selectorName = context.MapName(GetSiblingSelectorName(fieldClass));
+            string selectorName = context.MapName(GetSiblingSelectorName(fieldClass, context));
 
             var options = GetValue(fieldClass, "options") as List<object>
                 ?? throw new CtfMetadataException("CTF 2 variant does not define any options.");
@@ -570,7 +566,7 @@ namespace CtfPlayback.Metadata.Ctf2
             {
                 var option = options[index] as Dictionary<string, object>
                     ?? throw new CtfMetadataException("CTF 2 variant option is not a JSON object.");
-                var optionType = this.BuildFieldClass(GetRequiredValue(option, "field-class"), context);
+                var optionType = this.BuildFieldClass(GetRequiredValue(option, "field-class"), context.NotAddressable());
                 fields.Add(new CtfFieldDescriptor(optionType, GetOptionName(option, index, context)));
             }
 
@@ -610,9 +606,9 @@ namespace CtfPlayback.Metadata.Ctf2
             return name == null ? $"option{index}" : context.MapName(name);
         }
 
-        private static string GetSiblingSelectorName(Dictionary<string, object> variantClass)
+        private static string GetSiblingSelectorName(Dictionary<string, object> variantClass, BuildContext context)
         {
-            var path = GetFieldLocationPath(variantClass, "selector-field-location");
+            var path = ResolveFieldLocation(variantClass, "selector-field-location", context);
             if (path.Count != 1)
             {
                 throw new CtfMetadataException("Only CTF 2 variants whose selector is a sibling field are supported.");
@@ -623,20 +619,48 @@ namespace CtfPlayback.Metadata.Ctf2
 
         private string GetFieldLocation(Dictionary<string, object> fieldClass, string property, BuildContext context)
         {
-            return string.Join(".", GetFieldLocationPath(fieldClass, property).Select(context.MapName));
+            return string.Join(".", ResolveFieldLocation(fieldClass, property, context).Select(context.MapName));
         }
 
-        private static List<string> GetFieldLocationPath(Dictionary<string, object> fieldClass, string property)
+        /// <summary>
+        /// Returns the path of a field location (https://diamon.org/ctf/#field-loc) relative to the structure that
+        /// contains the field being built, which is how playback resolves it.
+        /// </summary>
+        private static List<string> ResolveFieldLocation(Dictionary<string, object> fieldClass, string property, BuildContext context)
         {
             if (!(GetValue(fieldClass, property) is Dictionary<string, object> location) ||
-                !(GetValue(location, "path") is List<object> path) ||
-                path.Count == 0)
+                !(GetValue(location, "path") is List<object> pathElements) ||
+                pathElements.Count == 0)
             {
                 throw new CtfMetadataException($"CTF 2 field class has an invalid '{property}'.");
             }
 
-            return path.Select(element => element as string
-                ?? throw new CtfMetadataException($"CTF 2 '{property}' path elements must be field names.")).ToList();
+            var path = pathElements.Select(element => element as string
+                ?? throw new CtfMetadataException($"CTF 2 '{property}' paths to a parent structure (null elements) are not supported.")).ToList();
+
+            string origin = GetString(location, "origin");
+            if (origin == null)
+            {
+                // Without an origin, the path starts at the structure containing the field.
+                return path;
+            }
+
+            // With an origin, the path starts at the root structure of that scope. LTTng-UST metadata writes all its
+            // locations this way, with the target in the same structure as the field. Such a path is made relative by
+            // removing the containing structure's own path. Targets in another scope, or outside the containing
+            // structure, would need lookups that playback doesn't support.
+            var container = context.Path?.Take(context.Path.Count - 1).ToList();
+            if (!StringComparer.Ordinal.Equals(origin, context.Scope) ||
+                container == null ||
+                path.Count <= container.Count ||
+                !path.Take(container.Count).SequenceEqual(container, StringComparer.Ordinal))
+            {
+                throw new CtfMetadataException(
+                    $"CTF 2 '{property}' with origin '{origin}' and path [{string.Join(", ", path)}] is not supported: " +
+                    $"the target must be within the '{context.Scope}' structure that contains the field.");
+            }
+
+            return path.Skip(container.Count).ToList();
         }
 
         private static CtfIntegerDescriptor CreateByte(string encoding, int displayBase)
@@ -763,17 +787,37 @@ namespace CtfPlayback.Metadata.Ctf2
 
         private sealed class BuildContext
         {
-            internal BuildContext(string clockName, bool prefixNames)
+            private BuildContext(string scope, string clockName, bool prefixNames, IReadOnlyList<string> path)
             {
+                this.Scope = scope;
                 this.ClockName = clockName;
                 this.PrefixNames = prefixNames;
+                this.Path = path;
             }
+
+            /// <summary>
+            /// The scope being built, named like a field location origin (e.g. "event-record-payload").
+            /// </summary>
+            internal string Scope { get; }
 
             internal string ClockName { get; }
 
             internal bool PrefixNames { get; }
 
-            internal static BuildContext Header(string clockName) => new BuildContext(clockName, false);
+            /// <summary>
+            /// Member names from the scope's root structure to the field class being built, or null when the field
+            /// can't be reached through structure members (array elements and variant options).
+            /// </summary>
+            internal IReadOnlyList<string> Path { get; }
+
+            internal static BuildContext Root(string scope, string clockName, bool prefixNames) =>
+                new BuildContext(scope, clockName, prefixNames, Array.Empty<string>());
+
+            internal BuildContext ForMember(string name) =>
+                new BuildContext(this.Scope, this.ClockName, this.PrefixNames, this.Path?.Concat(new[] { name }).ToArray());
+
+            internal BuildContext NotAddressable() =>
+                new BuildContext(this.Scope, this.ClockName, this.PrefixNames, null);
 
             internal string MapName(string name) => this.PrefixNames ? "_" + name : name;
         }

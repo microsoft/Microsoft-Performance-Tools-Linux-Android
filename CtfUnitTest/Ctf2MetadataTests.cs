@@ -211,6 +211,89 @@ namespace CtfUnitTest
             Assert.ThrowsException<CtfMetadataException>(() => Ctf2Json.Parse("{\"a\": }"));
         }
 
+        // Payload members written the way LTTng-UST metadata (lttng-tools) writes them: every field location has an
+        // origin, and its path starts at the root of that scope.
+        private const string OriginRootedPayload =
+            @"[{""name"":""len"",""field-class"":""u8""}," +
+            @"{""name"":""values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""origin"":""event-record-payload"",""path"":[""len""]}}}," +
+            @"{""name"":""nested"",""field-class"":{""type"":""structure"",""member-classes"":[{""name"":""n"",""field-class"":""u8""},{""name"":""text"",""field-class"":{""type"":""dynamic-length-string"",""length-field-location"":{""origin"":""event-record-payload"",""path"":[""nested"",""n""]}}}]}}," +
+            @"{""name"":""sel"",""field-class"":""u8""}," +
+            @"{""name"":""choice"",""field-class"":{""type"":""variant"",""selector-field-location"":{""origin"":""event-record-payload"",""path"":[""sel""]},""options"":[{""name"":""a"",""selector-field-ranges"":[[0,0]],""field-class"":""u8""},{""name"":""b"",""selector-field-ranges"":[[1,1]],""field-class"":""u32""}]}}," +
+            @"{""name"":""after"",""field-class"":""u32""}]";
+
+        [TestMethod]
+        public void ResolvesFieldLocationsRootedAtTheSameScope()
+        {
+            var builder = Parse(MetadataWithPayload(OriginRootedPayload));
+
+            // The event record header variant uses an "event-record-header" origin.
+            var header = builder.Streams.Single().EventHeader;
+            Assert.AreEqual("id", ((ICtfVariantDescriptor)header.GetField("v").TypeDescriptor).Switch);
+            Assert.IsInstanceOfType(header.GetField("id").TypeDescriptor, typeof(ICtfEnumDescriptor));
+
+            var payload = (ICtfStructDescriptor)builder.AddedEvents.Single().TypeDeclarations["fields"];
+            Assert.AreEqual("_len", ((ICtfArrayDescriptor)payload.GetField("_values").TypeDescriptor).Index);
+
+            var nested = (ICtfStructDescriptor)payload.GetField("_nested").TypeDescriptor;
+            Assert.AreEqual("_n", ((ICtfArrayDescriptor)nested.GetField("_text").TypeDescriptor).Index);
+
+            Assert.AreEqual("_sel", ((ICtfVariantDescriptor)payload.GetField("_choice").TypeDescriptor).Switch);
+            Assert.IsInstanceOfType(payload.GetField("_sel").TypeDescriptor, typeof(ICtfEnumDescriptor));
+        }
+
+        [TestMethod]
+        public void DecodesFieldsLocatedFromTheSameScope()
+        {
+            var payload = (ICtfStructDescriptor)Parse(MetadataWithPayload(OriginRootedPayload)).AddedEvents.Single().TypeDeclarations["fields"];
+
+            var bytes = new List<byte> { 2 };
+            bytes.AddRange(BitConverter.GetBytes(10u));
+            bytes.AddRange(BitConverter.GetBytes(20u));
+            bytes.Add(3);
+            bytes.AddRange(Encoding.UTF8.GetBytes("abc"));
+            bytes.Add(1);
+            bytes.AddRange(BitConverter.GetBytes(0xDEADBEEFu));
+            bytes.AddRange(BitConverter.GetBytes(7u));
+            var reader = new BufferPacketReader(bytes.ToArray());
+
+            var value = (CtfStructValue)payload.Read(reader);
+
+            CollectionAssert.AreEqual(new uint[] { 10, 20 }, value.ReadFieldAsArray("_values").ReadAsUInt32Array());
+            Assert.AreEqual("abc", ((CtfStructValue)value.FieldsByName["_nested"]).ReadFieldAsArray("_text").ReadAsString());
+            var choice = (CtfVariantValue)value.FieldsByName["_choice"];
+            Assert.AreEqual("_b", choice.Identifier);
+            Assert.AreEqual(0xDEADBEEFu, ((CtfIntegerValue)choice.Value).Value.ValueAsUlong);
+            Assert.AreEqual(7u, value.ReadFieldAsUInt32("_after"));
+            Assert.IsTrue(reader.EndOfStream);
+        }
+
+        [TestMethod]
+        [DataRow(@"[{""name"":""values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""origin"":""event-record-common-context"",""path"":[""ctx_len""]}}}]", "event-record-common-context")]
+        [DataRow(@"[{""name"":""len"",""field-class"":""u8""},{""name"":""nested"",""field-class"":{""type"":""structure"",""member-classes"":[{""name"":""values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""origin"":""event-record-payload"",""path"":[""len""]}}}]}}]", "event-record-payload")]
+        [DataRow(@"[{""name"":""items"",""field-class"":{""type"":""static-length-array"",""length"":2,""element-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""n"",""field-class"":""u8""},{""name"":""values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""origin"":""event-record-payload"",""path"":[""items"",""n""]}}}]}}}]", "event-record-payload")]
+        [DataRow(@"[{""name"":""len"",""field-class"":""u8""},{""name"":""nested"",""field-class"":{""type"":""structure"",""member-classes"":[{""name"":""values"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":""u32"",""length-field-location"":{""path"":[null,""len""]}}}]}}]", "null elements")]
+        public void RejectsUnsupportedFieldLocations(string payloadMembers, string expectedMessage)
+        {
+            var exception = Assert.ThrowsException<CtfMetadataException>(() => Parse(MetadataWithPayload(payloadMembers)));
+            StringAssert.Contains(exception.Message, expectedMessage);
+        }
+
+        private static string MetadataWithPayload(string payloadMembers)
+        {
+            return string.Concat(new[]
+            {
+                @"{""type"":""preamble"",""version"":2}",
+                @"{""type"":""field-class-alias"",""name"":""u8"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":8,""alignment"":8,""byte-order"":""little-endian""}}",
+                @"{""type"":""field-class-alias"",""name"":""u32"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":32,""alignment"":8,""byte-order"":""little-endian""}}",
+                @"{""type"":""trace-class"",""packet-header-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""magic"",""field-class"":""u32""},{""name"":""stream_id"",""field-class"":""u32""}]}}",
+                @"{""type"":""data-stream-class"",""id"":0," +
+                    @"""packet-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""content_size"",""field-class"":""u32""}]}," +
+                    @"""event-record-header-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""id"",""field-class"":""u8""},{""name"":""v"",""field-class"":{""type"":""variant"",""selector-field-location"":{""origin"":""event-record-header"",""path"":[""id""]},""options"":[{""name"":""compact"",""selector-field-ranges"":[[0,254]],""field-class"":{""type"":""structure"",""member-classes"":[]}},{""name"":""extended"",""selector-field-ranges"":[[255,255]],""field-class"":{""type"":""structure"",""member-classes"":[{""name"":""id"",""field-class"":""u32""}]}}]}}]}," +
+                    @"""event-record-common-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""ctx_len"",""field-class"":""u32""}]}}",
+                @"{""type"":""event-record-class"",""data-stream-class-id"":0,""id"":0,""name"":""ust_event"",""payload-field-class"":{""type"":""structure"",""member-classes"":" + payloadMembers + "}}",
+            }.Select(fragment => "\u001e" + fragment + "\n"));
+        }
+
         private static Ctf2TestMetadataBuilder Parse(string metadata)
         {
             var builder = new Ctf2TestMetadataBuilder();
@@ -257,6 +340,38 @@ namespace CtfUnitTest
             public void AddClock(ICtfClockDescriptor clockDescriptor) => this.clocks.Add(clockDescriptor);
 
             public void AddStream(ICtfStreamDescriptor streamDescriptor) => this.streams.Add(streamDescriptor);
+        }
+
+        private sealed class BufferPacketReader
+            : IPacketReader
+        {
+            private readonly byte[] bytes;
+            private int position;
+
+            public BufferPacketReader(byte[] bytes)
+            {
+                this.bytes = bytes;
+            }
+
+            public bool EndOfStream => this.position >= this.bytes.Length;
+
+            public uint RemainingBufferedBitCount => (uint)(this.bytes.Length - this.position) * 8;
+
+            public byte[] ReadBits(uint bitCount)
+            {
+                Assert.AreEqual(0u, bitCount % 8, "Only whole bytes are read in these tests.");
+                var result = new byte[bitCount / 8];
+                Array.Copy(this.bytes, this.position, result, 0, result.Length);
+                this.position += result.Length;
+                return result;
+            }
+
+            public byte[] ReadString() => throw new NotSupportedException();
+
+            public void Align(uint bitCount)
+            {
+                Assert.AreEqual(0u, (uint)(this.position * 8) % bitCount, "These tests only use byte-aligned fields.");
+            }
         }
 
         private sealed class BytePacketReader
