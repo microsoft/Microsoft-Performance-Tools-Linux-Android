@@ -14,7 +14,10 @@ namespace CtfPlayback.Metadata
     /// </summary>
     internal static class CtfMetadataText
     {
-        private const uint PacketMagic = 0x75d11d57;
+        // Magic number of a metadata packet, defined by CTF 1.8 section 7.1 (https://diamon.org/ctf/v1.8.3/#spec7.1)
+        // and CTF2-PMETA-1.0 (https://diamon.org/ctf/files/CTF2-PMETA-1.0.html). It may be stored in either byte order.
+        // This is not the magic number of data stream packets (0xC1FC1FC1).
+        private const uint MetadataPacketMagic = 0x75d11d57;
 
         // CTF 1.8: magic(4) + uuid(16) + checksum(4) + content_size(4) + packet_size(4) + 5 single-byte fields
         private const int Ctf1PacketHeaderSize = 37;
@@ -106,8 +109,8 @@ namespace CtfPlayback.Metadata
         private static bool TryGetPacketByteOrder(byte[] metadata, int packetOffset, out bool bigEndian)
         {
             var magic = new ReadOnlySpan<byte>(metadata, packetOffset, sizeof(uint));
-            bigEndian = BinaryPrimitives.ReadUInt32BigEndian(magic) == PacketMagic;
-            return bigEndian || BinaryPrimitives.ReadUInt32LittleEndian(magic) == PacketMagic;
+            bigEndian = BinaryPrimitives.ReadUInt32BigEndian(magic) == MetadataPacketMagic;
+            return bigEndian || BinaryPrimitives.ReadUInt32LittleEndian(magic) == MetadataPacketMagic;
         }
 
         private static uint ReadUInt32(byte[] metadata, int index, bool bigEndian)
