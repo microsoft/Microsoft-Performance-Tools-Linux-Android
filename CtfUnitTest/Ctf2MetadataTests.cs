@@ -35,7 +35,7 @@ namespace CtfUnitTest
             @"{""type"":""data-stream-class"",""id"":1,""default-clock-class-id"":""monotonic"",""packet-context-field-class"":""pkt-ctx"",""event-record-header-field-class"":""er-header-compact"",""event-record-common-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""tid"",""field-class"":{""type"":""fixed-length-signed-integer"",""length"":32,""byte-order"":""little-endian"",""alignment"":8}}]}}",
             @"{""type"":""data-stream-class"",""id"":0,""default-clock-class-id"":""monotonic"",""packet-context-field-class"":""pkt-ctx"",""event-record-header-field-class"":""er-header-compact"",""event-record-common-context-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""perf_cpu_cycles"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":64,""byte-order"":""little-endian"",""alignment"":8}},{""name"":""_callstack_kernel_length"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":32,""byte-order"":""little-endian"",""alignment"":8}},{""name"":""callstack_kernel"",""field-class"":{""type"":""dynamic-length-array"",""element-field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":64,""byte-order"":""little-endian"",""alignment"":8,""preferred-display-base"":16},""length-field-location"":{""path"":[""_callstack_kernel_length""]}}}]}}",
             @"{""type"":""event-record-class"",""data-stream-class-id"":1,""id"":0,""name"":""sched_wakeup"",""payload-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""comm"",""field-class"":{""type"":""static-length-string"",""length"":16}},{""name"":""tid"",""field-class"":{""type"":""fixed-length-signed-integer"",""length"":32,""byte-order"":""little-endian"",""alignment"":8}}]}}",
-            @"{""type"":""event-record-class"",""data-stream-class-id"":0,""id"":0,""name"":""sched_switch"",""attributes"":{""lttng.org,2009"":{""log-level"":13}},""payload-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""prev_tid"",""field-class"":{""type"":""fixed-length-signed-integer"",""length"":32,""byte-order"":""little-endian"",""alignment"":8}},{""name"":""filename"",""field-class"":{""type"":""null-terminated-string""}},{""name"":""address_ipv4"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":32,""byte-order"":""big-endian"",""alignment"":8,""preferred-display-base"":16}},{""name"":""ihl"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":4,""byte-order"":""big-endian""}},{""name"":""ratio"",""field-class"":{""type"":""fixed-length-floating-point-number"",""length"":64,""byte-order"":""little-endian"",""alignment"":8}}]}}",
+            @"{""type"":""event-record-class"",""data-stream-class-id"":0,""id"":0,""name"":""sched_switch"",""attributes"":{""lttng.org,2009"":{""log-level"":13}},""payload-field-class"":{""type"":""structure"",""member-classes"":[{""name"":""prev_tid"",""field-class"":{""type"":""fixed-length-signed-integer"",""length"":32,""byte-order"":""little-endian"",""alignment"":8}},{""name"":""filename"",""field-class"":{""type"":""null-terminated-string""}},{""name"":""address_ipv4"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":32,""byte-order"":""big-endian"",""alignment"":8,""preferred-display-base"":16}},{""name"":""ihl"",""field-class"":{""type"":""fixed-length-unsigned-integer"",""length"":4,""byte-order"":""big-endian""}},{""name"":""ratio"",""field-class"":{""type"":""fixed-length-floating-point-number"",""length"":64,""byte-order"":""little-endian"",""alignment"":8}},{""name"":""ratio_be"",""field-class"":{""type"":""fixed-length-floating-point-number"",""length"":32,""byte-order"":""big-endian"",""alignment"":8}}]}}",
         };
 
         private static string LTTngKernelMetadata => string.Concat(LTTngKernelFragments.Select(fragment => "\u001e" + fragment + "\n"));
@@ -175,6 +175,22 @@ namespace CtfUnitTest
 
             var value = (CtfIntegerValue)address.Read(new byte[] { 127, 0, 0, 1 }, 4);
             Assert.AreEqual(0x7F000001ul, value.Value.ValueAsUlong);
+        }
+
+        [TestMethod]
+        public void ReadsBigEndianFloatingPoint()
+        {
+            var builder = Parse(LTTngKernelMetadata);
+            var sched_switch = builder.AddedEvents.Single(e => e.Assignments["name"] == "sched_switch");
+            var payload = (ICtfStructDescriptor)sched_switch.TypeDeclarations["fields"];
+
+            // 123.4f = 0x42F6CCCD
+            var bigEndian = (CtfFloatingPointDescriptor)payload.GetField("_ratio_be").TypeDescriptor;
+            Assert.AreEqual(123.4f, ((CtfFloatValue)bigEndian.Read(new byte[] { 0x42, 0xF6, 0xCC, 0xCD }, 4)).Value);
+
+            // -2.0 = 0xC000000000000000
+            var littleEndian = (CtfFloatingPointDescriptor)payload.GetField("_ratio").TypeDescriptor;
+            Assert.AreEqual(-2.0, ((CtfDoubleValue)littleEndian.Read(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0xC0 }, 8)).Value);
         }
 
         [TestMethod]
