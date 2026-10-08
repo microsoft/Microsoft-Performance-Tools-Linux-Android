@@ -176,12 +176,16 @@ namespace CtfPlayback.Metadata.Types
                 value |= buffer[x];
             }
 
-            int signedMask = 1 << (this.Size - 1);
-            if ((value & signedMask) != 0)
+            // The sign bit must be computed in 64 bits: an int shift wraps for sizes above 32 bits. A 64-bit value
+            // already has its sign in place.
+            if (this.Size < 64)
             {
-                // extend the high order signed bit
-                long mask = ~(signedMask - 1);
-                value = value | mask;
+                long signBit = 1L << (this.Size - 1);
+                if ((value & signBit) != 0)
+                {
+                    // extend the high order signed bit
+                    value |= ~(signBit - 1);
+                }
             }
 
             return new IntegerLiteral(value);

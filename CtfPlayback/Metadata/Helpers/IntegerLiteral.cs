@@ -587,6 +587,12 @@ namespace CtfPlayback.Metadata.Helpers
 
             ushort highestUsedBit = 0;
 
+            // Math.Abs cannot represent the magnitude of long.MinValue, which needs all 64 bits (63 plus the sign).
+            if (value == long.MinValue)
+            {
+                return 63;
+            }
+
             // a negative number would always use the most significant bit
             value = Math.Abs(value);
 
