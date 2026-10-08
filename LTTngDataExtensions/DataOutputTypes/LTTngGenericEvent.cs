@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using CtfPlayback;
 using CtfPlayback.FieldValues;
 using LTTngCds.CookerData;
+using LTTngCds.CtfExtensions.DescriptorInterfaces;
 using Microsoft.Performance.SDK;
 
 namespace LTTngDataExtensions.DataOutputTypes
@@ -16,13 +18,11 @@ namespace LTTngDataExtensions.DataOutputTypes
         private class Key
         {
             private string domain;
-            private uint streamId;
             private uint id;
 
-            public Key(string domain, uint streamId, uint id)
+            public Key(string domain, uint id)
             {
                 this.domain = domain ?? string.Empty;
-                this.streamId = streamId;
                 this.id = id;
             }
 
@@ -30,7 +30,7 @@ namespace LTTngDataExtensions.DataOutputTypes
             {
                 if (obj is Key key)
                 {
-                    return domain.Equals(key.domain) && streamId.Equals(key.streamId) && id.Equals(key.id);
+                    return domain.Equals(key.domain) && id.Equals(key.id);
                 }
                 else
                 {
@@ -42,8 +42,7 @@ namespace LTTngDataExtensions.DataOutputTypes
             {
                 int h1 = domain.GetHashCode();
                 int h2 = id.GetHashCode();
-                int h3 = streamId.GetHashCode();
-                return ((((h1 << 5) + h1) ^ h2) * 31) ^ h3;
+                return ((h1 << 5) + h1) ^ h2;
             }
         }
 
@@ -77,29 +76,40 @@ namespace LTTngDataExtensions.DataOutputTypes
         private static readonly Dictionary<Key, EventKind> RegisteredKinds = new Dictionary<Key, EventKind>();
         private static readonly Regex TraceLoggingEventRegex = new Regex("^(?<ProviderName>[a-zA-Z_.0-9]+):(?<EventName>[a-zA-Z_.0-9]+);(?<Unknown>.+);$");
 
+        // Event ids are only unique within one stream of one trace, and a single input can contain several traces of
+        // the same domain (e.g. per-UID and per-PID UST buffers). The event descriptor identifies the event class
+        // itself. Entries are released with the trace's metadata, so traces processed later or concurrently never
+        // share kinds.
+        private static readonly ConditionalWeakTable<IEventDescriptor, EventKind> KindsByEventClass = new ConditionalWeakTable<IEventDescriptor, EventKind>();
+
+        internal static EventKind GetKind(LTTngEvent data, LTTngContext context, IReadOnlyList<CtfFieldValue> fields)
+        {
+            if (KindsByEventClass.TryGetValue(data.EventDescriptor, out var kind))
+            {
+                return kind;
+            }
+
+            return AddKind(data, context, fields);
+        }
+
+        [Obsolete("Event ids are not unique across streams or traces. LTTngGenericEvent identifies event kinds by event class instead.")]
         public static bool TryGetRegisteredKind(string domain, uint id, out EventKind kind)
         {
-            return TryGetRegisteredKind(domain, 0, id, out kind);
+            return RegisteredKinds.TryGetValue(new Key(domain, id), out kind);
         }
 
-        /// <summary>
-        /// Event ids are only unique within a stream (LTTng channel), so kinds are registered per stream.
-        /// </summary>
-        public static bool TryGetRegisteredKind(string domain, uint streamId, uint id, out EventKind kind)
-        {
-            return RegisteredKinds.TryGetValue(new Key(domain, streamId, id), out kind);
-        }
-
+        [Obsolete("Event ids are not unique across streams or traces. LTTngGenericEvent identifies event kinds by event class instead.")]
         public static EventKind RegisterKind(LTTngContext context, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
         {
-            return RegisterKind(context, 0, id, name, fields);
+            EventKind kind = new EventKind(context, id, name, fields);
+            RegisteredKinds.Add(new Key(context.Domain, id), kind);
+            return kind;
         }
 
-        public static EventKind RegisterKind(LTTngContext context, uint streamId, uint id, string name, IReadOnlyList<CtfFieldValue> fields)
+        private static EventKind AddKind(LTTngEvent data, LTTngContext context, IReadOnlyList<CtfFieldValue> fields)
         {
-            EventKind kind = new EventKind(context, id, name, fields);
-            RegisteredKinds.Add(new Key(context.Domain, streamId, id), kind);
-            return kind;
+            // If another thread adds the same event class first, its kind is returned.
+            return KindsByEventClass.GetValue(data.EventDescriptor, _ => new EventKind(context, data.Id, data.Name, fields));
         }
     }
 
@@ -119,10 +129,7 @@ namespace LTTngDataExtensions.DataOutputTypes
             this.CpuId = context.CurrentCpu;
             this.DiscardedEvents = data.DiscardedEvents;
 
-            if (!EventKind.TryGetRegisteredKind(context.Domain, data.StreamId, data.Id, out this.kind))
-            {
-                this.kind = EventKind.RegisterKind(context, data.StreamId, data.Id, data.Name, payload.Fields);
-            }
+            this.kind = EventKind.GetKind(data, context, payload.Fields);
 
             // As this is being written, all columns are of type 'T', so all rows are the same. For generic events,
             // where columns have different types for different rows, this means everything becomes a string.

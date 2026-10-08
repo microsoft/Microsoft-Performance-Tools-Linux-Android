@@ -60,6 +60,12 @@ namespace LTTngCds.CookerData
         public uint StreamId => this.ctfEvent.StreamId;
 
         /// <summary>
+        /// Metadata describing the event's class. A single instance is shared by all events of that class within a
+        /// trace, so it identifies the event class even across traces whose stream and event ids overlap.
+        /// </summary>
+        public IEventDescriptor EventDescriptor => this.eventDescriptor;
+
+        /// <summary>
         /// Event name
         /// </summary>
         public string Name => this.eventDescriptor.Name;
