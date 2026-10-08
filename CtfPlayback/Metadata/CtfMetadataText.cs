@@ -75,13 +75,19 @@ namespace CtfPlayback.Metadata
                 long contentBytes = contentBits / 8;
                 long packetBytes = packetBits / 8;
                 int headerBytes = GetHeaderSize(metadata, packetOffset, bigEndian, contentBytes);
-                if (contentBytes < headerBytes || packetBytes < contentBytes || offset + contentBytes > metadata.Length)
+                if (contentBytes < headerBytes || packetBytes < contentBytes ||
+                    offset + contentBytes > metadata.Length || offset + packetBytes > metadata.Length)
                 {
                     throw new InvalidDataException("Metadata stream seems to be corrupt: invalid packet size.");
                 }
 
                 content.Write(metadata, packetOffset + headerBytes, (int)contentBytes - headerBytes);
                 offset += packetBytes;
+            }
+
+            if (offset != metadata.Length)
+            {
+                throw new InvalidDataException("Metadata stream seems to be corrupt: truncated packet header.");
             }
 
             return Encoding.UTF8.GetString(content.GetBuffer(), 0, (int)content.Length);
