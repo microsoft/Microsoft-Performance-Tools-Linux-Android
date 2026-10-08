@@ -8,7 +8,22 @@ using System.IO;
 namespace CtfUnitTest
 {
     /// <summary>
-    /// Builds packetized metadata streams (CTF 1.8 section 7.1, and CTF2-PMETA-1.0).
+    /// Metadata packet header layouts.
+    /// </summary>
+    public enum MetadataPacketLayout
+    {
+        /// <summary>CTF 1.8 section 7.1: 37 bytes, version 1.8.</summary>
+        Ctf18,
+
+        /// <summary>What LTTng 2.15+ writes for CTF 2 metadata: the 37-byte CTF 1.8 header with version 2.0.</summary>
+        LttngCtf2,
+
+        /// <summary>CTF2-PMETA-1.0: 44 bytes (3 reserved bytes and a header size field added), version 2.0.</summary>
+        Ctf2Pmeta,
+    }
+
+    /// <summary>
+    /// Builds packetized metadata streams.
     /// </summary>
     internal static class MetadataPackets
     {
@@ -16,12 +31,14 @@ namespace CtfUnitTest
 
         /// <param name="content">Metadata content</param>
         /// <param name="bigEndian">Byte order of the header's integer fields</param>
-        /// <param name="majorVersion">1 for CTF 1.8 (37-byte header), 2 for CTF 2 (44-byte header)</param>
+        /// <param name="layout">Packet header layout</param>
         /// <param name="maxContentBytesPerPacket">Content is split into packets of at most this many bytes</param>
         /// <param name="paddingBytes">Padding after the content of each packet</param>
-        internal static byte[] Packetize(byte[] content, bool bigEndian, byte majorVersion, int maxContentBytesPerPacket = int.MaxValue, int paddingBytes = 0)
+        internal static byte[] Packetize(byte[] content, bool bigEndian, MetadataPacketLayout layout, int maxContentBytesPerPacket = int.MaxValue, int paddingBytes = 0)
         {
-            int headerSize = majorVersion >= 2 ? 44 : 37;
+            int headerSize = layout == MetadataPacketLayout.Ctf2Pmeta ? 44 : 37;
+            byte majorVersion = layout == MetadataPacketLayout.Ctf18 ? (byte)1 : (byte)2;
+            byte minorVersion = layout == MetadataPacketLayout.Ctf18 ? (byte)8 : (byte)0;
 
             var stream = new MemoryStream();
             int offset = 0;
@@ -36,8 +53,8 @@ namespace CtfUnitTest
                 WriteUInt32(stream, 0, bigEndian);
                 WriteUInt32(stream, contentBits, bigEndian);
                 WriteUInt32(stream, packetBits, bigEndian);
-                stream.Write(new byte[] { 0, 0, 0, majorVersion, majorVersion >= 2 ? (byte)0 : (byte)8 }, 0, 5);
-                if (majorVersion >= 2)
+                stream.Write(new byte[] { 0, 0, 0, majorVersion, minorVersion }, 0, 5);
+                if (layout == MetadataPacketLayout.Ctf2Pmeta)
                 {
                     stream.Write(new byte[3], 0, 3);
                     WriteUInt32(stream, (uint)(headerSize * 8), bigEndian);

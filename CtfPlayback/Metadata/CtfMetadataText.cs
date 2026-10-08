@@ -20,7 +20,8 @@ namespace CtfPlayback.Metadata
         // This is not the magic number of data stream packets (0xC1FC1FC1).
         private const uint MetadataPacketMagic = 0x75d11d57;
 
-        // CTF 1.8: magic(4) + uuid(16) + checksum(4) + content_size(4) + packet_size(4) + 5 single-byte fields
+        // CTF 1.8: magic(4) + uuid(16) + checksum(4) + content_size(4) + packet_size(4) + 5 single-byte fields.
+        // LTTng (2.15 and later) also uses this header for CTF 2 metadata, with version 2.0.
         private const int Ctf1PacketHeaderSize = 37;
 
         // CTF2-PMETA-1.0: the CTF 1.8 fields, 3 reserved bytes, then the header size in bits (352 = 44 bytes).
@@ -29,6 +30,7 @@ namespace CtfPlayback.Metadata
         private const int ContentSizeOffset = 24;
         private const int PacketSizeOffset = 28;
         private const int MajorVersionOffset = 35;
+        private const int Ctf2ReservedOffset = 37;
         private const int Ctf2HeaderSizeOffset = 40;
 
         internal static byte[] ReadAllBytes(Stream stream)
@@ -70,9 +72,9 @@ namespace CtfPlayback.Metadata
                     throw new InvalidDataException("Metadata stream seems to be corrupt: packet size is not a whole number of bytes.");
                 }
 
-                int headerBytes = GetHeaderSize(metadata, packetOffset, bigEndian);
                 long contentBytes = contentBits / 8;
                 long packetBytes = packetBits / 8;
+                int headerBytes = GetHeaderSize(metadata, packetOffset, bigEndian, contentBytes);
                 if (contentBytes < headerBytes || packetBytes < contentBytes || offset + contentBytes > metadata.Length)
                 {
                     throw new InvalidDataException("Metadata stream seems to be corrupt: invalid packet size.");
@@ -85,26 +87,34 @@ namespace CtfPlayback.Metadata
             return Encoding.UTF8.GetString(content.GetBuffer(), 0, (int)content.Length);
         }
 
-        private static int GetHeaderSize(byte[] metadata, int packetOffset, bool bigEndian)
+        private static int GetHeaderSize(byte[] metadata, int packetOffset, bool bigEndian, long contentBytes)
         {
-            // CTF 1.8 metadata packets are version 1.8; CTF 2 packets are version 2.0 and give their header size.
-            if (metadata[packetOffset + MajorVersionOffset] < 2)
+            // Version 1.8 packets, and LTTng's version 2.0 packets, have the 37-byte CTF 1.8 header. Only version 2.0
+            // packets with enough content can have the longer CTF2-PMETA-1.0 header.
+            if (metadata[packetOffset + MajorVersionOffset] < 2 ||
+                contentBytes < Ctf2MinimumPacketHeaderSize ||
+                packetOffset + Ctf2MinimumPacketHeaderSize > metadata.Length)
             {
                 return Ctf1PacketHeaderSize;
             }
 
-            if (packetOffset + Ctf2MinimumPacketHeaderSize > metadata.Length)
+            uint headerBits = ReadUInt32(metadata, packetOffset + Ctf2HeaderSizeOffset, bigEndian);
+            if ((headerBits % 8) == 0 && headerBits >= Ctf2MinimumPacketHeaderSize * 8 && headerBits / 8 <= contentBytes)
             {
-                throw new InvalidDataException("Metadata stream seems to be corrupt: truncated packet header.");
+                return (int)(headerBits / 8);
             }
 
-            uint headerBits = ReadUInt32(metadata, packetOffset + Ctf2HeaderSizeOffset, bigEndian);
-            if ((headerBits % 8) != 0 || headerBits < Ctf2MinimumPacketHeaderSize * 8)
+            // In LTTng's layout these bytes are metadata text. Text never contains NUL bytes, so zero "reserved" bytes
+            // mean a CTF2-PMETA-1.0 header with a bad size. (Every text byte is at least 0x09, so text read as a header
+            // size is over 18 MB and can't pass the check above for a real metadata packet.)
+            if (metadata[packetOffset + Ctf2ReservedOffset] == 0 &&
+                metadata[packetOffset + Ctf2ReservedOffset + 1] == 0 &&
+                metadata[packetOffset + Ctf2ReservedOffset + 2] == 0)
             {
                 throw new InvalidDataException("Metadata stream seems to be corrupt: invalid packet header size.");
             }
 
-            return (int)(headerBits / 8);
+            return Ctf1PacketHeaderSize;
         }
 
         private static bool TryGetPacketByteOrder(byte[] metadata, int packetOffset, out bool bigEndian)

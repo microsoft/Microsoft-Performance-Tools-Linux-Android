@@ -139,11 +139,13 @@ namespace CtfUnitTest
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void VersionDetectingParserHandlesPacketizedCtf2Metadata(bool bigEndian)
+        [DataRow(false, MetadataPacketLayout.LttngCtf2)]
+        [DataRow(true, MetadataPacketLayout.LttngCtf2)]
+        [DataRow(false, MetadataPacketLayout.Ctf2Pmeta)]
+        [DataRow(true, MetadataPacketLayout.Ctf2Pmeta)]
+        public void VersionDetectingParserHandlesPacketizedCtf2Metadata(bool bigEndian, MetadataPacketLayout layout)
         {
-            byte[] packets = MetadataPackets.Packetize(Encoding.UTF8.GetBytes(LTTngKernelMetadata), bigEndian, 2, maxContentBytesPerPacket: 512, paddingBytes: 4);
+            byte[] packets = MetadataPackets.Packetize(Encoding.UTF8.GetBytes(LTTngKernelMetadata), bigEndian, layout, maxContentBytesPerPacket: 512, paddingBytes: 4);
 
             var builder = new Ctf2TestMetadataBuilder();
             new CtfVersionDetectingMetadataParser(null, builder, true).Parse(new MemoryStream(packets));
