@@ -46,6 +46,8 @@ namespace CtfPlayback.Metadata
             }
 
             byte[] metadata = CtfMetadataText.ReadAllBytes(metadataStream);
+
+            // Packetized metadata (in either byte order) is decoded here, for both CTF 1.8 and CTF 2.
             string text = CtfMetadataText.Read(metadata);
 
             if (Ctf2MetadataParser.IsCtf2Metadata(text))
@@ -53,10 +55,7 @@ namespace CtfPlayback.Metadata
                 return new Ctf2MetadataParser(this.metadataBuilder, this.prefixCtf2EventFieldNamesWithUnderscore).Parse(text);
             }
 
-            using (var memoryStream = new MemoryStream(metadata, false))
-            {
-                return new CtfAntlrMetadataParser(this.metadataCustomization, this.metadataBuilder).Parse(memoryStream);
-            }
+            return new CtfAntlrMetadataParser(this.metadataCustomization, this.metadataBuilder).ParseText(text);
         }
     }
 }

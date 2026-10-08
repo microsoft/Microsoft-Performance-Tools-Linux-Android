@@ -139,22 +139,14 @@ namespace CtfUnitTest
         }
 
         [TestMethod]
-        public void VersionDetectingParserHandlesPacketizedCtf2Metadata()
+        [DataRow(false)]
+        [DataRow(true)]
+        public void VersionDetectingParserHandlesPacketizedCtf2Metadata(bool bigEndian)
         {
-            byte[] text = Encoding.UTF8.GetBytes(LTTngKernelMetadata);
-            var stream = new MemoryStream();
-            var writer = new BinaryWriter(stream);
-            writer.Write(0x75d11d57u);
-            writer.Write(new byte[16]);
-            writer.Write(0u);
-            writer.Write((uint)((37 + text.Length) * 8));
-            writer.Write((uint)((37 + text.Length) * 8));
-            writer.Write(new byte[] { 0, 0, 0, 2, 0 });
-            writer.Write(text);
-            stream.Position = 0;
+            byte[] packets = MetadataPackets.Packetize(Encoding.UTF8.GetBytes(LTTngKernelMetadata), bigEndian, 2, maxContentBytesPerPacket: 512, paddingBytes: 4);
 
             var builder = new Ctf2TestMetadataBuilder();
-            new CtfVersionDetectingMetadataParser(null, builder, true).Parse(stream);
+            new CtfVersionDetectingMetadataParser(null, builder, true).Parse(new MemoryStream(packets));
 
             Assert.AreEqual(2, builder.Streams.Count);
             Assert.AreEqual(2, builder.AddedEvents.Count);
