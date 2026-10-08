@@ -504,6 +504,8 @@ namespace CtfPlayback.Metadata.Ctf2
             return new CtfFloatingPointDescriptor(bag);
         }
 
+        // Shared by static-length and dynamic-length arrays: both use only "element-field-class" and
+        // "minimum-alignment" here; the length ("length" or "length-field-location") is handled by the caller.
         private CtfMetadataTypeDescriptor BuildArrayElement(Dictionary<string, object> fieldClass, BuildContext context)
         {
             var element = this.BuildFieldClass(GetRequiredValue(fieldClass, "element-field-class"), context);
